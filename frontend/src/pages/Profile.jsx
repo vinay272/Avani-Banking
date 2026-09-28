@@ -1,0 +1,1166 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+function Profile() {
+  const navigate = useNavigate();
+
+  const [customer, setCustomer] = useState(null);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  // =========================
+  // FETCH PROFILE
+  // =========================
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch(
+          "http://localhost:8080/api/customers/me",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.status === 401 || response.status === 403) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("customer");
+          navigate("/login");
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error("Unable to load profile.");
+        }
+
+        const data = await response.json();
+
+        setCustomer(data);
+
+        // Keep local customer information updated
+        localStorage.setItem(
+          "customer",
+          JSON.stringify(data)
+        );
+
+      } catch (err) {
+        console.error("Profile Error:", err);
+
+        setError(
+          err.message || "Unable to load profile."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [navigate]);
+
+  // =========================
+  // PASSWORD INPUT
+  // =========================
+
+  const handlePasswordChange = (e) => {
+    setPasswordForm({
+      ...passwordForm,
+      [e.target.name]: e.target.value,
+    });
+
+    setPasswordMessage("");
+    setPasswordError("");
+  };
+
+  // =========================
+  // CHANGE PASSWORD
+  // =========================
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+
+    setPasswordMessage("");
+    setPasswordError("");
+
+    const {
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    } = passwordForm;
+
+    if (!currentPassword) {
+      setPasswordError(
+        "Please enter your current password."
+      );
+      return;
+    }
+
+    if (!newPassword) {
+      setPasswordError(
+        "Please enter a new password."
+      );
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setPasswordError(
+        "New password must be at least 6 characters."
+      );
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError(
+        "New password and confirm password do not match."
+      );
+      return;
+    }
+
+    if (currentPassword === newPassword) {
+      setPasswordError(
+        "New password must be different from current password."
+      );
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      setPasswordLoading(true);
+
+      const response = await fetch(
+        "http://localhost:8080/api/customers/change-password",
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            currentPassword,
+            newPassword,
+          }),
+        }
+      );
+
+      const data = await response.text();
+
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("customer");
+
+        navigate("/login");
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          data || "Unable to change password."
+        );
+      }
+
+      setPasswordMessage(
+        "Password changed successfully."
+      );
+
+      setPasswordForm({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+
+    } catch (err) {
+      console.error(
+        "Change Password Error:",
+        err
+      );
+
+      setPasswordError(
+        err.message ||
+          "Unable to change password."
+      );
+    } finally {
+      setPasswordLoading(false);
+    }
+  };
+
+  // =========================
+  // LOGOUT
+  // =========================
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("customer");
+
+    navigate("/login");
+  };
+
+  // =========================
+  // FORMAT BALANCE
+  // =========================
+
+  const formatBalance = (balance) => {
+    return Number(balance || 0).toLocaleString(
+      "en-IN",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }
+    );
+  };
+
+  // =========================
+  // FORMAT DATE
+  // =========================
+
+  const formatDate = (dateValue) => {
+    if (!dateValue) {
+      return "Not available";
+    }
+
+    const date = new Date(dateValue);
+
+    if (Number.isNaN(date.getTime())) {
+      return "Not available";
+    }
+
+    return date.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
+  // =========================
+  // LOADING
+  // =========================
+
+  if (loading) {
+    return (
+      <div style={styles.page}>
+        <div style={styles.loadingContainer}>
+          <div style={styles.loadingIcon}>
+            ⟳
+          </div>
+
+          <h2 style={styles.loadingTitle}>
+            Loading Profile
+          </h2>
+
+          <p style={styles.loadingText}>
+            Fetching your account information...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================
+  // ERROR
+  // =========================
+
+  if (error) {
+    return (
+      <div style={styles.page}>
+        <div style={styles.errorContainer}>
+          <div style={styles.errorIcon}>
+            ⚠
+          </div>
+
+          <h2>
+            Unable to Load Profile
+          </h2>
+
+          <p>{error}</p>
+
+          <button
+            onClick={() => navigate("/dashboard")}
+            style={styles.primaryButton}
+          >
+            ← Back to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={styles.page}>
+      <div style={styles.container}>
+
+        {/* =========================
+            HEADER
+        ========================= */}
+
+        <div style={styles.header}>
+
+          <div style={styles.headerContent}>
+
+            <p style={styles.smallTitle}>
+              AVANI BANK
+            </p>
+
+            <h1 style={styles.title}>
+              My Profile
+            </h1>
+
+            <p style={styles.subtitle}>
+              Manage your personal and account
+              information securely.
+            </p>
+
+          </div>
+
+          <div style={styles.headerActions}>
+
+            <button
+              onClick={() =>
+                navigate("/dashboard")
+              }
+              style={styles.headerButton}
+            >
+              ← Dashboard
+            </button>
+
+            <button
+              onClick={handleLogout}
+              style={styles.logoutButton}
+            >
+              Logout
+            </button>
+
+          </div>
+
+        </div>
+
+        {/* =========================
+            PROFILE HERO
+        ========================= */}
+
+        <div style={styles.profileHero}>
+
+          <div style={styles.avatar}>
+            {customer?.fullName
+              ?.charAt(0)
+              ?.toUpperCase() || "U"}
+          </div>
+
+          <div style={styles.profileIdentity}>
+
+            <h2 style={styles.profileName}>
+              {customer?.fullName ||
+                "Customer"}
+            </h2>
+
+            <p style={styles.profileEmail}>
+              {customer?.email ||
+                "Email unavailable"}
+            </p>
+
+            <div style={styles.profileMeta}>
+
+              <span style={styles.accountBadge}>
+                {customer?.accountType ||
+                  "Account"}
+              </span>
+
+              <span
+                style={{
+                  ...styles.statusBadge,
+                  background:
+                    customer?.status === "ACTIVE"
+                      ? "#eaf8f0"
+                      : "#fff0f0",
+                  color:
+                    customer?.status === "ACTIVE"
+                      ? "#168653"
+                      : "#d13c3c",
+                }}
+              >
+                ● {customer?.status || "UNKNOWN"}
+              </span>
+
+            </div>
+
+          </div>
+
+          <div style={styles.balanceBox}>
+
+            <p style={styles.balanceLabel}>
+              Available Balance
+            </p>
+
+            <h2 style={styles.balance}>
+              ₹{formatBalance(
+                customer?.balance
+              )}
+            </h2>
+
+          </div>
+
+        </div>
+
+        {/* =========================
+            PERSONAL INFORMATION
+        ========================= */}
+
+        <div style={styles.card}>
+
+          <div style={styles.cardHeader}>
+
+            <div>
+              <h2 style={styles.cardTitle}>
+                Personal Information
+              </h2>
+
+              <p style={styles.cardSubtitle}>
+                Your registered personal details
+              </p>
+            </div>
+
+            <div style={styles.cardIcon}>
+              👤
+            </div>
+
+          </div>
+
+          <div style={styles.infoGrid}>
+
+            <InfoItem
+              label="Full Name"
+              value={customer?.fullName}
+            />
+
+            <InfoItem
+              label="Email Address"
+              value={customer?.email}
+            />
+
+            <InfoItem
+              label="Phone Number"
+              value={customer?.phone}
+            />
+
+            <InfoItem
+              label="Account Type"
+              value={customer?.accountType}
+            />
+
+          </div>
+
+        </div>
+
+        {/* =========================
+            ACCOUNT INFORMATION
+        ========================= */}
+
+        <div style={styles.card}>
+
+          <div style={styles.cardHeader}>
+
+            <div>
+              <h2 style={styles.cardTitle}>
+                Account Information
+              </h2>
+
+              <p style={styles.cardSubtitle}>
+                Your Avani Bank account details
+              </p>
+            </div>
+
+            <div style={styles.cardIcon}>
+              🏦
+            </div>
+
+          </div>
+
+          <div style={styles.accountGrid}>
+
+            <div style={styles.accountNumberBox}>
+
+              <p style={styles.detailLabel}>
+                Account Number
+              </p>
+
+              <h3 style={styles.accountNumber}>
+                {customer?.accountNumber ||
+                  "Not available"}
+              </h3>
+
+              <p style={styles.accountHint}>
+                Use this number to receive money
+              </p>
+
+            </div>
+
+            <div style={styles.detailBox}>
+
+              <p style={styles.detailLabel}>
+                Current Balance
+              </p>
+
+              <h3 style={styles.detailValue}>
+                ₹{formatBalance(
+                  customer?.balance
+                )}
+              </h3>
+
+            </div>
+
+            <div style={styles.detailBox}>
+
+              <p style={styles.detailLabel}>
+                Account Status
+              </p>
+
+              <h3
+                style={{
+                  ...styles.detailValue,
+                  color:
+                    customer?.status === "ACTIVE"
+                      ? "#168653"
+                      : "#d13c3c",
+                }}
+              >
+                {customer?.status ||
+                  "Unknown"}
+              </h3>
+
+            </div>
+
+            <div style={styles.detailBox}>
+
+              <p style={styles.detailLabel}>
+                Account Created
+              </p>
+
+              <h3 style={styles.detailValue}>
+                {formatDate(
+                  customer?.createdAt
+                )}
+              </h3>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* =========================
+            CHANGE PASSWORD
+        ========================= */}
+
+        <div style={styles.card}>
+
+          <div style={styles.cardHeader}>
+
+            <div>
+
+              <h2 style={styles.cardTitle}>
+                Security
+              </h2>
+
+              <p style={styles.cardSubtitle}>
+                Change your account password
+                securely.
+              </p>
+
+            </div>
+
+            <div style={styles.securityIcon}>
+              🔐
+            </div>
+
+          </div>
+
+          <form
+            onSubmit={handleChangePassword}
+          >
+
+            <div style={styles.passwordGrid}>
+
+              <div style={styles.field}>
+
+                <label style={styles.label}>
+                  Current Password
+                </label>
+
+                <input
+                  type="password"
+                  name="currentPassword"
+                  value={
+                    passwordForm.currentPassword
+                  }
+                  onChange={
+                    handlePasswordChange
+                  }
+                  placeholder="Enter current password"
+                  style={styles.input}
+                />
+
+              </div>
+
+              <div style={styles.field}>
+
+                <label style={styles.label}>
+                  New Password
+                </label>
+
+                <input
+                  type="password"
+                  name="newPassword"
+                  value={
+                    passwordForm.newPassword
+                  }
+                  onChange={
+                    handlePasswordChange
+                  }
+                  placeholder="Minimum 6 characters"
+                  style={styles.input}
+                />
+
+              </div>
+
+              <div style={styles.field}>
+
+                <label style={styles.label}>
+                  Confirm New Password
+                </label>
+
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={
+                    passwordForm.confirmPassword
+                  }
+                  onChange={
+                    handlePasswordChange
+                  }
+                  placeholder="Confirm new password"
+                  style={styles.input}
+                />
+
+              </div>
+
+            </div>
+
+            {passwordMessage && (
+              <div style={styles.success}>
+                ✓ {passwordMessage}
+              </div>
+            )}
+
+            {passwordError && (
+              <div style={styles.error}>
+                ⚠ {passwordError}
+              </div>
+            )}
+
+            <div style={styles.passwordFooter}>
+
+              <p style={styles.securityNote}>
+                🔒 Your password is securely
+                encrypted.
+              </p>
+
+              <button
+                type="submit"
+                disabled={passwordLoading}
+                style={{
+                  ...styles.primaryButton,
+                  opacity: passwordLoading
+                    ? 0.7
+                    : 1,
+                  cursor: passwordLoading
+                    ? "not-allowed"
+                    : "pointer",
+                }}
+              >
+                {passwordLoading
+                  ? "Changing Password..."
+                  : "Change Password →"}
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+// =========================
+// REUSABLE INFO COMPONENT
+// =========================
+
+function InfoItem({ label, value }) {
+  return (
+    <div style={styles.infoItem}>
+
+      <p style={styles.infoLabel}>
+        {label}
+      </p>
+
+      <p style={styles.infoValue}>
+        {value || "Not available"}
+      </p>
+
+    </div>
+  );
+}
+
+// =========================
+// STYLES
+// =========================
+
+const styles = {
+
+  page: {
+    minHeight: "100vh",
+    background: "#f5f7fb",
+    fontFamily:
+      "Inter, Arial, sans-serif",
+    color: "#172033",
+    paddingBottom: "50px",
+  },
+
+  container: {
+    width: "100%",
+    maxWidth: "1000px",
+    margin: "0 auto",
+    padding: "35px 20px",
+    boxSizing: "border-box",
+  },
+
+ header: {
+    maxHeight: "100px",
+    borderRadius:"18px",
+    background:"linear-gradient(135deg, #102354 0%, #173b8c 58%, #2457c6 100%)",
+    color: "#ffffff",
+    padding: "28px 6%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "25px",
+    boxSizing: "border-box",
+    boxShadow: "0 10px 30px rgba(18,51,120,0.14)",
+  },
+
+  headerContent: {
+    minWidth: 0,
+  },
+
+  smallTitle: {
+    margin: 0,
+    fontSize: "11px",
+    letterSpacing: "2px",
+    opacity: 0.7,
+    fontWeight: "700",
+  },
+
+  title: {
+    margin: "8px 0 5px",
+    fontSize: "30px",
+  },
+
+  subtitle: {
+    margin: 0,
+    fontSize: "13px",
+    color: "#d7e2ff",
+  },
+
+  headerActions: {
+    display: "flex",
+    gap: "8px",
+    flexShrink: 0,
+  },
+
+  headerButton: {
+    border: "1px solid rgba(255,255,255,0.25)",
+    background:
+      "#ffffff",
+    color: "#173b8c",
+    borderRadius: "9px",
+    padding: "10px 13px",
+    fontSize: "11px",
+    fontWeight: "700",
+    cursor: "pointer",
+  },
+
+  logoutButton: {
+    border: "none",
+    background: "#ffffff",
+    color: "#173b8c",
+    borderRadius: "9px",
+    padding: "10px 14px",
+    fontSize: "11px",
+    fontWeight: "700",
+    cursor: "pointer",
+  },
+
+  profileHero: {
+    marginTop: "20px",
+    background: "white",
+    border: "1px solid #e9edf4",
+    borderRadius: "18px",
+    padding: "24px",
+    display: "flex",
+    alignItems: "center",
+    gap: "18px",
+    boxShadow:
+      "0 8px 30px rgba(20,35,70,0.06)",
+    boxSizing: "border-box",
+  },
+
+  avatar: {
+    width: "68px",
+    height: "68px",
+    borderRadius: "18px",
+    background:
+      "linear-gradient(135deg, #173b8c, #2563c7)",
+    color: "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "27px",
+    fontWeight: "800",
+    flexShrink: 0,
+  },
+
+  profileIdentity: {
+    flex: 1,
+    minWidth: 0,
+  },
+
+  profileName: {
+    margin: 0,
+    fontSize: "21px",
+    color: "#172033",
+  },
+
+  profileEmail: {
+    margin: "5px 0 10px",
+    fontSize: "12px",
+    color: "#8993a8",
+  },
+
+  profileMeta: {
+    display: "flex",
+    gap: "8px",
+    flexWrap: "wrap",
+  },
+
+  accountBadge: {
+    padding: "5px 9px",
+    borderRadius: "6px",
+    background: "#edf3ff",
+    color: "#173b8c",
+    fontSize: "9px",
+    fontWeight: "700",
+  },
+
+  statusBadge: {
+    padding: "5px 9px",
+    borderRadius: "6px",
+    fontSize: "9px",
+    fontWeight: "700",
+  },
+
+  balanceBox: {
+    textAlign: "right",
+    paddingLeft: "20px",
+    borderLeft: "1px solid #edf0f5",
+    flexShrink: 0,
+  },
+
+  balanceLabel: {
+    margin: 0,
+    fontSize: "10px",
+    color: "#8993a8",
+    fontWeight: "600",
+  },
+
+  balance: {
+    margin: "5px 0 0",
+    fontSize: "24px",
+    color: "#173b8c",
+  },
+
+  card: {
+    marginTop: "18px",
+    background: "white",
+    border: "1px solid #e9edf4",
+    borderRadius: "18px",
+    padding: "25px",
+    boxShadow:
+      "0 8px 30px rgba(20,35,70,0.05)",
+    boxSizing: "border-box",
+  },
+
+  cardHeader: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "15px",
+    marginBottom: "22px",
+  },
+
+  cardTitle: {
+    margin: 0,
+    fontSize: "19px",
+  },
+
+  cardSubtitle: {
+    margin: "5px 0 0",
+    fontSize: "11px",
+    color: "#8993a8",
+  },
+
+  cardIcon: {
+    width: "40px",
+    height: "40px",
+    borderRadius: "11px",
+    background: "#edf3ff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "18px",
+  },
+
+  securityIcon: {
+    width: "40px",
+    height: "40px",
+    borderRadius: "11px",
+    background: "#eaf8f0",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "18px",
+  },
+
+  infoGrid: {
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(2, minmax(0, 1fr))",
+    gap: "12px",
+  },
+
+  infoItem: {
+    padding: "15px",
+    background: "#f8faff",
+    border: "1px solid #edf1f7",
+    borderRadius: "11px",
+  },
+
+  infoLabel: {
+    margin: 0,
+    fontSize: "10px",
+    color: "#8993a8",
+    fontWeight: "600",
+  },
+
+  infoValue: {
+    margin: "6px 0 0",
+    fontSize: "14px",
+    fontWeight: "700",
+    color: "#25304a",
+    wordBreak: "break-word",
+  },
+
+  accountGrid: {
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(2, minmax(0, 1fr))",
+    gap: "12px",
+  },
+
+  accountNumberBox: {
+    gridColumn: "1 / -1",
+    padding: "18px",
+    background:
+      "linear-gradient(135deg, #f4f7ff, #eef4ff)",
+    border: "1px solid #dce6fb",
+    borderRadius: "12px",
+  },
+
+  accountNumber: {
+    margin: "7px 0 3px",
+    fontSize: "22px",
+    letterSpacing: "1px",
+    color: "#173b8c",
+  },
+
+  accountHint: {
+    margin: 0,
+    fontSize: "10px",
+    color: "#8993a8",
+  },
+
+  detailBox: {
+    padding: "16px",
+    background: "#f8faff",
+    border: "1px solid #edf1f7",
+    borderRadius: "11px",
+  },
+
+  detailLabel: {
+    margin: 0,
+    fontSize: "10px",
+    color: "#8993a8",
+    fontWeight: "600",
+  },
+
+  detailValue: {
+    margin: "7px 0 0",
+    fontSize: "15px",
+    color: "#25304a",
+  },
+
+  passwordGrid: {
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(3, minmax(0, 1fr))",
+    gap: "14px",
+  },
+
+  field: {
+    marginBottom: "5px",
+  },
+
+  label: {
+    display: "block",
+    marginBottom: "8px",
+    fontSize: "11px",
+    fontWeight: "700",
+    color: "#526078",
+  },
+
+  input: {
+    width: "100%",
+    height: "46px",
+    padding: "0 13px",
+    border: "1px solid #dfe5ee",
+    borderRadius: "9px",
+    outline: "none",
+    fontSize: "12px",
+    boxSizing: "border-box",
+  },
+
+  passwordFooter: {
+    marginTop: "18px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "15px",
+  },
+
+  securityNote: {
+    margin: 0,
+    fontSize: "10px",
+    color: "#8993a8",
+  },
+
+  primaryButton: {
+    border: "none",
+    borderRadius: "9px",
+    padding: "12px 18px",
+    background:
+      "linear-gradient(135deg, #173b8c, #2563c7)",
+    color: "white",
+    fontSize: "11px",
+    fontWeight: "700",
+    cursor: "pointer",
+  },
+
+  success: {
+    marginTop: "15px",
+    padding: "11px 13px",
+    borderRadius: "8px",
+    background: "#eaf8f0",
+    color: "#168653",
+    fontSize: "11px",
+  },
+
+  error: {
+    marginTop: "15px",
+    padding: "11px 13px",
+    borderRadius: "8px",
+    background: "#fff0f0",
+    color: "#d13c3c",
+    fontSize: "11px",
+  },
+
+  loadingContainer: {
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  loadingIcon: {
+    fontSize: "35px",
+    color: "#173b8c",
+  },
+
+  loadingTitle: {
+    margin: "10px 0 5px",
+    fontSize: "18px",
+  },
+
+  loadingText: {
+    margin: 0,
+    color: "#8993a8",
+    fontSize: "12px",
+  },
+
+  errorContainer: {
+    maxWidth: "500px",
+    margin: "100px auto",
+    padding: "35px",
+    background: "white",
+    borderRadius: "18px",
+    textAlign: "center",
+    border: "1px solid #e9edf4",
+    boxSizing: "border-box",
+  },
+
+  errorIcon: {
+    fontSize: "35px",
+    marginBottom: "10px",
+  },
+};
+
+export default Profile;
