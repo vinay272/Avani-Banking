@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // =====================================================
@@ -20,6 +21,14 @@ const getGreeting = () => {
 
 function AdminDashboard() {
   const navigate = useNavigate();
+
+  const [isDark, setIsDark] = useState(() => {
+    return localStorage.getItem("adminTheme") === "dark";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("adminTheme", isDark ? "dark" : "light");
+  }, [isDark]);
 
   // ===================================================
   // STYLES
@@ -516,6 +525,20 @@ function AdminDashboard() {
       fontWeight: 750,
       color: "#68758c",
     },
+
+    themeButton: {
+      border: "1px solid rgba(255,255,255,.3)",
+      background: "rgba(255,255,255,.10)",
+      color: "#ffffff",
+      padding: "8px 11px",
+      borderRadius: "8px",
+      cursor: "pointer",
+      fontSize: "10px",
+      fontWeight: 700,
+      display: "flex",
+      alignItems: "center",
+      gap: "5px",
+    },
   };
 
   // ===================================================
@@ -610,7 +633,99 @@ function AdminDashboard() {
   // ===================================================
 
   return (
-    <div style={styles.page}>
+    <div className={isDark ? "admin-dashboard dark-mode" : "admin-dashboard"} style={styles.page}>
+      <style>{`
+        .admin-dashboard.dark-mode {
+          background: #0a1220 !important;
+          color: #e7edf7 !important;
+        }
+
+        .admin-dashboard.dark-mode .admin-greeting-card,
+        .admin-dashboard.dark-mode .admin-module-card,
+        .admin-dashboard.dark-mode .admin-quick-card,
+        .admin-dashboard.dark-mode .admin-status-panel {
+          background: #111b2d !important;
+          border-color: #25344d !important;
+          box-shadow: 0 8px 28px rgba(0,0,0,.24) !important;
+        }
+
+        .admin-dashboard.dark-mode .admin-greeting-card {
+          background: linear-gradient(135deg, #111b2d 0%, #16243b 100%) !important;
+        }
+
+        .admin-dashboard.dark-mode .admin-greeting-card h2,
+        .admin-dashboard.dark-mode .admin-module-card h4,
+        .admin-dashboard.dark-mode .admin-quick-card p,
+        .admin-dashboard.dark-mode .admin-status-panel h3,
+        .admin-dashboard.dark-mode .sectionTitle {
+          color: #edf3ff !important;
+        }
+
+        .admin-dashboard.dark-mode .admin-greeting-card p,
+        .admin-dashboard.dark-mode .admin-module-card p,
+        .admin-dashboard.dark-mode .admin-quick-card p:last-child,
+        .admin-dashboard.dark-mode .admin-status-panel p,
+        .admin-dashboard.dark-mode .sectionDescription,
+        .admin-dashboard.dark-mode .secureLabel {
+          color: #9aa9be !important;
+        }
+
+        .admin-dashboard.dark-mode .admin-greeting-icon {
+          background: #192944 !important;
+          border-color: #2c3f60 !important;
+        }
+
+        .admin-dashboard.dark-mode .admin-breadcrumb,
+        .admin-dashboard.dark-mode .admin-breadcrumb span {
+          color: #8998ad !important;
+        }
+
+        .admin-dashboard.dark-mode .admin-breadcrumb .breadcrumbActive {
+          color: #79a7ff !important;
+        }
+
+        .admin-dashboard.dark-mode .admin-module-card:hover,
+        .admin-dashboard.dark-mode .admin-quick-card:hover {
+          border-color: #3b557d !important;
+          box-shadow: 0 14px 32px rgba(0,0,0,.30) !important;
+        }
+
+        .admin-dashboard.dark-mode .cardArrow {
+          background: #1b2940 !important;
+          color: #9db8e8 !important;
+        }
+
+        .admin-dashboard.dark-mode .cardFooter {
+          border-top-color: #28374e !important;
+        }
+
+        .admin-dashboard.dark-mode .cardAction {
+          color: #79a7ff !important;
+        }
+
+        .admin-dashboard.dark-mode .admin-status-item {
+          background: #0e1829 !important;
+          border-color: #25344d !important;
+        }
+
+        .admin-dashboard.dark-mode .admin-footer {
+          border-top-color: #25344d !important;
+          color: #8391a7 !important;
+        }
+
+        .admin-dashboard.dark-mode .admin-footer span {
+          color: #a5b2c6 !important;
+        }
+
+        .admin-dashboard.dark-mode .quickIcon {
+          background: #1a2941 !important;
+        }
+
+        .admin-dashboard.dark-mode .icon {
+          background: #192944 !important;
+          border-color: #2b3e5d !important;
+        }
+      `}</style>
 
       {/* =================================================
           HEADER
@@ -636,12 +751,21 @@ function AdminDashboard() {
 
         </div>
 
-        <div style={styles.navRight}>
+        <div className="navRight" style={styles.navRight}>
 
           <div style={styles.adminBadge}>
             <span style={styles.onlineDot}></span>
             ADMIN SECURITY PANEL
           </div>
+
+          <button
+            type="button"
+            style={styles.themeButton}
+            onClick={() => setIsDark((prev) => !prev)}
+            title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {isDark ? "☀️ Light" : "🌙 Dark"}
+          </button>
 
           <button
             type="button"
@@ -667,18 +791,18 @@ function AdminDashboard() {
           MAIN
       ================================================= */}
 
-      <main style={styles.container}>
+      <main className="admin-main" style={styles.container}>
 
         {/* =================================================
             BREADCRUMB
         ================================================= */}
 
-        <div style={styles.breadcrumb}>
+        <div className="admin-breadcrumb" style={styles.breadcrumb}>
           <span>AVANI BANK</span>
 
           <span>›</span>
 
-          <span style={styles.breadcrumbActive}>
+          <span className="breadcrumbActive" style={styles.breadcrumbActive}>
             Admin Dashboard
           </span>
         </div>
@@ -687,7 +811,7 @@ function AdminDashboard() {
             GREETING
         ================================================= */}
 
-        <section style={styles.greetingCard}>
+        <section className="admin-greeting-card" style={styles.greetingCard}>
 
           <div style={styles.greetingLeft}>
 
@@ -707,7 +831,7 @@ function AdminDashboard() {
 
           </div>
 
-          <div style={styles.greetingIcon}>
+          <div className="admin-greeting-icon" style={styles.greetingIcon}>
             🏦
           </div>
 
@@ -717,7 +841,7 @@ function AdminDashboard() {
             MANAGEMENT MODULES
         ================================================= */}
 
-        <section style={styles.section}>
+        <section className="admin-section" style={styles.section}>
 
           <div style={styles.sectionHeader}>
 
@@ -726,11 +850,11 @@ function AdminDashboard() {
                 ADMINISTRATION
               </p>
 
-              <h3 style={styles.sectionTitle}>
+              <h3 className="sectionTitle" style={styles.sectionTitle}>
                 Management Modules
               </h3>
 
-              <p style={styles.sectionDescription}>
+              <p className="sectionDescription" style={styles.sectionDescription}>
                 Access the core administrative functions of Avani Bank.
               </p>
             </div>
@@ -742,7 +866,8 @@ function AdminDashboard() {
             {adminModules.map((module) => (
 
               <button
-                key={module.path}
+                className="admin-module-card"
+                 key={module.path}
                 type="button"
                 style={styles.card}
                 onClick={() => navigate(module.path)}
@@ -774,11 +899,11 @@ function AdminDashboard() {
 
                 <div style={styles.cardHeader}>
 
-                  <div style={styles.icon}>
+                  <div className="icon" style={styles.icon}>
                     {module.icon}
                   </div>
 
-                  <div style={styles.cardArrow}>
+                  <div className="cardArrow" style={styles.cardArrow}>
                     →
                   </div>
 
@@ -792,13 +917,13 @@ function AdminDashboard() {
                   {module.text}
                 </p>
 
-                <div style={styles.cardFooter}>
+                <div className="cardFooter" style={styles.cardFooter}>
 
-                  <span style={styles.cardAction}>
+                  <span className="cardAction" style={styles.cardAction}>
                     Open Module →
                   </span>
 
-                  <span style={styles.secureLabel}>
+                  <span className="secureLabel" style={styles.secureLabel}>
                     Secure Access
                   </span>
 
@@ -816,7 +941,7 @@ function AdminDashboard() {
             QUICK ACCESS
         ================================================= */}
 
-        <section style={styles.section}>
+        <section className="admin-section" style={styles.section}>
 
           <div style={styles.sectionHeader}>
 
@@ -837,7 +962,8 @@ function AdminDashboard() {
             {quickAccess.map((item) => (
 
               <button
-                key={`${item.title}-${item.path}`}
+                className="admin-quick-card"
+                 key={`${item.title}-${item.path}`}
                 type="button"
                 style={styles.quickCard}
                 onClick={() => navigate(item.path)}
@@ -859,7 +985,7 @@ function AdminDashboard() {
                 }}
               >
 
-                <div style={styles.quickIcon}>
+                <div className="quickIcon" style={styles.quickIcon}>
                   {item.icon}
                 </div>
 
@@ -885,7 +1011,7 @@ function AdminDashboard() {
             SYSTEM STATUS
         ================================================= */}
 
-        <section style={styles.statusPanel}>
+        <section className="admin-status-panel" style={styles.statusPanel}>
 
           <div style={styles.statusHeader}>
 
@@ -902,7 +1028,7 @@ function AdminDashboard() {
 
           <div style={styles.statusGrid}>
 
-            <div style={styles.statusItem}>
+            <div className="admin-status-item" style={styles.statusItem}>
 
               <div style={styles.statusItemTop}>
                 <span style={styles.statusDot}></span>
@@ -918,7 +1044,7 @@ function AdminDashboard() {
 
             </div>
 
-            <div style={styles.statusItem}>
+            <div className="admin-status-item" style={styles.statusItem}>
 
               <div style={styles.statusItemTop}>
                 <span style={styles.statusDot}></span>
@@ -934,7 +1060,7 @@ function AdminDashboard() {
 
             </div>
 
-            <div style={styles.statusItem}>
+            <div className="admin-status-item" style={styles.statusItem}>
 
               <div style={styles.statusItemTop}>
                 <span style={styles.statusDot}></span>
@@ -950,7 +1076,7 @@ function AdminDashboard() {
 
             </div>
 
-            <div style={styles.statusItem}>
+            <div className="admin-status-item" style={styles.statusItem}>
 
               <div style={styles.statusItemTop}>
                 <span style={styles.statusDot}></span>
@@ -974,7 +1100,7 @@ function AdminDashboard() {
             FOOTER
         ================================================= */}
 
-        <footer style={styles.footer}>
+        <footer className="admin-footer" style={styles.footer}>
 
           <span style={styles.footerBrand}>
             AVANI BANK · ADMINISTRATION PORTAL

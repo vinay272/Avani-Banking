@@ -14,6 +14,20 @@ function Dashboard() {
   const [error, setError] = useState("");
 
   // =====================================================
+  // DARK MODE
+  // =====================================================
+
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("avani-theme") === "dark";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("avani-theme", darkMode ? "dark" : "light");
+    document.documentElement.style.colorScheme = darkMode ? "dark" : "light";
+    document.body.style.background = darkMode ? "#0b1220" : "#f5f7fb";
+  }, [darkMode]);
+
+  // =====================================================
   // TIME BASED GREETING
   // =====================================================
 
@@ -271,23 +285,25 @@ if (notificationResponse.ok) {
     navigate("/login");
   };
 
+  const themeStyles = darkMode ? darkStyles : themeStylesBase;
+
   // =====================================================
   // LOADING
   // =====================================================
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.loadingCard}>
-          <div style={styles.loadingIcon}>🏦</div>
+      <div style={themeStyles.loadingPage}>
+        <div style={themeStyles.loadingCard}>
+          <div style={themeStyles.loadingIcon}>🏦</div>
 
-          <h2 style={styles.loadingTitle}>Loading your dashboard</h2>
+          <h2 style={themeStyles.loadingTitle}>Loading your dashboard</h2>
 
-          <p style={styles.loadingText}>
+          <p style={themeStyles.loadingText}>
             Please wait while we fetch your account information...
           </p>
 
-          <div style={styles.loader}></div>
+          <div style={themeStyles.loader}></div>
         </div>
       </div>
     );
@@ -299,16 +315,16 @@ if (notificationResponse.ok) {
 
   if (error && !customer) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.errorCard}>
-          <div style={styles.errorIcon}>⚠️</div>
+      <div style={themeStyles.loadingPage}>
+        <div style={themeStyles.errorCard}>
+          <div style={themeStyles.errorIcon}>⚠️</div>
 
-          <h2 style={styles.errorTitle}>Unable to load dashboard</h2>
+          <h2 style={themeStyles.errorTitle}>Unable to load dashboard</h2>
 
-          <p style={styles.errorText}>{error}</p>
+          <p style={themeStyles.errorText}>{error}</p>
 
           <button
-            style={styles.primaryButton}
+            style={themeStyles.primaryButton}
             onClick={() => window.location.reload()}
           >
             Try Again
@@ -323,27 +339,40 @@ if (notificationResponse.ok) {
   // =====================================================
 
   return (
-    <div style={styles.page}>
+    <div className={darkMode ? "dashboard-dark-mode" : ""} style={themeStyles.page}>
       {/* ================= NAVBAR ================= */}
 
-      <header style={styles.navbar}>
-        <div style={styles.brandArea}>
-          <div style={styles.brandIcon}>🏦</div>
+      <header style={themeStyles.navbar}>
+        <div style={themeStyles.brandArea}>
+          <div style={themeStyles.brandIcon}>🏦</div>
 
           <div>
-            <div style={styles.brandName}>AVANI BANK</div>
+            <div style={themeStyles.brandName}>AVANI BANK</div>
 
-            <div style={styles.brandSubtitle}>Digital Banking</div>
+            <div style={themeStyles.brandSubtitle}>Digital Banking</div>
           </div>
         </div>
 
-        <div style={styles.navRight}>
-          <div style={styles.accountBadge}>
-            <span style={styles.onlineDot}></span>
+        <div style={themeStyles.navRight}>
+          <div style={themeStyles.accountBadge}>
+            <span style={themeStyles.onlineDot}></span>
             Account Active
           </div>
 
-          <button style={styles.logoutButton} onClick={handleLogout}>
+          <button
+            type="button"
+            style={themeStyles.themeToggle}
+            onClick={() => setDarkMode((prev) => !prev)}
+            aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            <span style={themeStyles.themeToggleIcon}>
+              {darkMode ? "☀️" : "🌙"}
+            </span>
+            {darkMode ? "Light" : "Dark"}
+          </button>
+
+          <button style={themeStyles.logoutButton} onClick={handleLogout}>
             Logout
           </button>
         </div>
@@ -351,72 +380,72 @@ if (notificationResponse.ok) {
 
       {/* ================= MAIN ================= */}
 
-      <main style={styles.container}>
+      <main style={themeStyles.container}>
         {/* GREETING */}
 
-        <section style={styles.greetingSection}>
+        <section style={themeStyles.greetingSection}>
           <div>
-            <p style={styles.greetingSmall}>{getGreeting()}</p>
+            <p style={themeStyles.greetingSmall}>{getGreeting()}</p>
 
-            <h1 style={styles.greetingTitle}>
+            <h1 style={themeStyles.greetingTitle}>
               {customer?.fullName || "Customer"} 👋
             </h1>
 
-            <p style={styles.greetingSubtitle}>
+            <p style={themeStyles.greetingSubtitle}>
               Here's your account overview and recent banking activity.
             </p>
           </div>
 
-          <div style={styles.accountMiniCard}>
-            <div style={styles.accountMiniIcon}>💳</div>
+          <div style={themeStyles.accountMiniCard}>
+            <div style={themeStyles.accountMiniIcon}>💳</div>
 
             <div>
-              <p style={styles.miniLabel}>ACCOUNT NUMBER</p>
+              <p style={themeStyles.miniLabel}>ACCOUNT NUMBER</p>
 
-              <p style={styles.miniValue}>{customer?.accountNumber || "N/A"}</p>
+              <p style={themeStyles.miniValue}>{customer?.accountNumber || "N/A"}</p>
             </div>
           </div>
         </section>
 
         {/* ERROR */}
 
-        {error && <div style={styles.warningBox}>⚠️ {error}</div>}
+        {error && <div style={themeStyles.warningBox}>⚠️ {error}</div>}
 
         {/* ================= BALANCE ================= */}
 
-        <section style={styles.balanceCard}>
-          <div style={styles.balanceLeft}>
-            <div style={styles.balanceIcon}>₹</div>
+        <section style={themeStyles.balanceCard}>
+          <div style={themeStyles.balanceLeft}>
+            <div style={themeStyles.balanceIcon}>₹</div>
 
             <div>
-              <p style={styles.balanceLabel}>AVAILABLE BALANCE</p>
+              <p style={themeStyles.balanceLabel}>AVAILABLE BALANCE</p>
 
-              <h2 style={styles.balanceAmount}>
+              <h2 style={themeStyles.balanceAmount}>
                 ₹{formatCurrency(customer?.balance)}
               </h2>
 
-              <p style={styles.balanceStatus}>Available in your account</p>
+              <p style={themeStyles.balanceStatus}>Available in your account</p>
             </div>
           </div>
 
-          <div style={styles.balanceRight}>
-            <p style={styles.accountTypeLabel}>ACCOUNT TYPE</p>
+          <div style={themeStyles.balanceRight}>
+            <p style={themeStyles.accountTypeLabel}>ACCOUNT TYPE</p>
 
-            <p style={styles.accountTypeValue}>
+            <p style={themeStyles.accountTypeValue}>
               {customer?.accountType || "N/A"}
             </p>
 
-            <span style={styles.activeBadge}>● Active</span>
+            <span style={themeStyles.activeBadge}>● Active</span>
           </div>
         </section>
 
         {/* ================= STATS ================= */}
 
-        <section style={styles.statsGrid}>
-          <div style={styles.statCard}>
+        <section style={themeStyles.statsGrid}>
+          <div style={themeStyles.statCard}>
             <div
               style={{
-                ...styles.statIcon,
+                ...themeStyles.statIcon,
                 background: "#fff1f1",
                 color: "#d63c3c",
               }}
@@ -424,22 +453,22 @@ if (notificationResponse.ok) {
               ↑
             </div>
 
-            <div style={styles.statContent}>
-              <p style={styles.statLabel}>MONEY SENT</p>
+            <div style={themeStyles.statContent}>
+              <p style={themeStyles.statLabel}>MONEY SENT</p>
 
-              <h3 style={styles.statValue}>₹{formatCurrency(moneySent)}</h3>
+              <h3 style={themeStyles.statValue}>₹{formatCurrency(moneySent)}</h3>
 
-              <p style={styles.statSubtext}>
+              <p style={themeStyles.statSubtext}>
                 {sentTransactions.length} transaction
                 {sentTransactions.length !== 1 ? "s" : ""}
               </p>
             </div>
           </div>
 
-          <div style={styles.statCard}>
+          <div style={themeStyles.statCard}>
             <div
               style={{
-                ...styles.statIcon,
+                ...themeStyles.statIcon,
                 background: "#ecfdf5",
                 color: "#119463",
               }}
@@ -447,22 +476,22 @@ if (notificationResponse.ok) {
               ↓
             </div>
 
-            <div style={styles.statContent}>
-              <p style={styles.statLabel}>MONEY RECEIVED</p>
+            <div style={themeStyles.statContent}>
+              <p style={themeStyles.statLabel}>MONEY RECEIVED</p>
 
-              <h3 style={styles.statValue}>₹{formatCurrency(moneyReceived)}</h3>
+              <h3 style={themeStyles.statValue}>₹{formatCurrency(moneyReceived)}</h3>
 
-              <p style={styles.statSubtext}>
+              <p style={themeStyles.statSubtext}>
                 {receivedTransactions.length} transaction
                 {receivedTransactions.length !== 1 ? "s" : ""}
               </p>
             </div>
           </div>
 
-          <div style={styles.statCard}>
+          <div style={themeStyles.statCard}>
             <div
               style={{
-                ...styles.statIcon,
+                ...themeStyles.statIcon,
                 background: "#eef4ff",
                 color: "#2457c6",
               }}
@@ -470,36 +499,36 @@ if (notificationResponse.ok) {
               ↔
             </div>
 
-            <div style={styles.statContent}>
-              <p style={styles.statLabel}>TOTAL TRANSACTIONS</p>
+            <div style={themeStyles.statContent}>
+              <p style={themeStyles.statLabel}>TOTAL TRANSACTIONS</p>
 
-              <h3 style={styles.statValue}>{totalTransactions}</h3>
+              <h3 style={themeStyles.statValue}>{totalTransactions}</h3>
 
-              <p style={styles.statSubtext}>All account activity</p>
+              <p style={themeStyles.statSubtext}>All account activity</p>
             </div>
           </div>
         </section>
 
         {/* ================= QUICK ACTIONS ================= */}
 
-        <section style={styles.section}>
-          <div style={styles.sectionHeader}>
+        <section style={themeStyles.section}>
+          <div style={themeStyles.sectionHeader}>
             <div>
-              <p style={styles.sectionEyebrow}>BANKING</p>
+              <p style={themeStyles.sectionEyebrow}>BANKING</p>
 
-              <h2 style={styles.sectionTitle}>Quick Actions</h2>
+              <h2 style={themeStyles.sectionTitle}>Quick Actions</h2>
             </div>
           </div>
 
-          <div style={styles.actionsGrid}>       
+          <div style={themeStyles.actionsGrid}>       
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/payments")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -507,26 +536,26 @@ if (notificationResponse.ok) {
                 ₹
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>Payments</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Payments</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   UPI, NEFT, RTGS, IMPS, bills and other payments.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
 
             {/* TRANSACTION HISTORY */}
 
             <button
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/transactions")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -534,27 +563,27 @@ if (notificationResponse.ok) {
                 📋
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>Transaction History</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Transaction History</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   View all your transactions.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
 
             {/* CARDS */}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/cards")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#f3f0ff",
                   color: "#6847c7",
                 }}
@@ -562,27 +591,27 @@ if (notificationResponse.ok) {
                 💳
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>My Cards</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>My Cards</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   Manage your debit and credit cards.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
 
             {/* KYC */}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/kyc")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#f0fdf4",
                   color: "#15803d",
                 }}
@@ -590,27 +619,27 @@ if (notificationResponse.ok) {
                 ✓
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>KYC Verification</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>KYC Verification</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   Verify and manage your KYC documents.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
 
             {/* RISK PROFILE */}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/risk-profile")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#fff8e7",
                   color: "#9a6700",
                 }}
@@ -618,27 +647,27 @@ if (notificationResponse.ok) {
                 🛡️
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>Risk Profile</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Risk Profile</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   View your customer risk assessment.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
 
             {/* ADDRESS VERIFICATION */}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/address-verification")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#eef7f5",
                   color: "#16806b",
                 }}
@@ -646,26 +675,26 @@ if (notificationResponse.ok) {
                 📍
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>Address Verification</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Address Verification</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   Verify and manage your registered address.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
             {/* DUPLICATE KYC */}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/duplicate-kyc")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#f5efff",
                   color: "#7c3aed",
                 }}
@@ -673,26 +702,26 @@ if (notificationResponse.ok) {
                 🛡️
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>Duplicate KYC</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Duplicate KYC</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   Check KYC document duplication.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
             {/* JOINT ACCOUNT */}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/joint-account")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -700,24 +729,24 @@ if (notificationResponse.ok) {
                 👥
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>Joint Account</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Joint Account</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   Manage your joint bank accounts.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/customer-relationship-history")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -725,24 +754,24 @@ if (notificationResponse.ok) {
                 🔗
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>Relationship History</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Relationship History</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   View your customer relationship history.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/biometric-verification")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -750,26 +779,26 @@ if (notificationResponse.ok) {
                 🛡️
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>Biometric Verification</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Biometric Verification</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   Manage your biometric verification.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
             {/*AMLCHECK*/}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/aml-check")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -777,26 +806,26 @@ if (notificationResponse.ok) {
                 ✓
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>AML Check</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>AML Check</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   Anti-Money Laundering screening & compliance
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
             {/* NOMINEE */}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/nominee")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#f5f3ff",
                   color: "#6d4cc2",
                 }}
@@ -804,27 +833,27 @@ if (notificationResponse.ok) {
                 ♙
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>Nominee Management</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Nominee Management</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   Add and manage your nominees.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
 
             {/* BENEFICIARIES */}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/beneficiaries")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -832,27 +861,27 @@ if (notificationResponse.ok) {
                 👥
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>Beneficiaries</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Beneficiaries</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   Add and manage your beneficiaries.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
 
             {/* ACCOUNT MANAGEMENT */}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/accounts")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -860,27 +889,27 @@ if (notificationResponse.ok) {
                 🏦
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>Account Management</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Account Management</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   Manage accounts, balance, statements and account services.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
 
             {/* PROFILE */}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/profile")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -888,27 +917,27 @@ if (notificationResponse.ok) {
                 👤
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>Profile & Account</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Profile & Account</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   View and manage your account details.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
 
             {/* SETTINGS */}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/settings")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#f5f3ff",
                   color: "#7956b8",
                 }}
@@ -916,27 +945,27 @@ if (notificationResponse.ok) {
                 ⚙️
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>Settings</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Settings</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   Manage security and preferences.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
 
             {/* LOAN MANAGEMENT */}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/loans")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#fff7e8",
                   color: "#9a6700",
                 }}
@@ -944,27 +973,27 @@ if (notificationResponse.ok) {
                 💰
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>Loan Management</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Loan Management</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   Apply for loans and manage your repayments.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
 
             {/* INVESTMENT & WEALTH MANAGEMENT */}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() => navigate("/investments")}
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -972,29 +1001,29 @@ if (notificationResponse.ok) {
                 📈
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>
                   Investment & Wealth Management
                 </h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   Manage mutual funds, FD, SIP, bonds, gold and your portfolio.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
             
             {/* SECURITY CENTER */}
 
 <button
   type="button"
-  style={styles.actionCard}
+  style={themeStyles.actionCard}
   onClick={() => navigate("/security-center")}
 >
   <div
     style={{
-      ...styles.actionIcon,
+      ...themeStyles.actionIcon,
       background: "#fff1f2",
       color: "#c0263e",
     }}
@@ -1002,29 +1031,29 @@ if (notificationResponse.ok) {
     🛡️
   </div>
 
-  <div style={styles.actionText}>
-    <h3 style={styles.actionTitle}>
+  <div style={themeStyles.actionText}>
+    <h3 style={themeStyles.actionTitle}>
       Security Center
     </h3>
 
-    <p style={styles.actionDescription}>
+    <p style={themeStyles.actionDescription}>
       Monitor fraud alerts, risk score and account security.
     </p>
   </div>
 
-  <span style={styles.actionArrow}>→</span>
+  <span style={themeStyles.actionArrow}>→</span>
 </button>
 
 {/* CUSTOMER SERVICE */}
 
 <button
   type="button"
-  style={styles.actionCard}
+  style={themeStyles.actionCard}
   onClick={() => navigate("/customer-service")}
 >
   <div
     style={{
-      ...styles.actionIcon,
+      ...themeStyles.actionIcon,
       background: "#eef7f5",
       color: "#16806b",
     }}
@@ -1032,27 +1061,27 @@ if (notificationResponse.ok) {
     💬
   </div>
 
-  <div style={styles.actionText}>
-    <h3 style={styles.actionTitle}>Customer Service</h3>
+  <div style={themeStyles.actionText}>
+    <h3 style={themeStyles.actionTitle}>Customer Service</h3>
 
-    <p style={styles.actionDescription}>
+    <p style={themeStyles.actionDescription}>
       Raise complaints, service requests, appointments and get support.
     </p>
   </div>
 
-  <span style={styles.actionArrow}>→</span>
+  <span style={themeStyles.actionArrow}>→</span>
 </button>
 
 {/* NOTIFICATIONS */}
 
 <button
   type="button"
-  style={styles.actionCard}
+  style={themeStyles.actionCard}
   onClick={() => navigate("/notifications")}
 >
   <div
     style={{
-      ...styles.actionIcon,
+      ...themeStyles.actionIcon,
       background: "#eef4ff",
       color: "#2457c6",
     }}
@@ -1060,30 +1089,30 @@ if (notificationResponse.ok) {
     🔔
   </div>
 
-  <div style={styles.actionText}>
-    <h3 style={styles.actionTitle}>Notifications</h3>
+  <div style={themeStyles.actionText}>
+    <h3 style={themeStyles.actionTitle}>Notifications</h3>
 
-    <p style={styles.actionDescription}>
+    <p style={themeStyles.actionDescription}>
       View alerts, banking updates and important notifications.
     </p>
   </div>
 
   {unreadNotificationCount > 0 && (
-    <span style={styles.notificationBadge}>
+    <span style={themeStyles.notificationBadge}>
       {unreadNotificationCount > 99
         ? "99+"
         : unreadNotificationCount}
     </span>
   )}
 
-  <span style={styles.actionArrow}>→</span>
+  <span style={themeStyles.actionArrow}>→</span>
 </button>
 
             {/* VIEW ACTIVITY */}
 
             <button
               type="button"
-              style={styles.actionCard}
+              style={themeStyles.actionCard}
               onClick={() =>
                 window.scrollTo({
                   top: document.body.scrollHeight,
@@ -1093,7 +1122,7 @@ if (notificationResponse.ok) {
             >
               <div
                 style={{
-                  ...styles.actionIcon,
+                  ...themeStyles.actionIcon,
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -1101,50 +1130,50 @@ if (notificationResponse.ok) {
                 📊
               </div>
 
-              <div style={styles.actionText}>
-                <h3 style={styles.actionTitle}>View Activity</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>View Activity</h3>
 
-                <p style={styles.actionDescription}>
+                <p style={themeStyles.actionDescription}>
                   Check your recent transactions.
                 </p>
               </div>
 
-              <span style={styles.actionArrow}>→</span>
+              <span style={themeStyles.actionArrow}>→</span>
             </button>
           </div>
         </section>
 
         {/* ================= RECENT ACTIVITY ================= */}
 
-        <section style={styles.section}>
-          <div style={styles.sectionHeader}>
+        <section style={themeStyles.section}>
+          <div style={themeStyles.sectionHeader}>
             <div>
-              <p style={styles.sectionEyebrow}>TRANSACTIONS</p>
+              <p style={themeStyles.sectionEyebrow}>TRANSACTIONS</p>
 
-              <h2 style={styles.sectionTitle}>Recent Activity</h2>
+              <h2 style={themeStyles.sectionTitle}>Recent Activity</h2>
             </div>
 
-            <div style={styles.transactionCount}>{totalTransactions} total</div>
+            <div style={themeStyles.transactionCount}>{totalTransactions} total</div>
           </div>
 
-          <div style={styles.activityCard}>
+          <div style={themeStyles.activityCard}>
             {transactionLoading ? (
-              <div style={styles.activityLoading}>
-                <div style={styles.smallLoader}></div>
+              <div style={themeStyles.activityLoading}>
+                <div style={themeStyles.smallLoader}></div>
                 Loading transactions...
               </div>
             ) : recentTransactions.length === 0 ? (
-              <div style={styles.emptyState}>
-                <div style={styles.emptyIcon}>📭</div>
+              <div style={themeStyles.emptyState}>
+                <div style={themeStyles.emptyIcon}>📭</div>
 
-                <h3 style={styles.emptyTitle}>No transactions yet</h3>
+                <h3 style={themeStyles.emptyTitle}>No transactions yet</h3>
 
-                <p style={styles.emptyText}>
+                <p style={themeStyles.emptyText}>
                   Your recent transactions will appear here.
                 </p>
 
                 <button
-                  style={styles.emptyButton}
+                  style={themeStyles.emptyButton}
                   onClick={() => navigate("/transfer")}
                 >
                   Make Your First Transfer
@@ -1165,7 +1194,7 @@ if (notificationResponse.ok) {
                         transaction.id || `${transaction.direction}-${index}`
                       }
                       style={{
-                        ...styles.transactionRow,
+                        ...themeStyles.transactionRow,
                         borderBottom:
                           index === recentTransactions.length - 1
                             ? "none"
@@ -1174,7 +1203,7 @@ if (notificationResponse.ok) {
                     >
                       <div
                         style={{
-                          ...styles.transactionIcon,
+                          ...themeStyles.transactionIcon,
                           background: isSent ? "#fff1f1" : "#ecfdf5",
                           color: isSent ? "#d63c3c" : "#119463",
                         }}
@@ -1182,17 +1211,17 @@ if (notificationResponse.ok) {
                         {isSent ? "↑" : "↓"}
                       </div>
 
-                      <div style={styles.transactionInfo}>
-                        <h3 style={styles.transactionTitle}>
+                      <div style={themeStyles.transactionInfo}>
+                        <h3 style={themeStyles.transactionTitle}>
                           {isSent ? "Money Sent" : "Money Received"}
                         </h3>
 
-                        <p style={styles.transactionAccount}>
+                        <p style={themeStyles.transactionAccount}>
                           {isSent ? "To" : "From"} Account{" "}
                           {otherAccount || "N/A"}
                         </p>
 
-                        <p style={styles.transactionDate}>
+                        <p style={themeStyles.transactionDate}>
                           {formatDate(transaction.transactionDate)}
 
                           {formatTime(transaction.transactionDate) &&
@@ -1200,10 +1229,10 @@ if (notificationResponse.ok) {
                         </p>
                       </div>
 
-                      <div style={styles.transactionAmountBox}>
+                      <div style={themeStyles.transactionAmountBox}>
                         <p
                           style={{
-                            ...styles.transactionAmount,
+                            ...themeStyles.transactionAmount,
                             color: isSent ? "#d63c3c" : "#119463",
                           }}
                         >
@@ -1211,7 +1240,7 @@ if (notificationResponse.ok) {
                           {formatCurrency(transaction.amount)}
                         </p>
 
-                        <span style={styles.successStatus}>
+                        <span style={themeStyles.successStatus}>
                           ✓ {transaction.status || "SUCCESS"}
                         </span>
                       </div>
@@ -1225,75 +1254,75 @@ if (notificationResponse.ok) {
 
         {/* ================= ACCOUNT INFORMATION ================= */}
 
-        <section style={styles.section}>
-          <div style={styles.sectionHeader}>
+        <section style={themeStyles.section}>
+          <div style={themeStyles.sectionHeader}>
             <div>
-              <p style={styles.sectionEyebrow}>PROFILE</p>
+              <p style={themeStyles.sectionEyebrow}>PROFILE</p>
 
-              <h2 style={styles.sectionTitle}>Account Information</h2>
+              <h2 style={themeStyles.sectionTitle}>Account Information</h2>
             </div>
           </div>
 
-          <div style={styles.profileCard}>
-            <div style={styles.profileTop}>
-              <div style={styles.avatar}>
+          <div style={themeStyles.profileCard}>
+            <div style={themeStyles.profileTop}>
+              <div style={themeStyles.avatar}>
                 {customer?.fullName?.charAt(0)?.toUpperCase() || "C"}
               </div>
 
               <div>
-                <h3 style={styles.profileName}>
+                <h3 style={themeStyles.profileName}>
                   {customer?.fullName || "Customer"}
                 </h3>
 
-                <p style={styles.profileEmail}>
+                <p style={themeStyles.profileEmail}>
                   {customer?.email || "Email unavailable"}
                 </p>
               </div>
 
-              <div style={styles.profileStatus}>
+              <div style={themeStyles.profileStatus}>
                 ● {customer?.status || "ACTIVE"}
               </div>
             </div>
 
-            <div style={styles.profileGrid}>
-              <div style={styles.profileItem}>
-                <p style={styles.profileLabel}>FULL NAME</p>
+            <div style={themeStyles.profileGrid}>
+              <div style={themeStyles.profileItem}>
+                <p style={themeStyles.profileLabel}>FULL NAME</p>
 
-                <p style={styles.profileValue}>{customer?.fullName || "N/A"}</p>
+                <p style={themeStyles.profileValue}>{customer?.fullName || "N/A"}</p>
               </div>
 
-              <div style={styles.profileItem}>
-                <p style={styles.profileLabel}>EMAIL</p>
+              <div style={themeStyles.profileItem}>
+                <p style={themeStyles.profileLabel}>EMAIL</p>
 
-                <p style={styles.profileValue}>{customer?.email || "N/A"}</p>
+                <p style={themeStyles.profileValue}>{customer?.email || "N/A"}</p>
               </div>
 
-              <div style={styles.profileItem}>
-                <p style={styles.profileLabel}>PHONE</p>
+              <div style={themeStyles.profileItem}>
+                <p style={themeStyles.profileLabel}>PHONE</p>
 
-                <p style={styles.profileValue}>{customer?.phone || "N/A"}</p>
+                <p style={themeStyles.profileValue}>{customer?.phone || "N/A"}</p>
               </div>
 
-              <div style={styles.profileItem}>
-                <p style={styles.profileLabel}>ACCOUNT NUMBER</p>
+              <div style={themeStyles.profileItem}>
+                <p style={themeStyles.profileLabel}>ACCOUNT NUMBER</p>
 
-                <p style={styles.profileValue}>
+                <p style={themeStyles.profileValue}>
                   {customer?.accountNumber || "N/A"}
                 </p>
               </div>
 
-              <div style={styles.profileItem}>
-                <p style={styles.profileLabel}>ACCOUNT TYPE</p>
+              <div style={themeStyles.profileItem}>
+                <p style={themeStyles.profileLabel}>ACCOUNT TYPE</p>
 
-                <p style={styles.profileValue}>
+                <p style={themeStyles.profileValue}>
                   {customer?.accountType || "N/A"}
                 </p>
               </div>
 
-              <div style={styles.profileItem}>
-                <p style={styles.profileLabel}>CUSTOMER SINCE</p>
+              <div style={themeStyles.profileItem}>
+                <p style={themeStyles.profileLabel}>CUSTOMER SINCE</p>
 
-                <p style={styles.profileValue}>
+                <p style={themeStyles.profileValue}>
                   {formatDate(customer?.createdAt)}
                 </p>
               </div>
@@ -1304,7 +1333,7 @@ if (notificationResponse.ok) {
 
       {/* ================= FOOTER ================= */}
 
-      <footer style={styles.footer}>
+      <footer style={themeStyles.footer}>
         <div>© {new Date().getFullYear()} Avani Bank</div>
 
         <div>Secure • Reliable • Digital Banking</div>
@@ -1317,7 +1346,7 @@ if (notificationResponse.ok) {
 // STYLES
 // =====================================================
 
-const styles = {
+const themeStylesBase = {
   page: {
     minHeight: "100vh",
     background: "#f5f7fb",
@@ -1390,6 +1419,25 @@ const styles = {
     borderRadius: "50%",
     background: "#16a36c",
     marginRight: "6px",
+  },
+
+  themeToggle: {
+    border: "1px solid #e1e6ef",
+    background: "#ffffff",
+    color: "#4b5870",
+    borderRadius: "9px",
+    padding: "8px 11px",
+    fontSize: "11px",
+    fontWeight: "700",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+  },
+
+  themeToggleIcon: {
+    fontSize: "13px",
+    lineHeight: 1,
   },
 
   logoutButton: {
@@ -2058,12 +2106,139 @@ const styles = {
 };
 
 // =====================================================
+// DARK MODE OVERRIDES
+// =====================================================
+
+const darkThemeOverrides = {
+  page: {
+    background: "#0b1220",
+    color: "#e7edf7",
+  },
+  navbar: {
+    background: "#111a2b",
+    borderBottom: "1px solid #26344b",
+  },
+  brandName: { color: "#f4f7fb" },
+  brandSubtitle: { color: "#8d9ab0" },
+  themeToggle: {
+    background: "#182337",
+    border: "1px solid #30405a",
+    color: "#e7edf7",
+  },
+  logoutButton: {
+    background: "#182337",
+    border: "1px solid #30405a",
+    color: "#e7edf7",
+  },
+  greetingSmall: { color: "#66a0ff" },
+  greetingTitle: { color: "#f3f6fb" },
+  greetingSubtitle: { color: "#96a3b8" },
+  accountMiniCard: {
+    background: "#111a2b",
+    border: "1px solid #26344b",
+    boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
+  },
+  accountMiniIcon: { background: "#1a2942" },
+  miniLabel: { color: "#8190a8" },
+  miniValue: { color: "#e7edf7" },
+  warningBox: {
+    background: "#2b2414",
+    border: "1px solid #5a4820",
+    color: "#f0c969",
+  },
+  statCard: {
+    background: "#111a2b",
+    border: "1px solid #26344b",
+    boxShadow: "0 8px 24px rgba(0,0,0,0.16)",
+  },
+  statLabel: { color: "#8290a8" },
+  statValue: { color: "#f0f4fa" },
+  statSubtext: { color: "#8491a6" },
+  sectionEyebrow: { color: "#7199df" },
+  sectionTitle: { color: "#f0f4fa" },
+  actionCard: {
+    background: "#111a2b",
+    border: "1px solid #26344b",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
+  },
+  actionTitle: { color: "#eaf0f8" },
+  actionDescription: { color: "#8491a6" },
+  actionArrow: { color: "#6ea0ff" },
+  notificationBadge: { background: "#3269d6" },
+  transactionCount: {
+    background: "#1a2942",
+    color: "#9bb7ea",
+  },
+  activityCard: {
+    background: "#111a2b",
+    border: "1px solid #26344b",
+    boxShadow: "0 8px 24px rgba(0,0,0,0.16)",
+  },
+  transactionTitle: { color: "#e8eef7" },
+  transactionAccount: { color: "#8794a9" },
+  transactionDate: { color: "#707e94" },
+  activityLoading: { color: "#9aa7ba" },
+  emptyIcon: { background: "#1a2538" },
+  emptyTitle: { color: "#e6ecf5" },
+  emptyText: { color: "#8794a9" },
+  profileCard: {
+    background: "#111a2b",
+    border: "1px solid #26344b",
+    boxShadow: "0 8px 24px rgba(0,0,0,0.16)",
+  },
+  profileTop: { borderBottom: "1px solid #26344b" },
+  profileName: { color: "#e8eef7" },
+  profileEmail: { color: "#8794a9" },
+  profileLabel: { color: "#78869b" },
+  profileValue: { color: "#dce5f1" },
+  footer: {
+    background: "#111a2b",
+    borderTop: "1px solid #26344b",
+    color: "#7f8ca0",
+  },
+  loadingPage: {
+    background: "linear-gradient(135deg, #0b1220, #111a2b)",
+  },
+  loadingCard: {
+    background: "#111a2b",
+    boxShadow: "0 15px 40px rgba(0,0,0,0.25)",
+  },
+  loadingTitle: { color: "#e8eef7" },
+  loadingText: { color: "#8997ac" },
+  loader: {
+    border: "3px solid #26344b",
+    borderTop: "3px solid #4f8df7",
+  },
+  errorCard: {
+    background: "#111a2b",
+    boxShadow: "0 15px 40px rgba(0,0,0,0.25)",
+  },
+  errorTitle: { color: "#e8eef7" },
+  errorText: { color: "#9aa7ba" },
+};
+
+const darkStyles = Object.fromEntries(
+  Object.entries(themeStylesBase).map(([key, value]) => [
+    key,
+    { ...value, ...(darkThemeOverrides[key] || {}) },
+  ])
+);
+
+// =====================================================
 // GLOBAL ANIMATION
 // =====================================================
 
 const styleSheet = document.createElement("style");
 
 styleSheet.innerHTML = `
+  .dashboard-dark-mode button:hover {
+    filter: brightness(1.08);
+  }
+
+  .dashboard-dark-mode .transactionRow {
+    border-bottom-color: #26344b !important;
+  }
+
   @keyframes spin {
     from {
       transform: rotate(0deg);

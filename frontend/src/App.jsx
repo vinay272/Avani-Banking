@@ -45,9 +45,11 @@ import CustomerServicePortal from "./pages/CustomerServicePortal";
 import AdminCustomerSupport from "./pages/AdminCustomerSupport";
 import ComplianceAuditDashboard from "./pages/ComplianceAuditDashboard";
 import BranchManagement from "./pages/BranchManagement";
+import CashDeposit from "./pages/CashDeposit";
 import Notifications from "./pages/Notifications";
 import ExecutiveDashboard from "./pages/ExecutiveDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import CashierLogin from "./pages/CashierLogin";
 
 function App() {
   return (
@@ -113,6 +115,14 @@ function App() {
         <Route path="/notifications"element={<ProtectedRoute><Notifications /></ProtectedRoute>}/>
         <Route path="/admin/reports"element={<ProtectedRoute><ExecutiveDashboard /></ProtectedRoute>}/>
         <Route path="/admin/branch-management"element={<ProtectedRoute><BranchManagement /></ProtectedRoute>}/>
+        <Route
+  path="/cashier/login"
+  element={<CashierLogin />}
+/>
+        <Route
+  path="/cashier/cash-deposit"
+  element={<CashDeposit />}
+/>
 
         {/* =========================
             UNKNOWN ROUTE

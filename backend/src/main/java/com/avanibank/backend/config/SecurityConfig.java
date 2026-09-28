@@ -135,6 +135,9 @@ public class SecurityConfig {
                                                 .requestMatchers("/api/admin/**")
                                                 .hasAnyRole("SUPER_ADMIN", "BANK_ADMIN")
 
+                                                .requestMatchers("/api/cash-deposits/**")
+                                                .hasRole("CASHIER")
+
                                                 .requestMatchers("/api/auditor/**")
                                                 .hasAnyRole("SUPER_ADMIN", "BANK_ADMIN", "AUDITOR")
 

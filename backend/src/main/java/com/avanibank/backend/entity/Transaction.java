@@ -11,7 +11,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String senderAccountNumber;
 
     @Column(nullable = false)
@@ -28,6 +28,15 @@ public class Transaction {
 
     @Column(nullable = false)
     private LocalDateTime transactionDate;
+
+    @Column(unique = true)
+    private String transactionReference;
+
+    private String branchCode;
+
+    private String cashCounterCode;
+
+    private String cashierEmployeeCode;
 
     public Transaction() {
         this.transactionDate = LocalDateTime.now();
@@ -88,4 +97,36 @@ public class Transaction {
     public void setTransactionDate(LocalDateTime transactionDate) {
         this.transactionDate = transactionDate;
     }
+
+    public String getTransactionReference() {
+    return transactionReference;
+}
+
+public void setTransactionReference(String transactionReference) {
+    this.transactionReference = transactionReference;
+}
+
+public String getBranchCode() {
+    return branchCode;
+}
+
+public void setBranchCode(String branchCode) {
+    this.branchCode = branchCode;
+}
+
+public String getCashCounterCode() {
+    return cashCounterCode;
+}
+
+public void setCashCounterCode(String cashCounterCode) {
+    this.cashCounterCode = cashCounterCode;
+}
+
+public String getCashierEmployeeCode() {
+    return cashierEmployeeCode;
+}
+
+public void setCashierEmployeeCode(String cashierEmployeeCode) {
+    this.cashierEmployeeCode = cashierEmployeeCode;
+}
 }
