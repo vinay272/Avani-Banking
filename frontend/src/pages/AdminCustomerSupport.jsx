@@ -2252,40 +2252,191 @@ const adminStyles = `
 
 @media (max-width: 700px) {
   .admin-support-page {
-    padding: 18px 12px 35px;
+    padding: 14px 10px 30px;
+    overflow-x: hidden;
   }
 
   .admin-support-header {
-    align-items: flex-start;
+    max-height: none;
+    align-items: stretch;
     flex-direction: column;
-    padding: 24px 20px;
+    gap: 15px;
+    padding: 22px 18px;
+    border-radius: 15px;
+  }
+
+  .admin-support-header h1 {
+    font-size: 23px;
+    line-height: 1.25;
+  }
+
+  .admin-support-header p {
+    line-height: 1.55;
   }
 
   .admin-dashboard-button {
     width: 100%;
+    min-height: 40px;
+  }
+
+  .admin-alert {
+    align-items: flex-start;
+    line-height: 1.45;
+  }
+
+  .admin-support-tabs {
+    margin-bottom: 18px;
+    padding: 5px;
+    scrollbar-width: thin;
+  }
+
+  .admin-support-tabs button {
+    flex: 0 0 auto;
+    min-width: 125px;
+  }
+
+  .admin-section-heading {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .refresh-button {
+    width: 100%;
+    min-height: 38px;
+  }
+
+  .admin-table-card {
+    border-radius: 13px;
+  }
+
+  .admin-table-wrapper {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-table-wrapper table {
+    min-width: 760px;
+  }
+
+  .admin-table-wrapper th,
+  .admin-table-wrapper td {
+    padding: 11px 10px;
   }
 
   .feedback-admin-grid {
     grid-template-columns: 1fr;
   }
 
+  .feedback-admin-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .admin-chat-controls {
     grid-template-columns: 1fr;
+    padding: 14px;
   }
 
   .load-chat-button {
     grid-column: auto;
+    width: 100%;
+  }
+
+  .admin-chat-messages {
+    height: 360px;
+    padding: 14px;
+  }
+
+  .admin-chat-bubble {
+    max-width: 88%;
+  }
+
+  .admin-chat-input {
+    flex-direction: column;
+    padding: 12px;
+  }
+
+  .admin-chat-input input {
+    width: 100%;
+  }
+
+  .admin-chat-input button {
+    width: 100%;
+    min-height: 42px;
+  }
+
+  .admin-modal-overlay {
+    align-items: flex-end;
+    padding: 8px;
+  }
+
+  .admin-modal {
+    max-height: 92vh;
+    padding: 18px;
+    border-radius: 16px 16px 10px 10px;
+  }
+
+  .admin-modal-header {
+    gap: 12px;
+  }
+
+  .admin-modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .modal-cancel,
+  .modal-save {
+    width: 100%;
   }
 
   .admin-support-footer {
     flex-direction: column;
     align-items: flex-start;
+    line-height: 1.5;
   }
 }
 
 @media (max-width: 500px) {
   .admin-support-kpis {
     grid-template-columns: 1fr;
+  }
+
+  .admin-support-header {
+    padding: 19px 15px;
+  }
+
+  .admin-support-header h1 {
+    font-size: 20px;
+  }
+
+  .admin-support-eyebrow {
+    font-size: 8px;
+    letter-spacing: 1.1px;
+  }
+
+  .admin-support-tabs button {
+    min-width: 118px;
+    padding: 10px 11px;
+  }
+
+  .admin-section-heading h2 {
+    font-size: 18px;
+  }
+
+  .admin-table-wrapper table {
+    min-width: 700px;
+  }
+
+  .admin-chat-messages {
+    height: 320px;
+  }
+
+  .admin-chat-bubble {
+    max-width: 94%;
+  }
+
+  .admin-modal {
+    padding: 15px;
   }
 }
 `;

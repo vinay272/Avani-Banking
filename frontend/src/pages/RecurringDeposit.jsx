@@ -6,6 +6,22 @@ const API_BASE_URL = "http://localhost:8080";
 const RecurringDeposit = () => {
     const navigate = useNavigate();
 
+    // Responsive state
+    const [isMobile, setIsMobile] = useState(
+        typeof window !== "undefined" ? window.innerWidth <= 768 : false
+    );
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        window.addEventListener("resize", handleResize);
+        handleResize();
+
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     const [rds, setRds] = useState([]);
     const [accounts, setAccounts] = useState([]);
 
@@ -317,27 +333,32 @@ const RecurringDeposit = () => {
     // UI
     // =====================================================
 
+    const getResponsiveStyle = (name) => ({
+        ...(styles[name] || {}),
+        ...(isMobile ? (responsiveStyles[name] || {}) : {}),
+    });
+
     return (
-        <div style={styles.page}>
+        <div style={getResponsiveStyle("page")}>
 
             {/* =================================================
                 HEADER
             ================================================= */}
 
-            <header style={styles.header}>
+            <header style={getResponsiveStyle("header")}>
 
-                <div style={styles.headerLeft}>
+                <div style={getResponsiveStyle("headerLeft")}>
 
-                    <div style={styles.bankIcon}>
+                    <div style={getResponsiveStyle("bankIcon")}>
                         🏦
                     </div>
 
                     <div>
-                        <div style={styles.bankName}>
+                        <div style={getResponsiveStyle("bankName")}>
                             AVANI BANK
                         </div>
 
-                        <div style={styles.headerSubtitle}>
+                        <div style={getResponsiveStyle("headerSubtitle")}>
                             Account Details
                         </div>
                     </div>
@@ -346,10 +367,10 @@ const RecurringDeposit = () => {
 
                 <button
                     type="button"
-                    style={styles.backButton}
+                    style={getResponsiveStyle("backButton")}
                     onClick={() => navigate("/accounts")}
                 >
-                    <span style={styles.backArrow}>
+                    <span style={getResponsiveStyle("backArrow")}>
                         ←
                     </span>
 
@@ -363,25 +384,25 @@ const RecurringDeposit = () => {
                 MAIN CONTENT
             ================================================= */}
 
-            <main style={styles.main}>
+            <main style={getResponsiveStyle("main")}>
 
                 {/* =================================================
                     PAGE INTRO
                 ================================================= */}
 
-                <section style={styles.heroSection}>
+                <section style={getResponsiveStyle("heroSection")}>
 
                     <div>
 
-                        <div style={styles.eyebrow}>
+                        <div style={getResponsiveStyle("eyebrow")}>
                             SAVINGS & INVESTMENT
                         </div>
 
-                        <h1 style={styles.pageTitle}>
+                        <h1 style={getResponsiveStyle("pageTitle")}>
                             Recurring Deposit
                         </h1>
 
-                        <p style={styles.pageSubtitle}>
+                        <p style={getResponsiveStyle("pageSubtitle")}>
                             Save a fixed amount every month
                             and grow your money securely.
                         </p>
@@ -390,12 +411,12 @@ const RecurringDeposit = () => {
 
                     <button
                         type="button"
-                        style={styles.createButton}
+                        style={getResponsiveStyle("createButton")}
                         onClick={() =>
                             setShowCreate(true)
                         }
                     >
-                        <span style={styles.plusIcon}>
+                        <span style={getResponsiveStyle("plusIcon")}>
                             +
                         </span>
 
@@ -409,20 +430,20 @@ const RecurringDeposit = () => {
                     INFO CARDS
                 ================================================= */}
 
-                <section style={styles.infoGrid}>
+                <section style={getResponsiveStyle("infoGrid")}>
 
-                    <div style={styles.infoCard}>
+                    <div style={getResponsiveStyle("infoCard")}>
 
-                        <div style={styles.infoIcon}>
+                        <div style={getResponsiveStyle("infoIcon")}>
                             💰
                         </div>
 
                         <div>
-                            <span style={styles.infoLabel}>
+                            <span style={getResponsiveStyle("infoLabel")}>
                                 Monthly Saving
                             </span>
 
-                            <strong style={styles.infoValue}>
+                            <strong style={getResponsiveStyle("infoValue")}>
                                 Fixed Installment
                             </strong>
                         </div>
@@ -430,18 +451,18 @@ const RecurringDeposit = () => {
                     </div>
 
 
-                    <div style={styles.infoCard}>
+                    <div style={getResponsiveStyle("infoCard")}>
 
-                        <div style={styles.infoIcon}>
+                        <div style={getResponsiveStyle("infoIcon")}>
                             📈
                         </div>
 
                         <div>
-                            <span style={styles.infoLabel}>
+                            <span style={getResponsiveStyle("infoLabel")}>
                                 Interest
                             </span>
 
-                            <strong style={styles.infoValue}>
+                            <strong style={getResponsiveStyle("infoValue")}>
                                 Competitive Returns
                             </strong>
                         </div>
@@ -449,18 +470,18 @@ const RecurringDeposit = () => {
                     </div>
 
 
-                    <div style={styles.infoCard}>
+                    <div style={getResponsiveStyle("infoCard")}>
 
-                        <div style={styles.infoIcon}>
+                        <div style={getResponsiveStyle("infoIcon")}>
                             🔒
                         </div>
 
                         <div>
-                            <span style={styles.infoLabel}>
+                            <span style={getResponsiveStyle("infoLabel")}>
                                 Security
                             </span>
 
-                            <strong style={styles.infoValue}>
+                            <strong style={getResponsiveStyle("infoValue")}>
                                 Secure Banking
                             </strong>
                         </div>
@@ -476,25 +497,25 @@ const RecurringDeposit = () => {
 
                 {showCreate && (
 
-                    <div style={styles.overlay}>
+                    <div style={getResponsiveStyle("overlay")}>
 
-                        <div style={styles.modal}>
+                        <div style={getResponsiveStyle("modal")}>
 
                             {/* MODAL HEADER */}
 
-                            <div style={styles.modalHeader}>
+                            <div style={getResponsiveStyle("modalHeader")}>
 
                                 <div>
 
-                                    <div style={styles.modalEyebrow}>
+                                    <div style={getResponsiveStyle("modalEyebrow")}>
                                         NEW INVESTMENT
                                     </div>
 
-                                    <h2 style={styles.modalTitle}>
+                                    <h2 style={getResponsiveStyle("modalTitle")}>
                                         Create Recurring Deposit
                                     </h2>
 
-                                    <p style={styles.modalSubtitle}>
+                                    <p style={getResponsiveStyle("modalSubtitle")}>
                                         Set up your monthly savings plan.
                                     </p>
 
@@ -502,7 +523,7 @@ const RecurringDeposit = () => {
 
                                 <button
                                     type="button"
-                                    style={styles.closeButton}
+                                    style={getResponsiveStyle("closeButton")}
                                     onClick={() =>
                                         setShowCreate(false)
                                     }
@@ -519,9 +540,9 @@ const RecurringDeposit = () => {
 
                                 {/* ACCOUNT */}
 
-                                <div style={styles.formGroup}>
+                                <div style={getResponsiveStyle("formGroup")}>
 
-                                    <label style={styles.label}>
+                                    <label style={getResponsiveStyle("label")}>
                                         Debit Account
                                     </label>
 
@@ -529,7 +550,7 @@ const RecurringDeposit = () => {
                                         name="accountId"
                                         value={form.accountId}
                                         onChange={handleChange}
-                                        style={styles.input}
+                                        style={getResponsiveStyle("input")}
                                         required
                                     >
 
@@ -561,15 +582,15 @@ const RecurringDeposit = () => {
 
                                 {/* MONTHLY INSTALLMENT */}
 
-                                <div style={styles.formGroup}>
+                                <div style={getResponsiveStyle("formGroup")}>
 
-                                    <label style={styles.label}>
+                                    <label style={getResponsiveStyle("label")}>
                                         Monthly Installment
                                     </label>
 
-                                    <div style={styles.inputWrapper}>
+                                    <div style={getResponsiveStyle("inputWrapper")}>
 
-                                        <span style={styles.inputPrefix}>
+                                        <span style={getResponsiveStyle("inputPrefix")}>
                                             ₹
                                         </span>
 
@@ -581,9 +602,7 @@ const RecurringDeposit = () => {
                                                 form.monthlyInstallment
                                             }
                                             onChange={handleChange}
-                                            style={
-                                                styles.inputWithPrefix
-                                            }
+                                            style={getResponsiveStyle("inputWithPrefix")}
                                             min="1"
                                             required
                                         />
@@ -595,13 +614,13 @@ const RecurringDeposit = () => {
 
                                 {/* INTEREST RATE */}
 
-                                <div style={styles.formGroup}>
+                                <div style={getResponsiveStyle("formGroup")}>
 
-                                    <label style={styles.label}>
+                                    <label style={getResponsiveStyle("label")}>
                                         Interest Rate
                                     </label>
 
-                                    <div style={styles.inputWrapper}>
+                                    <div style={getResponsiveStyle("inputWrapper")}>
 
                                         <input
                                             type="number"
@@ -611,15 +630,13 @@ const RecurringDeposit = () => {
                                                 form.interestRate
                                             }
                                             onChange={handleChange}
-                                            style={
-                                                styles.inputWithSuffix
-                                            }
+                                            style={getResponsiveStyle("inputWithSuffix")}
                                             min="0"
                                             step="0.01"
                                             required
                                         />
 
-                                        <span style={styles.inputSuffix}>
+                                        <span style={getResponsiveStyle("inputSuffix")}>
                                             % p.a.
                                         </span>
 
@@ -630,13 +647,13 @@ const RecurringDeposit = () => {
 
                                 {/* TENURE */}
 
-                                <div style={styles.formGroup}>
+                                <div style={getResponsiveStyle("formGroup")}>
 
-                                    <label style={styles.label}>
+                                    <label style={getResponsiveStyle("label")}>
                                         Tenure
                                     </label>
 
-                                    <div style={styles.inputWrapper}>
+                                    <div style={getResponsiveStyle("inputWrapper")}>
 
                                         <input
                                             type="number"
@@ -646,14 +663,12 @@ const RecurringDeposit = () => {
                                                 form.tenureMonths
                                             }
                                             onChange={handleChange}
-                                            style={
-                                                styles.inputWithSuffix
-                                            }
+                                            style={getResponsiveStyle("inputWithSuffix")}
                                             min="1"
                                             required
                                         />
 
-                                        <span style={styles.inputSuffix}>
+                                        <span style={getResponsiveStyle("inputSuffix")}>
                                             Months
                                         </span>
 
@@ -664,11 +679,11 @@ const RecurringDeposit = () => {
 
                                 {/* FORM ACTIONS */}
 
-                                <div style={styles.formButtons}>
+                                <div style={getResponsiveStyle("formButtons")}>
 
                                     <button
                                         type="button"
-                                        style={styles.cancelButton}
+                                        style={getResponsiveStyle("cancelButton")}
                                         onClick={() =>
                                             setShowCreate(false)
                                         }
@@ -706,23 +721,23 @@ const RecurringDeposit = () => {
                     RD LIST
                 ================================================= */}
 
-                <section style={styles.listSection}>
+                <section style={getResponsiveStyle("listSection")}>
 
-                    <div style={styles.sectionHeader}>
+                    <div style={getResponsiveStyle("sectionHeader")}>
 
                         <div>
 
-                            <div style={styles.sectionEyebrow}>
+                            <div style={getResponsiveStyle("sectionEyebrow")}>
                                 YOUR INVESTMENTS
                             </div>
 
-                            <h2 style={styles.sectionTitle}>
+                            <h2 style={getResponsiveStyle("sectionTitle")}>
                                 My Recurring Deposits
                             </h2>
 
                         </div>
 
-                        <span style={styles.rdCount}>
+                        <span style={getResponsiveStyle("rdCount")}>
                             {rds.length} RD
                             {rds.length !== 1 ? "s" : ""}
                         </span>
@@ -734,16 +749,16 @@ const RecurringDeposit = () => {
 
                     {loading && rds.length === 0 ? (
 
-                        <div style={styles.empty}>
-                            <div style={styles.loadingIcon}>
+                        <div style={getResponsiveStyle("empty")}>
+                            <div style={getResponsiveStyle("loadingIcon")}>
                                 ⏳
                             </div>
 
-                            <h3 style={styles.emptyTitle}>
+                            <h3 style={getResponsiveStyle("emptyTitle")}>
                                 Loading recurring deposits...
                             </h3>
 
-                            <p style={styles.emptyText}>
+                            <p style={getResponsiveStyle("emptyText")}>
                                 Please wait while we fetch
                                 your investment details.
                             </p>
@@ -753,24 +768,24 @@ const RecurringDeposit = () => {
 
                         /* EMPTY */
 
-                        <div style={styles.empty}>
+                        <div style={getResponsiveStyle("empty")}>
 
-                            <div style={styles.emptyIcon}>
+                            <div style={getResponsiveStyle("emptyIcon")}>
                                 💰
                             </div>
 
-                            <h3 style={styles.emptyTitle}>
+                            <h3 style={getResponsiveStyle("emptyTitle")}>
                                 No Recurring Deposit
                             </h3>
 
-                            <p style={styles.emptyText}>
+                            <p style={getResponsiveStyle("emptyText")}>
                                 Start saving monthly to
                                 build your future.
                             </p>
 
                             <button
                                 type="button"
-                                style={styles.emptyCreateButton}
+                                style={getResponsiveStyle("emptyCreateButton")}
                                 onClick={() =>
                                     setShowCreate(true)
                                 }
@@ -784,29 +799,25 @@ const RecurringDeposit = () => {
 
                         /* RD CARDS */
 
-                        <div style={styles.cardsContainer}>
+                        <div style={getResponsiveStyle("cardsContainer")}>
 
                             {rds.map((rd) => (
 
                                 <div
                                     key={rd.id}
-                                    style={styles.card}
+                                    style={getResponsiveStyle("card")}
                                 >
 
                                     {/* CARD TOP */}
 
-                                    <div style={styles.cardHeader}>
+                                    <div style={getResponsiveStyle("cardHeader")}>
 
                                         <div
-                                            style={
-                                                styles.cardHeaderLeft
-                                            }
+                                            style={getResponsiveStyle("cardHeaderLeft")}
                                         >
 
                                             <div
-                                                style={
-                                                    styles.rdIcon
-                                                }
+                                                style={getResponsiveStyle("rdIcon")}
                                             >
                                                 💰
                                             </div>
@@ -814,9 +825,7 @@ const RecurringDeposit = () => {
                                             <div>
 
                                                 <h3
-                                                    style={
-                                                        styles.cardTitle
-                                                    }
+                                                    style={getResponsiveStyle("cardTitle")}
                                                 >
                                                     Recurring Deposit
                                                     {" #"}
@@ -848,9 +857,7 @@ const RecurringDeposit = () => {
 
                                             <button
                                                 type="button"
-                                                style={
-                                                    styles.closeRDButton
-                                                }
+                                                style={getResponsiveStyle("closeRDButton")}
                                                 onClick={() =>
                                                     closeRD(
                                                         rd.id
@@ -867,7 +874,7 @@ const RecurringDeposit = () => {
 
                                     {/* ACCOUNT */}
 
-                                    <div style={styles.accountInfo}>
+                                    <div style={getResponsiveStyle("accountInfo")}>
 
                                         <span>
                                             Debit Account
@@ -884,29 +891,21 @@ const RecurringDeposit = () => {
                                     {/* DETAILS */}
 
                                     <div
-                                        style={
-                                            styles.detailsGrid
-                                        }
+                                        style={getResponsiveStyle("detailsGrid")}
                                     >
 
                                         <div
-                                            style={
-                                                styles.detailBox
-                                            }
+                                            style={getResponsiveStyle("detailBox")}
                                         >
 
                                             <span
-                                                style={
-                                                    styles.detailLabel
-                                                }
+                                                style={getResponsiveStyle("detailLabel")}
                                             >
                                                 Monthly Installment
                                             </span>
 
                                             <strong
-                                                style={
-                                                    styles.detailValue
-                                                }
+                                                style={getResponsiveStyle("detailValue")}
                                             >
                                                 {formatMoney(
                                                     rd.monthlyInstallment
@@ -917,23 +916,17 @@ const RecurringDeposit = () => {
 
 
                                         <div
-                                            style={
-                                                styles.detailBox
-                                            }
+                                            style={getResponsiveStyle("detailBox")}
                                         >
 
                                             <span
-                                                style={
-                                                    styles.detailLabel
-                                                }
+                                                style={getResponsiveStyle("detailLabel")}
                                             >
                                                 Interest Rate
                                             </span>
 
                                             <strong
-                                                style={
-                                                    styles.detailValue
-                                                }
+                                                style={getResponsiveStyle("detailValue")}
                                             >
                                                 {rd.interestRate}%
                                             </strong>
@@ -942,23 +935,17 @@ const RecurringDeposit = () => {
 
 
                                         <div
-                                            style={
-                                                styles.detailBox
-                                            }
+                                            style={getResponsiveStyle("detailBox")}
                                         >
 
                                             <span
-                                                style={
-                                                    styles.detailLabel
-                                                }
+                                                style={getResponsiveStyle("detailLabel")}
                                             >
                                                 Tenure
                                             </span>
 
                                             <strong
-                                                style={
-                                                    styles.detailValue
-                                                }
+                                                style={getResponsiveStyle("detailValue")}
                                             >
                                                 {rd.tenureMonths}
                                                 {" Months"}
@@ -968,23 +955,17 @@ const RecurringDeposit = () => {
 
 
                                         <div
-                                            style={
-                                                styles.detailBox
-                                            }
+                                            style={getResponsiveStyle("detailBox")}
                                         >
 
                                             <span
-                                                style={
-                                                    styles.detailLabel
-                                                }
+                                                style={getResponsiveStyle("detailLabel")}
                                             >
                                                 Installments Paid
                                             </span>
 
                                             <strong
-                                                style={
-                                                    styles.detailValue
-                                                }
+                                                style={getResponsiveStyle("detailValue")}
                                             >
                                                 {rd.installmentsPaid}
                                                 {" / "}
@@ -999,15 +980,11 @@ const RecurringDeposit = () => {
                                     {/* PROGRESS */}
 
                                     <div
-                                        style={
-                                            styles.progressSection
-                                        }
+                                        style={getResponsiveStyle("progressSection")}
                                     >
 
                                         <div
-                                            style={
-                                                styles.progressTop
-                                            }
+                                            style={getResponsiveStyle("progressTop")}
                                         >
 
                                             <span>
@@ -1031,9 +1008,7 @@ const RecurringDeposit = () => {
 
 
                                         <div
-                                            style={
-                                                styles.progressBackground
-                                            }
+                                            style={getResponsiveStyle("progressBackground")}
                                         >
 
                                             <div
@@ -1057,25 +1032,19 @@ const RecurringDeposit = () => {
                                     {/* AMOUNTS */}
 
                                     <div
-                                        style={
-                                            styles.amountSection
-                                        }
+                                        style={getResponsiveStyle("amountSection")}
                                     >
 
                                         <div>
 
                                             <span
-                                                style={
-                                                    styles.detailLabel
-                                                }
+                                                style={getResponsiveStyle("detailLabel")}
                                             >
                                                 Total Deposited
                                             </span>
 
                                             <strong
-                                                style={
-                                                    styles.amount
-                                                }
+                                                style={getResponsiveStyle("amount")}
                                             >
                                                 {formatMoney(
                                                     rd.totalDeposited
@@ -1086,23 +1055,17 @@ const RecurringDeposit = () => {
 
 
                                         <div
-                                            style={
-                                                styles.amountRight
-                                            }
+                                            style={getResponsiveStyle("amountRight")}
                                         >
 
                                             <span
-                                                style={
-                                                    styles.detailLabel
-                                                }
+                                                style={getResponsiveStyle("detailLabel")}
                                             >
                                                 Expected Maturity
                                             </span>
 
                                             <strong
-                                                style={
-                                                    styles.maturity
-                                                }
+                                                style={getResponsiveStyle("maturity")}
                                             >
                                                 {formatMoney(
                                                     rd.maturityAmount
@@ -1117,9 +1080,7 @@ const RecurringDeposit = () => {
                                     {/* DATES */}
 
                                     <div
-                                        style={
-                                            styles.dateSection
-                                        }
+                                        style={getResponsiveStyle("dateSection")}
                                     >
 
                                         <div>
@@ -1177,7 +1138,7 @@ const RecurringDeposit = () => {
                 FOOTER
             ================================================= */}
 
-            <footer style={styles.footer}>
+            <footer style={getResponsiveStyle("footer")}>
 
                 <span>
                     © 2026 Avani Bank
@@ -1197,6 +1158,161 @@ const RecurringDeposit = () => {
 // =====================================================
 // STYLES
 // =====================================================
+
+const responsiveStyles = {
+    page: {
+        width: "100%",
+        overflowX: "hidden",
+    },
+    header: {
+        minHeight: "auto",
+        padding: "16px",
+        flexDirection: "column",
+        alignItems: "stretch",
+        gap: "12px",
+    },
+    headerLeft: {
+        width: "100%",
+    },
+    backButton: {
+        width: "100%",
+        justifyContent: "center",
+        padding: "11px 14px",
+    },
+    main: {
+        padding: "22px 14px 35px",
+    },
+    heroSection: {
+        flexDirection: "column",
+        alignItems: "stretch",
+        gap: "16px",
+        marginBottom: "22px",
+    },
+    pageTitle: {
+        fontSize: "25px",
+    },
+    pageSubtitle: {
+        fontSize: "12px",
+    },
+    createButton: {
+        width: "100%",
+        justifyContent: "center",
+        padding: "12px 16px",
+    },
+    infoGrid: {
+        gridTemplateColumns: "1fr",
+        gap: "12px",
+        marginBottom: "24px",
+    },
+    infoCard: {
+        padding: "15px",
+    },
+    listSection: {
+        width: "100%",
+    },
+    sectionHeader: {
+        alignItems: "flex-start",
+        flexDirection: "column",
+        gap: "10px",
+    },
+    sectionTitle: {
+        fontSize: "18px",
+    },
+    rdCount: {
+        alignSelf: "flex-start",
+    },
+    card: {
+        padding: "16px",
+        borderRadius: "13px",
+    },
+    cardHeader: {
+        flexDirection: "column",
+        alignItems: "stretch",
+        gap: "12px",
+    },
+    cardHeaderLeft: {
+        width: "100%",
+    },
+    cardTitle: {
+        fontSize: "15px",
+    },
+    closeRDButton: {
+        width: "100%",
+        padding: "10px 12px",
+    },
+    accountInfo: {
+        alignItems: "flex-start",
+        flexDirection: "column",
+        gap: "5px",
+    },
+    detailsGrid: {
+        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+        gap: "9px",
+    },
+    detailBox: {
+        padding: "11px",
+    },
+    detailValue: {
+        fontSize: "13px",
+    },
+    amountSection: {
+        flexDirection: "column",
+        alignItems: "stretch",
+        gap: "14px",
+    },
+    amountRight: {
+        textAlign: "left",
+    },
+    amount: {
+        fontSize: "17px",
+    },
+    maturity: {
+        fontSize: "17px",
+    },
+    dateSection: {
+        gridTemplateColumns: "1fr",
+        gap: "10px",
+    },
+    empty: {
+        padding: "45px 18px",
+    },
+    overlay: {
+        alignItems: "flex-start",
+        padding: "12px",
+        overflowY: "auto",
+    },
+    modal: {
+        maxHeight: "calc(100vh - 24px)",
+        padding: "20px 16px",
+        borderRadius: "14px",
+        margin: "0",
+    },
+    modalHeader: {
+        gap: "10px",
+        marginBottom: "20px",
+    },
+    modalTitle: {
+        fontSize: "19px",
+    },
+    formButtons: {
+        flexDirection: "column-reverse",
+        gap: "9px",
+    },
+    cancelButton: {
+        width: "100%",
+    },
+    submitButton: {
+        width: "100%",
+    },
+    footer: {
+        minHeight: "auto",
+        flexDirection: "column",
+        justifyContent: "center",
+        gap: "6px",
+        padding: "14px 16px",
+        textAlign: "center",
+    },
+};
 
 const styles = {
 

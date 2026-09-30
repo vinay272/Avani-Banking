@@ -4,6 +4,26 @@ import { useNavigate } from "react-router-dom";
 function InterestCalculation() {
   const navigate = useNavigate();
 
+  // Responsive layout state
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 700 : false
+  );
+  const [isTablet, setIsTablet] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 1000 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 700);
+      setIsTablet(window.innerWidth <= 1000);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [account, setAccount] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -107,44 +127,266 @@ function InterestCalculation() {
     setError("");
   };
 
+  // =========================
+  // RESPONSIVE STYLES
+  // =========================
+  const responsiveStyles = {
+    ...styles,
+    header: {
+      ...styles.header,
+      ...(isTablet ? { padding: "14px 4%", gap: "12px" } : {}),
+      ...(isMobile ? {
+        flexDirection: "column",
+        alignItems: "stretch",
+        padding: "14px 16px",
+        gap: "12px",
+      } : {}),
+    },
+    brandArea: {
+      ...styles.brandArea,
+      ...(isMobile ? { justifyContent: "center" } : {}),
+    },
+    headerButton: {
+      ...styles.headerButton,
+      ...(isMobile ? {
+        width: "100%",
+        textAlign: "center",
+        boxSizing: "border-box",
+        padding: "11px 14px",
+      } : {}),
+    },
+    container: {
+      ...styles.container,
+      ...(isTablet ? { padding: "35px 20px 50px" } : {}),
+      ...(isMobile ? { padding: "28px 14px 40px" } : {}),
+    },
+    pageHeading: {
+      ...styles.pageHeading,
+      ...(isMobile ? { marginBottom: "22px" } : {}),
+    },
+    title: {
+      ...styles.title,
+      ...(isTablet ? { fontSize: "30px" } : {}),
+      ...(isMobile ? { fontSize: "25px", letterSpacing: "-0.5px" } : {}),
+    },
+    subtitle: {
+      ...styles.subtitle,
+      ...(isMobile ? { fontSize: "12px", lineHeight: "1.5" } : {}),
+    },
+    errorBox: {
+      ...styles.errorBox,
+      ...(isMobile ? { padding: "12px 14px", fontSize: "12px" } : {}),
+    },
+    accountCard: {
+      ...styles.accountCard,
+      ...(isTablet ? { padding: "17px" } : {}),
+      ...(isMobile ? {
+        flexDirection: "column",
+        alignItems: "stretch",
+        gap: "14px",
+        padding: "16px",
+      } : {}),
+    },
+    accountLeft: {
+      ...styles.accountLeft,
+      ...(isMobile ? { alignItems: "flex-start" } : {}),
+    },
+    accountNumber: {
+      ...styles.accountNumber,
+      ...(isMobile ? { fontSize: "14px", overflowWrap: "anywhere" } : {}),
+    },
+    rateBox: {
+      ...styles.rateBox,
+      ...(isMobile ? {
+        width: "100%",
+        minWidth: 0,
+        boxSizing: "border-box",
+        textAlign: "left",
+      } : {}),
+    },
+    calculatorCard: {
+      ...styles.calculatorCard,
+      ...(isTablet ? { padding: "20px" } : {}),
+      ...(isMobile ? { padding: "17px" } : {}),
+    },
+    cardHeader: {
+      ...styles.cardHeader,
+      ...(isMobile ? { alignItems: "flex-start", gap: "12px" } : {}),
+    },
+    cardTitle: {
+      ...styles.cardTitle,
+      ...(isMobile ? { fontSize: "17px" } : {}),
+    },
+    percentIcon: {
+      ...styles.percentIcon,
+      ...(isMobile ? {
+        width: "38px",
+        height: "38px",
+        minWidth: "38px",
+        fontSize: "18px",
+      } : {}),
+    },
+    formGrid: {
+      ...styles.formGrid,
+      ...(isTablet ? { gridTemplateColumns: "1fr" } : {}),
+    },
+    input: {
+      ...styles.input,
+      ...(isMobile ? { fontSize: "13px" } : {}),
+    },
+    readOnlyInput: {
+      ...styles.readOnlyInput,
+      ...(isMobile ? { fontSize: "13px" } : {}),
+    },
+    buttonRow: {
+      ...styles.buttonRow,
+      ...(isMobile ? { flexDirection: "column", gap: "9px" } : {}),
+    },
+    calculateButton: {
+      ...styles.calculateButton,
+      ...(isMobile ? { width: "100%", padding: "13px 16px" } : {}),
+    },
+    resetButton: {
+      ...styles.resetButton,
+      ...(isMobile ? { width: "100%", padding: "13px 16px" } : {}),
+    },
+    resultCard: {
+      ...styles.resultCard,
+      ...(isMobile ? { padding: "17px" } : {}),
+    },
+    resultHeader: {
+      ...styles.resultHeader,
+      ...(isMobile ? { alignItems: "flex-start", gap: "12px" } : {}),
+    },
+    resultTitle: {
+      ...styles.resultTitle,
+      ...(isMobile ? { fontSize: "17px" } : {}),
+    },
+    resultIcon: {
+      ...styles.resultIcon,
+      ...(isMobile ? {
+        width: "38px",
+        height: "38px",
+        minWidth: "38px",
+        fontSize: "17px",
+      } : {}),
+    },
+    resultGrid: {
+      ...styles.resultGrid,
+      ...(isTablet ? { gridTemplateColumns: "repeat(2, minmax(0, 1fr))" } : {}),
+      ...(isMobile ? { gridTemplateColumns: "1fr" } : {}),
+    },
+    resultItem: {
+      ...styles.resultItem,
+      ...(isMobile ? { padding: "12px" } : {}),
+    },
+    resultItemHighlight: {
+      ...styles.resultItemHighlight,
+      ...(isMobile ? { padding: "12px" } : {}),
+    },
+    totalBox: {
+      ...styles.totalBox,
+      ...(isMobile ? {
+        flexDirection: "column",
+        alignItems: "flex-start",
+        gap: "8px",
+        padding: "14px",
+      } : {}),
+    },
+    totalAmount: {
+      ...styles.totalAmount,
+      ...(isMobile ? { fontSize: "19px", overflowWrap: "anywhere" } : {}),
+    },
+    infoCard: {
+      ...styles.infoCard,
+      ...(isMobile ? {
+        alignItems: "flex-start",
+        padding: "15px",
+        gap: "10px",
+      } : {}),
+    },
+    infoIcon: {
+      ...styles.infoIcon,
+      ...(isMobile ? { width: "36px", height: "36px", minWidth: "36px" } : {}),
+    },
+    footer: {
+      ...styles.footer,
+      ...(isMobile ? {
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+        padding: "16px",
+      } : {}),
+    },
+    loadingPage: {
+      ...styles.loadingPage,
+      padding: isMobile ? "16px" : "20px",
+      boxSizing: "border-box",
+    },
+    loadingCard: {
+      ...styles.loadingCard,
+      width: isMobile ? "100%" : "auto",
+      maxWidth: isMobile ? "360px" : "none",
+      boxSizing: "border-box",
+      padding: isMobile ? "28px 20px" : styles.loadingCard.padding,
+    },
+    loadingTitle: {
+      ...styles.loadingTitle,
+      ...(isMobile ? { fontSize: "17px" } : {}),
+    },
+  };
+
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.loadingCard}>
-          <div style={styles.loadingIcon}>%</div>
+      <div style={responsiveStyles.loadingPage}>
+        <div style={responsiveStyles.loadingCard}>
+          <div style={responsiveStyles.loadingIcon}>%</div>
 
-          <h2 style={styles.loadingTitle}>
+          <h2 style={responsiveStyles.loadingTitle}>
             Loading interest details
           </h2>
 
-          <p style={styles.loadingText}>
+          <p style={responsiveStyles.loadingText}>
             Please wait while we fetch your account information...
           </p>
 
-          <div style={styles.loader}></div>
+          <div style={responsiveStyles.loader}></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={styles.page}>
+    <div style={responsiveStyles.page}>
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+
+        input, select, button {
+          max-width: 100%;
+        }
+
+        input, select {
+          min-width: 0;
+        }
+      `}</style>
 
       {/* ================= HEADER ================= */}
 
-      <header style={styles.header}>
-        <div style={styles.brandArea}>
+      <header style={responsiveStyles.header}>
+        <div style={responsiveStyles.brandArea}>
 
-          <div style={styles.brandIcon}>
+          <div style={responsiveStyles.brandIcon}>
             %
           </div>
 
           <div>
-            <div style={styles.brandName}>
+            <div style={responsiveStyles.brandName}>
               AVANI BANK
             </div>
 
-            <div style={styles.brandSubtitle}>
+            <div style={responsiveStyles.brandSubtitle}>
               Interest Calculation
             </div>
           </div>
@@ -152,7 +394,7 @@ function InterestCalculation() {
         </div>
 
         <button
-          style={styles.headerButton}
+          style={responsiveStyles.headerButton}
           onClick={() => navigate("/accounts")}
         >
           ← Account Management
@@ -161,26 +403,26 @@ function InterestCalculation() {
 
       {/* ================= MAIN ================= */}
 
-      <main style={styles.container}>
+      <main style={responsiveStyles.container}>
 
-        <section style={styles.pageHeading}>
+        <section style={responsiveStyles.pageHeading}>
 
-          <p style={styles.eyebrow}>
+          <p style={responsiveStyles.eyebrow}>
             ACCOUNT SERVICES
           </p>
 
-          <h1 style={styles.title}>
+          <h1 style={responsiveStyles.title}>
             Interest Calculation
           </h1>
 
-          <p style={styles.subtitle}>
+          <p style={responsiveStyles.subtitle}>
             Calculate the estimated interest on your account balance.
           </p>
 
         </section>
 
         {error && (
-          <div style={styles.errorBox}>
+          <div style={responsiveStyles.errorBox}>
             ⚠️ {error}
           </div>
         )}
@@ -189,41 +431,41 @@ function InterestCalculation() {
           <>
             {/* ================= ACCOUNT SUMMARY ================= */}
 
-            <section style={styles.accountCard}>
+            <section style={responsiveStyles.accountCard}>
 
-              <div style={styles.accountLeft}>
+              <div style={responsiveStyles.accountLeft}>
 
-                <div style={styles.accountIcon}>
+                <div style={responsiveStyles.accountIcon}>
                   🏦
                 </div>
 
                 <div>
-                  <p style={styles.label}>
+                  <p style={responsiveStyles.label}>
                     ACCOUNT NUMBER
                   </p>
 
-                  <p style={styles.accountNumber}>
+                  <p style={responsiveStyles.accountNumber}>
                     {account.accountNumber || "N/A"}
                   </p>
 
-                  <p style={styles.accountType}>
+                  <p style={responsiveStyles.accountType}>
                     {account.accountType || "N/A"} Account
                   </p>
                 </div>
 
               </div>
 
-              <div style={styles.rateBox}>
+              <div style={responsiveStyles.rateBox}>
 
-                <p style={styles.rateLabel}>
+                <p style={responsiveStyles.rateLabel}>
                   CURRENT INTEREST RATE
                 </p>
 
-                <p style={styles.rate}>
+                <p style={responsiveStyles.rate}>
                   {account.interestRate || 0}%
                 </p>
 
-                <p style={styles.rateNote}>
+                <p style={responsiveStyles.rateNote}>
                   Per annum
                 </p>
 
@@ -233,33 +475,33 @@ function InterestCalculation() {
 
             {/* ================= CALCULATOR ================= */}
 
-            <section style={styles.calculatorCard}>
+            <section style={responsiveStyles.calculatorCard}>
 
-              <div style={styles.cardHeader}>
+              <div style={responsiveStyles.cardHeader}>
 
                 <div>
-                  <p style={styles.sectionEyebrow}>
+                  <p style={responsiveStyles.sectionEyebrow}>
                     INTEREST CALCULATOR
                   </p>
 
-                  <h2 style={styles.cardTitle}>
+                  <h2 style={responsiveStyles.cardTitle}>
                     Calculate Your Interest
                   </h2>
                 </div>
 
-                <div style={styles.percentIcon}>
+                <div style={responsiveStyles.percentIcon}>
                   %
                 </div>
 
               </div>
 
-              <div style={styles.formGrid}>
+              <div style={responsiveStyles.formGrid}>
 
                 {/* AMOUNT */}
 
-                <div style={styles.fieldGroup}>
+                <div style={responsiveStyles.fieldGroup}>
 
-                  <label style={styles.fieldLabel}>
+                  <label style={responsiveStyles.fieldLabel}>
                     PRINCIPAL AMOUNT (₹)
                   </label>
 
@@ -268,10 +510,10 @@ function InterestCalculation() {
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder="Enter amount"
-                    style={styles.input}
+                    style={responsiveStyles.input}
                   />
 
-                  <p style={styles.helperText}>
+                  <p style={responsiveStyles.helperText}>
                     Current balance: ₹
                     {formatCurrency(account.balance)}
                   </p>
@@ -280,20 +522,20 @@ function InterestCalculation() {
 
                 {/* RATE */}
 
-                <div style={styles.fieldGroup}>
+                <div style={responsiveStyles.fieldGroup}>
 
-                  <label style={styles.fieldLabel}>
+                  <label style={responsiveStyles.fieldLabel}>
                     INTEREST RATE
                   </label>
 
-                  <div style={styles.readOnlyInput}>
+                  <div style={responsiveStyles.readOnlyInput}>
                     {account.interestRate || 0}%
-                    <span style={styles.inputSuffix}>
+                    <span style={responsiveStyles.inputSuffix}>
                       p.a.
                     </span>
                   </div>
 
-                  <p style={styles.helperText}>
+                  <p style={responsiveStyles.helperText}>
                     Based on your account type
                   </p>
 
@@ -301,16 +543,16 @@ function InterestCalculation() {
 
                 {/* PERIOD */}
 
-                <div style={styles.fieldGroup}>
+                <div style={responsiveStyles.fieldGroup}>
 
-                  <label style={styles.fieldLabel}>
+                  <label style={responsiveStyles.fieldLabel}>
                     TIME PERIOD
                   </label>
 
                   <select
                     value={months}
                     onChange={(e) => setMonths(e.target.value)}
-                    style={styles.input}
+                    style={responsiveStyles.input}
                   >
                     <option value="3">3 Months</option>
                     <option value="6">6 Months</option>
@@ -319,7 +561,7 @@ function InterestCalculation() {
                     <option value="36">36 Months</option>
                   </select>
 
-                  <p style={styles.helperText}>
+                  <p style={responsiveStyles.helperText}>
                     Select calculation period
                   </p>
 
@@ -329,17 +571,17 @@ function InterestCalculation() {
 
               {/* ================= BUTTONS ================= */}
 
-              <div style={styles.buttonRow}>
+              <div style={responsiveStyles.buttonRow}>
 
                 <button
-                  style={styles.calculateButton}
+                  style={responsiveStyles.calculateButton}
                   onClick={calculateInterest}
                 >
                   Calculate Interest
                 </button>
 
                 <button
-                  style={styles.resetButton}
+                  style={responsiveStyles.resetButton}
                   onClick={resetCalculation}
                 >
                   Reset
@@ -352,34 +594,34 @@ function InterestCalculation() {
             {/* ================= RESULT ================= */}
 
             {calculatedInterest && (
-              <section style={styles.resultCard}>
+              <section style={responsiveStyles.resultCard}>
 
-                <div style={styles.resultHeader}>
+                <div style={responsiveStyles.resultHeader}>
 
                   <div>
-                    <p style={styles.resultEyebrow}>
+                    <p style={responsiveStyles.resultEyebrow}>
                       CALCULATION RESULT
                     </p>
 
-                    <h2 style={styles.resultTitle}>
+                    <h2 style={responsiveStyles.resultTitle}>
                       Estimated Interest
                     </h2>
                   </div>
 
-                  <div style={styles.resultIcon}>
+                  <div style={responsiveStyles.resultIcon}>
                     ₹
                   </div>
 
                 </div>
 
-                <div style={styles.resultGrid}>
+                <div style={responsiveStyles.resultGrid}>
 
-                  <div style={styles.resultItem}>
-                    <p style={styles.resultLabel}>
+                  <div style={responsiveStyles.resultItem}>
+                    <p style={responsiveStyles.resultLabel}>
                       PRINCIPAL
                     </p>
 
-                    <p style={styles.resultValue}>
+                    <p style={responsiveStyles.resultValue}>
                       ₹
                       {formatCurrency(
                         calculatedInterest.principal
@@ -387,32 +629,32 @@ function InterestCalculation() {
                     </p>
                   </div>
 
-                  <div style={styles.resultItem}>
-                    <p style={styles.resultLabel}>
+                  <div style={responsiveStyles.resultItem}>
+                    <p style={responsiveStyles.resultLabel}>
                       RATE
                     </p>
 
-                    <p style={styles.resultValue}>
+                    <p style={responsiveStyles.resultValue}>
                       {calculatedInterest.rate}%
                     </p>
                   </div>
 
-                  <div style={styles.resultItem}>
-                    <p style={styles.resultLabel}>
+                  <div style={responsiveStyles.resultItem}>
+                    <p style={responsiveStyles.resultLabel}>
                       PERIOD
                     </p>
 
-                    <p style={styles.resultValue}>
+                    <p style={responsiveStyles.resultValue}>
                       {months} Months
                     </p>
                   </div>
 
-                  <div style={styles.resultItemHighlight}>
-                    <p style={styles.resultLabelGreen}>
+                  <div style={responsiveStyles.resultItemHighlight}>
+                    <p style={responsiveStyles.resultLabelGreen}>
                       ESTIMATED INTEREST
                     </p>
 
-                    <p style={styles.interestValue}>
+                    <p style={responsiveStyles.interestValue}>
                       ₹
                       {formatCurrency(
                         calculatedInterest.interest
@@ -422,19 +664,19 @@ function InterestCalculation() {
 
                 </div>
 
-                <div style={styles.totalBox}>
+                <div style={responsiveStyles.totalBox}>
 
                   <div>
-                    <p style={styles.totalLabel}>
+                    <p style={responsiveStyles.totalLabel}>
                       ESTIMATED TOTAL AMOUNT
                     </p>
 
-                    <p style={styles.totalNote}>
+                    <p style={responsiveStyles.totalNote}>
                       Principal + estimated interest
                     </p>
                   </div>
 
-                  <p style={styles.totalAmount}>
+                  <p style={responsiveStyles.totalAmount}>
                     ₹
                     {formatCurrency(
                       calculatedInterest.totalAmount
@@ -448,19 +690,19 @@ function InterestCalculation() {
 
             {/* ================= INFORMATION ================= */}
 
-            <section style={styles.infoCard}>
+            <section style={responsiveStyles.infoCard}>
 
-              <div style={styles.infoIcon}>
+              <div style={responsiveStyles.infoIcon}>
                 ℹ
               </div>
 
               <div>
 
-                <h3 style={styles.infoTitle}>
+                <h3 style={responsiveStyles.infoTitle}>
                   Interest Calculation
                 </h3>
 
-                <p style={styles.infoText}>
+                <p style={responsiveStyles.infoText}>
                   This calculator provides an estimated interest
                   amount using simple interest based on your
                   account's applicable interest rate.
@@ -476,7 +718,7 @@ function InterestCalculation() {
 
       {/* ================= FOOTER ================= */}
 
-      <footer style={styles.footer}>
+      <footer style={responsiveStyles.footer}>
         <div>
           © {new Date().getFullYear()} Avani Bank
         </div>

@@ -10,6 +10,13 @@ function Notifications() {
   const [actionLoading, setActionLoading] = useState(null);
   const [clearConfirm, setClearConfirm] = useState(false);
   const [error, setError] = useState("");
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 700);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 700);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const token = localStorage.getItem("token");
 
@@ -317,19 +324,19 @@ function Notifications() {
   }
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, ...(isMobile ? styles.mobilePage : {}) }}>
       {/* ================= HEADER ================= */}
 
-      <header style={styles.header}>
-        <div style={styles.headerLeft}>
-          <div style={styles.headerIcon}>🔔</div>
+      <header style={{ ...styles.header, ...(isMobile ? styles.mobileHeader : {}) }}>
+        <div style={{ ...styles.headerLeft, ...(isMobile ? styles.mobileHeaderLeft : {}) }}>
+          <div style={{ ...styles.headerIcon, ...(isMobile ? styles.mobileHeaderIcon : {}) }}>🔔</div>
 
           <div>
             <div style={styles.headerBrand}>AVANI BANK • DIGITAL BANKING</div>
 
-            <h1 style={styles.headerTitle}>Notifications</h1>
+            <h1 style={{ ...styles.headerTitle, ...(isMobile ? styles.mobileHeaderTitle : {}) }}>Notifications</h1>
 
-            <p style={styles.headerSubtitle}>
+            <p style={{ ...styles.headerSubtitle, ...(isMobile ? styles.mobileHeaderSubtitle : {}) }}>
               Stay updated with important banking alerts, transactions and
               security notifications.
             </p>
@@ -338,7 +345,7 @@ function Notifications() {
 
         <button
           type="button"
-          style={styles.backButton}
+          style={{ ...styles.backButton, ...(isMobile ? styles.mobileBackButton : {}) }}
           onClick={() => navigate("/dashboard")}
         >
           ← Dashboard
@@ -347,12 +354,12 @@ function Notifications() {
 
       {/* ================= MAIN ================= */}
 
-      <main style={styles.container}>
+      <main style={{ ...styles.container, ...(isMobile ? styles.mobileContainer : {}) }}>
         {error && <div style={styles.errorBox}>⚠️ {error}</div>}
 
         {/* ================= SUMMARY ================= */}
 
-        <section style={styles.summaryGrid}>
+        <section style={{ ...styles.summaryGrid, ...(isMobile ? styles.mobileSummaryGrid : {}) }}>
           <div style={styles.summaryCard}>
             <div
               style={{
@@ -418,7 +425,7 @@ function Notifications() {
 
         {/* ================= CONTROLS ================= */}
 
-        <section style={styles.section}>
+        <section style={{ ...styles.section, ...(isMobile ? styles.mobileSection : {}) }}>
           <div style={styles.sectionHeader}>
             <div>
               <p style={styles.sectionEyebrow}>ALERT CENTER</p>
@@ -510,7 +517,7 @@ function Notifications() {
 
         {/* ================= NOTIFICATIONS ================= */}
 
-        <section style={styles.notificationList}>
+        <section style={{ ...styles.notificationList, ...(isMobile ? styles.mobileNotificationList : {}) }}>
           {filteredNotifications.length === 0 ? (
             <div style={styles.emptyCard}>
               <div style={styles.emptyIcon}>
@@ -553,7 +560,7 @@ function Notifications() {
                   </div>
 
                   <div style={styles.notificationContent}>
-                    <div style={styles.notificationTop}>
+                    <div style={{ ...styles.notificationTop, ...(isMobile ? styles.mobileNotificationTop : {}) }}>
                       <div>
                         <span style={styles.notificationType}>
                           {formatType(notification.notificationType)}
@@ -569,16 +576,16 @@ function Notifications() {
                       </span>
                     </div>
 
-                    <h3 style={styles.notificationTitle}>
+                    <h3 style={{ ...styles.notificationTitle, ...(isMobile ? styles.mobileNotificationTitle : {}) }}>
                       {notification.title || "Avani Bank Notification"}
                     </h3>
 
-                    <p style={styles.notificationMessage}>
+                    <p style={{ ...styles.notificationMessage, ...(isMobile ? styles.mobileNotificationMessage : {}) }}>
                       {notification.message ||
                         "You have a new notification from Avani Bank."}
                     </p>
 
-                    <div style={styles.notificationBottom}>
+                    <div style={{ ...styles.notificationBottom, ...(isMobile ? styles.mobileNotificationBottom : {}) }}>
                       <span style={styles.notificationDate}>
                         {formatDate(notification.createdAt)}
 
@@ -725,7 +732,7 @@ function Notifications() {
       )}
       {/* ================= FOOTER ================= */}
 
-      <footer style={styles.footer}>
+      <footer style={{ ...styles.footer, ...(isMobile ? styles.mobileFooter : {}) }}>
         <div>© {new Date().getFullYear()} Avani Bank</div>
 
         <div>Secure • Reliable • Digital Banking</div>
@@ -1182,6 +1189,122 @@ const styles = {
     fontSize: "10px",
     fontWeight: "700",
   },
+
+  // Responsive overrides
+  mobilePage: {
+    padding: "12px",
+    overflowX: "hidden",
+  },
+
+  mobileHeader: {
+    maxHeight: "none",
+    padding: "18px 16px",
+    borderRadius: "14px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "14px",
+  },
+
+  mobileHeaderLeft: {
+    alignItems: "flex-start",
+    gap: "11px",
+  },
+
+  mobileHeaderIcon: {
+    width: "44px",
+    height: "44px",
+    borderRadius: "12px",
+    fontSize: "21px",
+    marginTop: 0,
+  },
+
+  mobileHeaderTitle: {
+    fontSize: "22px",
+    letterSpacing: "-0.3px",
+  },
+
+  mobileHeaderSubtitle: {
+    fontSize: "10px",
+    lineHeight: "1.45",
+    marginTop: "5px",
+  },
+
+  mobileBackButton: {
+    width: "100%",
+    textAlign: "center",
+    padding: "10px 12px",
+  },
+
+  mobileContainer: {
+    padding: "20px 0 32px",
+  },
+
+  mobileSummaryGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+  },
+
+  mobileSection: {
+    marginTop: "22px",
+  },
+
+  mobileNotificationList: {
+    marginTop: "12px",
+    gap: "9px",
+  },
+
+  mobileNotificationCard: {
+    padding: "13px",
+    gap: "10px",
+    flexDirection: "row",
+    alignItems: "flex-start",
+    borderRadius: "13px",
+  },
+
+  mobileNotificationIcon: {
+    width: "38px",
+    height: "38px",
+    borderRadius: "10px",
+    fontSize: "17px",
+  },
+
+  mobileNotificationTop: {
+    alignItems: "flex-start",
+    flexDirection: "column",
+    gap: "7px",
+  },
+
+  mobileNotificationTitle: {
+    fontSize: "13px",
+    lineHeight: "1.35",
+    overflowWrap: "anywhere",
+  },
+
+  mobileNotificationMessage: {
+    fontSize: "10.5px",
+    lineHeight: "1.55",
+    overflowWrap: "anywhere",
+  },
+
+  mobileNotificationBottom: {
+    alignItems: "flex-start",
+    flexDirection: "column",
+    gap: "9px",
+  },
+
+  mobileReadButton: {
+    width: "100%",
+    textAlign: "center",
+    padding: "8px 10px",
+  },
+
+  mobileFooter: {
+    padding: "15px 12px",
+    flexDirection: "column",
+    alignItems: "center",
+    textAlign: "center",
+    gap: "6px",
+  },
 };
 
 const styleSheet = document.createElement("style");
@@ -1206,6 +1329,18 @@ styleSheet.innerHTML = `
   @media (max-width: 650px) {
     .notification-mobile {
       flex-direction: column;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .notification-responsive,
+    .notification-mobile {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
     }
   }
 `;

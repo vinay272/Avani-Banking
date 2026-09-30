@@ -4,6 +4,19 @@ import { useNavigate } from "react-router-dom";
 function Beneficiary() {
   const navigate = useNavigate();
 
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 600
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [beneficiaries, setBeneficiaries] = useState([]);
   const [beneficiaryName, setBeneficiaryName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
@@ -273,7 +286,7 @@ function Beneficiary() {
 
   if (loading) {
     return (
-      <div style={styles.page}>
+      <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
         <div style={styles.loading}>
           <div style={styles.loader}></div>
           <p>Loading beneficiaries...</p>
@@ -284,22 +297,22 @@ function Beneficiary() {
 
   return (
     <div style={styles.page}>
-      <div style={styles.container}>
+      <div style={{ ...styles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
 
         {/* HEADER */}
 
-        <div style={styles.header}>
+        <div style={{ ...styles.header, ...(isMobile ? responsiveStyles.header : {}) }}>
 
           <div>
             <p style={styles.brand}>
               AVANI BANK
             </p>
 
-            <h1 style={styles.title}>
+            <h1 style={{ ...styles.title, ...(isMobile ? responsiveStyles.title : {}) }}>
               Beneficiaries
             </h1>
 
-            <p style={styles.subtitle}>
+            <p style={{ ...styles.subtitle, ...(isMobile ? responsiveStyles.subtitle : {}) }}>
               Manage your saved beneficiaries securely.
             </p>
           </div>
@@ -308,7 +321,7 @@ function Beneficiary() {
             onClick={() =>
               navigate("/dashboard")
             }
-            style={styles.dashboardButton}
+            style={{ ...styles.dashboardButton, ...(isMobile ? responsiveStyles.dashboardButton : {}) }}
           >
             ← Dashboard
           </button>
@@ -331,9 +344,9 @@ function Beneficiary() {
 
         {/* ADD BENEFICIARY */}
 
-        <div style={styles.card}>
+        <div style={{ ...styles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
 
-          <div style={styles.cardHeader}>
+          <div style={{ ...styles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
             <div>
               <h2 style={styles.cardTitle}>
                 Add Beneficiary
@@ -353,7 +366,7 @@ function Beneficiary() {
             onSubmit={handleAddBeneficiary}
           >
 
-            <div style={styles.formGrid}>
+            <div style={{ ...styles.formGrid, ...(isMobile ? responsiveStyles.formGrid : {}) }}>
 
               <div style={styles.field}>
                 <label style={styles.label}>
@@ -398,6 +411,7 @@ function Beneficiary() {
               disabled={adding}
               style={{
                 ...styles.addButton,
+                ...(isMobile ? responsiveStyles.addButton : {}),
                 opacity: adding ? 0.7 : 1,
                 cursor: adding
                   ? "not-allowed"
@@ -436,7 +450,7 @@ function Beneficiary() {
 
           {beneficiaries.length === 0 ? (
 
-            <div style={styles.empty}>
+            <div style={{ ...styles.empty, ...(isMobile ? responsiveStyles.empty : {}) }}>
 
               <div style={styles.emptyIcon}>
                 👥
@@ -461,7 +475,7 @@ function Beneficiary() {
 
                   <div
                     key={beneficiary.id}
-                    style={styles.beneficiaryCard}
+                    style={{ ...styles.beneficiaryCard, ...(isMobile ? responsiveStyles.beneficiaryCard : {}) }}
                   >
 
                     <div style={styles.personIcon}>
@@ -470,7 +484,7 @@ function Beneficiary() {
                         ?.toUpperCase() || "B"}
                     </div>
 
-                    <div style={styles.info}>
+                    <div style={{ ...styles.info, ...(isMobile ? responsiveStyles.info : {}) }}>
 
                       <h3 style={styles.name}>
                         {beneficiary.beneficiaryName}
@@ -494,7 +508,7 @@ function Beneficiary() {
 
                     </div>
 
-                    <div style={styles.actions}>
+                    <div style={{ ...styles.actions, ...(isMobile ? responsiveStyles.actions : {}) }}>
 
                       <button
                         onClick={() =>
@@ -502,7 +516,7 @@ function Beneficiary() {
                             beneficiary.accountNumber
                           )
                         }
-                        style={styles.transferButton}
+                        style={{ ...styles.transferButton, ...(isMobile ? responsiveStyles.actionButton : {}) }}
                       >
                         Transfer
                       </button>
@@ -517,7 +531,7 @@ function Beneficiary() {
                           deletingId ===
                           beneficiary.id
                         }
-                        style={styles.deleteButton}
+                        style={{ ...styles.deleteButton, ...(isMobile ? responsiveStyles.actionButton : {}) }}
                       >
                         {deletingId ===
                         beneficiary.id
@@ -865,6 +879,98 @@ const styles = {
     marginBottom: "12px",
     animation:
       "spin 1s linear infinite",
+  },
+};
+
+
+/* =====================================================
+   RESPONSIVE STYLE OVERRIDES
+   ===================================================== */
+
+const responsiveStyles = {
+  page: {
+    padding: "12px",
+  },
+
+  container: {
+    maxWidth: "100%",
+  },
+
+  header: {
+    maxHeight: "none",
+    padding: "18px",
+    borderRadius: "16px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "16px",
+  },
+
+  title: {
+    fontSize: "22px",
+    lineHeight: 1.25,
+  },
+
+  subtitle: {
+    fontSize: "12px",
+    lineHeight: 1.55,
+  },
+
+  dashboardButton: {
+    width: "100%",
+    minHeight: "44px",
+  },
+
+  card: {
+    padding: "18px",
+    borderRadius: "14px",
+  },
+
+  cardHeader: {
+    gap: "12px",
+    marginBottom: "17px",
+  },
+
+  formGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "0",
+  },
+
+  addButton: {
+    minHeight: "46px",
+    marginTop: "3px",
+  },
+
+  beneficiaryCard: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "13px",
+    padding: "15px",
+  },
+
+  info: {
+    width: "100%",
+    minWidth: 0,
+  },
+
+  actions: {
+    width: "100%",
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "8px",
+    flexShrink: 1,
+    paddingTop: "11px",
+    borderTop: "1px solid #e8edf4",
+  },
+
+  actionButton: {
+    width: "100%",
+    minHeight: "42px",
+    padding: "10px 12px",
+    fontSize: "11px",
+  },
+
+  empty: {
+    padding: "32px 8px",
   },
 };
 

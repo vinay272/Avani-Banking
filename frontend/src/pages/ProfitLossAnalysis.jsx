@@ -4,6 +4,22 @@ import { useNavigate } from "react-router-dom";
 const ProfitLossAnalysis = () => {
   const navigate = useNavigate();
 
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 768 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const getResponsiveStyle = (name) => ({
+    ...(styles[name] || {}),
+    ...(isMobile ? (responsiveStyles[name] || {}) : {}),
+  });
+
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -148,11 +164,11 @@ const ProfitLossAnalysis = () => {
 
   if (loading) {
     return (
-      <div style={styles.page}>
-        <div style={styles.loadingContainer}>
-          <div style={styles.spinner}></div>
-          <h3 style={styles.loadingTitle}>Analyzing Your Investments</h3>
-          <p style={styles.loadingText}>
+      <div style={getResponsiveStyle("page")}>
+        <div style={getResponsiveStyle("loadingContainer")}>
+          <div style={getResponsiveStyle("spinner")}></div>
+          <h3 style={getResponsiveStyle("loadingTitle")}>Analyzing Your Investments</h3>
+          <p style={getResponsiveStyle("loadingText")}>
             Please wait while we calculate your profit and loss.
           </p>
         </div>
@@ -162,17 +178,17 @@ const ProfitLossAnalysis = () => {
 
   if (error) {
     return (
-      <div style={styles.page}>
-        <div style={styles.errorContainer}>
-          <div style={styles.errorIcon}>!</div>
+      <div style={getResponsiveStyle("page")}>
+        <div style={getResponsiveStyle("errorContainer")}>
+          <div style={getResponsiveStyle("errorIcon")}>!</div>
 
-          <h2 style={styles.errorTitle}>Unable to Load Analysis</h2>
+          <h2 style={getResponsiveStyle("errorTitle")}>Unable to Load Analysis</h2>
 
-          <p style={styles.errorText}>{error}</p>
+          <p style={getResponsiveStyle("errorText")}>{error}</p>
 
           <button
             type="button"
-            style={styles.primaryButton}
+            style={getResponsiveStyle("primaryButton")}
             onClick={() => fetchAnalysis()}
           >
             Try Again
@@ -180,7 +196,7 @@ const ProfitLossAnalysis = () => {
 
           <button
             type="button"
-            style={styles.secondaryButton}
+            style={getResponsiveStyle("secondaryButton")}
             onClick={() => navigate("/investments")}
           >
             ← Back to Investment Page
@@ -199,15 +215,15 @@ const ProfitLossAnalysis = () => {
   const returnPercentage = Number(analysis.returnPercentage || 0);
 
   return (
-    <div style={styles.page}>
+    <div style={getResponsiveStyle("page")}>
       {/* Header */}
-      <div style={styles.header}>
-        <div style={styles.headerLeft}>
-          <div style={styles.headerIcon}>₹</div>
+      <div style={getResponsiveStyle("header")}>
+        <div style={getResponsiveStyle("headerLeft")}>
+          <div style={getResponsiveStyle("headerIcon")}>₹</div>
 
           <div>
-            <h1 style={styles.headerTitle}>Profit / Loss Analysis</h1>
-            <p style={styles.headerSubtitle}>
+            <h1 style={getResponsiveStyle("headerTitle")}>Profit / Loss Analysis</h1>
+            <p style={getResponsiveStyle("headerSubtitle")}>
               Track your investment performance at a glance
             </p>
           </div>
@@ -215,20 +231,20 @@ const ProfitLossAnalysis = () => {
 
         <button
           type="button"
-          style={styles.backButton}
+          style={getResponsiveStyle("backButton")}
           onClick={() => navigate("/investments")}
         >
           ← Back to Investment Page
         </button>
       </div>
 
-      <div style={styles.content}>
+      <div style={getResponsiveStyle("content")}>
         {/* Main P/L Highlight */}
-        <div style={styles.heroCard}>
+        <div style={getResponsiveStyle("heroCard")}>
           <div>
-            <p style={styles.heroLabel}>Overall Portfolio Performance</p>
+            <p style={getResponsiveStyle("heroLabel")}>Overall Portfolio Performance</p>
 
-            <div style={styles.heroAmountRow}>
+            <div style={getResponsiveStyle("heroAmountRow")}>
               <span
                 style={{
                   ...styles.heroAmount,
@@ -254,45 +270,45 @@ const ProfitLossAnalysis = () => {
               </span>
             </div>
 
-            <p style={styles.heroDescription}>
+            <p style={getResponsiveStyle("heroDescription")}>
               Your current portfolio has generated an overall return of{" "}
               <strong>{formatPercentage(returnPercentage)}</strong>.
             </p>
           </div>
 
-          <div style={styles.performanceCircle}>
-            <div style={styles.performanceCircleInner}>
-              <span style={styles.circlePercentage}>
+          <div style={getResponsiveStyle("performanceCircle")}>
+            <div style={getResponsiveStyle("performanceCircleInner")}>
+              <span style={getResponsiveStyle("circlePercentage")}>
                 {formatPercentage(returnPercentage)}
               </span>
-              <span style={styles.circleLabel}>Return</span>
+              <span style={getResponsiveStyle("circleLabel")}>Return</span>
             </div>
           </div>
         </div>
 
         {/* Summary Cards */}
-        <div style={styles.summaryGrid}>
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryIcon}>₹</div>
+        <div style={getResponsiveStyle("summaryGrid")}>
+          <div style={getResponsiveStyle("summaryCard")}>
+            <div style={getResponsiveStyle("summaryIcon")}>₹</div>
             <div>
-              <p style={styles.cardLabel}>Total Invested</p>
-              <h2 style={styles.cardValue}>
+              <p style={getResponsiveStyle("cardLabel")}>Total Invested</p>
+              <h2 style={getResponsiveStyle("cardValue")}>
                 ₹{formatAmount(analysis.totalInvested)}
               </h2>
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryIcon}>↗</div>
+          <div style={getResponsiveStyle("summaryCard")}>
+            <div style={getResponsiveStyle("summaryIcon")}>↗</div>
             <div>
-              <p style={styles.cardLabel}>Current Value</p>
-              <h2 style={styles.cardValue}>
+              <p style={getResponsiveStyle("cardLabel")}>Current Value</p>
+              <h2 style={getResponsiveStyle("cardValue")}>
                 ₹{formatAmount(analysis.currentValue)}
               </h2>
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
+          <div style={getResponsiveStyle("summaryCard")}>
             <div
               style={{
                 ...styles.summaryIcon,
@@ -304,7 +320,7 @@ const ProfitLossAnalysis = () => {
             </div>
 
             <div>
-              <p style={styles.cardLabel}>Total Profit / Loss</p>
+              <p style={getResponsiveStyle("cardLabel")}>Total Profit / Loss</p>
               <h2
                 style={{
                   ...styles.cardValue,
@@ -317,10 +333,10 @@ const ProfitLossAnalysis = () => {
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryIcon}>%</div>
+          <div style={getResponsiveStyle("summaryCard")}>
+            <div style={getResponsiveStyle("summaryIcon")}>%</div>
             <div>
-              <p style={styles.cardLabel}>Overall Return</p>
+              <p style={getResponsiveStyle("cardLabel")}>Overall Return</p>
               <h2
                 style={{
                   ...styles.cardValue,
@@ -334,45 +350,45 @@ const ProfitLossAnalysis = () => {
         </div>
 
         {/* Best & Lowest */}
-        <div style={styles.performanceGrid}>
+        <div style={getResponsiveStyle("performanceGrid")}>
           {/* Best */}
-          <div style={styles.highlightCard}>
-            <div style={styles.highlightTop}>
-              <div style={styles.highlightIconBest}>★</div>
+          <div style={getResponsiveStyle("highlightCard")}>
+            <div style={getResponsiveStyle("highlightTop")}>
+              <div style={getResponsiveStyle("highlightIconBest")}>★</div>
 
               <div>
-                <p style={styles.highlightLabel}>Best Performing</p>
-                <h3 style={styles.highlightTitle}>
+                <p style={getResponsiveStyle("highlightLabel")}>Best Performing</p>
+                <h3 style={getResponsiveStyle("highlightTitle")}>
                   {analysis.bestPerformingInvestment || "—"}
                 </h3>
               </div>
             </div>
 
-            <div style={styles.highlightNumbers}>
-              <span style={styles.profitValue}>
+            <div style={getResponsiveStyle("highlightNumbers")}>
+              <span style={getResponsiveStyle("profitValue")}>
                 +₹{formatAmount(analysis.bestPerformingProfitLoss)}
               </span>
 
-              <span style={styles.returnPill}>
+              <span style={getResponsiveStyle("returnPill")}>
                 {formatPercentage(analysis.bestPerformingReturn)}
               </span>
             </div>
           </div>
 
           {/* Lowest */}
-          <div style={styles.highlightCard}>
-            <div style={styles.highlightTop}>
-              <div style={styles.highlightIconLowest}>↓</div>
+          <div style={getResponsiveStyle("highlightCard")}>
+            <div style={getResponsiveStyle("highlightTop")}>
+              <div style={getResponsiveStyle("highlightIconLowest")}>↓</div>
 
               <div>
-                <p style={styles.highlightLabel}>Lowest Performing</p>
-                <h3 style={styles.highlightTitle}>
+                <p style={getResponsiveStyle("highlightLabel")}>Lowest Performing</p>
+                <h3 style={getResponsiveStyle("highlightTitle")}>
                   {analysis.lowestPerformingInvestment || "—"}
                 </h3>
               </div>
             </div>
 
-            <div style={styles.highlightNumbers}>
+            <div style={getResponsiveStyle("highlightNumbers")}>
               <span
                 style={{
                   ...styles.profitValue,
@@ -391,7 +407,7 @@ const ProfitLossAnalysis = () => {
                 )}
               </span>
 
-              <span style={styles.returnPill}>
+              <span style={getResponsiveStyle("returnPill")}>
                 {formatPercentage(analysis.lowestPerformingReturn)}
               </span>
             </div>
@@ -399,19 +415,19 @@ const ProfitLossAnalysis = () => {
         </div>
 
         {/* Investment Wise Analysis */}
-        <div style={styles.sectionCard}>
-          <div style={styles.sectionHeader}>
+        <div style={getResponsiveStyle("sectionCard")}>
+          <div style={getResponsiveStyle("sectionHeader")}>
             <div>
-              <h2 style={styles.sectionTitle}>
+              <h2 style={getResponsiveStyle("sectionTitle")}>
                 Investment-wise Profit / Loss
               </h2>
-              <p style={styles.sectionSubtitle}>
+              <p style={getResponsiveStyle("sectionSubtitle")}>
                 Performance comparison across your investment categories
               </p>
             </div>
           </div>
 
-          <div style={styles.investmentList}>
+          <div style={getResponsiveStyle("investmentList")}>
             {investmentData.map((item) => {
               const positive = item.profitLoss >= 0;
 
@@ -419,21 +435,21 @@ const ProfitLossAnalysis = () => {
                 (Math.abs(item.profitLoss) / maxAbsProfitLoss) * 100;
 
               return (
-                <div key={item.name} style={styles.investmentRow}>
-                  <div style={styles.investmentInfo}>
-                    <div style={styles.investmentIcon}>{item.icon}</div>
+                <div key={item.name} style={getResponsiveStyle("investmentRow")}>
+                  <div style={getResponsiveStyle("investmentInfo")}>
+                    <div style={getResponsiveStyle("investmentIcon")}>{item.icon}</div>
 
                     <div>
-                      <h3 style={styles.investmentName}>{item.name}</h3>
+                      <h3 style={getResponsiveStyle("investmentName")}>{item.name}</h3>
 
-                      <p style={styles.investmentReturn}>
+                      <p style={getResponsiveStyle("investmentReturn")}>
                         Return: {formatPercentage(item.returnPercentage)}
                       </p>
                     </div>
                   </div>
 
-                  <div style={styles.barArea}>
-                    <div style={styles.barBackground}>
+                  <div style={getResponsiveStyle("barArea")}>
+                    <div style={getResponsiveStyle("barBackground")}>
                       <div
                         style={{
                           ...styles.barFill,
@@ -446,7 +462,7 @@ const ProfitLossAnalysis = () => {
                     </div>
                   </div>
 
-                  <div style={styles.plAmount}>
+                  <div style={getResponsiveStyle("plAmount")}>
                     <span
                       style={{
                         color: positive ? "#15803d" : "#dc2626",
@@ -472,13 +488,13 @@ const ProfitLossAnalysis = () => {
         </div>
 
         {/* Analysis Insight */}
-        <div style={styles.insightCard}>
-          <div style={styles.insightIcon}>💡</div>
+        <div style={getResponsiveStyle("insightCard")}>
+          <div style={getResponsiveStyle("insightIcon")}>💡</div>
 
           <div>
-            <h3 style={styles.insightTitle}>Investment Insight</h3>
+            <h3 style={getResponsiveStyle("insightTitle")}>Investment Insight</h3>
 
-            <p style={styles.insightText}>
+            <p style={getResponsiveStyle("insightText")}>
               {overallStatus === "PROFIT"
                 ? `Your investment portfolio is currently in profit. ${
                     analysis.bestPerformingInvestment || "One of your investments"
@@ -493,9 +509,9 @@ const ProfitLossAnalysis = () => {
         </div>
 
         {/* Footer */}
-        <div style={styles.footerSection}>
+        <div style={getResponsiveStyle("footerSection")}>
           <div>
-            <p style={styles.generatedText}>
+            <p style={getResponsiveStyle("generatedText")}>
               Analysis generated on{" "}
               {analysis.generatedAt
                 ? new Date(analysis.generatedAt).toLocaleString("en-IN", {
@@ -521,6 +537,157 @@ const ProfitLossAnalysis = () => {
       </div>
     </div>
   );
+};
+
+const responsiveStyles = {
+  page: {
+    padding: 0,
+    overflowX: "hidden",
+  },
+  header: {
+    padding: "16px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "14px",
+  },
+  headerLeft: {
+    width: "100%",
+  },
+  headerTitle: {
+    fontSize: "20px",
+  },
+  headerSubtitle: {
+    fontSize: "11px",
+  },
+  backButton: {
+    width: "100%",
+    minHeight: "44px",
+    justifyContent: "center",
+  },
+  content: {
+    width: "100%",
+    padding: "18px 14px 30px",
+    boxSizing: "border-box",
+  },
+  heroCard: {
+    padding: "20px 16px",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: "18px",
+  },
+  heroAmount: {
+    fontSize: "28px",
+  },
+  heroDescription: {
+    fontSize: "12px",
+    lineHeight: 1.6,
+  },
+  performanceCircle: {
+    width: "105px",
+    height: "105px",
+    alignSelf: "center",
+  },
+  performanceCircleInner: {
+    width: "79px",
+    height: "79px",
+  },
+  circlePercentage: {
+    fontSize: "15px",
+  },
+  summaryGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "12px",
+  },
+  summaryCard: {
+    padding: "16px",
+    minWidth: 0,
+  },
+  cardValue: {
+    fontSize: "18px",
+  },
+  performanceGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "12px",
+  },
+  highlightCard: {
+    padding: "17px",
+  },
+  highlightTitle: {
+    fontSize: "16px",
+    overflowWrap: "anywhere",
+  },
+  highlightNumbers: {
+    flexWrap: "wrap",
+  },
+  profitValue: {
+    fontSize: "18px",
+  },
+  sectionCard: {
+    padding: "17px 14px",
+    borderRadius: "15px",
+  },
+  sectionTitle: {
+    fontSize: "17px",
+  },
+  sectionSubtitle: {
+    fontSize: "11px",
+    lineHeight: 1.5,
+  },
+  investmentList: {
+    gap: "16px",
+  },
+  investmentRow: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "10px",
+    padding: "13px",
+    border: "1px solid #edf1f5",
+    borderRadius: "12px",
+  },
+  investmentInfo: {
+    width: "100%",
+  },
+  investmentName: {
+    fontSize: "13px",
+  },
+  barArea: {
+    width: "100%",
+  },
+  plAmount: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  insightCard: {
+    padding: "16px",
+    gap: "11px",
+  },
+  insightText: {
+    fontSize: "12px",
+  },
+  footerSection: {
+    flexDirection: "column",
+    alignItems: "stretch",
+  },
+  refreshButton: {
+    width: "100%",
+    minHeight: "44px",
+  },
+  primaryButton: {
+    width: "100%",
+    maxWidth: "320px",
+    minHeight: "44px",
+  },
+  secondaryButton: {
+    width: "100%",
+    maxWidth: "320px",
+    minHeight: "44px",
+  },
+  errorContainer: {
+    padding: "22px 16px",
+  },
 };
 
 const styles = {

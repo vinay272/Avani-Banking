@@ -287,7 +287,7 @@ function ExecutiveDashboard() {
         </span>
       </div>
 
-      <div style={styles.kpiValue}>
+      <div className="kpiValue" style={styles.kpiValue}>
         {value}
       </div>
 
@@ -348,7 +348,7 @@ function ExecutiveDashboard() {
 
     return (
       <div style={styles.barRow}>
-        <div style={styles.barLabel}>
+        <div className="barLabel" style={styles.barLabel}>
           <span>{label}</span>
 
           <strong>
@@ -405,9 +405,9 @@ function ExecutiveDashboard() {
         ================================================= */}
 
         <section>
-          <div style={styles.sectionHeading}>
+          <div className="executive-section-heading" style={styles.sectionHeading}>
             <div>
-              <h2 style={styles.sectionTitle}>
+              <h2 className="sectionTitle" style={styles.sectionTitle}>
                 Executive Overview
               </h2>
 
@@ -426,7 +426,7 @@ function ExecutiveDashboard() {
             </button>
           </div>
 
-          <div style={styles.kpiGrid}>
+          <div className="executive-kpi-grid" style={styles.kpiGrid}>
             <KpiCard
               icon="👥"
               title="Total Customers"
@@ -525,9 +525,9 @@ function ExecutiveDashboard() {
         ================================================= */}
 
         <section style={styles.chartsSection}>
-          <div style={styles.sectionHeading}>
+          <div className="executive-section-heading" style={styles.sectionHeading}>
             <div>
-              <h2 style={styles.sectionTitle}>
+              <h2 className="sectionTitle" style={styles.sectionTitle}>
                 Business Analytics
               </h2>
 
@@ -537,7 +537,7 @@ function ExecutiveDashboard() {
             </div>
           </div>
 
-          <div style={styles.chartGrid}>
+          <div className="executive-chart-grid" style={styles.chartGrid}>
             {/* REVENUE */}
 
             <ChartCard
@@ -547,7 +547,7 @@ function ExecutiveDashboard() {
               {revenueData.length === 0 ? (
                 <EmptyChart text="No revenue data available." />
               ) : (
-                <div style={styles.chartBody}>
+                <div className="chartBody" style={styles.chartBody}>
                   {revenueData.map(
                     (item, index) => (
                       <Bar
@@ -577,7 +577,7 @@ function ExecutiveDashboard() {
               {transactionData.length === 0 ? (
                 <EmptyChart text="No transaction data available." />
               ) : (
-                <div style={styles.chartBody}>
+                <div className="chartBody" style={styles.chartBody}>
                   {transactionData.map(
                     (item, index) => (
                       <Bar
@@ -609,7 +609,7 @@ function ExecutiveDashboard() {
               {loanData.length === 0 ? (
                 <EmptyChart text="No loan data available." />
               ) : (
-                <div style={styles.chartBody}>
+                <div className="chartBody" style={styles.chartBody}>
                   {loanData.map(
                     (item, index) => (
                       <Bar
@@ -641,7 +641,7 @@ function ExecutiveDashboard() {
               {depositData.length === 0 ? (
                 <EmptyChart text="No deposit data available." />
               ) : (
-                <div style={styles.chartBody}>
+                <div className="chartBody" style={styles.chartBody}>
                   {depositData.map(
                     (item, index) => (
                       <Bar
@@ -673,7 +673,7 @@ function ExecutiveDashboard() {
               {fraudData.length === 0 ? (
                 <EmptyChart text="No fraud data available." />
               ) : (
-                <div style={styles.chartBody}>
+                <div className="chartBody" style={styles.chartBody}>
                   {fraudData.map(
                     (item, index) => (
                       <Bar
@@ -705,7 +705,7 @@ function ExecutiveDashboard() {
               {customerData.length === 0 ? (
                 <EmptyChart text="No customer growth data available." />
               ) : (
-                <div style={styles.chartBody}>
+                <div className="chartBody" style={styles.chartBody}>
                   {customerData.map(
                     (item, index) => (
                       <Bar
@@ -735,9 +735,9 @@ function ExecutiveDashboard() {
         ================================================= */}
 
         <section>
-          <div style={styles.sectionHeading}>
+          <div className="executive-section-heading" style={styles.sectionHeading}>
             <div>
-              <h2 style={styles.sectionTitle}>
+              <h2 className="sectionTitle" style={styles.sectionTitle}>
                 Branch Performance
               </h2>
 
@@ -802,8 +802,8 @@ function ExecutiveDashboard() {
     }
 
     return (
-      <div style={styles.tableWrapper}>
-        <table style={styles.table}>
+      <div className="executive-table-wrapper" style={styles.tableWrapper}>
+        <table className="executive-table" style={styles.table}>
           <thead>
             <tr>
               {columns.map(
@@ -921,9 +921,9 @@ function ExecutiveDashboard() {
 
     return (
       <section>
-        <div style={styles.sectionHeading}>
+        <div className="executive-section-heading" style={styles.sectionHeading}>
           <div>
-            <h2 style={styles.sectionTitle}>
+            <h2 className="sectionTitle" style={styles.sectionTitle}>
               {title}
             </h2>
 
@@ -981,7 +981,7 @@ function ExecutiveDashboard() {
     );
 
     return (
-      <div style={styles.reportSummaryGrid}>
+      <div className="executive-summary-grid" style={styles.reportSummaryGrid}>
         {summaries.map(
           ({ key, value }) => (
             <div
@@ -1041,7 +1041,7 @@ function ExecutiveDashboard() {
 
     if (data.length === 0) {
       return (
-        <div style={styles.reportCard}>
+        <div className="reportCard" style={styles.reportCard}>
           <h3 style={styles.reportCardTitle}>
             Report Details
           </h3>
@@ -1067,7 +1067,7 @@ function ExecutiveDashboard() {
       keys.slice(0, 10);
 
     return (
-      <div style={styles.reportCard}>
+      <div className="reportCard" style={styles.reportCard}>
         <div style={styles.reportCardHeader}>
           <div>
             <h3 style={styles.reportCardTitle}>
@@ -1191,13 +1191,187 @@ function ExecutiveDashboard() {
   // =========================================================
 
   return (
-    <div style={styles.page}>
-      <div style={styles.container}>
+    <div className="executive-responsive" style={styles.page}>
+      <style>{`
+        .executive-responsive {
+          overflow-x: hidden;
+        }
+
+        .executive-responsive .executive-container {
+          width: min(1440px, 100%) !important;
+        }
+
+        .executive-responsive .executive-navigation-scroll {
+          scrollbar-width: thin;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 1000px) {
+          .executive-responsive .executive-container {
+            padding: 20px 18px 35px !important;
+          }
+
+          .executive-responsive .executive-header {
+            max-height: none !important;
+            padding: 25px !important;
+          }
+
+          .executive-responsive .executive-kpi-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+
+          .executive-responsive .executive-chart-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+
+          .executive-responsive .executive-summary-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          }
+        }
+
+        @media (max-width: 700px) {
+          .executive-responsive .executive-container {
+            padding: 12px 12px 28px !important;
+          }
+
+          .executive-responsive .executive-header {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 16px !important;
+            padding: 20px !important;
+            border-radius: 16px !important;
+          }
+
+          .executive-responsive .executive-header h1 {
+            font-size: 23px !important;
+            line-height: 1.2 !important;
+          }
+
+          .executive-responsive .executive-header p {
+            max-width: none !important;
+          }
+
+          .executive-responsive .executive-header > button {
+            width: 100% !important;
+            text-align: center !important;
+          }
+
+          .executive-responsive .executive-navigation {
+            margin-bottom: 17px !important;
+            padding: 6px !important;
+          }
+
+          .executive-responsive .executive-navigation-scroll {
+            gap: 4px !important;
+          }
+
+          .executive-responsive .executive-navigation-scroll button {
+            flex: 0 0 auto !important;
+            padding: 9px 12px !important;
+            font-size: 11px !important;
+          }
+
+          .executive-responsive .executive-section-heading {
+            align-items: stretch !important;
+            flex-direction: column !important;
+            gap: 10px !important;
+          }
+
+          .executive-responsive .executive-section-heading button {
+            width: 100% !important;
+          }
+
+          .executive-responsive .executive-kpi-grid,
+          .executive-responsive .executive-chart-grid,
+          .executive-responsive .executive-summary-grid {
+            grid-template-columns: 1fr !important;
+          }
+
+          .executive-responsive .executive-kpi-grid > div {
+            min-height: auto !important;
+            padding: 15px !important;
+          }
+
+          .executive-responsive .executive-chart-grid > div {
+            min-height: auto !important;
+            padding: 16px !important;
+          }
+
+          .executive-responsive .executive-table-wrapper {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+          }
+
+          .executive-responsive .executive-table {
+            min-width: 680px !important;
+          }
+
+          .executive-responsive .executive-error {
+            align-items: flex-start !important;
+            flex-wrap: wrap !important;
+          }
+
+          .executive-responsive .executive-error button {
+            margin-left: 0 !important;
+            width: 100% !important;
+          }
+
+          .executive-responsive .executive-footer {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+          }
+
+          .executive-responsive .chartBody {
+            overflow: hidden;
+          }
+
+          .executive-responsive .barLabel {
+            gap: 8px !important;
+          }
+
+          .executive-responsive .reportCard {
+            padding: 15px !important;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .executive-responsive .executive-container {
+            padding: 8px 8px 22px !important;
+          }
+
+          .executive-responsive .executive-header {
+            padding: 16px !important;
+          }
+
+          .executive-responsive .executive-header h1 {
+            font-size: 20px !important;
+          }
+
+          .executive-responsive .executive-header p {
+            font-size: 11px !important;
+          }
+
+          .executive-responsive .executive-navigation-scroll button {
+            padding: 8px 10px !important;
+          }
+
+          .executive-responsive .sectionTitle {
+            font-size: 17px !important;
+          }
+
+          .executive-responsive .kpiValue {
+            font-size: 19px !important;
+          }
+        }
+      `}</style>
+      <div className="executive-container" style={styles.container}>
         {/* =================================================
             HEADER
         ================================================= */}
 
-        <header style={styles.header}>
+        <header className="executive-header" style={styles.header}>
           <div>
             <p style={styles.eyebrow}>
               AVANI BANK • EXECUTIVE MANAGEMENT
@@ -1230,7 +1404,7 @@ function ExecutiveDashboard() {
         ================================================= */}
 
         {error && (
-          <div style={styles.errorBox}>
+          <div className="executive-error" style={styles.errorBox}>
             <strong>⚠</strong>
 
             <span>{error}</span>
@@ -1252,8 +1426,8 @@ function ExecutiveDashboard() {
             NAVIGATION
         ================================================= */}
 
-        <div style={styles.navigationCard}>
-          <div style={styles.navigationScroll}>
+        <div className="executive-navigation" style={styles.navigationCard}>
+          <div className="executive-navigation-scroll" style={styles.navigationScroll}>
             <NavButton
               active={
                 activeSection === "overview"
@@ -1360,7 +1534,7 @@ function ExecutiveDashboard() {
             FOOTER
         ================================================= */}
 
-        <footer style={styles.footer}>
+        <footer className="executive-footer" style={styles.footer}>
           <span>
             © 2026 Avani Bank • Executive
             Management System

@@ -149,33 +149,32 @@ function Dashboard() {
           Array.isArray(receivedData) ? receivedData : [],
         );
 
-      // UNREAD NOTIFICATION COUNT
-const notificationResponse = await fetch(
-  "http://localhost:8080/api/notifications/unread/count",
-  {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  },
-);
+        // UNREAD NOTIFICATION COUNT
+        const notificationResponse = await fetch(
+          "http://localhost:8080/api/notifications/unread/count",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          },
+        );
 
-if (
-  notificationResponse.status === 401 ||
-  notificationResponse.status === 403
-) {
-  localStorage.removeItem("token");
-  localStorage.removeItem("customer");
-  navigate("/login");
-  return;
-}
+        if (
+          notificationResponse.status === 401 ||
+          notificationResponse.status === 403
+        ) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("customer");
+          navigate("/login");
+          return;
+        }
 
-if (notificationResponse.ok) {
-  const notificationCount = await notificationResponse.json();
-  setUnreadNotificationCount(Number(notificationCount || 0));
-}  
-
+        if (notificationResponse.ok) {
+          const notificationCount = await notificationResponse.json();
+          setUnreadNotificationCount(Number(notificationCount || 0));
+        }
       } catch (err) {
         console.error("Dashboard Error:", err);
         setError(err.message || "Unable to load dashboard data.");
@@ -339,10 +338,13 @@ if (notificationResponse.ok) {
   // =====================================================
 
   return (
-    <div className={darkMode ? "dashboard-dark-mode" : ""} style={themeStyles.page}>
+    <div
+      className={`dashboard-page ${darkMode ? "dashboard-dark-mode" : ""}`}
+      style={themeStyles.page}
+    >
+      {" "}
       {/* ================= NAVBAR ================= */}
-
-      <header style={themeStyles.navbar}>
+      <header className="dashboard-navbar" style={themeStyles.navbar}>
         <div style={themeStyles.brandArea}>
           <div style={themeStyles.brandIcon}>🏦</div>
 
@@ -353,7 +355,7 @@ if (notificationResponse.ok) {
           </div>
         </div>
 
-        <div style={themeStyles.navRight}>
+        <div className="dashboard-nav-right" style={themeStyles.navRight}>
           <div style={themeStyles.accountBadge}>
             <span style={themeStyles.onlineDot}></span>
             Account Active
@@ -363,7 +365,9 @@ if (notificationResponse.ok) {
             type="button"
             style={themeStyles.themeToggle}
             onClick={() => setDarkMode((prev) => !prev)}
-            aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={
+              darkMode ? "Switch to light mode" : "Switch to dark mode"
+            }
             title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
           >
             <span style={themeStyles.themeToggleIcon}>
@@ -377,13 +381,14 @@ if (notificationResponse.ok) {
           </button>
         </div>
       </header>
-
       {/* ================= MAIN ================= */}
-
       <main style={themeStyles.container}>
         {/* GREETING */}
 
-        <section style={themeStyles.greetingSection}>
+        <section
+          className="dashboard-greeting"
+          style={themeStyles.greetingSection}
+        >
           <div>
             <p style={themeStyles.greetingSmall}>{getGreeting()}</p>
 
@@ -402,7 +407,9 @@ if (notificationResponse.ok) {
             <div>
               <p style={themeStyles.miniLabel}>ACCOUNT NUMBER</p>
 
-              <p style={themeStyles.miniValue}>{customer?.accountNumber || "N/A"}</p>
+              <p style={themeStyles.miniValue}>
+                {customer?.accountNumber || "N/A"}
+              </p>
             </div>
           </div>
         </section>
@@ -413,8 +420,8 @@ if (notificationResponse.ok) {
 
         {/* ================= BALANCE ================= */}
 
-        <section style={themeStyles.balanceCard}>
-          <div style={themeStyles.balanceLeft}>
+        <section className="dashboard-balance" style={themeStyles.balanceCard}>
+          <div className="dashboard-balance-left" style={themeStyles.balanceLeft}>
             <div style={themeStyles.balanceIcon}>₹</div>
 
             <div>
@@ -428,7 +435,10 @@ if (notificationResponse.ok) {
             </div>
           </div>
 
-          <div style={themeStyles.balanceRight}>
+          <div
+            className="dashboard-balance-right"
+            style={themeStyles.balanceRight}
+          >
             <p style={themeStyles.accountTypeLabel}>ACCOUNT TYPE</p>
 
             <p style={themeStyles.accountTypeValue}>
@@ -441,7 +451,7 @@ if (notificationResponse.ok) {
 
         {/* ================= STATS ================= */}
 
-        <section style={themeStyles.statsGrid}>
+        <section className="dashboard-stats" style={themeStyles.statsGrid}>
           <div style={themeStyles.statCard}>
             <div
               style={{
@@ -456,7 +466,9 @@ if (notificationResponse.ok) {
             <div style={themeStyles.statContent}>
               <p style={themeStyles.statLabel}>MONEY SENT</p>
 
-              <h3 style={themeStyles.statValue}>₹{formatCurrency(moneySent)}</h3>
+              <h3 style={themeStyles.statValue}>
+                ₹{formatCurrency(moneySent)}
+              </h3>
 
               <p style={themeStyles.statSubtext}>
                 {sentTransactions.length} transaction
@@ -479,7 +491,9 @@ if (notificationResponse.ok) {
             <div style={themeStyles.statContent}>
               <p style={themeStyles.statLabel}>MONEY RECEIVED</p>
 
-              <h3 style={themeStyles.statValue}>₹{formatCurrency(moneyReceived)}</h3>
+              <h3 style={themeStyles.statValue}>
+                ₹{formatCurrency(moneyReceived)}
+              </h3>
 
               <p style={themeStyles.statSubtext}>
                 {receivedTransactions.length} transaction
@@ -520,7 +534,7 @@ if (notificationResponse.ok) {
             </div>
           </div>
 
-          <div style={themeStyles.actionsGrid}>       
+          <div className="dashboard-actions" style={themeStyles.actionsGrid}>
             <button
               type="button"
               style={themeStyles.actionCard}
@@ -1013,100 +1027,99 @@ if (notificationResponse.ok) {
 
               <span style={themeStyles.actionArrow}>→</span>
             </button>
-            
+
             {/* SECURITY CENTER */}
 
-<button
-  type="button"
-  style={themeStyles.actionCard}
-  onClick={() => navigate("/security-center")}
->
-  <div
-    style={{
-      ...themeStyles.actionIcon,
-      background: "#fff1f2",
-      color: "#c0263e",
-    }}
-  >
-    🛡️
-  </div>
+            <button
+              type="button"
+              style={themeStyles.actionCard}
+              onClick={() => navigate("/security-center")}
+            >
+              <div
+                style={{
+                  ...themeStyles.actionIcon,
+                  background: "#fff1f2",
+                  color: "#c0263e",
+                }}
+              >
+                🛡️
+              </div>
 
-  <div style={themeStyles.actionText}>
-    <h3 style={themeStyles.actionTitle}>
-      Security Center
-    </h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Security Center</h3>
 
-    <p style={themeStyles.actionDescription}>
-      Monitor fraud alerts, risk score and account security.
-    </p>
-  </div>
+                <p style={themeStyles.actionDescription}>
+                  Monitor fraud alerts, risk score and account security.
+                </p>
+              </div>
 
-  <span style={themeStyles.actionArrow}>→</span>
-</button>
+              <span style={themeStyles.actionArrow}>→</span>
+            </button>
 
-{/* CUSTOMER SERVICE */}
+            {/* CUSTOMER SERVICE */}
 
-<button
-  type="button"
-  style={themeStyles.actionCard}
-  onClick={() => navigate("/customer-service")}
->
-  <div
-    style={{
-      ...themeStyles.actionIcon,
-      background: "#eef7f5",
-      color: "#16806b",
-    }}
-  >
-    💬
-  </div>
+            <button
+              type="button"
+              style={themeStyles.actionCard}
+              onClick={() => navigate("/customer-service")}
+            >
+              <div
+                style={{
+                  ...themeStyles.actionIcon,
+                  background: "#eef7f5",
+                  color: "#16806b",
+                }}
+              >
+                💬
+              </div>
 
-  <div style={themeStyles.actionText}>
-    <h3 style={themeStyles.actionTitle}>Customer Service</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Customer Service</h3>
 
-    <p style={themeStyles.actionDescription}>
-      Raise complaints, service requests, appointments and get support.
-    </p>
-  </div>
+                <p style={themeStyles.actionDescription}>
+                  Raise complaints, service requests, appointments and get
+                  support.
+                </p>
+              </div>
 
-  <span style={themeStyles.actionArrow}>→</span>
-</button>
+              <span style={themeStyles.actionArrow}>→</span>
+            </button>
 
-{/* NOTIFICATIONS */}
+            {/* NOTIFICATIONS */}
 
-<button
-  type="button"
-  style={themeStyles.actionCard}
-  onClick={() => navigate("/notifications")}
->
-  <div
-    style={{
-      ...themeStyles.actionIcon,
-      background: "#eef4ff",
-      color: "#2457c6",
-    }}
-  >
-    🔔
-  </div>
+            <button
+              type="button"
+              style={themeStyles.actionCard}
+              onClick={() => navigate("/notifications")}
+            >
+              <div
+                style={{
+                  ...themeStyles.actionIcon,
+                  background: "#eef4ff",
+                  color: "#2457c6",
+                }}
+              >
+                🔔
+              </div>
 
-  <div style={themeStyles.actionText}>
-    <h3 style={themeStyles.actionTitle}>Notifications</h3>
+              <div style={themeStyles.actionText}>
+                <h3 style={themeStyles.actionTitle}>Notifications</h3>
 
-    <p style={themeStyles.actionDescription}>
-      View alerts, banking updates and important notifications.
-    </p>
-  </div>
+                <p style={themeStyles.actionDescription}>
+                  View alerts, banking updates and important notifications.
+                </p>
+              </div>
 
-  {unreadNotificationCount > 0 && (
-    <span style={themeStyles.notificationBadge}>
-      {unreadNotificationCount > 99
-        ? "99+"
-        : unreadNotificationCount}
-    </span>
-  )}
+              {unreadNotificationCount > 0 && (
+                <span style={themeStyles.notificationBadge}>
+                  {unreadNotificationCount > 99
+                    ? "99+"
+                    : unreadNotificationCount}
+                </span>
+              )}
 
-  <span style={themeStyles.actionArrow}>→</span>
-</button>
+              <span style={themeStyles.actionArrow}>→</span>
+            </button>
 
             {/* VIEW ACTIVITY */}
 
@@ -1153,7 +1166,9 @@ if (notificationResponse.ok) {
               <h2 style={themeStyles.sectionTitle}>Recent Activity</h2>
             </div>
 
-            <div style={themeStyles.transactionCount}>{totalTransactions} total</div>
+            <div style={themeStyles.transactionCount}>
+              {totalTransactions} total
+            </div>
           </div>
 
           <div style={themeStyles.activityCard}>
@@ -1193,6 +1208,7 @@ if (notificationResponse.ok) {
                       key={
                         transaction.id || `${transaction.direction}-${index}`
                       }
+                      className="dashboard-transaction-row"
                       style={{
                         ...themeStyles.transactionRow,
                         borderBottom:
@@ -1263,8 +1279,8 @@ if (notificationResponse.ok) {
             </div>
           </div>
 
-          <div style={themeStyles.profileCard}>
-            <div style={themeStyles.profileTop}>
+          <div className="dashboard-profile-card" style={themeStyles.profileCard}>
+            <div className="dashboard-profile-top" style={themeStyles.profileTop}>
               <div style={themeStyles.avatar}>
                 {customer?.fullName?.charAt(0)?.toUpperCase() || "C"}
               </div>
@@ -1284,23 +1300,29 @@ if (notificationResponse.ok) {
               </div>
             </div>
 
-            <div style={themeStyles.profileGrid}>
+            <div className="dashboard-profile-grid" style={themeStyles.profileGrid}>
               <div style={themeStyles.profileItem}>
                 <p style={themeStyles.profileLabel}>FULL NAME</p>
 
-                <p style={themeStyles.profileValue}>{customer?.fullName || "N/A"}</p>
+                <p style={themeStyles.profileValue}>
+                  {customer?.fullName || "N/A"}
+                </p>
               </div>
 
               <div style={themeStyles.profileItem}>
                 <p style={themeStyles.profileLabel}>EMAIL</p>
 
-                <p style={themeStyles.profileValue}>{customer?.email || "N/A"}</p>
+                <p style={themeStyles.profileValue}>
+                  {customer?.email || "N/A"}
+                </p>
               </div>
 
               <div style={themeStyles.profileItem}>
                 <p style={themeStyles.profileLabel}>PHONE</p>
 
-                <p style={themeStyles.profileValue}>{customer?.phone || "N/A"}</p>
+                <p style={themeStyles.profileValue}>
+                  {customer?.phone || "N/A"}
+                </p>
               </div>
 
               <div style={themeStyles.profileItem}>
@@ -1330,10 +1352,8 @@ if (notificationResponse.ok) {
           </div>
         </section>
       </main>
-
       {/* ================= FOOTER ================= */}
-
-      <footer style={themeStyles.footer}>
+      <footer className="dashboard-footer" style={themeStyles.footer}>
         <div>© {new Date().getFullYear()} Avani Bank</div>
 
         <div>Secure • Reliable • Digital Banking</div>
@@ -1550,7 +1570,6 @@ const themeStylesBase = {
     boxShadow: "0 15px 35px rgba(18,51,120,0.16)",
     boxSizing: "border-box",
   },
-  
 
   balanceLeft: {
     display: "flex",
@@ -1701,7 +1720,6 @@ const themeStylesBase = {
      COMPACT QUICK ACTION CARDS
      ===================================================== */
 
-
   actionsGrid: {
     display: "grid",
     gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
@@ -1767,20 +1785,20 @@ const themeStylesBase = {
   },
 
   notificationBadge: {
-  minWidth: "22px",
-  height: "22px",
-  padding: "0 6px",
-  borderRadius: "12px",
-  background: "#2457c6",
-  color: "#ffffff",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontSize: "9px",
-  fontWeight: "800",
-  boxSizing: "border-box",
-  flexShrink: 0,
-},
+    minWidth: "22px",
+    height: "22px",
+    padding: "0 6px",
+    borderRadius: "12px",
+    background: "#2457c6",
+    color: "#ffffff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "9px",
+    fontWeight: "800",
+    boxSizing: "border-box",
+    flexShrink: 0,
+  },
 
   transactionCount: {
     background: "#eef3ff",
@@ -2221,7 +2239,7 @@ const darkStyles = Object.fromEntries(
   Object.entries(themeStylesBase).map(([key, value]) => [
     key,
     { ...value, ...(darkThemeOverrides[key] || {}) },
-  ])
+  ]),
 );
 
 // =====================================================
@@ -2249,19 +2267,348 @@ styleSheet.innerHTML = `
     }
   }
 
-  @media (max-width: 850px) {
-    .dashboard-responsive {
-      grid-template-columns: 1fr;
+  /* =========================================
+     TABLET
+     ========================================= */
+
+  @media (max-width: 900px) {
+
+    .dashboard-navbar {
+      padding: 12px 4% !important;
+      min-height: auto !important;
+      flex-wrap: wrap !important;
     }
 
-    .actionsGrid {
-      grid-template-columns: 1fr;
+    .dashboard-nav-right {
+      flex-wrap: wrap !important;
+      justify-content: flex-end !important;
+      gap: 8px !important;
+    }
+
+    .dashboard-greeting {
+      align-items: stretch !important;
+      flex-direction: column !important;
+      gap: 16px !important;
+    }
+
+    .dashboard-greeting > div:first-child {
+      min-width: 0 !important;
+    }
+
+    .dashboard-balance {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+    }
+
+    .dashboard-balance-right {
+      width: 100% !important;
+      text-align: left !important;
+      padding-top: 4px !important;
+    }
+
+    .dashboard-stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .dashboard-actions {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .dashboard-profile-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
   }
 
-  @media (max-width: 700px) {
-    .dashboard-responsive {
-      grid-template-columns: 1fr;
+
+  /* =========================================
+     MOBILE
+     ========================================= */
+
+  @media (max-width: 600px) {
+
+    .dashboard-page {
+      width: 100% !important;
+      overflow-x: hidden !important;
+    }
+
+    .dashboard-navbar {
+      padding: 12px 16px !important;
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 12px !important;
+    }
+
+    .dashboard-nav-right {
+      width: 100% !important;
+      justify-content: space-between !important;
+      gap: 7px !important;
+    }
+
+    .dashboard-nav-right button {
+      min-height: 38px !important;
+    }
+
+    .dashboard-nav-right > div {
+      min-height: 38px !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+
+    .dashboard-page main {
+      padding: 24px 16px 38px !important;
+    }
+
+    .dashboard-greeting {
+      margin-bottom: 18px !important;
+      gap: 14px !important;
+    }
+
+    .dashboard-greeting h1 {
+      font-size: 26px !important;
+      line-height: 1.2 !important;
+      word-break: break-word !important;
+    }
+
+    .dashboard-greeting p {
+      max-width: 100% !important;
+    }
+
+    .dashboard-balance {
+      padding: 22px 20px !important;
+      border-radius: 17px !important;
+      gap: 18px !important;
+    }
+
+    .dashboard-balance-left {
+      width: 100% !important;
+    }
+
+    .dashboard-balance h2 {
+      font-size: 27px !important;
+      word-break: break-word !important;
+    }
+
+    .dashboard-stats {
+      grid-template-columns: 1fr !important;
+      gap: 11px !important;
+    }
+
+    .dashboard-actions {
+      grid-template-columns: 1fr !important;
+      gap: 10px !important;
+    }
+
+    .dashboard-actions button {
+      min-height: 82px !important;
+      padding: 13px 14px !important;
+    }
+
+    .dashboard-actions button > div:nth-child(2) {
+      min-width: 0 !important;
+    }
+
+    .dashboard-actions button h3,
+    .dashboard-actions button p {
+      overflow-wrap: anywhere !important;
+    }
+
+    .dashboard-profile-grid {
+      grid-template-columns: 1fr !important;
+      gap: 15px !important;
+    }
+
+    .dashboard-profile-top {
+      flex-wrap: wrap !important;
+    }
+
+    .dashboard-profile-top > div:nth-child(2) {
+      min-width: 0 !important;
+      flex: 1 !important;
+    }
+
+    .dashboard-profile-top > div:last-child {
+      margin-left: auto !important;
+    }
+
+    .dashboard-transaction-row {
+      padding: 14px 13px !important;
+      gap: 10px !important;
+    }
+
+    .dashboard-transaction-row > div:nth-child(2) {
+      min-width: 0 !important;
+    }
+
+    .dashboard-transaction-row p {
+      overflow-wrap: anywhere !important;
+    }
+
+    .dashboard-transaction-row > div:last-child {
+      flex-shrink: 0 !important;
+    }
+
+    .dashboard-footer {
+      padding: 16px !important;
+      flex-direction: column !important;
+      text-align: center !important;
+      gap: 7px !important;
+    }
+  }
+
+
+  /* =========================================
+     SMALL MOBILE
+     ========================================= */
+
+  @media (max-width: 430px) {
+
+    .dashboard-navbar {
+      padding: 10px 12px !important;
+    }
+
+    .dashboard-nav-right {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+    }
+
+    .dashboard-nav-right > div {
+      grid-column: 1 / -1 !important;
+      justify-content: center !important;
+    }
+
+    .dashboard-nav-right button {
+      width: 100% !important;
+      justify-content: center !important;
+    }
+
+    .dashboard-page main {
+      padding: 20px 12px 32px !important;
+    }
+
+    .dashboard-greeting h1 {
+      font-size: 23px !important;
+    }
+
+    .dashboard-greeting small {
+      font-size: 16px !important;
+    }
+
+    .dashboard-greeting p {
+      font-size: 11px !important;
+      line-height: 1.5 !important;
+    }
+
+    .dashboard-balance {
+      padding: 19px 17px !important;
+    }
+
+    .dashboard-balance h2 {
+      font-size: 24px !important;
+    }
+
+    .dashboard-balance-left {
+      gap: 12px !important;
+    }
+
+    .dashboard-balance-left > div:first-child {
+      width: 46px !important;
+      height: 46px !important;
+      min-width: 46px !important;
+      font-size: 21px !important;
+    }
+
+    .dashboard-actions button {
+      min-height: 78px !important;
+    }
+
+    .dashboard-actions button > div:first-child {
+      width: 42px !important;
+      min-width: 42px !important;
+      height: 42px !important;
+    }
+
+    .dashboard-transaction-row {
+      align-items: flex-start !important;
+    }
+
+    .dashboard-transaction-row > div:first-child {
+      width: 36px !important;
+      min-width: 36px !important;
+      height: 36px !important;
+    }
+
+    .dashboard-transaction-row > div:last-child {
+      text-align: right !important;
+    }
+
+    .dashboard-transaction-row > div:last-child p {
+      font-size: 12px !important;
+    }
+
+    .dashboard-profile-card {
+      padding: 17px !important;
+    }
+  }
+
+
+  /* =========================================
+     VERY SMALL MOBILE
+     ========================================= */
+
+  @media (max-width: 360px) {
+
+    .dashboard-navbar {
+      padding: 9px 10px !important;
+    }
+
+    .dashboard-page main {
+      padding-left: 10px !important;
+      padding-right: 10px !important;
+    }
+
+    .dashboard-greeting h1 {
+      font-size: 21px !important;
+    }
+
+    .dashboard-balance {
+      padding: 17px 14px !important;
+    }
+
+    .dashboard-balance h2 {
+      font-size: 22px !important;
+    }
+
+    .dashboard-actions button {
+      padding: 12px !important;
+    }
+
+    .dashboard-actions button h3 {
+      font-size: 12px !important;
+    }
+
+    .dashboard-actions button p {
+      font-size: 9px !important;
+    }
+
+    .dashboard-transaction-row {
+      padding: 12px 10px !important;
+    }
+
+    .dashboard-transaction-row > div:last-child {
+      max-width: 105px !important;
+    }
+
+    .dashboard-transaction-row > div:last-child p {
+      font-size: 11px !important;
+    }
+
+    .dashboard-profile-top {
+      align-items: flex-start !important;
+    }
+
+    .dashboard-profile-top > div:last-child {
+      width: 100% !important;
+      margin-left: 0 !important;
     }
   }
 `;

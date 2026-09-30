@@ -13,6 +13,24 @@ function SecurityCenter() {
   const [liveStatus, setLiveStatus] = useState("Connecting...");
   const [selectedAlert, setSelectedAlert] = useState(null);
 
+  // =========================
+  // RESPONSIVE VIEW
+  // =========================
+
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 700
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 700);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const streamReaderRef = useRef(null);
 
   const getToken = () => localStorage.getItem("token");
@@ -216,10 +234,10 @@ function SecurityCenter() {
   };
 
   return (
-    <div style={styles.page}>
-      <div style={styles.container}>
+    <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
+      <div style={{ ...styles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
         {/* Header */}
-        <div style={styles.header}>
+        <div style={{ ...styles.header, ...(isMobile ? responsiveStyles.header : {}) }}>
             
           <div>
             <div style={styles.brand}>AVANI BANK</div>
@@ -229,7 +247,7 @@ function SecurityCenter() {
           </div>
 
           <button
-            style={styles.backButton}
+            style={{ ...styles.backButton, ...(isMobile ? responsiveStyles.backButton : {}) }}
             onClick={() => navigate("/dashboard")}
           >
             ← Dashboard
@@ -237,7 +255,7 @@ function SecurityCenter() {
         </div>
 
         {/* Title */}
-        <div style={styles.titleSection}>
+        <div style={{ ...styles.titleSection, ...(isMobile ? responsiveStyles.titleSection : {}) }}>
           <div>
             <h1 style={styles.title}>Security Center</h1>
             <p style={styles.subtitle}>
@@ -247,7 +265,7 @@ function SecurityCenter() {
           </div>
 
           <button
-            style={styles.refreshButton}
+            style={{ ...styles.refreshButton, ...(isMobile ? responsiveStyles.refreshButton : {}) }}
             onClick={loadSecurityData}
             disabled={loading}
           >
@@ -258,7 +276,7 @@ function SecurityCenter() {
         {error && <div style={styles.error}>{error}</div>}
 
         {/* Security Overview */}
-        <div style={styles.grid}>
+        <div style={{ ...styles.grid, ...(isMobile ? responsiveStyles.grid : {}) }}>
           <div style={styles.card}>
             <div style={styles.cardIcon}>🛡️</div>
             <div>
@@ -343,8 +361,8 @@ function SecurityCenter() {
         </div>
 
         {/* Alerts */}
-        <div style={styles.section}>
-          <div style={styles.sectionHeader}>
+        <div style={{ ...styles.section, ...(isMobile ? responsiveStyles.section : {}) }}>
+          <div style={{ ...styles.sectionHeader, ...(isMobile ? responsiveStyles.sectionHeader : {}) }}>
             <div>
               <h2 style={styles.sectionTitle}>Security & Fraud Alerts</h2>
               <p style={styles.sectionSubtitle}>
@@ -384,7 +402,7 @@ function SecurityCenter() {
                     }
                     style={styles.alertCard}
                   >
-                    <div style={styles.alertTop}>
+                    <div style={{ ...styles.alertTop, ...(isMobile ? responsiveStyles.alertTop : {}) }}>
                       <div>
                         <div style={styles.alertType}>
                           {formatAlertType(alert.alertType)}
@@ -403,7 +421,7 @@ function SecurityCenter() {
                       </span>
                     </div>
 
-                    <div style={styles.alertBody}>
+                    <div style={{ ...styles.alertBody, ...(isMobile ? responsiveStyles.alertBody : {}) }}>
                       <div>
                         <span style={styles.infoLabel}>Risk Score</span>
                         <strong>
@@ -452,11 +470,11 @@ function SecurityCenter() {
         </div>
 
         {/* Security Tips */}
-        <div style={styles.tipsSection}>
+        <div style={{ ...styles.tipsSection, ...(isMobile ? responsiveStyles.tipsSection : {}) }}>
           <h2 style={styles.sectionTitle}>Security Tips</h2>
 
-          <div style={styles.tipsGrid}>
-            <div style={styles.tip}>
+          <div style={{ ...styles.tipsGrid, ...(isMobile ? responsiveStyles.tipsGrid : {}) }}>
+            <div style={{ ...styles.tip, ...(isMobile ? responsiveStyles.tip : {}) }}>
               <span>🔐</span>
               <div>
                 <strong>Protect your credentials</strong>
@@ -466,7 +484,7 @@ function SecurityCenter() {
               </div>
             </div>
 
-            <div style={styles.tip}>
+            <div style={{ ...styles.tip, ...(isMobile ? responsiveStyles.tip : {}) }}>
               <span>📱</span>
               <div>
                 <strong>Use trusted devices</strong>
@@ -476,7 +494,7 @@ function SecurityCenter() {
               </div>
             </div>
 
-            <div style={styles.tip}>
+            <div style={{ ...styles.tip, ...(isMobile ? responsiveStyles.tip : {}) }}>
               <span>🚨</span>
               <div>
                 <strong>Report suspicious activity</strong>
@@ -493,14 +511,14 @@ function SecurityCenter() {
       {/* Details Modal */}
       {selectedAlert && (
         <div
-          style={styles.overlay}
+          style={{ ...styles.overlay, ...(isMobile ? responsiveStyles.overlay : {}) }}
           onClick={() => setSelectedAlert(null)}
         >
           <div
-            style={styles.modal}
+            style={{ ...styles.modal, ...(isMobile ? responsiveStyles.modal : {}) }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={styles.modalHeader}>
+            <div style={{ ...styles.modalHeader, ...(isMobile ? responsiveStyles.modalHeader : {}) }}>
               <div>
                 <div style={styles.modalLabel}>SECURITY ALERT</div>
                 <h2 style={styles.modalTitle}>
@@ -509,14 +527,14 @@ function SecurityCenter() {
               </div>
 
               <button
-                style={styles.closeButton}
+                style={{ ...styles.closeButton, ...(isMobile ? responsiveStyles.closeButton : {}) }}
                 onClick={() => setSelectedAlert(null)}
               >
                 ×
               </button>
             </div>
 
-            <div style={styles.modalGrid}>
+            <div style={{ ...styles.modalGrid, ...(isMobile ? responsiveStyles.modalGrid : {}) }}>
               <div>
                 <span style={styles.infoLabel}>Risk Level</span>
                 <strong>
@@ -587,6 +605,125 @@ function SecurityCenter() {
     </div>
   );
 }
+
+const responsiveStyles = {
+  page: {
+    padding: "14px 10px 24px",
+  },
+
+  container: {
+    maxWidth: "100%",
+  },
+
+  header: {
+    maxHeight: "none",
+    padding: "18px 16px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "14px",
+    borderRadius: "15px",
+  },
+
+  titleSection: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "14px",
+    marginBottom: "18px",
+  },
+
+  backButton: {
+    width: "100%",
+    padding: "11px 14px",
+    textAlign: "center",
+  },
+
+  refreshButton: {
+    width: "100%",
+    padding: "11px 14px",
+  },
+
+  grid: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+  },
+
+  statusBanner: {
+    alignItems: "flex-start",
+    gap: "11px",
+    padding: "15px",
+  },
+
+  section: {
+    padding: "16px 13px",
+    borderRadius: "13px",
+    marginBottom: "16px",
+  },
+
+  sectionHeader: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: "10px",
+    marginBottom: "16px",
+  },
+
+  alertCard: {
+    padding: "15px",
+  },
+
+  alertTop: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "10px",
+  },
+
+  alertBody: {
+    gridTemplateColumns: "1fr",
+    gap: "11px",
+    marginTop: "15px",
+    paddingTop: "13px",
+  },
+
+  tipsSection: {
+    padding: "16px 13px",
+  },
+
+  tipsGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+  },
+
+  tip: {
+    alignItems: "flex-start",
+    padding: "13px",
+  },
+
+  overlay: {
+    padding: "10px",
+    alignItems: "center",
+  },
+
+  modal: {
+    maxWidth: "100%",
+    width: "100%",
+    padding: "18px 15px",
+    borderRadius: "13px",
+    maxHeight: "92vh",
+  },
+
+  modalHeader: {
+    gap: "10px",
+    marginBottom: "18px",
+  },
+
+  closeButton: {
+    flexShrink: 0,
+  },
+
+  modalGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "13px",
+  },
+};
 
 const styles = {
   page: {

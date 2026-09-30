@@ -1880,6 +1880,205 @@ tbody tr:last-child td {
   }
 
 }
+
+/* =====================================================
+   EXTRA MOBILE REFINEMENTS
+   ===================================================== */
+
+@media (max-width: 900px) {
+  .aml-page {
+    padding: 18px 20px;
+  }
+
+  .aml-header {
+    gap: 18px;
+  }
+
+  .aml-content {
+    padding: 24px 0 35px;
+  }
+
+  .intro-card {
+    padding: 22px;
+  }
+
+  .top-grid {
+    gap: 18px;
+  }
+
+  .customer-card,
+  .form-card,
+  .history-card {
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .aml-page {
+    padding: 12px;
+  }
+
+  .aml-header {
+    width: 100%;
+    max-height: none;
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .header-left {
+    width: 100%;
+  }
+
+  .aml-header h1 {
+    font-size: 21px;
+  }
+
+  .aml-header p {
+    line-height: 1.5;
+  }
+
+  .header-right {
+    width: 100%;
+  }
+
+  .user-box {
+    min-width: 0;
+  }
+
+  .user-info {
+    min-width: 0;
+  }
+
+  .user-info strong,
+  .user-info span {
+    overflow-wrap: anywhere;
+  }
+
+  .aml-content {
+    padding: 18px 0 28px;
+  }
+
+  .intro-card,
+  .customer-card,
+  .form-card,
+  .history-card {
+    padding: 18px;
+  }
+
+  .intro-card h2 {
+    font-size: 19px;
+    line-height: 1.35;
+  }
+
+  .intro-card p {
+    line-height: 1.6;
+  }
+
+  .card-top h3,
+  .history-header h2 {
+    font-size: 17px;
+  }
+
+  .customer-info-grid {
+    margin-top: 32px;
+    gap: 20px;
+  }
+
+  .customer-detail strong {
+    display: block;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.45;
+  }
+
+  .form-group select,
+  .form-group textarea {
+    font-size: 13px;
+  }
+
+  .run-button {
+    min-height: 46px;
+  }
+
+  .success-message,
+  .error-message {
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+  }
+
+  table {
+    min-width: 650px;
+  }
+
+  .remarks-cell {
+    max-width: 260px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .aml-footer {
+    padding: 18px 0;
+    line-height: 1.6;
+    text-align: center;
+  }
+}
+
+@media (max-width: 420px) {
+  .aml-header {
+    padding: 15px;
+  }
+
+  .page-icon {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+  }
+
+  .aml-header h1 {
+    font-size: 19px;
+  }
+
+  .header-label {
+    font-size: 8px;
+  }
+
+  .intro-card,
+  .customer-card,
+  .form-card,
+  .history-card {
+    padding: 16px;
+  }
+
+  .secure-badge {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .customer-card-icon,
+  .aml-card-icon {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+  }
+
+  .record-count {
+    align-self: stretch;
+    text-align: center;
+  }
+
+  .empty-state {
+    padding: 35px 10px;
+  }
+}
+
 `;
 
 export default AmlCheck;

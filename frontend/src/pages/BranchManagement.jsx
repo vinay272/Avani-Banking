@@ -1652,6 +1652,28 @@ const BranchManagement = () => {
   };
 
   // =========================================================
+  // RESPONSIVE VIEW
+  // =========================================================
+  const [isTablet, setIsTablet] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 1000
+  );
+
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 700
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsTablet(window.innerWidth <= 1000);
+      setIsMobile(window.innerWidth <= 700);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // =========================================================
   // STYLES
   // =========================================================
   const styles = {
@@ -2187,39 +2209,315 @@ const BranchManagement = () => {
   };
 
   // =========================================================
+  // RESPONSIVE STYLE OVERRIDES
+  // =========================================================
+  const responsiveStyles = {
+    ...styles,
+
+    page: {
+      ...styles.page,
+      ...(isTablet ? { padding: "18px 20px" } : {}),
+      ...(isMobile ? { padding: "10px" } : {}),
+    },
+
+    header: {
+      ...styles.header,
+      ...(isTablet
+        ? {
+            height: "auto",
+            minHeight: "80px",
+            flexWrap: "wrap",
+            padding: "16px 20px",
+          }
+        : {}),
+      ...(isMobile
+        ? {
+            borderRadius: "14px",
+            padding: "14px",
+            flexDirection: "column",
+            alignItems: "stretch",
+            gap: "14px",
+          }
+        : {}),
+    },
+
+    headerLeft: {
+      ...styles.headerLeft,
+      ...(isMobile ? { width: "100%" } : {}),
+    },
+
+    headerIcon: {
+      ...styles.headerIcon,
+      ...(isMobile
+        ? { width: "42px", height: "42px", fontSize: "21px" }
+        : {}),
+    },
+
+    headerTitle: {
+      ...styles.headerTitle,
+      ...(isMobile ? { fontSize: "18px" } : {}),
+    },
+
+    headerSubtitle: {
+      ...styles.headerSubtitle,
+      ...(isMobile ? { fontSize: "11px", lineHeight: 1.4 } : {}),
+    },
+
+    dashboardButton: {
+      ...styles.dashboardButton,
+      ...(isMobile ? { width: "100%", minHeight: "44px" } : {}),
+    },
+
+    container: {
+      ...styles.container,
+      ...(isTablet ? { padding: "18px" } : {}),
+      ...(isMobile ? { padding: "14px 0 30px" } : {}),
+    },
+
+    tabs: {
+      ...styles.tabs,
+      ...(isMobile
+        ? {
+            flexWrap: "nowrap",
+            overflowX: "auto",
+            WebkitOverflowScrolling: "touch",
+            padding: "7px",
+            gap: "6px",
+          }
+        : {}),
+    },
+
+    tab: {
+      ...styles.tab,
+      ...(isMobile
+        ? {
+            flexShrink: 0,
+            whiteSpace: "nowrap",
+            padding: "10px 13px",
+            fontSize: "12px",
+          }
+        : {}),
+    },
+
+    section: {
+      ...styles.section,
+      ...(isMobile
+        ? {
+            padding: "15px",
+            borderRadius: "13px",
+          }
+        : {}),
+    },
+
+    sectionHeader: {
+      ...styles.sectionHeader,
+      ...(isMobile
+        ? {
+            alignItems: "stretch",
+            flexDirection: "column",
+            gap: "12px",
+          }
+        : {}),
+    },
+
+    sectionTitle: {
+      ...styles.sectionTitle,
+      ...(isMobile ? { fontSize: "18px" } : {}),
+    },
+
+    sectionDescription: {
+      ...styles.sectionDescription,
+      ...(isMobile ? { lineHeight: 1.5 } : {}),
+    },
+
+    primaryButton: {
+      ...styles.primaryButton,
+      ...(isMobile ? { width: "100%", minHeight: "44px" } : {}),
+    },
+
+    secondaryButton: {
+      ...styles.secondaryButton,
+      ...(isMobile ? { minHeight: "42px" } : {}),
+    },
+
+    formGrid: {
+      ...styles.formGrid,
+      ...(isTablet
+        ? { gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }
+        : {}),
+      ...(isMobile
+        ? { gridTemplateColumns: "1fr", gap: "11px" }
+        : {}),
+    },
+
+    filterBar: {
+      ...styles.filterBar,
+      ...(isTablet
+        ? {
+            gridTemplateColumns: "minmax(180px, 1fr) minmax(150px, 1fr)",
+          }
+        : {}),
+      ...(isMobile
+        ? {
+            gridTemplateColumns: "1fr",
+            gap: "9px",
+          }
+        : {}),
+    },
+
+    analyticsGrid: {
+      ...styles.analyticsGrid,
+      ...(isTablet
+        ? { gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }
+        : {}),
+      ...(isMobile ? { gridTemplateColumns: "1fr" } : {}),
+    },
+
+    detailGrid: {
+      ...styles.detailGrid,
+      ...(isTablet
+        ? { gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }
+        : {}),
+      ...(isMobile ? { gridTemplateColumns: "1fr" } : {}),
+    },
+
+    atmDetailGrid: {
+      ...styles.atmDetailGrid,
+      ...(isTablet
+        ? { gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }
+        : {}),
+      ...(isMobile ? { gridTemplateColumns: "1fr" } : {}),
+    },
+
+    cashCounterDetailGrid: {
+      ...styles.cashCounterDetailGrid,
+      ...(isTablet
+        ? { gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }
+        : {}),
+      ...(isMobile ? { gridTemplateColumns: "1fr" } : {}),
+    },
+
+    tableWrapper: {
+      ...styles.tableWrapper,
+      overflowX: "auto",
+      WebkitOverflowScrolling: "touch",
+    },
+
+    table: {
+      ...styles.table,
+      minWidth: isMobile ? "780px" : isTablet ? "820px" : styles.table.minWidth,
+    },
+
+    actionGroup: {
+      ...styles.actionGroup,
+      ...(isMobile ? { flexDirection: "column", alignItems: "stretch" } : {}),
+    },
+
+    modalOverlay: {
+      ...styles.modalOverlay,
+      ...(isMobile
+        ? {
+            alignItems: "flex-end",
+            padding: "8px",
+          }
+        : {}),
+    },
+
+    modal: {
+      ...styles.modal,
+      ...(isTablet ? { maxHeight: "92vh", overflowY: "auto" } : {}),
+      ...(isMobile
+        ? {
+            width: "100%",
+            maxWidth: "100%",
+            maxHeight: "92vh",
+            borderRadius: "16px 16px 10px 10px",
+            padding: "15px",
+            overflowY: "auto",
+          }
+        : {}),
+    },
+
+    modalHeader: {
+      ...styles.modalHeader,
+      ...(isMobile ? { alignItems: "flex-start" } : {}),
+    },
+
+    modalTitle: {
+      ...styles.modalTitle,
+      ...(isMobile ? { fontSize: "17px" } : {}),
+    },
+
+    modalFooter: {
+      ...styles.modalFooter,
+      ...(isMobile
+        ? {
+            flexDirection: "column",
+            alignItems: "stretch",
+          }
+        : {}),
+    },
+
+    closeButton: {
+      ...styles.closeButton,
+      ...(isMobile ? { flexShrink: 0 } : {}),
+    },
+  };
+
+  // =========================================================
   // RENDER
   // =========================================================
   return (
-    <div style={styles.page}>
+    <div className="branch-management-page" style={responsiveStyles.page}>
+      <style>{`
+        .branch-management-page {
+          width: 100%;
+          max-width: 100%;
+          overflow-x: hidden;
+        }
+        .branch-management-page * {
+          box-sizing: border-box;
+        }
+        @media (max-width: 700px) {
+          .branch-management-page input,
+          .branch-management-page select,
+          .branch-management-page textarea {
+            max-width: 100%;
+          }
+          .branch-management-page table {
+            white-space: nowrap;
+          }
+        }
+      `}</style>
       {/* =====================================================
           HEADER
       ===================================================== */}
-      <header style={styles.header}>
-        <div style={styles.headerLeft}>
-          <div style={styles.headerIcon}>🏦</div>
+      <header style={responsiveStyles.header}>
+        <div style={responsiveStyles.headerLeft}>
+          <div style={responsiveStyles.headerIcon}>🏦</div>
 
           <div>
-            <h1 style={styles.headerTitle}>Branch Management</h1>
+            <h1 style={responsiveStyles.headerTitle}>Branch Management</h1>
 
-            <p style={styles.headerSubtitle}>
+            <p style={responsiveStyles.headerSubtitle}>
               Manage branches, employees and branch operations
             </p>
           </div>
         </div>
 
         <button
-          style={styles.dashboardButton}
+          style={responsiveStyles.dashboardButton}
           onClick={() => navigate("/admin/dashboard")}
         >
           ← Admin Dashboard
         </button>
       </header>
 
-      <main style={styles.container}>
+      <main style={responsiveStyles.container}>
         {/* ===================================================
             TABS
         =================================================== */}
-        <div style={styles.tabs}>
+        <div style={responsiveStyles.tabs}>
           {[
             ["branches", "🏦 Branches"],
             ["employees", "👥 Employees"],
@@ -2248,27 +2546,27 @@ const BranchManagement = () => {
         {/* ===================================================
             SUCCESS / ERROR
         =================================================== */}
-        {success && <div style={styles.alertSuccess}>✓ {success}</div>}
+        {success && <div style={responsiveStyles.alertSuccess}>✓ {success}</div>}
 
-        {error && <div style={styles.alertError}>⚠ {error}</div>}
+        {error && <div style={responsiveStyles.alertError}>⚠ {error}</div>}
 
         {/* ===================================================
             BRANCH MANAGEMENT
         =================================================== */}
         {activeTab === "branches" && (
-          <section style={styles.section}>
-            <div style={styles.sectionHeader}>
+          <section style={responsiveStyles.section}>
+            <div style={responsiveStyles.sectionHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Branch Network</div>
+                <div style={responsiveStyles.sectionEyebrow}>Branch Network</div>
 
-                <h2 style={styles.sectionTitle}>All Branches</h2>
+                <h2 style={responsiveStyles.sectionTitle}>All Branches</h2>
 
-                <p style={styles.sectionDescription}>
+                <p style={responsiveStyles.sectionDescription}>
                   Create, update and manage Avani Bank branches.
                 </p>
               </div>
 
-              <button style={styles.primaryButton} onClick={openAddBranchForm}>
+              <button style={responsiveStyles.primaryButton} onClick={openAddBranchForm}>
                 + Add Branch
               </button>
             </div>
@@ -2292,49 +2590,49 @@ const BranchManagement = () => {
             )}
 
             {!loading && branches.length > 0 && (
-              <div style={styles.tableWrapper}>
-                <table style={styles.table}>
+              <div style={responsiveStyles.tableWrapper}>
+                <table style={responsiveStyles.table}>
                   <thead>
                     <tr>
-                      <th style={styles.th}>Branch Code</th>
-                      <th style={styles.th}>Branch Name</th>
-                      <th style={styles.th}>Location</th>
-                      <th style={styles.th}>Phone</th>
-                      <th style={styles.th}>Manager</th>
-                      <th style={styles.th}>Status</th>
-                      <th style={styles.th}>Actions</th>
+                      <th style={responsiveStyles.th}>Branch Code</th>
+                      <th style={responsiveStyles.th}>Branch Name</th>
+                      <th style={responsiveStyles.th}>Location</th>
+                      <th style={responsiveStyles.th}>Phone</th>
+                      <th style={responsiveStyles.th}>Manager</th>
+                      <th style={responsiveStyles.th}>Status</th>
+                      <th style={responsiveStyles.th}>Actions</th>
                     </tr>
                   </thead>
 
                   <tbody>
                     {branches.map((branch) => (
                       <tr key={branch.id}>
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           <strong>{branch.branchCode || "—"}</strong>
                         </td>
 
-                        <td style={styles.td}>{branch.branchName || "—"}</td>
+                        <td style={responsiveStyles.td}>{branch.branchName || "—"}</td>
 
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           {[branch.city, branch.state]
                             .filter(Boolean)
                             .join(", ") || "—"}
                         </td>
 
-                        <td style={styles.td}>{branch.phone || "—"}</td>
+                        <td style={responsiveStyles.td}>{branch.phone || "—"}</td>
 
-                        <td style={styles.td}>{branch.managerName || "—"}</td>
+                        <td style={responsiveStyles.td}>{branch.managerName || "—"}</td>
 
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           <span style={getStatusClass(branch.status)}>
                             {branch.status || "—"}
                           </span>
                         </td>
 
-                        <td style={styles.td}>
-                          <div style={styles.actionGroup}>
+                        <td style={responsiveStyles.td}>
+                          <div style={responsiveStyles.actionGroup}>
                             <button
-                              style={styles.secondaryButton}
+                              style={responsiveStyles.secondaryButton}
                               onClick={() => openEditBranchForm(branch)}
                             >
                               Edit
@@ -2354,20 +2652,20 @@ const BranchManagement = () => {
             EMPLOYEE MANAGEMENT
         =================================================== */}
         {activeTab === "employees" && (
-          <section style={styles.section}>
-            <div style={styles.sectionHeader}>
+          <section style={responsiveStyles.section}>
+            <div style={responsiveStyles.sectionHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Staff Administration</div>
+                <div style={responsiveStyles.sectionEyebrow}>Staff Administration</div>
 
-                <h2 style={styles.sectionTitle}>Employee Management</h2>
+                <h2 style={responsiveStyles.sectionTitle}>Employee Management</h2>
 
-                <p style={styles.sectionDescription}>
+                <p style={responsiveStyles.sectionDescription}>
                   Manage employee accounts, roles, branches and account status.
                 </p>
               </div>
 
               <button
-                style={styles.primaryButton}
+                style={responsiveStyles.primaryButton}
                 onClick={openAddEmployeeForm}
               >
                 + Add Employee
@@ -2375,27 +2673,27 @@ const BranchManagement = () => {
             </div>
 
             {employeeSuccess && (
-              <div style={styles.alertSuccess}>✓ {employeeSuccess}</div>
+              <div style={responsiveStyles.alertSuccess}>✓ {employeeSuccess}</div>
             )}
 
             {employeeError && (
-              <div style={styles.alertError}>⚠ {employeeError}</div>
+              <div style={responsiveStyles.alertError}>⚠ {employeeError}</div>
             )}
 
             {/* FILTERS */}
-            <div style={styles.filterBar}>
+            <div style={responsiveStyles.filterBar}>
               <input
                 type="text"
                 placeholder="Search employee, email, code or branch..."
                 value={employeeSearch}
                 onChange={(e) => setEmployeeSearch(e.target.value)}
-                style={styles.input}
+                style={responsiveStyles.input}
               />
 
               <select
                 value={employeeRoleFilter}
                 onChange={(e) => setEmployeeRoleFilter(e.target.value)}
-                style={styles.select}
+                style={responsiveStyles.select}
               >
                 <option value="ALL">All Roles</option>
 
@@ -2409,7 +2707,7 @@ const BranchManagement = () => {
               <select
                 value={employeeStatusFilter}
                 onChange={(e) => setEmployeeStatusFilter(e.target.value)}
-                style={styles.select}
+                style={responsiveStyles.select}
               >
                 <option value="ALL">All Status</option>
                 <option value="ACTIVE">ACTIVE</option>
@@ -2439,16 +2737,16 @@ const BranchManagement = () => {
             )}
 
             {!employeeLoading && filteredEmployees.length > 0 && (
-              <div style={styles.tableWrapper}>
-                <table style={styles.table}>
+              <div style={responsiveStyles.tableWrapper}>
+                <table style={responsiveStyles.table}>
                   <thead>
                     <tr>
-                      <th style={styles.th}>Employee</th>
-                      <th style={styles.th}>Email</th>
-                      <th style={styles.th}>Role</th>
-                      <th style={styles.th}>Branch</th>
-                      <th style={styles.th}>Status</th>
-                      <th style={styles.th}>Actions</th>
+                      <th style={responsiveStyles.th}>Employee</th>
+                      <th style={responsiveStyles.th}>Email</th>
+                      <th style={responsiveStyles.th}>Role</th>
+                      <th style={responsiveStyles.th}>Branch</th>
+                      <th style={responsiveStyles.th}>Status</th>
+                      <th style={responsiveStyles.th}>Actions</th>
                     </tr>
                   </thead>
 
@@ -2460,7 +2758,7 @@ const BranchManagement = () => {
 
                       return (
                         <tr key={employee.id}>
-                          <td style={styles.td}>
+                          <td style={responsiveStyles.td}>
                             <div
                               style={{
                                 fontWeight: 750,
@@ -2481,9 +2779,9 @@ const BranchManagement = () => {
                             </div>
                           </td>
 
-                          <td style={styles.td}>{employee.email || "—"}</td>
+                          <td style={responsiveStyles.td}>{employee.email || "—"}</td>
 
-                          <td style={styles.td}>
+                          <td style={responsiveStyles.td}>
                             <span
                               style={{
                                 display: "inline-flex",
@@ -2499,27 +2797,27 @@ const BranchManagement = () => {
                             </span>
                           </td>
 
-                          <td style={styles.td}>
+                          <td style={responsiveStyles.td}>
                             {employee.branchCode || "—"}
                           </td>
 
-                          <td style={styles.td}>
+                          <td style={responsiveStyles.td}>
                             <span style={getStatusClass(employee.status)}>
                               {employee.status || "—"}
                             </span>
                           </td>
 
-                          <td style={styles.td}>
-                            <div style={styles.actionGroup}>
+                          <td style={responsiveStyles.td}>
+                            <div style={responsiveStyles.actionGroup}>
                               <button
-                                style={styles.secondaryButton}
+                                style={responsiveStyles.secondaryButton}
                                 onClick={() => handleViewEmployee(employee)}
                               >
                                 View
                               </button>
 
                               <button
-                                style={styles.secondaryButton}
+                                style={responsiveStyles.secondaryButton}
                                 onClick={() => openEditEmployeeForm(employee)}
                               >
                                 Edit
@@ -2554,18 +2852,18 @@ const BranchManagement = () => {
         =================================================== */}
 
         {activeTab === "cash-counters" && (
-          <section style={styles.section}>
-            <div style={styles.sectionHeader}>
+          <section style={responsiveStyles.section}>
+            <div style={responsiveStyles.sectionHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Branch Operations</div>
-                <h2 style={styles.sectionTitle}>Cash Counter Management</h2>
-                <p style={styles.sectionDescription}>
+                <div style={responsiveStyles.sectionEyebrow}>Branch Operations</div>
+                <h2 style={responsiveStyles.sectionTitle}>Cash Counter Management</h2>
+                <p style={responsiveStyles.sectionDescription}>
                   Manage branch cash counters, balances and cashier assignments.
                 </p>
               </div>
               <button
                 type="button"
-                style={styles.primaryButton}
+                style={responsiveStyles.primaryButton}
                 onClick={openAddCashCounterForm}
               >
                 + Add Cash Counter
@@ -2573,21 +2871,21 @@ const BranchManagement = () => {
             </div>
 
             {cashCounterSuccess && (
-              <div style={styles.alertSuccess}>{cashCounterSuccess}</div>
+              <div style={responsiveStyles.alertSuccess}>{cashCounterSuccess}</div>
             )}
             {cashCounterError && (
-              <div style={styles.alertError}>{cashCounterError}</div>
+              <div style={responsiveStyles.alertError}>{cashCounterError}</div>
             )}
 
-            <div style={styles.filterBar}>
+            <div style={responsiveStyles.filterBar}>
               <input
-                style={styles.input}
+                style={responsiveStyles.input}
                 value={cashCounterSearch}
                 onChange={(e) => setCashCounterSearch(e.target.value)}
                 placeholder="Search counter, branch or cashier..."
               />
               <select
-                style={styles.select}
+                style={responsiveStyles.select}
                 value={cashCounterBranchFilter}
                 onChange={(e) => setCashCounterBranchFilter(e.target.value)}
               >
@@ -2599,7 +2897,7 @@ const BranchManagement = () => {
                 ))}
               </select>
               <select
-                style={styles.select}
+                style={responsiveStyles.select}
                 value={cashCounterStatusFilter}
                 onChange={(e) => setCashCounterStatusFilter(e.target.value)}
               >
@@ -2621,31 +2919,31 @@ const BranchManagement = () => {
               </div>
             ) : filteredCashCounters.length === 0 ? (
               <div style={{ textAlign: "center", padding: "45px" }}>
-                <div style={styles.placeholderIcon}>💵</div>
-                <h3 style={styles.placeholderTitle}>No Cash Counters Found</h3>
-                <p style={styles.placeholderText}>
+                <div style={responsiveStyles.placeholderIcon}>💵</div>
+                <h3 style={responsiveStyles.placeholderTitle}>No Cash Counters Found</h3>
+                <p style={responsiveStyles.placeholderText}>
                   Create a cash counter to start managing branch cash
                   operations.
                 </p>
               </div>
             ) : (
-              <div style={styles.tableWrapper}>
-                <table style={styles.table}>
+              <div style={responsiveStyles.tableWrapper}>
+                <table style={responsiveStyles.table}>
                   <thead>
                     <tr>
-                      <th style={styles.th}>Counter</th>
-                      <th style={styles.th}>Branch</th>
-                      <th style={styles.th}>Cashier</th>
-                      <th style={styles.th}>Opening Balance</th>
-                      <th style={styles.th}>Current Balance</th>
-                      <th style={styles.th}>Status</th>
-                      <th style={styles.th}>Actions</th>
+                      <th style={responsiveStyles.th}>Counter</th>
+                      <th style={responsiveStyles.th}>Branch</th>
+                      <th style={responsiveStyles.th}>Cashier</th>
+                      <th style={responsiveStyles.th}>Opening Balance</th>
+                      <th style={responsiveStyles.th}>Current Balance</th>
+                      <th style={responsiveStyles.th}>Status</th>
+                      <th style={responsiveStyles.th}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredCashCounters.map((counter) => (
                       <tr key={counter.id}>
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           <strong>{counter.counterCode}</strong>
                           <div
                             style={{
@@ -2657,44 +2955,44 @@ const BranchManagement = () => {
                             {counter.counterName}
                           </div>
                         </td>
-                        <td style={styles.td}>{counter.branchCode || "—"}</td>
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>{counter.branchCode || "—"}</td>
+                        <td style={responsiveStyles.td}>
                           {counter.assignedEmployeeCode || "Not Assigned"}
                         </td>
-                        <td style={styles.td}>
-                          <span style={styles.moneyValue}>
+                        <td style={responsiveStyles.td}>
+                          <span style={responsiveStyles.moneyValue}>
                             {formatCurrency(counter.openingBalance)}
                           </span>
                         </td>
-                        <td style={styles.td}>
-                          <span style={styles.moneyValue}>
+                        <td style={responsiveStyles.td}>
+                          <span style={responsiveStyles.moneyValue}>
                             {formatCurrency(counter.currentBalance)}
                           </span>
                         </td>
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           <span style={getStatusClass(counter.status)}>
                             {String(counter.status || "UNKNOWN").toUpperCase()}
                           </span>
                         </td>
-                        <td style={styles.td}>
-                          <div style={styles.actionGroup}>
+                        <td style={responsiveStyles.td}>
+                          <div style={responsiveStyles.actionGroup}>
                             <button
                               type="button"
-                              style={styles.secondaryButton}
+                              style={responsiveStyles.secondaryButton}
                               onClick={() => handleViewCashCounter(counter)}
                             >
                               View
                             </button>
                             <button
                               type="button"
-                              style={styles.secondaryButton}
+                              style={responsiveStyles.secondaryButton}
                               onClick={() => openEditCashCounterForm(counter)}
                             >
                               Edit
                             </button>
                             <button
                               type="button"
-                              style={styles.secondaryButton}
+                              style={responsiveStyles.secondaryButton}
                               onClick={() => openAssignCashierForm(counter)}
                             >
                               Assign
@@ -2703,7 +3001,7 @@ const BranchManagement = () => {
                             "ACTIVE" ? (
                               <button
                                 type="button"
-                                style={styles.dangerButton}
+                                style={responsiveStyles.dangerButton}
                                 onClick={() =>
                                   handleCashCounterStatusChange(counter)
                                 }
@@ -2713,7 +3011,7 @@ const BranchManagement = () => {
                             ) : (
                               <button
                                 type="button"
-                                style={styles.successButton}
+                                style={responsiveStyles.successButton}
                                 onClick={() =>
                                   handleCashCounterStatusChange(counter)
                                 }
@@ -2736,19 +3034,19 @@ const BranchManagement = () => {
             ATM MONITORING
         =================================================== */}
         {activeTab === "atms" && (
-          <section style={styles.section}>
-            <div style={styles.sectionHeader}>
+          <section style={responsiveStyles.section}>
+            <div style={responsiveStyles.sectionHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>ATM Operations</div>
-                <h2 style={styles.sectionTitle}>ATM Monitoring</h2>
-                <p style={styles.sectionDescription}>
+                <div style={responsiveStyles.sectionEyebrow}>ATM Operations</div>
+                <h2 style={responsiveStyles.sectionTitle}>ATM Monitoring</h2>
+                <p style={responsiveStyles.sectionDescription}>
                   Monitor ATM status, cash availability and maintenance.
                 </p>
               </div>
 
               <button
                 type="button"
-                style={styles.primaryButton}
+                style={responsiveStyles.primaryButton}
                 onClick={openAddAtmForm}
               >
                 + Add ATM
@@ -2756,21 +3054,21 @@ const BranchManagement = () => {
             </div>
 
             {atmSuccess && (
-              <div style={styles.alertSuccess}>✓ {atmSuccess}</div>
+              <div style={responsiveStyles.alertSuccess}>✓ {atmSuccess}</div>
             )}
 
-            {atmError && <div style={styles.alertError}>⚠ {atmError}</div>}
+            {atmError && <div style={responsiveStyles.alertError}>⚠ {atmError}</div>}
 
-            <div style={styles.filterBar}>
+            <div style={responsiveStyles.filterBar}>
               <input
-                style={styles.input}
+                style={responsiveStyles.input}
                 value={atmSearch}
                 onChange={(e) => setAtmSearch(e.target.value)}
                 placeholder="Search ATM, branch or location..."
               />
 
               <select
-                style={styles.select}
+                style={responsiveStyles.select}
                 value={atmBranchFilter}
                 onChange={(e) => setAtmBranchFilter(e.target.value)}
               >
@@ -2783,7 +3081,7 @@ const BranchManagement = () => {
               </select>
 
               <select
-                style={styles.select}
+                style={responsiveStyles.select}
                 value={atmStatusFilter}
                 onChange={(e) => setAtmStatusFilter(e.target.value)}
               >
@@ -2805,31 +3103,31 @@ const BranchManagement = () => {
               </div>
             ) : filteredAtms.length === 0 ? (
               <div style={{ textAlign: "center", padding: "45px" }}>
-                <div style={styles.placeholderIcon}>🏧</div>
-                <h3 style={styles.placeholderTitle}>No ATMs Found</h3>
-                <p style={styles.placeholderText}>
+                <div style={responsiveStyles.placeholderIcon}>🏧</div>
+                <h3 style={responsiveStyles.placeholderTitle}>No ATMs Found</h3>
+                <p style={responsiveStyles.placeholderText}>
                   Add an ATM to start monitoring branch ATM operations.
                 </p>
               </div>
             ) : (
-              <div style={styles.tableWrapper}>
-                <table style={styles.table}>
+              <div style={responsiveStyles.tableWrapper}>
+                <table style={responsiveStyles.table}>
                   <thead>
                     <tr>
-                      <th style={styles.th}>ATM</th>
-                      <th style={styles.th}>Branch</th>
-                      <th style={styles.th}>Location</th>
-                      <th style={styles.th}>Cash Balance</th>
-                      <th style={styles.th}>Maintenance</th>
-                      <th style={styles.th}>Status</th>
-                      <th style={styles.th}>Actions</th>
+                      <th style={responsiveStyles.th}>ATM</th>
+                      <th style={responsiveStyles.th}>Branch</th>
+                      <th style={responsiveStyles.th}>Location</th>
+                      <th style={responsiveStyles.th}>Cash Balance</th>
+                      <th style={responsiveStyles.th}>Maintenance</th>
+                      <th style={responsiveStyles.th}>Status</th>
+                      <th style={responsiveStyles.th}>Actions</th>
                     </tr>
                   </thead>
 
                   <tbody>
                     {filteredAtms.map((atm) => (
                       <tr key={atm.id}>
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           <strong>{atm.atmCode}</strong>
                           <div
                             style={{
@@ -2842,33 +3140,33 @@ const BranchManagement = () => {
                           </div>
                         </td>
 
-                        <td style={styles.td}>{atm.branchCode || "—"}</td>
+                        <td style={responsiveStyles.td}>{atm.branchCode || "—"}</td>
 
-                        <td style={styles.td}>{atm.location || "—"}</td>
+                        <td style={responsiveStyles.td}>{atm.location || "—"}</td>
 
-                        <td style={styles.td}>
-                          <span style={styles.moneyValue}>
+                        <td style={responsiveStyles.td}>
+                          <span style={responsiveStyles.moneyValue}>
                             {formatCurrency(atm.cashBalance)}
                           </span>
                         </td>
 
-                        <td style={styles.td}>
-                          <span style={styles.maintenanceText}>
+                        <td style={responsiveStyles.td}>
+                          <span style={responsiveStyles.maintenanceText}>
                             {formatDate(atm.lastMaintenanceAt)}
                           </span>
                         </td>
 
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           <span style={getStatusClass(atm.status)}>
                             {String(atm.status || "UNKNOWN").toUpperCase()}
                           </span>
                         </td>
 
-                        <td style={styles.td}>
-                          <div style={styles.actionGroup}>
+                        <td style={responsiveStyles.td}>
+                          <div style={responsiveStyles.actionGroup}>
                             <button
                               type="button"
-                              style={styles.secondaryButton}
+                              style={responsiveStyles.secondaryButton}
                               onClick={() => handleViewAtm(atm)}
                             >
                               View
@@ -2876,7 +3174,7 @@ const BranchManagement = () => {
 
                             <button
                               type="button"
-                              style={styles.secondaryButton}
+                              style={responsiveStyles.secondaryButton}
                               onClick={() => openEditAtmForm(atm)}
                             >
                               Edit
@@ -2884,7 +3182,7 @@ const BranchManagement = () => {
 
                             <button
                               type="button"
-                              style={styles.secondaryButton}
+                              style={responsiveStyles.secondaryButton}
                               onClick={() => handleAtmMaintenance(atm)}
                             >
                               Maintenance
@@ -2894,7 +3192,7 @@ const BranchManagement = () => {
                             "ACTIVE" ? (
                               <button
                                 type="button"
-                                style={styles.dangerButton}
+                                style={responsiveStyles.dangerButton}
                                 onClick={() => handleAtmStatusChange(atm)}
                               >
                                 Deactivate
@@ -2902,7 +3200,7 @@ const BranchManagement = () => {
                             ) : (
                               <button
                                 type="button"
-                                style={styles.successButton}
+                                style={responsiveStyles.successButton}
                                 onClick={() => handleAtmStatusChange(atm)}
                               >
                                 Activate
@@ -2923,32 +3221,32 @@ const BranchManagement = () => {
             VAULT
         =================================================== */}
         {activeTab === "vault" && (
-          <section style={styles.section}>
-            <div style={styles.sectionHeader}>
+          <section style={responsiveStyles.section}>
+            <div style={responsiveStyles.sectionHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Security Operations</div>
-                <h2 style={styles.sectionTitle}>Vault Management</h2>
-                <p style={styles.sectionDescription}>
+                <div style={responsiveStyles.sectionEyebrow}>Security Operations</div>
+                <h2 style={responsiveStyles.sectionTitle}>Vault Management</h2>
+                <p style={responsiveStyles.sectionDescription}>
                   Manage branch vaults, capacity, status and audit records.
                 </p>
               </div>
-              <button style={styles.primaryButton} onClick={openAddVaultForm}>
+              <button style={responsiveStyles.primaryButton} onClick={openAddVaultForm}>
                 + Add Vault
               </button>
             </div>
             {vaultSuccess && (
-              <div style={styles.alertSuccess}>✓ {vaultSuccess}</div>
+              <div style={responsiveStyles.alertSuccess}>✓ {vaultSuccess}</div>
             )}
-            {vaultError && <div style={styles.alertError}>⚠ {vaultError}</div>}
-            <div style={styles.filterBar}>
+            {vaultError && <div style={responsiveStyles.alertError}>⚠ {vaultError}</div>}
+            <div style={responsiveStyles.filterBar}>
               <input
-                style={styles.input}
+                style={responsiveStyles.input}
                 value={vaultSearch}
                 onChange={(e) => setVaultSearch(e.target.value)}
                 placeholder="Search vault, code or branch..."
               />
               <select
-                style={styles.select}
+                style={responsiveStyles.select}
                 value={vaultBranchFilter}
                 onChange={(e) => setVaultBranchFilter(e.target.value)}
               >
@@ -2960,7 +3258,7 @@ const BranchManagement = () => {
                 ))}
               </select>
               <select
-                style={styles.select}
+                style={responsiveStyles.select}
                 value={vaultStatusFilter}
                 onChange={(e) => setVaultStatusFilter(e.target.value)}
               >
@@ -2974,61 +3272,61 @@ const BranchManagement = () => {
                 Loading vaults...
               </div>
             ) : filteredVaults.length === 0 ? (
-              <div style={styles.emptyState}>No vaults found.</div>
+              <div style={responsiveStyles.emptyState}>No vaults found.</div>
             ) : (
-              <div style={styles.tableWrapper}>
-                <table style={styles.table}>
+              <div style={responsiveStyles.tableWrapper}>
+                <table style={responsiveStyles.table}>
                   <thead>
                     <tr>
-                      <th style={styles.th}>Vault</th>
-                      <th style={styles.th}>Branch</th>
-                      <th style={styles.th}>Capacity</th>
-                      <th style={styles.th}>Balance</th>
-                      <th style={styles.th}>Status</th>
-                      <th style={styles.th}>Last Audit</th>
-                      <th style={styles.th}>Actions</th>
+                      <th style={responsiveStyles.th}>Vault</th>
+                      <th style={responsiveStyles.th}>Branch</th>
+                      <th style={responsiveStyles.th}>Capacity</th>
+                      <th style={responsiveStyles.th}>Balance</th>
+                      <th style={responsiveStyles.th}>Status</th>
+                      <th style={responsiveStyles.th}>Last Audit</th>
+                      <th style={responsiveStyles.th}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredVaults.map((v) => (
                       <tr key={v.id}>
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           <strong>{v.vaultCode || "—"}</strong>
-                          <div style={styles.mutedSmall}>
+                          <div style={responsiveStyles.mutedSmall}>
                             {v.vaultName || "—"}
                           </div>
                         </td>
-                        <td style={styles.td}>{v.branchCode || "—"}</td>
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>{v.branchCode || "—"}</td>
+                        <td style={responsiveStyles.td}>
                           {formatCurrency(v.totalCapacity)}
                         </td>
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           {formatCurrency(v.currentBalance ?? v.vaultBalance)}
                         </td>
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           <span style={getStatusClass(v.status)}>
                             {v.status || "—"}
                           </span>
                         </td>
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           {formatDate(v.lastAuditAt || v.updatedAt)}
                         </td>
-                        <td style={styles.td}>
-                          <div style={styles.actionGroup}>
+                        <td style={responsiveStyles.td}>
+                          <div style={responsiveStyles.actionGroup}>
                             <button
-                              style={styles.secondaryButton}
+                              style={responsiveStyles.secondaryButton}
                               onClick={() => handleViewVault(v)}
                             >
                               View
                             </button>
                             <button
-                              style={styles.secondaryButton}
+                              style={responsiveStyles.secondaryButton}
                               onClick={() => openEditVaultForm(v)}
                             >
                               Edit
                             </button>
                             <button
-                              style={styles.secondaryButton}
+                              style={responsiveStyles.secondaryButton}
                               onClick={() => handleVaultAudit(v)}
                             >
                               Audit
@@ -3036,14 +3334,14 @@ const BranchManagement = () => {
                             {String(v.status || "").toUpperCase() ===
                             "ACTIVE" ? (
                               <button
-                                style={styles.dangerButton}
+                                style={responsiveStyles.dangerButton}
                                 onClick={() => handleVaultStatusChange(v)}
                               >
                                 Deactivate
                               </button>
                             ) : (
                               <button
-                                style={styles.successButton}
+                                style={responsiveStyles.successButton}
                                 onClick={() => handleVaultStatusChange(v)}
                               >
                                 Activate
@@ -3062,32 +3360,32 @@ const BranchManagement = () => {
 
         {/* =================================================== DAILY CLOSING */}
         {activeTab === "daily-closing" && (
-          <section style={styles.section}>
-            <div style={styles.sectionHeader}>
+          <section style={responsiveStyles.section}>
+            <div style={responsiveStyles.sectionHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Daily Operations</div>
-                <h2 style={styles.sectionTitle}>Daily Closing Reports</h2>
-                <p style={styles.sectionDescription}>
+                <div style={responsiveStyles.sectionEyebrow}>Daily Operations</div>
+                <h2 style={responsiveStyles.sectionTitle}>Daily Closing Reports</h2>
+                <p style={responsiveStyles.sectionDescription}>
                   Create and review branch end-of-day cash closing reports.
                 </p>
               </div>
-              <button style={styles.primaryButton} onClick={openAddDailyForm}>
+              <button style={responsiveStyles.primaryButton} onClick={openAddDailyForm}>
                 + Create Closing Report
               </button>
             </div>
             {dailySuccess && (
-              <div style={styles.alertSuccess}>✓ {dailySuccess}</div>
+              <div style={responsiveStyles.alertSuccess}>✓ {dailySuccess}</div>
             )}
-            {dailyError && <div style={styles.alertError}>⚠ {dailyError}</div>}
-            <div style={styles.filterBar}>
+            {dailyError && <div style={responsiveStyles.alertError}>⚠ {dailyError}</div>}
+            <div style={responsiveStyles.filterBar}>
               <input
-                style={styles.input}
+                style={responsiveStyles.input}
                 value={dailySearch}
                 onChange={(e) => setDailySearch(e.target.value)}
                 placeholder="Search branch, employee or date..."
               />
               <select
-                style={styles.select}
+                style={responsiveStyles.select}
                 value={dailyBranchFilter}
                 onChange={(e) => setDailyBranchFilter(e.target.value)}
               >
@@ -3099,7 +3397,7 @@ const BranchManagement = () => {
                 ))}
               </select>
               <select
-                style={styles.select}
+                style={responsiveStyles.select}
                 value={dailyStatusFilter}
                 onChange={(e) => setDailyStatusFilter(e.target.value)}
               >
@@ -3113,38 +3411,38 @@ const BranchManagement = () => {
                 Loading reports...
               </div>
             ) : filteredDailyReports.length === 0 ? (
-              <div style={styles.emptyState}>
+              <div style={responsiveStyles.emptyState}>
                 No daily closing reports found.
               </div>
             ) : (
-              <div style={styles.tableWrapper}>
-                <table style={styles.table}>
+              <div style={responsiveStyles.tableWrapper}>
+                <table style={responsiveStyles.table}>
                   <thead>
                     <tr>
-                      <th style={styles.th}>Date</th>
-                      <th style={styles.th}>Branch</th>
-                      <th style={styles.th}>Opening Cash</th>
-                      <th style={styles.th}>Received</th>
-                      <th style={styles.th}>Paid</th>
-                      <th style={styles.th}>Transactions</th>
-                      <th style={styles.th}>Status</th>
-                      <th style={styles.th}>Actions</th>
+                      <th style={responsiveStyles.th}>Date</th>
+                      <th style={responsiveStyles.th}>Branch</th>
+                      <th style={responsiveStyles.th}>Opening Cash</th>
+                      <th style={responsiveStyles.th}>Received</th>
+                      <th style={responsiveStyles.th}>Paid</th>
+                      <th style={responsiveStyles.th}>Transactions</th>
+                      <th style={responsiveStyles.th}>Status</th>
+                      <th style={responsiveStyles.th}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredDailyReports.map((r) => (
                       <tr key={r.id}>
-                        <td style={styles.td}>{r.closingDate || "—"}</td>
-                        <td style={styles.td}>{r.branchCode || "—"}</td>
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>{r.closingDate || "—"}</td>
+                        <td style={responsiveStyles.td}>{r.branchCode || "—"}</td>
+                        <td style={responsiveStyles.td}>
                           {formatCurrency(r.openingCash)}
                         </td>
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           {formatCurrency(r.cashReceived)}
                         </td>
-                        <td style={styles.td}>{formatCurrency(r.cashPaid)}</td>
-                        <td style={styles.td}>{r.totalTransactions ?? "—"}</td>
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>{formatCurrency(r.cashPaid)}</td>
+                        <td style={responsiveStyles.td}>{r.totalTransactions ?? "—"}</td>
+                        <td style={responsiveStyles.td}>
                           {r.status ? (
                             <span style={getStatusClass(r.status)}>
                               {r.status}
@@ -3153,9 +3451,9 @@ const BranchManagement = () => {
                             "—"
                           )}
                         </td>
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           <button
-                            style={styles.secondaryButton}
+                            style={responsiveStyles.secondaryButton}
                             onClick={() => handleViewDailyReport(r)}
                           >
                             View
@@ -3172,22 +3470,22 @@ const BranchManagement = () => {
 
         {/* =================================================== ANALYTICS */}
         {activeTab === "analytics" && (
-          <section style={styles.section}>
-            <div style={styles.sectionHeader}>
+          <section style={responsiveStyles.section}>
+            <div style={responsiveStyles.sectionHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Branch Intelligence</div>
-                <h2 style={styles.sectionTitle}>Branch Analytics</h2>
-                <p style={styles.sectionDescription}>
+                <div style={responsiveStyles.sectionEyebrow}>Branch Intelligence</div>
+                <h2 style={responsiveStyles.sectionTitle}>Branch Analytics</h2>
+                <p style={responsiveStyles.sectionDescription}>
                   View operational metrics for a selected branch.
                 </p>
               </div>
             </div>
             {analyticsError && (
-              <div style={styles.alertError}>⚠ {analyticsError}</div>
+              <div style={responsiveStyles.alertError}>⚠ {analyticsError}</div>
             )}
-            <div style={styles.analyticsSelector}>
+            <div style={responsiveStyles.analyticsSelector}>
               <select
-                style={styles.select}
+                style={responsiveStyles.select}
                 value={analyticsBranch}
                 onChange={(e) => setAnalyticsBranch(e.target.value)}
               >
@@ -3199,7 +3497,7 @@ const BranchManagement = () => {
                 ))}
               </select>
               <button
-                style={styles.primaryButton}
+                style={responsiveStyles.primaryButton}
                 disabled={!analyticsBranch || analyticsLoading}
                 onClick={() => fetchBranchAnalytics()}
               >
@@ -3207,22 +3505,22 @@ const BranchManagement = () => {
               </button>
             </div>
             {!analytics && !analyticsLoading && (
-              <div style={styles.analyticsEmpty}>
-                <div style={styles.placeholderIcon}>📈</div>
-                <h3 style={styles.placeholderTitle}>Select a branch</h3>
-                <p style={styles.placeholderText}>
+              <div style={responsiveStyles.analyticsEmpty}>
+                <div style={responsiveStyles.placeholderIcon}>📈</div>
+                <h3 style={responsiveStyles.placeholderTitle}>Select a branch</h3>
+                <p style={responsiveStyles.placeholderText}>
                   Choose a branch above to load its latest analytics.
                 </p>
               </div>
             )}
             {analyticsLoading && (
-              <div style={styles.emptyState}>Loading branch analytics...</div>
+              <div style={responsiveStyles.emptyState}>Loading branch analytics...</div>
             )}
             {analytics && !analyticsLoading && (
               <>
-                <div style={styles.analyticsHero}>
+                <div style={responsiveStyles.analyticsHero}>
                   <div>
-                    <div style={styles.analyticsCode}>
+                    <div style={responsiveStyles.analyticsCode}>
                       {analytics.branchCode || "—"}
                     </div>
                     <h3>{analytics.branchName || "Branch"}</h3>
@@ -3236,7 +3534,7 @@ const BranchManagement = () => {
                     {analytics.status || "—"}
                   </span>
                 </div>
-                <div style={styles.analyticsGrid}>
+                <div style={responsiveStyles.analyticsGrid}>
                   {[
                     ["Total Employees", analytics.totalEmployees],
                     ["Active Employees", analytics.activeEmployees],
@@ -3269,9 +3567,9 @@ const BranchManagement = () => {
                       analytics.latestTransactionCount ?? "—",
                     ],
                   ].map(([label, value]) => (
-                    <div style={styles.analyticsCard} key={label}>
-                      <div style={styles.detailLabel}>{label}</div>
-                      <div style={styles.analyticsValue}>{value}</div>
+                    <div style={responsiveStyles.analyticsCard} key={label}>
+                      <div style={responsiveStyles.detailLabel}>{label}</div>
+                      <div style={responsiveStyles.analyticsValue}>{value}</div>
                     </div>
                   ))}
                 </div>
@@ -3285,29 +3583,29 @@ const BranchManagement = () => {
           VAULT FORM MODAL
       ===================================================== */}
       {showVaultForm && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
-            <div style={styles.modalHeader}>
+        <div style={responsiveStyles.modalOverlay}>
+          <div style={responsiveStyles.modal}>
+            <div style={responsiveStyles.modalHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Security Operations</div>
-                <h3 style={styles.modalTitle}>
+                <div style={responsiveStyles.sectionEyebrow}>Security Operations</div>
+                <h3 style={responsiveStyles.modalTitle}>
                   {editingVault ? "Edit Vault" : "Add Vault"}
                 </h3>
               </div>
               <button
                 type="button"
-                style={styles.closeButton}
+                style={responsiveStyles.closeButton}
                 onClick={() => setShowVaultForm(false)}
               >
                 ×
               </button>
             </div>
             <form onSubmit={handleVaultSubmit}>
-              <div style={styles.formGrid}>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Vault Code *</label>
+              <div style={responsiveStyles.formGrid}>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Vault Code *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     name="vaultCode"
                     value={vaultFormData.vaultCode}
                     onChange={(e) =>
@@ -3320,10 +3618,10 @@ const BranchManagement = () => {
                     placeholder="e.g. VLT-001"
                   />
                 </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Vault Name *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Vault Name *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     name="vaultName"
                     value={vaultFormData.vaultName}
                     onChange={(e) =>
@@ -3336,10 +3634,10 @@ const BranchManagement = () => {
                     placeholder="Main Branch Vault"
                   />
                 </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Branch *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Branch *</label>
                   <select
-                    style={styles.select}
+                    style={responsiveStyles.select}
                     name="branchCode"
                     value={vaultFormData.branchCode}
                     onChange={(e) =>
@@ -3358,10 +3656,10 @@ const BranchManagement = () => {
                     ))}
                   </select>
                 </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Total Capacity *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Total Capacity *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     type="number"
                     min="0"
                     step="0.01"
@@ -3389,17 +3687,17 @@ const BranchManagement = () => {
                   {vaultError}
                 </div>
               )}
-              <div style={styles.modalFooter}>
+              <div style={responsiveStyles.modalFooter}>
                 <button
                   type="button"
-                  style={styles.secondaryButton}
+                  style={responsiveStyles.secondaryButton}
                   onClick={() => setShowVaultForm(false)}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  style={styles.primaryButton}
+                  style={responsiveStyles.primaryButton}
                   disabled={vaultSaving}
                 >
                   {vaultSaving
@@ -3416,27 +3714,27 @@ const BranchManagement = () => {
 
       {/* ===================================================== DAILY CLOSING FORM */}
       {showDailyForm && (
-        <div style={styles.modalOverlay}>
+        <div style={responsiveStyles.modalOverlay}>
           <div style={{ ...styles.modal, maxWidth: "920px" }}>
-            <div style={styles.modalHeader}>
+            <div style={responsiveStyles.modalHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Daily Operations</div>
-                <h3 style={styles.modalTitle}>Create Daily Closing Report</h3>
+                <div style={responsiveStyles.sectionEyebrow}>Daily Operations</div>
+                <h3 style={responsiveStyles.modalTitle}>Create Daily Closing Report</h3>
               </div>
               <button
                 type="button"
-                style={styles.closeButton}
+                style={responsiveStyles.closeButton}
                 onClick={() => setShowDailyForm(false)}
               >
                 ×
               </button>
             </div>
             <form onSubmit={handleDailySubmit}>
-              <div style={styles.formGrid}>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Branch Code *</label>
+              <div style={responsiveStyles.formGrid}>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Branch Code *</label>
                   <select
-                    style={styles.select}
+                    style={responsiveStyles.select}
                     name="branchCode"
                     value={dailyFormData.branchCode}
                     onChange={handleDailyChange}
@@ -3450,10 +3748,10 @@ const BranchManagement = () => {
                     ))}
                   </select>
                 </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Closing Date *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Closing Date *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     type="date"
                     name="closingDate"
                     value={dailyFormData.closingDate}
@@ -3461,10 +3759,10 @@ const BranchManagement = () => {
                     required
                   />
                 </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Opening Cash *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Opening Cash *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     type="number"
                     min="0"
                     step="0.01"
@@ -3475,10 +3773,10 @@ const BranchManagement = () => {
                     placeholder="0.00"
                   />
                 </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Cash Received *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Cash Received *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     type="number"
                     min="0"
                     step="0.01"
@@ -3489,10 +3787,10 @@ const BranchManagement = () => {
                     placeholder="0.00"
                   />
                 </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Cash Paid *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Cash Paid *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     type="number"
                     min="0"
                     step="0.01"
@@ -3503,10 +3801,10 @@ const BranchManagement = () => {
                     placeholder="0.00"
                   />
                 </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Total Transactions *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Total Transactions *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     type="number"
                     min="0"
                     step="1"
@@ -3517,10 +3815,10 @@ const BranchManagement = () => {
                     placeholder="0"
                   />
                 </div>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Closed By Employee Code</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Closed By Employee Code</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     name="closedByEmployeeCode"
                     value={dailyFormData.closedByEmployeeCode}
                     onChange={handleDailyChange}
@@ -3539,17 +3837,17 @@ const BranchManagement = () => {
                   {dailyError}
                 </div>
               )}
-              <div style={styles.modalFooter}>
+              <div style={responsiveStyles.modalFooter}>
                 <button
                   type="button"
-                  style={styles.secondaryButton}
+                  style={responsiveStyles.secondaryButton}
                   onClick={() => setShowDailyForm(false)}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  style={styles.primaryButton}
+                  style={responsiveStyles.primaryButton}
                   disabled={dailySaving}
                 >
                   {dailySaving ? "Saving..." : "Create Report"}
@@ -3562,25 +3860,25 @@ const BranchManagement = () => {
 
       {/* ===================================================== VAULT DETAILS */}
       {showVaultDetails && (
-        <div style={styles.modalOverlay}>
+        <div style={responsiveStyles.modalOverlay}>
           <div style={{ ...styles.modal, maxWidth: "850px" }}>
-            <div style={styles.modalHeader}>
+            <div style={responsiveStyles.modalHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Vault</div>
-                <h3 style={styles.modalTitle}>Vault Details</h3>
+                <div style={responsiveStyles.sectionEyebrow}>Vault</div>
+                <h3 style={responsiveStyles.modalTitle}>Vault Details</h3>
               </div>
               <button
                 type="button"
-                style={styles.closeButton}
+                style={responsiveStyles.closeButton}
                 onClick={() => setShowVaultDetails(false)}
               >
                 ×
               </button>
             </div>
             {vaultDetailLoading ? (
-              <div style={styles.emptyState}>Loading details...</div>
+              <div style={responsiveStyles.emptyState}>Loading details...</div>
             ) : selectedVault ? (
-              <div style={styles.detailGrid}>
+              <div style={responsiveStyles.detailGrid}>
                 {[
                   ["Vault Code", selectedVault.vaultCode],
                   ["Vault Name", selectedVault.vaultName],
@@ -3601,9 +3899,9 @@ const BranchManagement = () => {
                   ["Created At", formatDate(selectedVault.createdAt)],
                   ["Updated At", formatDate(selectedVault.updatedAt)],
                 ].map(([l, v]) => (
-                  <div style={styles.detailItem} key={l}>
-                    <div style={styles.detailLabel}>{l}</div>
-                    <div style={styles.detailValue}>
+                  <div style={responsiveStyles.detailItem} key={l}>
+                    <div style={responsiveStyles.detailLabel}>{l}</div>
+                    <div style={responsiveStyles.detailValue}>
                       {l === "Status" ? (
                         <span style={getStatusClass(v)}>{v || "—"}</span>
                       ) : (
@@ -3614,12 +3912,12 @@ const BranchManagement = () => {
                 ))}
               </div>
             ) : (
-              <div style={styles.emptyState}>Vault details unavailable.</div>
+              <div style={responsiveStyles.emptyState}>Vault details unavailable.</div>
             )}
-            <div style={styles.modalFooter}>
+            <div style={responsiveStyles.modalFooter}>
               <button
                 type="button"
-                style={styles.secondaryButton}
+                style={responsiveStyles.secondaryButton}
                 onClick={() => setShowVaultDetails(false)}
               >
                 Close
@@ -3631,25 +3929,25 @@ const BranchManagement = () => {
 
       {/* ===================================================== DAILY DETAILS */}
       {showDailyDetails && (
-        <div style={styles.modalOverlay}>
+        <div style={responsiveStyles.modalOverlay}>
           <div style={{ ...styles.modal, maxWidth: "850px" }}>
-            <div style={styles.modalHeader}>
+            <div style={responsiveStyles.modalHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Daily Closing</div>
-                <h3 style={styles.modalTitle}>Report Details</h3>
+                <div style={responsiveStyles.sectionEyebrow}>Daily Closing</div>
+                <h3 style={responsiveStyles.modalTitle}>Report Details</h3>
               </div>
               <button
                 type="button"
-                style={styles.closeButton}
+                style={responsiveStyles.closeButton}
                 onClick={() => setShowDailyDetails(false)}
               >
                 ×
               </button>
             </div>
             {dailyDetailLoading ? (
-              <div style={styles.emptyState}>Loading details...</div>
+              <div style={responsiveStyles.emptyState}>Loading details...</div>
             ) : selectedDailyReport ? (
-              <div style={styles.detailGrid}>
+              <div style={responsiveStyles.detailGrid}>
                 {[
                   ["Branch", selectedDailyReport.branchCode],
                   ["Closing Date", selectedDailyReport.closingDate],
@@ -3674,9 +3972,9 @@ const BranchManagement = () => {
                   ],
                   ["Created At", formatDate(selectedDailyReport.createdAt)],
                 ].map(([l, v]) => (
-                  <div style={styles.detailItem} key={l}>
-                    <div style={styles.detailLabel}>{l}</div>
-                    <div style={styles.detailValue}>
+                  <div style={responsiveStyles.detailItem} key={l}>
+                    <div style={responsiveStyles.detailLabel}>{l}</div>
+                    <div style={responsiveStyles.detailValue}>
                       {l === "Status" && v ? (
                         <span style={getStatusClass(v)}>{v}</span>
                       ) : (
@@ -3687,12 +3985,12 @@ const BranchManagement = () => {
                 ))}
               </div>
             ) : (
-              <div style={styles.emptyState}>Report details unavailable.</div>
+              <div style={responsiveStyles.emptyState}>Report details unavailable.</div>
             )}
-            <div style={styles.modalFooter}>
+            <div style={responsiveStyles.modalFooter}>
               <button
                 type="button"
-                style={styles.secondaryButton}
+                style={responsiveStyles.secondaryButton}
                 onClick={() => setShowDailyDetails(false)}
               >
                 Close
@@ -3706,19 +4004,19 @@ const BranchManagement = () => {
           ATM FORM MODAL
       ===================================================== */}
       {showAtmForm && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
-            <div style={styles.modalHeader}>
+        <div style={responsiveStyles.modalOverlay}>
+          <div style={responsiveStyles.modal}>
+            <div style={responsiveStyles.modalHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>ATM Operations</div>
-                <h3 style={styles.modalTitle}>
+                <div style={responsiveStyles.sectionEyebrow}>ATM Operations</div>
+                <h3 style={responsiveStyles.modalTitle}>
                   {editingAtm ? "Edit ATM" : "Add ATM"}
                 </h3>
               </div>
 
               <button
                 type="button"
-                style={styles.closeButton}
+                style={responsiveStyles.closeButton}
                 onClick={() => {
                   setShowAtmForm(false);
                   setEditingAtm(null);
@@ -3729,11 +4027,11 @@ const BranchManagement = () => {
             </div>
 
             <form onSubmit={handleAtmSubmit}>
-              <div style={styles.formGrid}>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>ATM Code *</label>
+              <div style={responsiveStyles.formGrid}>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>ATM Code *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     name="atmCode"
                     value={atmFormData.atmCode}
                     onChange={handleAtmChange}
@@ -3742,10 +4040,10 @@ const BranchManagement = () => {
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>ATM Name *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>ATM Name *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     name="atmName"
                     value={atmFormData.atmName}
                     onChange={handleAtmChange}
@@ -3754,10 +4052,10 @@ const BranchManagement = () => {
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Branch *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Branch *</label>
                   <select
-                    style={styles.select}
+                    style={responsiveStyles.select}
                     name="branchCode"
                     value={atmFormData.branchCode}
                     onChange={handleAtmChange}
@@ -3772,10 +4070,10 @@ const BranchManagement = () => {
                   </select>
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Location *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Location *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     name="location"
                     value={atmFormData.location}
                     onChange={handleAtmChange}
@@ -3784,10 +4082,10 @@ const BranchManagement = () => {
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Cash Balance *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Cash Balance *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     type="number"
                     name="cashBalance"
                     min="0"
@@ -3799,7 +4097,7 @@ const BranchManagement = () => {
                   />
                 </div>
 
-                <div style={styles.infoNote}>
+                <div style={responsiveStyles.infoNote}>
                   New ATMs are created as ACTIVE by the backend. Status can be
                   changed separately using Activate / Deactivate.
                 </div>
@@ -3817,10 +4115,10 @@ const BranchManagement = () => {
                 </div>
               )}
 
-              <div style={styles.modalFooter}>
+              <div style={responsiveStyles.modalFooter}>
                 <button
                   type="button"
-                  style={styles.secondaryButton}
+                  style={responsiveStyles.secondaryButton}
                   onClick={() => {
                     setShowAtmForm(false);
                     setEditingAtm(null);
@@ -3831,7 +4129,7 @@ const BranchManagement = () => {
 
                 <button
                   type="submit"
-                  style={styles.primaryButton}
+                  style={responsiveStyles.primaryButton}
                   disabled={atmSaving}
                 >
                   {atmSaving
@@ -3850,7 +4148,7 @@ const BranchManagement = () => {
           ATM DETAILS MODAL
       ===================================================== */}
       {showAtmDetails && (
-        <div style={styles.modalOverlay}>
+        <div style={responsiveStyles.modalOverlay}>
           <div
             style={{
               ...styles.modal,
@@ -3865,13 +4163,13 @@ const BranchManagement = () => {
               }}
             >
               <div>
-                <div style={styles.sectionEyebrow}>ATM Operations</div>
-                <h3 style={styles.modalTitle}>ATM Details</h3>
+                <div style={responsiveStyles.sectionEyebrow}>ATM Operations</div>
+                <h3 style={responsiveStyles.modalTitle}>ATM Details</h3>
               </div>
 
               <button
                 type="button"
-                style={styles.closeButton}
+                style={responsiveStyles.closeButton}
                 onClick={() => setShowAtmDetails(false)}
               >
                 ×
@@ -3889,7 +4187,7 @@ const BranchManagement = () => {
                 Loading details...
               </div>
             ) : selectedAtm ? (
-              <div style={styles.atmDetailGrid}>
+              <div style={responsiveStyles.atmDetailGrid}>
                 {[
                   ["ATM Code", selectedAtm.atmCode || "—"],
                   ["ATM Name", selectedAtm.atmName || "—"],
@@ -3903,15 +4201,15 @@ const BranchManagement = () => {
                   ["Created At", formatDate(selectedAtm.createdAt)],
                   ["Updated At", formatDate(selectedAtm.updatedAt)],
                 ].map(([label, value]) => (
-                  <div style={styles.detailItem} key={label}>
-                    <div style={styles.detailLabel}>{label}</div>
-                    <div style={styles.detailValue}>{value}</div>
+                  <div style={responsiveStyles.detailItem} key={label}>
+                    <div style={responsiveStyles.detailLabel}>{label}</div>
+                    <div style={responsiveStyles.detailValue}>{value}</div>
                   </div>
                 ))}
 
-                <div style={styles.detailItem}>
-                  <div style={styles.detailLabel}>Status</div>
-                  <div style={styles.detailValue}>
+                <div style={responsiveStyles.detailItem}>
+                  <div style={responsiveStyles.detailLabel}>Status</div>
+                  <div style={responsiveStyles.detailValue}>
                     <span style={getStatusClass(selectedAtm.status)}>
                       {String(selectedAtm.status || "UNKNOWN").toUpperCase()}
                     </span>
@@ -3930,10 +4228,10 @@ const BranchManagement = () => {
               </div>
             )}
 
-            <div style={styles.modalFooter}>
+            <div style={responsiveStyles.modalFooter}>
               <button
                 type="button"
-                style={styles.secondaryButton}
+                style={responsiveStyles.secondaryButton}
                 onClick={() => setShowAtmDetails(false)}
               >
                 Close
@@ -3947,19 +4245,19 @@ const BranchManagement = () => {
           BRANCH FORM MODAL
       ===================================================== */}
       {showBranchForm && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
-            <div style={styles.modalHeader}>
+        <div style={responsiveStyles.modalOverlay}>
+          <div style={responsiveStyles.modal}>
+            <div style={responsiveStyles.modalHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Branch Management</div>
+                <div style={responsiveStyles.sectionEyebrow}>Branch Management</div>
 
-                <h2 style={styles.modalTitle}>
+                <h2 style={responsiveStyles.modalTitle}>
                   {editingBranch ? "Edit Branch" : "Add New Branch"}
                 </h2>
               </div>
 
               <button
-                style={styles.closeButton}
+                style={responsiveStyles.closeButton}
                 onClick={() => {
                   setShowBranchForm(false);
                   setEditingBranch(null);
@@ -3970,116 +4268,116 @@ const BranchManagement = () => {
             </div>
 
             <form onSubmit={handleBranchSubmit}>
-              <div style={styles.formGrid}>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Branch Code *</label>
+              <div style={responsiveStyles.formGrid}>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Branch Code *</label>
 
                   <input
                     name="branchCode"
                     value={branchFormData.branchCode}
                     onChange={handleBranchChange}
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     placeholder="e.g. AVN-VNS-001"
                     required
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Branch Name *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Branch Name *</label>
 
                   <input
                     name="branchName"
                     value={branchFormData.branchName}
                     onChange={handleBranchChange}
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     placeholder="Branch name"
                     required
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Phone</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Phone</label>
 
                   <input
                     name="phone"
                     value={branchFormData.phone}
                     onChange={handleBranchChange}
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     placeholder="Branch phone"
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Email</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Email</label>
 
                   <input
                     type="email"
                     name="email"
                     value={branchFormData.email}
                     onChange={handleBranchChange}
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     placeholder="branch@avanibank.com"
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>City *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>City *</label>
 
                   <input
                     name="city"
                     value={branchFormData.city}
                     onChange={handleBranchChange}
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     placeholder="City"
                     required
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>State *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>State *</label>
 
                   <input
                     name="state"
                     value={branchFormData.state}
                     onChange={handleBranchChange}
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     placeholder="State"
                     required
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Pincode</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Pincode</label>
 
                   <input
                     name="pincode"
                     value={branchFormData.pincode}
                     onChange={handleBranchChange}
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     placeholder="Pincode"
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Manager Name</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Manager Name</label>
 
                   <input
                     name="managerName"
                     value={branchFormData.managerName}
                     onChange={handleBranchChange}
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     placeholder="Branch manager"
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Status</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Status</label>
 
                   <select
                     name="status"
                     value={branchFormData.status}
                     onChange={handleBranchChange}
-                    style={styles.select}
+                    style={responsiveStyles.select}
                   >
                     <option value="ACTIVE">ACTIVE</option>
 
@@ -4093,22 +4391,22 @@ const BranchManagement = () => {
                     gridColumn: "1 / -1",
                   }}
                 >
-                  <label style={styles.label}>Address</label>
+                  <label style={responsiveStyles.label}>Address</label>
 
                   <input
                     name="address"
                     value={branchFormData.address}
                     onChange={handleBranchChange}
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     placeholder="Complete branch address"
                   />
                 </div>
               </div>
 
-              <div style={styles.modalFooter}>
+              <div style={responsiveStyles.modalFooter}>
                 <button
                   type="button"
-                  style={styles.secondaryButton}
+                  style={responsiveStyles.secondaryButton}
                   onClick={() => {
                     setShowBranchForm(false);
                     setEditingBranch(null);
@@ -4119,7 +4417,7 @@ const BranchManagement = () => {
 
                 <button
                   type="submit"
-                  style={styles.primaryButton}
+                  style={responsiveStyles.primaryButton}
                   disabled={loading}
                 >
                   {loading
@@ -4138,19 +4436,19 @@ const BranchManagement = () => {
           EMPLOYEE FORM MODAL
       ===================================================== */}
       {showEmployeeForm && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
-            <div style={styles.modalHeader}>
+        <div style={responsiveStyles.modalOverlay}>
+          <div style={responsiveStyles.modal}>
+            <div style={responsiveStyles.modalHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Staff Administration</div>
+                <div style={responsiveStyles.sectionEyebrow}>Staff Administration</div>
 
-                <h2 style={styles.modalTitle}>
+                <h2 style={responsiveStyles.modalTitle}>
                   {editingEmployee ? "Edit Employee" : "Add New Employee"}
                 </h2>
               </div>
 
               <button
-                style={styles.closeButton}
+                style={responsiveStyles.closeButton}
                 onClick={() => {
                   setShowEmployeeForm(false);
                   setEditingEmployee(null);
@@ -4162,59 +4460,59 @@ const BranchManagement = () => {
             </div>
 
             {employeeError && (
-              <div style={styles.alertError}>⚠ {employeeError}</div>
+              <div style={responsiveStyles.alertError}>⚠ {employeeError}</div>
             )}
 
             <form onSubmit={handleEmployeeSubmit}>
-              <div style={styles.formGrid}>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Employee Code *</label>
+              <div style={responsiveStyles.formGrid}>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Employee Code *</label>
 
                   <input
                     name="employeeCode"
                     value={employeeFormData.employeeCode}
                     onChange={handleEmployeeChange}
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     placeholder="AVN-EMP-001"
                     required
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Full Name *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Full Name *</label>
 
                   <input
                     name="fullName"
                     value={employeeFormData.fullName}
                     onChange={handleEmployeeChange}
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     placeholder="Employee full name"
                     required
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Email *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Email *</label>
 
                   <input
                     type="email"
                     name="email"
                     value={employeeFormData.email}
                     onChange={handleEmployeeChange}
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     placeholder="employee@avanibank.com"
                     required
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Role *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Role *</label>
 
                   <select
                     name="role"
                     value={employeeFormData.role}
                     onChange={handleEmployeeChange}
-                    style={styles.select}
+                    style={responsiveStyles.select}
                     required
                   >
                     <option value="">Select Role</option>
@@ -4227,14 +4525,14 @@ const BranchManagement = () => {
                   </select>
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Branch *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Branch *</label>
 
                   <select
                     name="branchCode"
                     value={employeeFormData.branchCode}
                     onChange={handleEmployeeChange}
-                    style={styles.select}
+                    style={responsiveStyles.select}
                     required
                   >
                     <option value="">Select Branch</option>
@@ -4248,8 +4546,8 @@ const BranchManagement = () => {
                   </select>
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>
                     {editingEmployee ? "New Password" : "Password *"}
                   </label>
 
@@ -4314,10 +4612,10 @@ const BranchManagement = () => {
                 the employee table.
               </div>
 
-              <div style={styles.modalFooter}>
+              <div style={responsiveStyles.modalFooter}>
                 <button
                   type="button"
-                  style={styles.secondaryButton}
+                  style={responsiveStyles.secondaryButton}
                   onClick={() => {
                     setShowEmployeeForm(false);
                     setEditingEmployee(null);
@@ -4329,7 +4627,7 @@ const BranchManagement = () => {
 
                 <button
                   type="submit"
-                  style={styles.primaryButton}
+                  style={responsiveStyles.primaryButton}
                   disabled={employeeSaving}
                 >
                   {employeeSaving
@@ -4348,12 +4646,12 @@ const BranchManagement = () => {
           CASH COUNTER FORM MODAL
       ===================================================== */}
       {showCashCounterForm && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
-            <div style={styles.modalHeader}>
+        <div style={responsiveStyles.modalOverlay}>
+          <div style={responsiveStyles.modal}>
+            <div style={responsiveStyles.modalHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Branch Operations</div>
-                <h3 style={styles.modalTitle}>
+                <div style={responsiveStyles.sectionEyebrow}>Branch Operations</div>
+                <h3 style={responsiveStyles.modalTitle}>
                   {editingCashCounter
                     ? "Edit Cash Counter"
                     : "Add Cash Counter"}
@@ -4361,7 +4659,7 @@ const BranchManagement = () => {
               </div>
               <button
                 type="button"
-                style={styles.closeButton}
+                style={responsiveStyles.closeButton}
                 onClick={() => {
                   setShowCashCounterForm(false);
                   setEditingCashCounter(null);
@@ -4372,11 +4670,11 @@ const BranchManagement = () => {
             </div>
 
             <form onSubmit={handleCashCounterSubmit}>
-              <div style={styles.formGrid}>
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Counter Code *</label>
+              <div style={responsiveStyles.formGrid}>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Counter Code *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     name="counterCode"
                     value={cashCounterFormData.counterCode}
                     onChange={handleCashCounterChange}
@@ -4385,10 +4683,10 @@ const BranchManagement = () => {
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Counter Name *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Counter Name *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     name="counterName"
                     value={cashCounterFormData.counterName}
                     onChange={handleCashCounterChange}
@@ -4397,10 +4695,10 @@ const BranchManagement = () => {
                   />
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Branch *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Branch *</label>
                   <select
-                    style={styles.select}
+                    style={responsiveStyles.select}
                     name="branchCode"
                     value={cashCounterFormData.branchCode}
                     onChange={(e) => {
@@ -4421,10 +4719,10 @@ const BranchManagement = () => {
                   </select>
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Assign Cashier</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Assign Cashier</label>
                   <select
-                    style={styles.select}
+                    style={responsiveStyles.select}
                     name="assignedEmployeeCode"
                     value={cashCounterFormData.assignedEmployeeCode}
                     onChange={handleCashCounterChange}
@@ -4440,10 +4738,10 @@ const BranchManagement = () => {
                   </select>
                 </div>
 
-                <div style={styles.formGroup}>
-                  <label style={styles.label}>Opening Balance *</label>
+                <div style={responsiveStyles.formGroup}>
+                  <label style={responsiveStyles.label}>Opening Balance *</label>
                   <input
-                    style={styles.input}
+                    style={responsiveStyles.input}
                     type="number"
                     name="openingBalance"
                     min="0"
@@ -4455,7 +4753,7 @@ const BranchManagement = () => {
                   />
                 </div>
 
-                <div style={styles.infoNote}>
+                <div style={responsiveStyles.infoNote}>
                   Current balance is initialized by the backend from the opening
                   balance. Status is managed separately.
                 </div>
@@ -4473,10 +4771,10 @@ const BranchManagement = () => {
                 </div>
               )}
 
-              <div style={styles.modalFooter}>
+              <div style={responsiveStyles.modalFooter}>
                 <button
                   type="button"
-                  style={styles.secondaryButton}
+                  style={responsiveStyles.secondaryButton}
                   onClick={() => {
                     setShowCashCounterForm(false);
                     setEditingCashCounter(null);
@@ -4486,7 +4784,7 @@ const BranchManagement = () => {
                 </button>
                 <button
                   type="submit"
-                  style={styles.primaryButton}
+                  style={responsiveStyles.primaryButton}
                   disabled={cashCounterSaving}
                 >
                   {cashCounterSaving
@@ -4505,16 +4803,16 @@ const BranchManagement = () => {
           ASSIGN CASHIER MODAL
       ===================================================== */}
       {showCashierAssignForm && cashierAssignCounter && (
-        <div style={styles.modalOverlay}>
+        <div style={responsiveStyles.modalOverlay}>
           <div style={{ ...styles.modal, maxWidth: "620px" }}>
-            <div style={styles.modalHeader}>
+            <div style={responsiveStyles.modalHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Cash Counter</div>
-                <h3 style={styles.modalTitle}>Assign Cashier</h3>
+                <div style={responsiveStyles.sectionEyebrow}>Cash Counter</div>
+                <h3 style={responsiveStyles.modalTitle}>Assign Cashier</h3>
               </div>
               <button
                 type="button"
-                style={styles.closeButton}
+                style={responsiveStyles.closeButton}
                 onClick={() => setShowCashierAssignForm(false)}
               >
                 ×
@@ -4522,25 +4820,25 @@ const BranchManagement = () => {
             </div>
 
             <form onSubmit={handleAssignCashier}>
-              <div style={styles.detailGrid}>
-                <div style={styles.detailItem}>
-                  <div style={styles.detailLabel}>Counter</div>
-                  <div style={styles.detailValue}>
+              <div style={responsiveStyles.detailGrid}>
+                <div style={responsiveStyles.detailItem}>
+                  <div style={responsiveStyles.detailLabel}>Counter</div>
+                  <div style={responsiveStyles.detailValue}>
                     {cashierAssignCounter.counterCode}
                   </div>
                 </div>
-                <div style={styles.detailItem}>
-                  <div style={styles.detailLabel}>Branch</div>
-                  <div style={styles.detailValue}>
+                <div style={responsiveStyles.detailItem}>
+                  <div style={responsiveStyles.detailLabel}>Branch</div>
+                  <div style={responsiveStyles.detailValue}>
                     {cashierAssignCounter.branchCode}
                   </div>
                 </div>
               </div>
 
               <div style={{ marginTop: "16px" }}>
-                <label style={styles.label}>Active Cashier</label>
+                <label style={responsiveStyles.label}>Active Cashier</label>
                 <select
-                  style={styles.select}
+                  style={responsiveStyles.select}
                   value={cashierAssignEmployeeCode}
                   onChange={(e) => setCashierAssignEmployeeCode(e.target.value)}
                 >
@@ -4562,17 +4860,17 @@ const BranchManagement = () => {
                 </div>
               )}
 
-              <div style={styles.modalFooter}>
+              <div style={responsiveStyles.modalFooter}>
                 <button
                   type="button"
-                  style={styles.secondaryButton}
+                  style={responsiveStyles.secondaryButton}
                   onClick={() => setShowCashierAssignForm(false)}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  style={styles.primaryButton}
+                  style={responsiveStyles.primaryButton}
                   disabled={cashierAssignSaving}
                 >
                   {cashierAssignSaving ? "Saving..." : "Save Assignment"}
@@ -4587,7 +4885,7 @@ const BranchManagement = () => {
           CASH COUNTER DETAILS MODAL
       ===================================================== */}
       {showCashCounterDetails && (
-        <div style={styles.modalOverlay}>
+        <div style={responsiveStyles.modalOverlay}>
           <div
             style={{
               ...styles.modal,
@@ -4597,13 +4895,13 @@ const BranchManagement = () => {
           >
             <div style={{ ...styles.modalHeader, marginBottom: "14px" }}>
               <div>
-                <div style={styles.sectionEyebrow}>Cash Counter</div>
-                <h3 style={styles.modalTitle}>Cash Counter Details</h3>
+                <div style={responsiveStyles.sectionEyebrow}>Cash Counter</div>
+                <h3 style={responsiveStyles.modalTitle}>Cash Counter Details</h3>
               </div>
 
               <button
                 type="button"
-                style={styles.closeButton}
+                style={responsiveStyles.closeButton}
                 onClick={() => setShowCashCounterDetails(false)}
               >
                 ×
@@ -4622,7 +4920,7 @@ const BranchManagement = () => {
                 Loading details...
               </div>
             ) : selectedCashCounter ? (
-              <div style={styles.cashCounterDetailGrid}>
+              <div style={responsiveStyles.cashCounterDetailGrid}>
                 {[
                   ["Counter Code", selectedCashCounter.counterCode || "—"],
                   ["Counter Name", selectedCashCounter.counterName || "—"],
@@ -4642,15 +4940,15 @@ const BranchManagement = () => {
                   ["Created At", formatDate(selectedCashCounter.createdAt)],
                   ["Updated At", formatDate(selectedCashCounter.updatedAt)],
                 ].map(([label, value]) => (
-                  <div style={styles.cashCounterDetailItem} key={label}>
-                    <div style={styles.detailLabel}>{label}</div>
-                    <div style={styles.detailValue}>{value}</div>
+                  <div style={responsiveStyles.cashCounterDetailItem} key={label}>
+                    <div style={responsiveStyles.detailLabel}>{label}</div>
+                    <div style={responsiveStyles.detailValue}>{value}</div>
                   </div>
                 ))}
 
-                <div style={styles.cashCounterDetailItem}>
-                  <div style={styles.detailLabel}>Status</div>
-                  <div style={styles.detailValue}>
+                <div style={responsiveStyles.cashCounterDetailItem}>
+                  <div style={responsiveStyles.detailLabel}>Status</div>
+                  <div style={responsiveStyles.detailValue}>
                     <span style={getStatusClass(selectedCashCounter.status)}>
                       {String(
                         selectedCashCounter.status || "UNKNOWN",
@@ -4680,7 +4978,7 @@ const BranchManagement = () => {
             >
               <button
                 type="button"
-                style={styles.secondaryButton}
+                style={responsiveStyles.secondaryButton}
                 onClick={() => setShowCashCounterDetails(false)}
               >
                 Close
@@ -4694,22 +4992,22 @@ const BranchManagement = () => {
           EMPLOYEE DETAILS MODAL
       ===================================================== */}
       {showEmployeeDetails && (
-        <div style={styles.modalOverlay}>
+        <div style={responsiveStyles.modalOverlay}>
           <div
             style={{
               ...styles.modal,
               maxWidth: "700px",
             }}
           >
-            <div style={styles.modalHeader}>
+            <div style={responsiveStyles.modalHeader}>
               <div>
-                <div style={styles.sectionEyebrow}>Employee Profile</div>
+                <div style={responsiveStyles.sectionEyebrow}>Employee Profile</div>
 
-                <h2 style={styles.modalTitle}>Employee Details</h2>
+                <h2 style={responsiveStyles.modalTitle}>Employee Details</h2>
               </div>
 
               <button
-                style={styles.closeButton}
+                style={responsiveStyles.closeButton}
                 onClick={() => setShowEmployeeDetails(false)}
               >
                 ×
@@ -4730,77 +5028,77 @@ const BranchManagement = () => {
 
             {!employeeDetailLoading && selectedEmployee && (
               <>
-                <div style={styles.detailGrid}>
-                  <div style={styles.detailItem}>
-                    <div style={styles.detailLabel}>Employee Code</div>
+                <div style={responsiveStyles.detailGrid}>
+                  <div style={responsiveStyles.detailItem}>
+                    <div style={responsiveStyles.detailLabel}>Employee Code</div>
 
-                    <div style={styles.detailValue}>
+                    <div style={responsiveStyles.detailValue}>
                       {selectedEmployee.employeeCode || "—"}
                     </div>
                   </div>
 
-                  <div style={styles.detailItem}>
-                    <div style={styles.detailLabel}>Full Name</div>
+                  <div style={responsiveStyles.detailItem}>
+                    <div style={responsiveStyles.detailLabel}>Full Name</div>
 
-                    <div style={styles.detailValue}>
+                    <div style={responsiveStyles.detailValue}>
                       {selectedEmployee.fullName || "—"}
                     </div>
                   </div>
 
-                  <div style={styles.detailItem}>
-                    <div style={styles.detailLabel}>Email</div>
+                  <div style={responsiveStyles.detailItem}>
+                    <div style={responsiveStyles.detailLabel}>Email</div>
 
-                    <div style={styles.detailValue}>
+                    <div style={responsiveStyles.detailValue}>
                       {selectedEmployee.email || "—"}
                     </div>
                   </div>
 
-                  <div style={styles.detailItem}>
-                    <div style={styles.detailLabel}>Role</div>
+                  <div style={responsiveStyles.detailItem}>
+                    <div style={responsiveStyles.detailLabel}>Role</div>
 
-                    <div style={styles.detailValue}>
+                    <div style={responsiveStyles.detailValue}>
                       {selectedEmployee.role || "—"}
                     </div>
                   </div>
 
-                  <div style={styles.detailItem}>
-                    <div style={styles.detailLabel}>Branch</div>
+                  <div style={responsiveStyles.detailItem}>
+                    <div style={responsiveStyles.detailLabel}>Branch</div>
 
-                    <div style={styles.detailValue}>
+                    <div style={responsiveStyles.detailValue}>
                       {selectedEmployee.branchCode || "—"}
                     </div>
                   </div>
 
-                  <div style={styles.detailItem}>
-                    <div style={styles.detailLabel}>Status</div>
+                  <div style={responsiveStyles.detailItem}>
+                    <div style={responsiveStyles.detailLabel}>Status</div>
 
-                    <div style={styles.detailValue}>
+                    <div style={responsiveStyles.detailValue}>
                       <span style={getStatusClass(selectedEmployee.status)}>
                         {selectedEmployee.status || "—"}
                       </span>
                     </div>
                   </div>
 
-                  <div style={styles.detailItem}>
-                    <div style={styles.detailLabel}>Created At</div>
+                  <div style={responsiveStyles.detailItem}>
+                    <div style={responsiveStyles.detailLabel}>Created At</div>
 
-                    <div style={styles.detailValue}>
+                    <div style={responsiveStyles.detailValue}>
                       {formatDate(selectedEmployee.createdAt)}
                     </div>
                   </div>
 
-                  <div style={styles.detailItem}>
-                    <div style={styles.detailLabel}>Updated At</div>
+                  <div style={responsiveStyles.detailItem}>
+                    <div style={responsiveStyles.detailLabel}>Updated At</div>
 
-                    <div style={styles.detailValue}>
+                    <div style={responsiveStyles.detailValue}>
                       {formatDate(selectedEmployee.updatedAt)}
                     </div>
                   </div>
                 </div>
 
-                <div style={styles.modalFooter}>
+                <div style={responsiveStyles.modalFooter}>
                   <button
-                    style={styles.secondaryButton}
+                    style={responsiveStyles.secondaryButton}
                     onClick={() => {
                       setShowEmployeeDetails(false);
                       openEditEmployeeForm(selectedEmployee);
@@ -4810,7 +5108,7 @@ const BranchManagement = () => {
                   </button>
 
                   <button
-                    style={styles.primaryButton}
+                    style={responsiveStyles.primaryButton}
                     onClick={() => setShowEmployeeDetails(false)}
                   >
                     Close

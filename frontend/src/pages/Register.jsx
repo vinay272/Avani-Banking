@@ -100,35 +100,150 @@ function Register() {
 
   return (
     <>
-      <style>
-        {`
-          html,
-          body,
-          #root {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            min-height: 100%;
-          }
+     <style>
+  {`
+    html,
+    body,
+    #root {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+    }
 
-          body {
-            overflow-x: hidden;
-            overflow-y: hidden;
-          }
+    html,
+    body {
+      overflow-x: hidden;
+    }
 
-          * {
-            box-sizing: border-box;
-          }
+    * {
+      box-sizing: border-box;
+    }
 
-          @media (max-width: 850px) {
-            body {
-              overflow-y: auto;
-            }
-          }
-        `}
-      </style>
+    /* ==========================================
+       TABLET + MOBILE
+    ========================================== */
 
-      <div style={styles.page}>
+    @media (max-width: 900px) {
+      body {
+        overflow-y: auto;
+      }
+
+      .register-page {
+        min-height: 100svh !important;
+        height: auto !important;
+        padding: 12px !important;
+        align-items: flex-start !important;
+      }
+
+      .register-card {
+        width: 100% !important;
+        max-width: 560px !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        height: auto !important;
+
+        flex-direction: column !important;
+
+        border-radius: 24px !important;
+      }
+
+      .register-welcome-panel {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 270px !important;
+
+        padding: 24px 22px !important;
+
+        flex-shrink: 0 !important;
+      }
+
+      .register-panel {
+        width: 100% !important;
+        height: auto !important;
+
+        padding: 30px 24px !important;
+
+        overflow: visible !important;
+
+        flex-shrink: 0 !important;
+      }
+
+      .register-content {
+        width: 100% !important;
+        max-width: 430px !important;
+
+        margin: 0 auto !important;
+
+        transform: none !important;
+      }
+
+      .mobile-welcome-title {
+        font-size: 31px !important;
+      }
+
+      .mobile-welcome-text {
+        font-size: 11.5px !important;
+      }
+    }
+
+    /* ==========================================
+       SMALL MOBILE
+    ========================================== */
+
+    @media (max-width: 480px) {
+      .register-page {
+        padding: 8px !important;
+      }
+
+      .register-card {
+        border-radius: 20px !important;
+      }
+
+      .register-welcome-panel {
+        min-height: 245px !important;
+        padding: 20px 18px !important;
+      }
+
+      .register-panel {
+        padding: 26px 18px !important;
+      }
+
+      .mobile-welcome-title {
+        font-size: 27px !important;
+      }
+
+      .mobile-welcome-text {
+        font-size: 11px !important;
+      }
+
+      .register-content {
+        max-width: 100% !important;
+      }
+    }
+
+    /* ==========================================
+       VERY SMALL MOBILE
+    ========================================== */
+
+    @media (max-width: 380px) {
+      .register-welcome-panel {
+        min-height: 225px !important;
+        padding: 18px 16px !important;
+      }
+
+      .register-panel {
+        padding: 24px 16px !important;
+      }
+
+      .mobile-welcome-title {
+        font-size: 24px !important;
+      }
+    }
+  `}
+</style>
+
+      <div className="register-page" style={styles.page}>
 
         {/* BACKGROUND DECORATION */}
 
@@ -136,13 +251,13 @@ function Register() {
         <div style={styles.backgroundCircleTwo}></div>
 
 
-        <div style={styles.card}>
+        <div className="register-card" style={styles.card}>
 
           {/* =================================================
               LEFT WELCOME PANEL
           ================================================= */}
 
-          <div style={styles.welcomePanel}>
+          <div className="register-welcome-panel" style={styles.welcomePanel}>
 
             <div>
 
@@ -177,13 +292,13 @@ function Register() {
                   START YOUR JOURNEY
                 </div>
 
-                <h1 style={styles.welcomeTitle}>
+                <h1 className="mobile-welcome-title" style={styles.welcomeTitle}>
                   Banking that
                   <br />
                   grows with you.
                 </h1>
 
-                <p style={styles.welcomeText}>
+                <p className="mobile-welcome-text" style={styles.welcomeText}>
                   Open your Avani Bank account and
                   experience simple, secure and convenient
                   digital banking.
@@ -282,9 +397,9 @@ function Register() {
               RIGHT REGISTER PANEL
           ================================================= */}
 
-          <div style={styles.registerPanel}>
+          <div className="register-panel" style={styles.registerPanel}>
 
-            <div style={styles.registerContent}>
+            <div className="register-content" style={styles.registerContent}>
 
               {/* HEADER */}
 
@@ -660,7 +775,7 @@ const styles = {
   page: {
     width: "100%",
     height: "100vh",
-
+    minHeight: "100svh",
     position: "relative",
 
     overflow: "hidden",
@@ -730,11 +845,9 @@ const styles = {
 
     zIndex: 2,
 
-    width: "58vw",
-
+    width: "min(1000px, 94vw)",
     maxWidth: "1000px",
-
-    minWidth: "760px",
+    minWidth: 0,
 
     /*
       IMPORTANT:

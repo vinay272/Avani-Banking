@@ -130,91 +130,109 @@ const DividendTracking = () => {
       .replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 768 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const getResponsiveStyle = (name) => ({
+    ...(styles[name] || {}),
+    ...(isMobile ? responsiveStyles[name] || {} : {}),
+  });
+
   return (
-    <div style={styles.page}>
+    <div style={getResponsiveStyle("page")}>
       {/* Header */}
-      <div style={styles.header}>
-        <div style={styles.headerLeft}>
-          <div style={styles.headerIcon}>₹</div>
+      <div style={getResponsiveStyle("header")}>
+        <div style={getResponsiveStyle("headerLeft")}>
+          <div style={getResponsiveStyle("headerIcon")}>₹</div>
 
           <div>
-            <h1 style={styles.title}>Dividend Tracking</h1>
+            <h1 style={getResponsiveStyle("title")}>Dividend Tracking</h1>
 
-            <p style={styles.subtitle}>
+            <p style={getResponsiveStyle("subtitle")}>
               Track your dividend income and history
             </p>
           </div>
         </div>
 
         <button
-          style={styles.backButton}
+          style={getResponsiveStyle("backButton")}
           onClick={() => navigate("/investments")}
         >
           ← Investment Page
         </button>
       </div>
 
-      <div style={styles.content}>
+      <div style={getResponsiveStyle("content")}>
         {/* Error */}
-        {error && <div style={styles.errorBox}>{error}</div>}
+        {error && <div style={getResponsiveStyle("errorBox")}>{error}</div>}
 
         {/* Summary Cards */}
-        <div style={styles.summaryGrid}>
-          <div style={styles.summaryCard}>
-            <div style={styles.cardIcon}>₹</div>
+        <div style={getResponsiveStyle("summaryGrid")}>
+          <div style={getResponsiveStyle("summaryCard")}>
+            <div style={getResponsiveStyle("cardIcon")}>₹</div>
 
             <div>
-              <p style={styles.cardLabel}>Total Dividend</p>
+              <p style={getResponsiveStyle("cardLabel")}>Total Dividend</p>
 
-              <h2 style={styles.cardValue}>
+              <h2 style={getResponsiveStyle("cardValue")}>
                 {formatCurrency(summary?.totalDividend ?? totalDividend)}
               </h2>
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.cardIcon}>✓</div>
+          <div style={getResponsiveStyle("summaryCard")}>
+            <div style={getResponsiveStyle("cardIcon")}>✓</div>
 
             <div>
-              <p style={styles.cardLabel}>Dividends Received</p>
+              <p style={getResponsiveStyle("cardLabel")}>Dividends Received</p>
 
-              <h2 style={styles.cardValue}>
+              <h2 style={getResponsiveStyle("cardValue")}>
                 {summary?.totalRecords ?? receivedCount}
               </h2>
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.cardIcon}>↗</div>
+          <div style={getResponsiveStyle("summaryCard")}>
+            <div style={getResponsiveStyle("cardIcon")}>↗</div>
 
             <div>
-              <p style={styles.cardLabel}>Latest Dividend</p>
+              <p style={getResponsiveStyle("cardLabel")}>Latest Dividend</p>
 
-              <h2 style={styles.cardValueSmall}>
+              <h2 style={getResponsiveStyle("cardValueSmall")}>
                 {latestDividend
                   ? formatCurrency(latestDividend.dividendAmount)
                   : "₹0.00"}
               </h2>
 
               {latestDividend && (
-                <span style={styles.smallDate}>
+                <span style={getResponsiveStyle("smallDate")}>
                   {formatDate(latestDividend.dividendDate)}
                 </span>
               )}
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.cardIcon}>📅</div>
+          <div style={getResponsiveStyle("summaryCard")}>
+            <div style={getResponsiveStyle("cardIcon")}>📅</div>
 
             <div>
-              <p style={styles.cardLabel}>This Month</p>
+              <p style={getResponsiveStyle("cardLabel")}>This Month</p>
 
-              <h2 style={styles.cardValue}>
+              <h2 style={getResponsiveStyle("cardValue")}>
                 {formatCurrency(summary?.currentMonthDividend)}
               </h2>
 
-              <span style={styles.smallDate}>
+              <span style={getResponsiveStyle("smallDate")}>
                 Current month dividend income
               </span>
             </div>
@@ -223,24 +241,24 @@ const DividendTracking = () => {
 
         {/* Dividend Analytics */}
 
-<div style={styles.analyticsCard}>
+<div style={getResponsiveStyle("analyticsCard")}>
 
-    <div style={styles.analyticsHeader}>
+    <div style={getResponsiveStyle("analyticsHeader")}>
         <div>
-            <h2 style={styles.sectionTitle}>
+            <h2 style={getResponsiveStyle("sectionTitle")}>
                 Dividend by Investment
             </h2>
 
-            <p style={styles.sectionSubtitle}>
+            <p style={getResponsiveStyle("sectionSubtitle")}>
                 Distribution of your received dividend income
             </p>
         </div>
     </div>
 
-    <div style={styles.analyticsGrid}>
+    <div style={getResponsiveStyle("analyticsGrid")}>
 
-        <div style={styles.analyticsItem}>
-            <div style={styles.analyticsItemTop}>
+        <div style={getResponsiveStyle("analyticsItem")}>
+            <div style={getResponsiveStyle("analyticsItemTop")}>
                 <span>📈 Mutual Funds</span>
 
                 <strong>
@@ -250,7 +268,7 @@ const DividendTracking = () => {
                 </strong>
             </div>
 
-            <div style={styles.analyticsTrack}>
+            <div style={getResponsiveStyle("analyticsTrack")}>
                 <div
                     style={{
                         ...styles.analyticsFill,
@@ -272,8 +290,8 @@ const DividendTracking = () => {
         </div>
 
 
-        <div style={styles.analyticsItem}>
-            <div style={styles.analyticsItemTop}>
+        <div style={getResponsiveStyle("analyticsItem")}>
+            <div style={getResponsiveStyle("analyticsItemTop")}>
                 <span>🔄 SIP</span>
 
                 <strong>
@@ -283,7 +301,7 @@ const DividendTracking = () => {
                 </strong>
             </div>
 
-            <div style={styles.analyticsTrack}>
+            <div style={getResponsiveStyle("analyticsTrack")}>
                 <div
                     style={{
                         ...styles.analyticsFill,
@@ -305,8 +323,8 @@ const DividendTracking = () => {
         </div>
 
 
-        <div style={styles.analyticsItem}>
-            <div style={styles.analyticsItemTop}>
+        <div style={getResponsiveStyle("analyticsItem")}>
+            <div style={getResponsiveStyle("analyticsItemTop")}>
                 <span>📜 Bonds</span>
 
                 <strong>
@@ -316,7 +334,7 @@ const DividendTracking = () => {
                 </strong>
             </div>
 
-            <div style={styles.analyticsTrack}>
+            <div style={getResponsiveStyle("analyticsTrack")}>
                 <div
                     style={{
                         ...styles.analyticsFill,
@@ -338,8 +356,8 @@ const DividendTracking = () => {
         </div>
 
 
-        <div style={styles.analyticsItem}>
-            <div style={styles.analyticsItemTop}>
+        <div style={getResponsiveStyle("analyticsItem")}>
+            <div style={getResponsiveStyle("analyticsItemTop")}>
                 <span>🪙 Gold</span>
 
                 <strong>
@@ -349,7 +367,7 @@ const DividendTracking = () => {
                 </strong>
             </div>
 
-            <div style={styles.analyticsTrack}>
+            <div style={getResponsiveStyle("analyticsTrack")}>
                 <div
                     style={{
                         ...styles.analyticsFill,
@@ -371,8 +389,8 @@ const DividendTracking = () => {
         </div>
 
 
-        <div style={styles.analyticsItem}>
-            <div style={styles.analyticsItemTop}>
+        <div style={getResponsiveStyle("analyticsItem")}>
+            <div style={getResponsiveStyle("analyticsItemTop")}>
                 <span>🏦 Fixed Deposits</span>
 
                 <strong>
@@ -382,7 +400,7 @@ const DividendTracking = () => {
                 </strong>
             </div>
 
-            <div style={styles.analyticsTrack}>
+            <div style={getResponsiveStyle("analyticsTrack")}>
                 <div
                     style={{
                         ...styles.analyticsFill,
@@ -407,21 +425,21 @@ const DividendTracking = () => {
 </div>
 
         {/* Dividend History */}
-        <div style={styles.historyCard}>
-          <div style={styles.historyHeader}>
+        <div style={getResponsiveStyle("historyCard")}>
+          <div style={getResponsiveStyle("historyHeader")}>
             <div>
-              <h2 style={styles.sectionTitle}>Dividend History</h2>
+              <h2 style={getResponsiveStyle("sectionTitle")}>Dividend History</h2>
 
-              <p style={styles.sectionSubtitle}>
+              <p style={getResponsiveStyle("sectionSubtitle")}>
                 Your received dividend transactions
               </p>
             </div>
 
-            <div style={styles.headerActions}>
+            <div style={getResponsiveStyle("headerActions")}>
               <select
                 value={filterType}
                 onChange={(e) => setFilterType(e.target.value)}
-                style={styles.select}
+                style={getResponsiveStyle("select")}
               >
                 <option value="ALL">All Investments</option>
 
@@ -437,7 +455,7 @@ const DividendTracking = () => {
               </select>
 
               <button
-                style={styles.refreshButton}
+                style={getResponsiveStyle("refreshButton")}
                 onClick={fetchDividends}
                 disabled={loading}
               >
@@ -447,64 +465,64 @@ const DividendTracking = () => {
           </div>
 
           {loading ? (
-            <div style={styles.emptyState}>
-              <div style={styles.loader}></div>
+            <div style={getResponsiveStyle("emptyState")}>
+              <div style={getResponsiveStyle("loader")}></div>
 
               <p>Loading dividend history...</p>
             </div>
           ) : filteredDividends.length === 0 ? (
-            <div style={styles.emptyState}>
-              <div style={styles.emptyIcon}>₹</div>
+            <div style={getResponsiveStyle("emptyState")}>
+              <div style={getResponsiveStyle("emptyIcon")}>₹</div>
 
               <h3>No Dividend Records</h3>
 
               <p>Your received dividend history will appear here.</p>
             </div>
           ) : (
-            <div style={styles.tableWrapper}>
-              <table style={styles.table}>
+            <div style={getResponsiveStyle("tableWrapper")}>
+              <table style={getResponsiveStyle("table")}>
                 <thead>
                   <tr>
-                    <th style={styles.th}>Investment</th>
+                    <th style={getResponsiveStyle("th")}>Investment</th>
 
-                    <th style={styles.th}>Type</th>
+                    <th style={getResponsiveStyle("th")}>Type</th>
 
-                    <th style={styles.th}>Dividend Date</th>
+                    <th style={getResponsiveStyle("th")}>Dividend Date</th>
 
-                    <th style={styles.th}>Units</th>
+                    <th style={getResponsiveStyle("th")}>Units</th>
 
-                    <th style={styles.th}>Per Unit</th>
+                    <th style={getResponsiveStyle("th")}>Per Unit</th>
 
-                    <th style={styles.th}>Dividend Amount</th>
+                    <th style={getResponsiveStyle("th")}>Dividend Amount</th>
 
-                    <th style={styles.th}>Status</th>
+                    <th style={getResponsiveStyle("th")}>Status</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   {filteredDividends.map((dividend) => (
                     <tr key={dividend.id}>
-                      <td style={styles.td}>
-                        <div style={styles.investmentName}>
+                      <td style={getResponsiveStyle("td")}>
+                        <div style={getResponsiveStyle("investmentName")}>
                           {dividend.investmentName}
                         </div>
 
-                        <div style={styles.idText}>Dividend #{dividend.id}</div>
+                        <div style={getResponsiveStyle("idText")}>Dividend #{dividend.id}</div>
                       </td>
 
-                      <td style={styles.td}>
-                        <span style={styles.typeBadge}>
+                      <td style={getResponsiveStyle("td")}>
+                        <span style={getResponsiveStyle("typeBadge")}>
                           {formatInvestmentType(dividend.investmentType)}
                         </span>
                       </td>
 
-                      <td style={styles.td}>
+                      <td style={getResponsiveStyle("td")}>
                         {formatDate(dividend.dividendDate)}
                       </td>
 
-                      <td style={styles.td}>{dividend.units ?? "-"}</td>
+                      <td style={getResponsiveStyle("td")}>{dividend.units ?? "-"}</td>
 
-                      <td style={styles.td}>
+                      <td style={getResponsiveStyle("td")}>
                         {dividend.dividendPerUnit
                           ? formatCurrency(dividend.dividendPerUnit)
                           : "-"}
@@ -519,8 +537,8 @@ const DividendTracking = () => {
                         +{formatCurrency(dividend.dividendAmount)}
                       </td>
 
-                      <td style={styles.td}>
-                        <span style={styles.statusBadge}>
+                      <td style={getResponsiveStyle("td")}>
+                        <span style={getResponsiveStyle("statusBadge")}>
                           {dividend.status}
                         </span>
                       </td>
@@ -533,13 +551,13 @@ const DividendTracking = () => {
         </div>
 
         {/* Information */}
-        <div style={styles.infoCard}>
-          <div style={styles.infoIcon}>i</div>
+        <div style={getResponsiveStyle("infoCard")}>
+          <div style={getResponsiveStyle("infoIcon")}>i</div>
 
           <div>
-            <h3 style={styles.infoTitle}>Dividend Income</h3>
+            <h3 style={getResponsiveStyle("infoTitle")}>Dividend Income</h3>
 
-            <p style={styles.infoText}>
+            <p style={getResponsiveStyle("infoText")}>
               Dividends received from eligible investments are credited to your
               linked account and recorded here for tracking.
             </p>
@@ -548,6 +566,194 @@ const DividendTracking = () => {
       </div>
     </div>
   );
+};
+
+const responsiveStyles = {
+  page: {
+    padding: "12px",
+  },
+  header: {
+    minHeight: "auto",
+    padding: "16px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "14px",
+    borderRadius: "14px",
+  },
+  headerLeft: {
+    gap: "11px",
+    alignItems: "flex-start",
+  },
+  headerIcon: {
+    width: "42px",
+    height: "42px",
+    fontSize: "20px",
+    flexShrink: 0,
+  },
+  title: {
+    fontSize: "20px",
+    lineHeight: 1.2,
+  },
+  subtitle: {
+    fontSize: "12px",
+    lineHeight: 1.4,
+  },
+  backButton: {
+    width: "100%",
+    padding: "10px 14px",
+    fontSize: "13px",
+  },
+  content: {
+    padding: "18px 0 0",
+    maxWidth: "100%",
+  },
+  errorBox: {
+    padding: "12px 14px",
+    fontSize: "13px",
+  },
+  summaryGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "12px",
+    marginBottom: "18px",
+  },
+  summaryCard: {
+    padding: "16px",
+    gap: "12px",
+    minWidth: 0,
+  },
+  cardIcon: {
+    width: "40px",
+    height: "40px",
+    flexShrink: 0,
+  },
+  cardLabel: {
+    fontSize: "12px",
+  },
+  cardValue: {
+    fontSize: "20px",
+    wordBreak: "break-word",
+  },
+  cardValueSmall: {
+    fontSize: "18px",
+    wordBreak: "break-word",
+  },
+  smallDate: {
+    fontSize: "10px",
+  },
+  analyticsCard: {
+    padding: "17px 15px",
+    marginTop: "18px",
+    marginBottom: "18px",
+  },
+  analyticsHeader: {
+    marginBottom: "14px",
+  },
+  analyticsGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+  },
+  analyticsItem: {
+    padding: "12px",
+  },
+  analyticsItemTop: {
+    gap: "8px",
+    fontSize: "11px",
+    flexWrap: "wrap",
+  },
+  analyticsTrack: {
+    height: "6px",
+  },
+  historyCard: {
+    borderRadius: "13px",
+  },
+  historyHeader: {
+    padding: "17px 15px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "13px",
+  },
+  sectionTitle: {
+    fontSize: "17px",
+  },
+  sectionSubtitle: {
+    fontSize: "12px",
+    lineHeight: 1.5,
+  },
+  headerActions: {
+    width: "100%",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "8px",
+  },
+  select: {
+    width: "100%",
+    minHeight: "40px",
+    fontSize: "13px",
+  },
+  refreshButton: {
+    width: "100%",
+    minHeight: "40px",
+    padding: "9px 14px",
+  },
+  tableWrapper: {
+    width: "100%",
+    overflowX: "auto",
+    WebkitOverflowScrolling: "touch",
+  },
+  table: {
+    minWidth: "760px",
+  },
+  th: {
+    padding: "12px 14px",
+    fontSize: "11px",
+  },
+  td: {
+    padding: "13px 14px",
+    fontSize: "12px",
+  },
+  investmentName: {
+    fontSize: "12px",
+  },
+  idText: {
+    fontSize: "10px",
+  },
+  typeBadge: {
+    padding: "4px 8px",
+    fontSize: "10px",
+  },
+  statusBadge: {
+    padding: "4px 8px",
+    fontSize: "10px",
+  },
+  emptyState: {
+    minHeight: "220px",
+    padding: "24px 15px",
+  },
+  emptyIcon: {
+    width: "48px",
+    height: "48px",
+    fontSize: "20px",
+  },
+  loader: {
+    width: "23px",
+    height: "23px",
+  },
+  infoCard: {
+    marginTop: "15px",
+    padding: "14px",
+    gap: "10px",
+  },
+  infoIcon: {
+    width: "25px",
+    height: "25px",
+  },
+  infoTitle: {
+    fontSize: "13px",
+  },
+  infoText: {
+    fontSize: "11px",
+    lineHeight: "1.55",
+  },
 };
 
 const styles = {

@@ -79,46 +79,172 @@ function AdminLogin() {
     <>
       {/* Responsive safety CSS */}
       <style>
-        {`
-          html,
-          body,
-          #root {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            min-height: 100%;
-            overflow-x: hidden;
-          }
+  {`
+    html,
+    body,
+    #root {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+    }
 
-          body {
-            overflow-y: hidden;
-          }
+    html,
+    body {
+      overflow-x: hidden;
+    }
 
-          * {
-            box-sizing: border-box;
-          }
+    * {
+      box-sizing: border-box;
+    }
 
-          @media (max-width: 900px) {
-            body {
-              overflow-y: auto;
-            }
-          }
-        `}
-      </style>
+    /* ==========================================
+       TABLET + MOBILE
+    ========================================== */
 
-      <div style={styles.page}>
+    @media (max-width: 900px) {
+      body {
+        overflow-y: auto;
+      }
+
+      .admin-login-page {
+        min-height: 100svh !important;
+        height: auto !important;
+        padding: 12px !important;
+        align-items: flex-start !important;
+      }
+
+      .admin-login-container {
+        width: 100% !important;
+        max-width: 560px !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        height: auto !important;
+
+        flex-direction: column !important;
+
+        border-radius: 24px !important;
+      }
+
+      .admin-brand-panel {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 285px !important;
+
+        padding: 24px 22px !important;
+
+        flex-shrink: 0 !important;
+      }
+
+      .admin-login-panel {
+        width: 100% !important;
+        height: auto !important;
+
+        margin-top: 0 !important;
+
+        padding: 30px 24px !important;
+
+        overflow: visible !important;
+
+        flex-shrink: 0 !important;
+      }
+
+      .admin-login-header {
+        justify-content: flex-start !important;
+      }
+
+      .admin-login-content {
+        width: 100% !important;
+        max-width: 430px !important;
+        margin: 0 auto !important;
+      }
+
+      .admin-center-divider {
+        display: none !important;
+      }
+
+      .admin-brand-title {
+        font-size: 30px !important;
+      }
+
+      .admin-brand-description {
+        font-size: 11.5px !important;
+      }
+    }
+
+    /* ==========================================
+       SMALL MOBILE
+    ========================================== */
+
+    @media (max-width: 480px) {
+      .admin-login-page {
+        padding: 8px !important;
+      }
+
+      .admin-login-container {
+        border-radius: 20px !important;
+      }
+
+      .admin-brand-panel {
+        min-height: 255px !important;
+        padding: 20px 18px !important;
+      }
+
+      .admin-login-panel {
+        padding: 26px 18px !important;
+      }
+
+      .admin-brand-title {
+        font-size: 27px !important;
+      }
+
+      .admin-brand-description {
+        font-size: 10.5px !important;
+      }
+
+      .admin-login-content {
+        max-width: 100% !important;
+      }
+    }
+
+    /* ==========================================
+       VERY SMALL MOBILE
+    ========================================== */
+
+    @media (max-width: 380px) {
+      .admin-brand-panel {
+        min-height: 235px !important;
+        padding: 18px 16px !important;
+      }
+
+      .admin-login-panel {
+        padding: 24px 16px !important;
+      }
+
+      .admin-brand-title {
+        font-size: 24px !important;
+      }
+
+      .admin-brand-description {
+        font-size: 10px !important;
+      }
+    }
+  `}
+</style>
+
+      <div className="admin-login-page" style={styles.page}>
 
         {/* Background Decoration */}
         <div style={styles.glowOne}></div>
         <div style={styles.glowTwo}></div>
 
-        <div style={styles.loginContainer}>
+        <div className="admin-login-container" style={styles.loginContainer}>
 
           {/* =====================================================
               LEFT BRANDING PANEL
           ====================================================== */}
 
-          <div style={styles.brandPanel}>
+          <div className="admin-brand-panel" style={styles.brandPanel}>
 
             <div style={styles.brandHeader}>
               <div style={styles.logoBox}>🏦</div>
@@ -209,7 +335,7 @@ function AdminLogin() {
               STYLISH CENTER SEPARATOR
           ====================================================== */}
 
-          <div style={styles.centerDivider}>
+          <div className="admin-center-divider" style={styles.centerDivider}>
             <div style={styles.dividerDot}></div>
           </div>
 
@@ -218,7 +344,7 @@ function AdminLogin() {
               RIGHT LOGIN PANEL
           ====================================================== */}
 
-          <div style={styles.loginPanel}>
+          <div className="admin-login-panel" style={styles.loginPanel}>
 
             <div style={styles.loginHeader}>
 
@@ -456,6 +582,7 @@ const styles = {
   page: {
     width: "100%",
     height: "100vh",
+    minHeight: "100svh",
     overflow: "hidden",
     display: "flex",
     alignItems: "center",
@@ -516,17 +643,9 @@ const styles = {
   loginContainer: {
     position: "relative",
     zIndex: 2,
-
-    /* 55-58% screen width */
-    width: "58vw",
+    width: "min(1040px, 94vw)",
     maxWidth: "1040px",
-    minWidth: "760px",
-
-    /*
-      IMPORTANT:
-      No 650px / 560px fixed height.
-      Compact height so everything fits.
-    */
+    minWidth: 0,
     height: "min(500px, calc(100vh - 30px))",
 
     display: "flex",
@@ -838,7 +957,7 @@ const styles = {
     height: "100%",
 
     padding: "24px 34px",
-    marginTop:"20px",
+    marginTop:"0",
     boxSizing: "border-box",
 
     display: "flex",

@@ -453,7 +453,7 @@ function ComplianceAuditDashboard() {
   // =====================================================
 
   return (
-    <div style={styles.page}>
+    <div className="compliance-audit-dashboard" style={styles.page}>
 
       {/* =================================================
           HEADER
@@ -2487,5 +2487,284 @@ const styles = {
     flexWrap: "wrap",
   },
 };
+
+
+export const complianceAuditResponsiveStyles = `
+.compliance-audit-dashboard {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.compliance-audit-dashboard * {
+  box-sizing: border-box;
+}
+
+@media (max-width: 1000px) {
+  .compliance-audit-dashboard {
+    padding: 18px 20px !important;
+  }
+
+  .compliance-audit-dashboard header {
+    flex-wrap: wrap !important;
+    align-items: center !important;
+  }
+
+  .compliance-audit-dashboard .headerActions {
+    margin-left: auto;
+  }
+
+  .compliance-audit-dashboard .hero {
+    align-items: stretch !important;
+  }
+
+  .compliance-audit-dashboard .cardGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .compliance-audit-dashboard .twoColumnGrid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .compliance-audit-dashboard .summaryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .compliance-audit-dashboard .tableScroll {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 700px) {
+  .compliance-audit-dashboard {
+    padding: 12px !important;
+  }
+
+  .compliance-audit-dashboard header {
+    padding: 16px !important;
+    border-radius: 14px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+
+  .compliance-audit-dashboard .brandArea {
+    width: 100%;
+  }
+
+  .compliance-audit-dashboard .brandSubtitle {
+    line-height: 1.4;
+  }
+
+  .compliance-audit-dashboard .headerActions {
+    width: 100%;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+  }
+
+  .compliance-audit-dashboard .adminBadge,
+  .compliance-audit-dashboard .backButton {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .compliance-audit-dashboard .container {
+    width: 100% !important;
+    padding: 22px 0 35px !important;
+  }
+
+  .compliance-audit-dashboard .hero {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 15px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .compliance-audit-dashboard .title {
+    font-size: 26px !important;
+  }
+
+  .compliance-audit-dashboard .subtitle {
+    font-size: 13px !important;
+  }
+
+  .compliance-audit-dashboard .refreshButton {
+    width: 100% !important;
+  }
+
+  .compliance-audit-dashboard .tabsWrapper {
+    margin-bottom: 20px !important;
+    border-radius: 12px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .compliance-audit-dashboard .tabs {
+    min-width: max-content !important;
+  }
+
+  .compliance-audit-dashboard .tab {
+    padding: 10px 12px !important;
+  }
+
+  .compliance-audit-dashboard .cardGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .compliance-audit-dashboard .kpiCard {
+    padding: 14px !important;
+    min-height: 78px !important;
+  }
+
+  .compliance-audit-dashboard .kpiIcon {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 18px !important;
+  }
+
+  .compliance-audit-dashboard .kpiValue {
+    font-size: 17px !important;
+  }
+
+  .compliance-audit-dashboard .sectionTitle {
+    font-size: 21px !important;
+  }
+
+  .compliance-audit-dashboard .sectionDescription {
+    line-height: 1.5;
+  }
+
+  .compliance-audit-dashboard .panel {
+    padding: 16px !important;
+    border-radius: 13px !important;
+  }
+
+  .compliance-audit-dashboard .panelHeader {
+    align-items: flex-start !important;
+  }
+
+  .compliance-audit-dashboard .summaryGrid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .compliance-audit-dashboard .tableWrapper,
+  .compliance-audit-dashboard .tableScroll {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+  }
+
+  .compliance-audit-dashboard .table {
+    min-width: 850px !important;
+  }
+
+  .compliance-audit-dashboard .input {
+    width: 100% !important;
+    min-height: 42px;
+  }
+
+  .compliance-audit-dashboard .primaryButton,
+  .compliance-audit-dashboard .secondaryButton {
+    width: 100% !important;
+    min-height: 44px;
+  }
+
+  .compliance-audit-dashboard .dryRunBox {
+    padding: 13px !important;
+  }
+
+  .compliance-audit-dashboard footer {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 16px 4% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .compliance-audit-dashboard {
+    padding: 8px !important;
+  }
+
+  .compliance-audit-dashboard header {
+    padding: 13px !important;
+    border-radius: 12px !important;
+  }
+
+  .compliance-audit-dashboard .brandIcon {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .compliance-audit-dashboard .brandName {
+    font-size: 16px !important;
+  }
+
+  .compliance-audit-dashboard .brandSubtitle {
+    font-size: 10px !important;
+  }
+
+  .compliance-audit-dashboard .container {
+    padding-top: 18px !important;
+  }
+
+  .compliance-audit-dashboard .title {
+    font-size: 23px !important;
+  }
+
+  .compliance-audit-dashboard .eyebrow {
+    font-size: 10px !important;
+  }
+
+  .compliance-audit-dashboard .cardGrid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .compliance-audit-dashboard .kpiCard {
+    min-height: 72px !important;
+  }
+
+  .compliance-audit-dashboard .sectionTitle {
+    font-size: 19px !important;
+  }
+
+  .compliance-audit-dashboard .panel {
+    padding: 13px !important;
+  }
+
+  .compliance-audit-dashboard .panelHeader {
+    gap: 10px !important;
+  }
+
+  .compliance-audit-dashboard .panelIcon {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 16px !important;
+  }
+
+  .compliance-audit-dashboard .progressRow {
+    gap: 10px !important;
+    align-items: flex-start !important;
+  }
+
+  .compliance-audit-dashboard .table {
+    min-width: 780px !important;
+  }
+
+  .compliance-audit-dashboard .th,
+  .compliance-audit-dashboard .td {
+    padding: 10px !important;
+  }
+
+  .compliance-audit-dashboard footer {
+    font-size: 10px !important;
+  }
+}
+`;
 
 export default ComplianceAuditDashboard;

@@ -9,7 +9,6 @@ const getToken = () =>
 
 const formatCurrency = (value) => {
   const amount = Number(value || 0);
-
   return amount.toLocaleString("en-IN", {
     style: "currency",
     currency: "INR",
@@ -43,24 +42,623 @@ export default function GoldInvestment() {
   const [accounts, setAccounts] = useState([]);
   const [goldPrices, setGoldPrices] = useState([]);
   const [investments, setInvestments] = useState([]);
-
   const [selectedAccount, setSelectedAccount] = useState("");
   const [selectedPurity, setSelectedPurity] = useState("24K");
   const [investmentAmount, setInvestmentAmount] = useState("");
-
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState(false);
   const [sellingId, setSellingId] = useState(null);
-
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-
   const [showSellModal, setShowSellModal] = useState(false);
   const [selectedInvestment, setSelectedInvestment] = useState(null);
 
-  // =====================================================
-  // CURRENT SELECTED GOLD PRICE
-  // =====================================================
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 767 : false
+  );
+  const [isTablet, setIsTablet] = useState(
+    typeof window !== "undefined"
+      ? window.innerWidth >= 768 && window.innerWidth <= 1024
+      : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width <= 767);
+      setIsTablet(width >= 768 && width <= 1024);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const responsiveStyles = useMemo(() => {
+    const mobile = isMobile;
+    const tablet = isTablet;
+
+    return {
+      page: {
+        ...styles.page,
+        padding: mobile ? "14px" : tablet ? "18px" : "28px",
+        overflowX: "hidden",
+      },
+
+      header: {
+        ...styles.header,
+        padding: mobile ? "16px" : tablet ? "18px 20px" : "20px 24px",
+        borderRadius: mobile ? "14px" : "18px",
+        gap: mobile ? "14px" : "20px",
+        alignItems: mobile || tablet ? "stretch" : "center",
+        flexDirection: mobile || tablet ? "column" : "row",
+        marginBottom: mobile ? "16px" : "22px",
+      },
+
+      headerLeft: {
+        ...styles.headerLeft,
+        gap: mobile ? "10px" : "14px",
+        alignItems: "center",
+        minWidth: 0,
+      },
+
+      headerIcon: {
+        ...styles.headerIcon,
+        width: mobile ? "44px" : tablet ? "48px" : "52px",
+        height: mobile ? "44px" : tablet ? "48px" : "52px",
+        fontSize: mobile ? "23px" : "27px",
+        flexShrink: 0,
+      },
+
+      headerTitle: {
+        ...styles.headerTitle,
+        fontSize: mobile ? "20px" : tablet ? "22px" : "25px",
+        lineHeight: 1.2,
+      },
+
+      headerSubtitle: {
+        ...styles.headerSubtitle,
+        fontSize: mobile ? "11px" : "13px",
+        lineHeight: 1.4,
+      },
+
+      backButton: {
+        ...styles.backButton,
+        width: mobile || tablet ? "100%" : "auto",
+        minHeight: mobile ? "44px" : "auto",
+        padding: mobile ? "11px 14px" : "10px 16px",
+        fontSize: mobile ? "12px" : "13px",
+      },
+
+      successAlert: {
+        ...styles.successAlert,
+        padding: mobile ? "11px 12px" : "12px 15px",
+        fontSize: mobile ? "12px" : "14px",
+        alignItems: "flex-start",
+        lineHeight: 1.45,
+      },
+
+      errorAlert: {
+        ...styles.errorAlert,
+        padding: mobile ? "11px 12px" : "12px 15px",
+        fontSize: mobile ? "12px" : "14px",
+        alignItems: "flex-start",
+        lineHeight: 1.45,
+      },
+
+      summaryGrid: {
+        ...styles.summaryGrid,
+        gridTemplateColumns: mobile
+          ? "1fr"
+          : tablet
+            ? "repeat(2, minmax(0, 1fr))"
+            : "repeat(4, minmax(0, 1fr))",
+        gap: mobile ? "11px" : "16px",
+        marginBottom: mobile ? "16px" : "22px",
+      },
+
+      summaryCard: {
+        ...styles.summaryCard,
+        padding: mobile ? "14px" : "18px",
+        borderRadius: mobile ? "13px" : "15px",
+        gap: mobile ? "11px" : "13px",
+      },
+
+      summaryIcon: {
+        ...styles.summaryIcon,
+        width: mobile ? "41px" : "45px",
+        height: mobile ? "41px" : "45px",
+        fontSize: mobile ? "19px" : "21px",
+      },
+
+      summaryLabel: {
+        ...styles.summaryLabel,
+        fontSize: mobile ? "11px" : "12px",
+      },
+
+      summaryValue: {
+        ...styles.summaryValue,
+        fontSize: mobile ? "17px" : "19px",
+        overflowWrap: "anywhere",
+      },
+
+      mainGrid: {
+        ...styles.mainGrid,
+        gridTemplateColumns: mobile || tablet
+          ? "1fr"
+          : "minmax(0, 1.15fr) minmax(0, 0.85fr)",
+        gap: mobile ? "14px" : "20px",
+        marginBottom: mobile ? "18px" : "24px",
+      },
+
+      card: {
+        ...styles.card,
+        padding: mobile ? "16px" : tablet ? "19px" : "22px",
+        borderRadius: mobile ? "14px" : "17px",
+      },
+
+      cardHeader: {
+        ...styles.cardHeader,
+        alignItems: mobile ? "flex-start" : "center",
+        marginBottom: mobile ? "16px" : "20px",
+        gap: "12px",
+      },
+
+      cardTitle: {
+        ...styles.cardTitle,
+        fontSize: mobile ? "17px" : "19px",
+      },
+
+      cardSubtitle: {
+        ...styles.cardSubtitle,
+        fontSize: mobile ? "11px" : "13px",
+        lineHeight: 1.4,
+      },
+
+      goldBadge: {
+        ...styles.goldBadge,
+        width: mobile ? "40px" : "45px",
+        height: mobile ? "40px" : "45px",
+        fontSize: mobile ? "20px" : "23px",
+        flexShrink: 0,
+      },
+
+      priceIcon: {
+        ...styles.priceIcon,
+        width: mobile ? "40px" : "45px",
+        height: mobile ? "40px" : "45px",
+        fontSize: mobile ? "19px" : "21px",
+        flexShrink: 0,
+      },
+
+      form: {
+        ...styles.form,
+        gap: mobile ? "14px" : "17px",
+      },
+
+      formGroup: {
+        ...styles.formGroup,
+        gap: "7px",
+      },
+
+      label: {
+        ...styles.label,
+        fontSize: mobile ? "12px" : "13px",
+      },
+
+      input: {
+        ...styles.input,
+        minHeight: mobile ? "46px" : "auto",
+        padding: mobile ? "12px" : "12px 13px",
+        fontSize: mobile ? "14px" : "14px",
+      },
+
+      purityGrid: {
+        ...styles.purityGrid,
+        gridTemplateColumns: mobile
+          ? "1fr"
+          : "repeat(2, minmax(0, 1fr))",
+        gap: mobile ? "8px" : "10px",
+      },
+
+      purityButton: {
+        ...styles.purityButton,
+        minHeight: mobile ? "58px" : "auto",
+        padding: mobile ? "11px" : "12px",
+      },
+
+      amountWrapper: {
+        ...styles.amountWrapper,
+        minHeight: mobile ? "46px" : "auto",
+      },
+
+      amountPrefix: {
+        ...styles.amountPrefix,
+        paddingLeft: mobile ? "12px" : "13px",
+      },
+
+      amountInput: {
+        ...styles.amountInput,
+        padding: mobile ? "12px 9px" : "12px 10px",
+        fontSize: mobile ? "15px" : "15px",
+        minWidth: 0,
+      },
+
+      helperText: {
+        ...styles.helperText,
+        fontSize: mobile ? "10px" : "11px",
+        lineHeight: 1.4,
+      },
+
+      calculationBox: {
+        ...styles.calculationBox,
+        gridTemplateColumns: mobile ? "1fr" : "1fr auto 1fr",
+        gap: mobile ? "10px" : "12px",
+        padding: mobile ? "12px" : "14px",
+      },
+
+      calculationDivider: {
+        ...styles.calculationDivider,
+        width: mobile ? "100%" : "1px",
+        height: mobile ? "1px" : "34px",
+      },
+
+      calculationValue: {
+        ...styles.calculationValue,
+        fontSize: mobile ? "13px" : "14px",
+      },
+
+      calculationGold: {
+        ...styles.calculationGold,
+        fontSize: mobile ? "14px" : "15px",
+      },
+
+      primaryButton: {
+        ...styles.primaryButton,
+        minHeight: mobile ? "46px" : "auto",
+        padding: mobile ? "12px" : "13px",
+      },
+
+      warningText: {
+        ...styles.warningText,
+        fontSize: mobile ? "11px" : "12px",
+        lineHeight: 1.4,
+      },
+
+      priceList: {
+        ...styles.priceList,
+        gap: mobile ? "9px" : "12px",
+      },
+
+      priceRow: {
+        ...styles.priceRow,
+        padding: mobile ? "12px" : "15px",
+        gap: "12px",
+        alignItems: "center",
+      },
+
+      pricePurity: {
+        ...styles.pricePurity,
+        fontSize: mobile ? "14px" : "16px",
+      },
+
+      priceType: {
+        ...styles.priceType,
+        fontSize: mobile ? "10px" : "11px",
+      },
+
+      priceRight: {
+        ...styles.priceRight,
+        flexShrink: 0,
+      },
+
+      priceAmount: {
+        ...styles.priceAmount,
+        fontSize: mobile ? "14px" : "16px",
+      },
+
+      priceUnit: {
+        ...styles.priceUnit,
+        fontSize: mobile ? "10px" : "11px",
+      },
+
+      infoBox: {
+        ...styles.infoBox,
+        marginTop: mobile ? "14px" : "18px",
+        padding: mobile ? "11px" : "12px",
+        fontSize: mobile ? "10px" : "11px",
+        lineHeight: 1.5,
+      },
+
+      section: {
+        ...styles.section,
+        padding: mobile ? "16px" : tablet ? "19px" : "22px",
+        borderRadius: mobile ? "14px" : "17px",
+        marginBottom: mobile ? "16px" : "24px",
+      },
+
+      sectionHeader: {
+        ...styles.sectionHeader,
+        flexDirection: mobile ? "column" : "row",
+        alignItems: mobile ? "flex-start" : "center",
+        gap: mobile ? "10px" : "15px",
+        marginBottom: mobile ? "14px" : "18px",
+      },
+
+      sectionTitle: {
+        ...styles.sectionTitle,
+        fontSize: mobile ? "17px" : "19px",
+        lineHeight: 1.3,
+      },
+
+      sectionSubtitle: {
+        ...styles.sectionSubtitle,
+        fontSize: mobile ? "11px" : "13px",
+        lineHeight: 1.4,
+      },
+
+      countBadge: {
+        ...styles.countBadge,
+        padding: mobile ? "6px 10px" : "7px 12px",
+        fontSize: mobile ? "10px" : "11px",
+      },
+
+      investmentGrid: {
+        ...styles.investmentGrid,
+        gridTemplateColumns: mobile
+          ? "1fr"
+          : tablet
+            ? "repeat(2, minmax(0, 1fr))"
+            : "repeat(2, minmax(0, 1fr))",
+        gap: mobile ? "11px" : "16px",
+      },
+
+      investmentCard: {
+        ...styles.investmentCard,
+        padding: mobile ? "14px" : "17px",
+        borderRadius: mobile ? "13px" : "14px",
+      },
+
+      investmentTop: {
+        ...styles.investmentTop,
+        flexDirection: mobile ? "column" : "row",
+        alignItems: mobile ? "stretch" : "flex-start",
+        marginBottom: mobile ? "13px" : "16px",
+      },
+
+      goldTitleRow: {
+        ...styles.goldTitleRow,
+        gap: mobile ? "8px" : "10px",
+      },
+
+      goldMiniIcon: {
+        ...styles.goldMiniIcon,
+        width: mobile ? "36px" : "39px",
+        height: mobile ? "36px" : "39px",
+        fontSize: mobile ? "17px" : "19px",
+        flexShrink: 0,
+      },
+
+      investmentTitle: {
+        ...styles.investmentTitle,
+        fontSize: mobile ? "14px" : "15px",
+      },
+
+      investmentId: {
+        ...styles.investmentId,
+        fontSize: mobile ? "9px" : "10px",
+        overflowWrap: "anywhere",
+      },
+
+      activeBadge: {
+        ...styles.activeBadge,
+        alignSelf: mobile ? "flex-start" : "auto",
+      },
+
+      investmentDetails: {
+        ...styles.investmentDetails,
+        gridTemplateColumns: mobile
+          ? "1fr 1fr"
+          : "repeat(2, minmax(0, 1fr))",
+        gap: mobile ? "10px" : "12px",
+      },
+
+      detailLabel: {
+        ...styles.detailLabel,
+        fontSize: mobile ? "9px" : "10px",
+      },
+
+      detailValue: {
+        ...styles.detailValue,
+        fontSize: mobile ? "11px" : "12px",
+        overflowWrap: "anywhere",
+      },
+
+      valueBox: {
+        ...styles.valueBox,
+        gridTemplateColumns: mobile
+          ? "1fr"
+          : "repeat(3, minmax(0, 1fr))",
+        gap: mobile ? "9px" : "10px",
+        padding: mobile ? "11px" : "12px",
+      },
+
+      valueLabel: {
+        ...styles.valueLabel,
+        fontSize: mobile ? "9px" : "10px",
+      },
+
+      valueAmount: {
+        ...styles.valueAmount,
+        fontSize: mobile ? "11px" : "12px",
+        overflowWrap: "anywhere",
+      },
+
+      currentValue: {
+        ...styles.currentValue,
+        fontSize: mobile ? "11px" : "12px",
+        overflowWrap: "anywhere",
+      },
+
+      investmentFooter: {
+        ...styles.investmentFooter,
+        flexDirection: mobile ? "column" : "row",
+        alignItems: mobile ? "stretch" : "center",
+        marginTop: mobile ? "12px" : "15px",
+      },
+
+      purchaseDate: {
+        ...styles.purchaseDate,
+        fontSize: mobile ? "9px" : "10px",
+        overflowWrap: "anywhere",
+      },
+
+      sellButton: {
+        ...styles.sellButton,
+        width: mobile ? "100%" : "auto",
+        minHeight: mobile ? "42px" : "auto",
+        padding: mobile ? "10px 12px" : "8px 12px",
+      },
+
+      emptyCard: {
+        ...styles.emptyCard,
+        padding: mobile ? "32px 15px" : "40px 20px",
+      },
+
+      emptyIcon: {
+        ...styles.emptyIcon,
+        fontSize: mobile ? "30px" : "34px",
+      },
+
+      emptyTitle: {
+        ...styles.emptyTitle,
+        fontSize: mobile ? "15px" : "16px",
+      },
+
+      emptyText: {
+        ...styles.emptyText,
+        fontSize: mobile ? "11px" : "12px",
+        lineHeight: 1.5,
+      },
+
+      emptyHistory: {
+        ...styles.emptyHistory,
+        padding: mobile ? "22px 14px" : "25px",
+        fontSize: mobile ? "12px" : "13px",
+      },
+
+      tableWrapper: {
+        ...styles.tableWrapper,
+        width: "100%",
+        overflowX: "auto",
+        WebkitOverflowScrolling: "touch",
+      },
+
+      table: {
+        ...styles.table,
+        minWidth: mobile ? "720px" : "750px",
+      },
+
+      th: {
+        ...styles.th,
+        padding: mobile ? "11px 9px" : "12px 10px",
+        fontSize: mobile ? "9px" : "10px",
+        whiteSpace: "nowrap",
+      },
+
+      td: {
+        ...styles.td,
+        padding: mobile ? "11px 9px" : "13px 10px",
+        fontSize: mobile ? "10px" : "11px",
+        whiteSpace: "nowrap",
+      },
+
+      soldBadge: {
+        ...styles.soldBadge,
+        padding: mobile ? "4px 8px" : "5px 9px",
+        fontSize: mobile ? "8px" : "9px",
+      },
+
+      modalOverlay: {
+        ...styles.modalOverlay,
+        padding: mobile ? "12px" : "20px",
+        alignItems: mobile ? "flex-start" : "center",
+        overflowY: "auto",
+      },
+
+      modal: {
+        ...styles.modal,
+        maxWidth: mobile ? "100%" : "430px",
+        width: "100%",
+        margin: mobile ? "auto 0" : "0",
+        padding: mobile ? "20px 16px" : "25px",
+        borderRadius: mobile ? "14px" : "17px",
+        maxHeight: mobile ? "calc(100vh - 24px)" : "none",
+        overflowY: mobile ? "auto" : "visible",
+      },
+
+      modalIcon: {
+        ...styles.modalIcon,
+        width: mobile ? "48px" : "55px",
+        height: mobile ? "48px" : "55px",
+        fontSize: mobile ? "23px" : "27px",
+      },
+
+      modalTitle: {
+        ...styles.modalTitle,
+        fontSize: mobile ? "19px" : "21px",
+      },
+
+      modalText: {
+        ...styles.modalText,
+        fontSize: mobile ? "12px" : "13px",
+      },
+
+      modalDetails: {
+        ...styles.modalDetails,
+        padding: mobile ? "12px" : "13px",
+      },
+
+      modalActions: {
+        ...styles.modalActions,
+        flexDirection: mobile ? "column" : "row",
+        marginTop: mobile ? "16px" : "20px",
+      },
+
+      cancelButton: {
+        ...styles.cancelButton,
+        width: mobile ? "100%" : "auto",
+        minHeight: mobile ? "44px" : "auto",
+      },
+
+      confirmSellButton: {
+        ...styles.confirmSellButton,
+        width: mobile ? "100%" : "auto",
+        minHeight: mobile ? "44px" : "auto",
+      },
+
+      loadingCard: {
+        ...styles.loadingCard,
+        width: mobile ? "calc(100% - 28px)" : "auto",
+        boxSizing: "border-box",
+        margin: mobile ? "70px auto" : "120px auto",
+        padding: mobile ? "32px 18px" : "45px 25px",
+        borderRadius: mobile ? "14px" : "18px",
+      },
+
+      loadingTitle: {
+        ...styles.loadingTitle,
+        fontSize: mobile ? "18px" : "20px",
+      },
+
+      loadingText: {
+        ...styles.loadingText,
+        fontSize: mobile ? "12px" : "13px",
+        lineHeight: 1.5,
+      },
+    };
+  }, [isMobile, isTablet]);
 
   const selectedGoldPrice = useMemo(() => {
     return (
@@ -72,10 +670,6 @@ export default function GoldInvestment() {
     );
   }, [goldPrices, selectedPurity]);
 
-  // =====================================================
-  // CALCULATED GOLD QUANTITY
-  // =====================================================
-
   const calculatedGrams = useMemo(() => {
     const amount = Number(investmentAmount || 0);
     const price = Number(selectedGoldPrice?.pricePerGram || 0);
@@ -86,10 +680,6 @@ export default function GoldInvestment() {
 
     return amount / price;
   }, [investmentAmount, selectedGoldPrice]);
-
-  // =====================================================
-  // LOAD ALL DATA
-  // =====================================================
 
   useEffect(() => {
     loadData();
@@ -103,45 +693,44 @@ export default function GoldInvestment() {
       const token = getToken();
 
       if (!token) {
-        throw new Error("Authentication token not found. Please login again.");
+        throw new Error(
+          "Authentication token not found. Please login again."
+        );
       }
 
       const headers = {
         Authorization: `Bearer ${token}`,
       };
 
-      const [accountsResponse, pricesResponse, investmentsResponse] =
-        await Promise.all([
-          fetch(`${API_BASE}/api/accounts`, {
-            method: "GET",
-            headers,
-          }),
-          fetch(`${API_BASE}/api/gold-prices`, {
-            method: "GET",
-            headers,
-          }),
-          fetch(`${API_BASE}/api/gold-investments`, {
-            method: "GET",
-            headers,
-          }),
-        ]);
+      const [
+        accountsResponse,
+        pricesResponse,
+        investmentsResponse,
+      ] = await Promise.all([
+        fetch(`${API_BASE}/api/accounts`, {
+          method: "GET",
+          headers,
+        }),
+        fetch(`${API_BASE}/api/gold-prices`, {
+          method: "GET",
+          headers,
+        }),
+        fetch(`${API_BASE}/api/gold-investments`, {
+          method: "GET",
+          headers,
+        }),
+      ]);
 
       if (!accountsResponse.ok) {
-        throw new Error(
-          await getErrorMessage(accountsResponse)
-        );
+        throw new Error(await getErrorMessage(accountsResponse));
       }
 
       if (!pricesResponse.ok) {
-        throw new Error(
-          await getErrorMessage(pricesResponse)
-        );
+        throw new Error(await getErrorMessage(pricesResponse));
       }
 
       if (!investmentsResponse.ok) {
-        throw new Error(
-          await getErrorMessage(investmentsResponse)
-        );
+        throw new Error(await getErrorMessage(investmentsResponse));
       }
 
       const accountData = await accountsResponse.json();
@@ -156,33 +745,24 @@ export default function GoldInvestment() {
         : [];
 
       setAccounts(activeAccounts);
-      setGoldPrices(
-        Array.isArray(priceData) ? priceData : []
-      );
+      setGoldPrices(Array.isArray(priceData) ? priceData : []);
       setInvestments(
         Array.isArray(investmentData) ? investmentData : []
       );
 
       if (activeAccounts.length > 0) {
-        setSelectedAccount(
-          String(activeAccounts[0].id)
-        );
+        setSelectedAccount(String(activeAccounts[0].id));
       }
     } catch (err) {
       console.error("Gold Investment load error:", err);
 
       setError(
-        err.message ||
-          "Unable to load Gold Investment data."
+        err.message || "Unable to load Gold Investment data."
       );
     } finally {
       setLoading(false);
     }
   };
-
-  // =====================================================
-  // PURCHASE GOLD
-  // =====================================================
 
   const handlePurchase = async (event) => {
     event.preventDefault();
@@ -211,14 +791,9 @@ export default function GoldInvestment() {
       selectedGoldPrice.minimumInvestment || 0
     );
 
-    if (
-      minimumInvestment > 0 &&
-      amount < minimumInvestment
-    ) {
+    if (minimumInvestment > 0 && amount < minimumInvestment) {
       setError(
-        `Minimum investment is ${formatCurrency(
-          minimumInvestment
-        )}.`
+        `Minimum investment is ${formatCurrency(minimumInvestment)}.`
       );
       return;
     }
@@ -252,9 +827,7 @@ export default function GoldInvestment() {
       );
 
       if (!response.ok) {
-        throw new Error(
-          await getErrorMessage(response)
-        );
+        throw new Error(await getErrorMessage(response));
       }
 
       const savedInvestment = await response.json();
@@ -272,23 +845,15 @@ export default function GoldInvestment() {
         )} grams of ${savedInvestment.purity} gold added to your portfolio.`
       );
 
-      // Refresh account balances as well
       await loadAccountsOnly();
     } catch (err) {
       console.error("Gold purchase error:", err);
 
-      setError(
-        err.message ||
-          "Unable to purchase gold."
-      );
+      setError(err.message || "Unable to purchase gold.");
     } finally {
       setPurchasing(false);
     }
   };
-
-  // =====================================================
-  // REFRESH ACCOUNTS
-  // =====================================================
 
   const loadAccountsOnly = async () => {
     try {
@@ -298,15 +863,12 @@ export default function GoldInvestment() {
         return;
       }
 
-      const response = await fetch(
-        `${API_BASE}/api/accounts`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`${API_BASE}/api/accounts`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!response.ok) {
         return;
@@ -317,23 +879,15 @@ export default function GoldInvestment() {
       const activeAccounts = Array.isArray(data)
         ? data.filter(
             (account) =>
-              String(account.status || "").toUpperCase() ===
-              "ACTIVE"
+              String(account.status || "").toUpperCase() === "ACTIVE"
           )
         : [];
 
       setAccounts(activeAccounts);
     } catch (err) {
-      console.error(
-        "Account refresh error:",
-        err
-      );
+      console.error("Account refresh error:", err);
     }
   };
-
-  // =====================================================
-  // OPEN SELL MODAL
-  // =====================================================
 
   const openSellModal = (investment) => {
     setSelectedInvestment(investment);
@@ -341,10 +895,6 @@ export default function GoldInvestment() {
     setError("");
     setMessage("");
   };
-
-  // =====================================================
-  // CLOSE SELL MODAL
-  // =====================================================
 
   const closeSellModal = () => {
     if (sellingId !== null) {
@@ -354,10 +904,6 @@ export default function GoldInvestment() {
     setShowSellModal(false);
     setSelectedInvestment(null);
   };
-
-  // =====================================================
-  // SELL GOLD
-  // =====================================================
 
   const handleSell = async () => {
     if (!selectedInvestment?.id) {
@@ -388,9 +934,7 @@ export default function GoldInvestment() {
       );
 
       if (!response.ok) {
-        throw new Error(
-          await getErrorMessage(response)
-        );
+        throw new Error(await getErrorMessage(response));
       }
 
       const soldInvestment = await response.json();
@@ -416,29 +960,20 @@ export default function GoldInvestment() {
     } catch (err) {
       console.error("Gold sell error:", err);
 
-      setError(
-        err.message ||
-          "Unable to sell gold."
-      );
+      setError(err.message || "Unable to sell gold.");
     } finally {
       setSellingId(null);
     }
   };
 
-  // =====================================================
-  // SUMMARY
-  // =====================================================
-
   const activeInvestments = investments.filter(
     (investment) =>
-      String(investment.status || "").toUpperCase() ===
-      "ACTIVE"
+      String(investment.status || "").toUpperCase() === "ACTIVE"
   );
 
   const soldInvestments = investments.filter(
     (investment) =>
-      String(investment.status || "").toUpperCase() ===
-      "SOLD"
+      String(investment.status || "").toUpperCase() === "SOLD"
   );
 
   const totalInvested = activeInvestments.reduce(
@@ -465,22 +1000,17 @@ export default function GoldInvestment() {
     0
   );
 
-  const profitLossPositive =
-    totalProfitLoss >= 0;
-
-  // =====================================================
-  // LOADING
-  // =====================================================
+  const profitLossPositive = totalProfitLoss >= 0;
 
   if (loading) {
     return (
-      <div style={styles.page}>
-        <div style={styles.loadingCard}>
-          <div style={styles.loadingIcon}>🪙</div>
-          <h2 style={styles.loadingTitle}>
+      <div style={responsiveStyles.page}>
+        <div style={responsiveStyles.loadingCard}>
+          <div style={responsiveStyles.loadingIcon}>🪙</div>
+          <h2 style={responsiveStyles.loadingTitle}>
             Loading Gold Investments...
           </h2>
-          <p style={styles.loadingText}>
+          <p style={responsiveStyles.loadingText}>
             Please wait while we load your portfolio.
           </p>
         </div>
@@ -489,23 +1019,17 @@ export default function GoldInvestment() {
   }
 
   return (
-    <div style={styles.page}>
-      {/* =================================================
-          HEADER
-      ================================================= */}
+    <div style={responsiveStyles.page}>
+      <div style={responsiveStyles.header}>
+        <div style={responsiveStyles.headerLeft}>
+          <div style={responsiveStyles.headerIcon}>🪙</div>
 
-      <div style={styles.header}>
-        <div style={styles.headerLeft}>
-          <div style={styles.headerIcon}>
-            🪙
-          </div>
-
-          <div>
-            <h1 style={styles.headerTitle}>
+          <div style={{ minWidth: 0 }}>
+            <h1 style={responsiveStyles.headerTitle}>
               Gold Investment
             </h1>
 
-            <p style={styles.headerSubtitle}>
+            <p style={responsiveStyles.headerSubtitle}>
               Invest, track and manage your digital gold
             </p>
           </div>
@@ -513,42 +1037,32 @@ export default function GoldInvestment() {
 
         <button
           type="button"
-          style={styles.backButton}
-          onClick={() =>
-            (window.location.href = "/investments")
-          }
+          style={responsiveStyles.backButton}
+          onClick={() => (window.location.href = "/investments")}
         >
           ← Back to Investment Page
         </button>
       </div>
 
-      {/* =================================================
-          ALERTS
-      ================================================= */}
-
       {message && (
-        <div style={styles.successAlert}>
+        <div style={responsiveStyles.successAlert}>
           <span>✓</span>
           <span>{message}</span>
         </div>
       )}
 
       {error && (
-        <div style={styles.errorAlert}>
+        <div style={responsiveStyles.errorAlert}>
           <span>!</span>
           <span>{error}</span>
         </div>
       )}
 
-      {/* =================================================
-          SUMMARY CARDS
-      ================================================= */}
-
-      <div style={styles.summaryGrid}>
-        <div style={styles.summaryCard}>
+      <div style={responsiveStyles.summaryGrid}>
+        <div style={responsiveStyles.summaryCard}>
           <div
             style={{
-              ...styles.summaryIcon,
+              ...responsiveStyles.summaryIcon,
               background: "#eef4ff",
               color: "#2457c6",
             }}
@@ -556,21 +1070,18 @@ export default function GoldInvestment() {
             🪙
           </div>
 
-          <div>
-            <p style={styles.summaryLabel}>
-              Gold Holdings
-            </p>
-
-            <h2 style={styles.summaryValue}>
+          <div style={{ minWidth: 0 }}>
+            <p style={responsiveStyles.summaryLabel}>Gold Holdings</p>
+            <h2 style={responsiveStyles.summaryValue}>
               {formatNumber(totalGoldGrams)} g
             </h2>
           </div>
         </div>
 
-        <div style={styles.summaryCard}>
+        <div style={responsiveStyles.summaryCard}>
           <div
             style={{
-              ...styles.summaryIcon,
+              ...responsiveStyles.summaryIcon,
               background: "#eef8f1",
               color: "#198754",
             }}
@@ -578,21 +1089,18 @@ export default function GoldInvestment() {
             💰
           </div>
 
-          <div>
-            <p style={styles.summaryLabel}>
-              Total Invested
-            </p>
-
-            <h2 style={styles.summaryValue}>
+          <div style={{ minWidth: 0 }}>
+            <p style={responsiveStyles.summaryLabel}>Total Invested</p>
+            <h2 style={responsiveStyles.summaryValue}>
               {formatCurrency(totalInvested)}
             </h2>
           </div>
         </div>
 
-        <div style={styles.summaryCard}>
+        <div style={responsiveStyles.summaryCard}>
           <div
             style={{
-              ...styles.summaryIcon,
+              ...responsiveStyles.summaryIcon,
               background: "#fff7e8",
               color: "#d98b00",
             }}
@@ -600,43 +1108,31 @@ export default function GoldInvestment() {
             📊
           </div>
 
-          <div>
-            <p style={styles.summaryLabel}>
-              Current Value
-            </p>
-
-            <h2 style={styles.summaryValue}>
+          <div style={{ minWidth: 0 }}>
+            <p style={responsiveStyles.summaryLabel}>Current Value</p>
+            <h2 style={responsiveStyles.summaryValue}>
               {formatCurrency(totalCurrentValue)}
             </h2>
           </div>
         </div>
 
-        <div style={styles.summaryCard}>
+        <div style={responsiveStyles.summaryCard}>
           <div
             style={{
-              ...styles.summaryIcon,
-              background: profitLossPositive
-                ? "#eef8f1"
-                : "#fff0f0",
-              color: profitLossPositive
-                ? "#198754"
-                : "#dc3545",
+              ...responsiveStyles.summaryIcon,
+              background: profitLossPositive ? "#eef8f1" : "#fff0f0",
+              color: profitLossPositive ? "#198754" : "#dc3545",
             }}
           >
             {profitLossPositive ? "↗" : "↘"}
           </div>
 
-          <div>
-            <p style={styles.summaryLabel}>
-              Overall P/L
-            </p>
-
+          <div style={{ minWidth: 0 }}>
+            <p style={responsiveStyles.summaryLabel}>Overall P/L</p>
             <h2
               style={{
-                ...styles.summaryValue,
-                color: profitLossPositive
-                  ? "#198754"
-                  : "#dc3545",
+                ...responsiveStyles.summaryValue,
+                color: profitLossPositive ? "#198754" : "#dc3545",
               }}
             >
               {profitLossPositive ? "+" : ""}
@@ -646,62 +1142,38 @@ export default function GoldInvestment() {
         </div>
       </div>
 
-      {/* =================================================
-          MAIN GRID
-      ================================================= */}
-
-      <div style={styles.mainGrid}>
-        {/* =================================================
-            PURCHASE CARD
-        ================================================= */}
-
-        <div style={styles.card}>
-          <div style={styles.cardHeader}>
-            <div>
-              <h2 style={styles.cardTitle}>
+      <div style={responsiveStyles.mainGrid}>
+        <div style={responsiveStyles.card}>
+          <div style={responsiveStyles.cardHeader}>
+            <div style={{ minWidth: 0 }}>
+              <h2 style={responsiveStyles.cardTitle}>
                 Buy Digital Gold
               </h2>
 
-              <p style={styles.cardSubtitle}>
+              <p style={responsiveStyles.cardSubtitle}>
                 Start your gold investment journey
               </p>
             </div>
 
-            <div style={styles.goldBadge}>
-              🪙
-            </div>
+            <div style={responsiveStyles.goldBadge}>🪙</div>
           </div>
 
-          <form
-            onSubmit={handlePurchase}
-            style={styles.form}
-          >
-            {/* ACCOUNT */}
-
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
-                Debit Account
-              </label>
+          <form onSubmit={handlePurchase} style={responsiveStyles.form}>
+            <div style={responsiveStyles.formGroup}>
+              <label style={responsiveStyles.label}>Debit Account</label>
 
               <select
                 value={selectedAccount}
                 onChange={(event) =>
-                  setSelectedAccount(
-                    event.target.value
-                  )
+                  setSelectedAccount(event.target.value)
                 }
-                style={styles.input}
+                style={responsiveStyles.input}
                 required
               >
-                <option value="">
-                  Select Account
-                </option>
+                <option value="">Select Account</option>
 
                 {accounts.map((account) => (
-                  <option
-                    key={account.id}
-                    value={account.id}
-                  >
+                  <option key={account.id} value={account.id}>
                     {account.accountNumber} —{" "}
                     {formatCurrency(account.balance)}
                   </option>
@@ -709,65 +1181,48 @@ export default function GoldInvestment() {
               </select>
             </div>
 
-            {/* GOLD TYPE */}
-
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
-                Gold Type
-              </label>
+            <div style={responsiveStyles.formGroup}>
+              <label style={responsiveStyles.label}>Gold Type</label>
 
               <input
                 type="text"
                 value="Digital Gold"
                 readOnly
                 style={{
-                  ...styles.input,
+                  ...responsiveStyles.input,
                   background: "#f7f9fc",
                   color: "#495057",
                 }}
               />
             </div>
 
-            {/* PURITY */}
+            <div style={responsiveStyles.formGroup}>
+              <label style={responsiveStyles.label}>Gold Purity</label>
 
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
-                Gold Purity
-              </label>
-
-              <div style={styles.purityGrid}>
+              <div style={responsiveStyles.purityGrid}>
                 {goldPrices.map((price) => {
-                  const purity =
-                    String(
-                      price.purity || ""
-                    ).toUpperCase();
+                  const purity = String(
+                    price.purity || ""
+                  ).toUpperCase();
 
-                  const selected =
-                    selectedPurity === purity;
+                  const selected = selectedPurity === purity;
 
                   return (
                     <button
                       type="button"
                       key={purity}
-                      onClick={() =>
-                        setSelectedPurity(purity)
-                      }
+                      onClick={() => setSelectedPurity(purity)}
                       style={{
-                        ...styles.purityButton,
+                        ...responsiveStyles.purityButton,
                         ...(selected
                           ? styles.purityButtonActive
                           : {}),
                       }}
                     >
-                      <strong>
-                        {purity}
-                      </strong>
+                      <strong>{purity}</strong>
 
                       <span>
-                        {formatCurrency(
-                          price.pricePerGram
-                        )}
-                        /g
+                        {formatCurrency(price.pricePerGram)}/g
                       </span>
                     </button>
                   );
@@ -775,38 +1230,29 @@ export default function GoldInvestment() {
               </div>
             </div>
 
-            {/* INVESTMENT AMOUNT */}
-
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
+            <div style={responsiveStyles.formGroup}>
+              <label style={responsiveStyles.label}>
                 Investment Amount
               </label>
 
-              <div style={styles.amountWrapper}>
-                <span style={styles.amountPrefix}>
-                  ₹
-                </span>
+              <div style={responsiveStyles.amountWrapper}>
+                <span style={responsiveStyles.amountPrefix}>₹</span>
 
                 <input
                   type="number"
-                  min={
-                    selectedGoldPrice?.minimumInvestment ||
-                    100
-                  }
+                  min={selectedGoldPrice?.minimumInvestment || 100}
                   step="0.01"
                   value={investmentAmount}
                   onChange={(event) =>
-                    setInvestmentAmount(
-                      event.target.value
-                    )
+                    setInvestmentAmount(event.target.value)
                   }
                   placeholder="Enter amount"
-                  style={styles.amountInput}
+                  style={responsiveStyles.amountInput}
                   required
                 />
               </div>
 
-              <p style={styles.helperText}>
+              <p style={responsiveStyles.helperText}>
                 Minimum investment:{" "}
                 {formatCurrency(
                   selectedGoldPrice?.minimumInvestment
@@ -814,114 +1260,86 @@ export default function GoldInvestment() {
               </p>
             </div>
 
-            {/* CALCULATION */}
-
-            <div style={styles.calculationBox}>
+            <div style={responsiveStyles.calculationBox}>
               <div>
-                <span style={styles.calculationLabel}>
+                <span style={responsiveStyles.calculationLabel}>
                   Gold Price
                 </span>
 
-                <strong style={styles.calculationValue}>
-                  {formatCurrency(
-                    selectedGoldPrice?.pricePerGram
-                  )}
+                <strong style={responsiveStyles.calculationValue}>
+                  {formatCurrency(selectedGoldPrice?.pricePerGram)}
                   / gram
                 </strong>
               </div>
 
-              <div style={styles.calculationDivider} />
+              <div style={responsiveStyles.calculationDivider} />
 
               <div>
-                <span style={styles.calculationLabel}>
+                <span style={responsiveStyles.calculationLabel}>
                   You Receive
                 </span>
 
-                <strong style={styles.calculationGold}>
-                  {formatNumber(
-                    calculatedGrams
-                  )}{" "}
-                  grams
+                <strong style={responsiveStyles.calculationGold}>
+                  {formatNumber(calculatedGrams)} grams
                 </strong>
               </div>
             </div>
 
-            {/* PURCHASE BUTTON */}
-
             <button
               type="submit"
-              disabled={
-                purchasing ||
-                accounts.length === 0
-              }
+              disabled={purchasing || accounts.length === 0}
               style={{
-                ...styles.primaryButton,
+                ...responsiveStyles.primaryButton,
                 opacity:
-                  purchasing ||
-                  accounts.length === 0
-                    ? 0.65
-                    : 1,
+                  purchasing || accounts.length === 0 ? 0.65 : 1,
               }}
             >
-              {purchasing
-                ? "Processing..."
-                : "🪙 Buy Gold"}
+              {purchasing ? "Processing..." : "🪙 Buy Gold"}
             </button>
 
             {accounts.length === 0 && (
-              <p style={styles.warningText}>
-                No active account available for
-                investment.
+              <p style={responsiveStyles.warningText}>
+                No active account available for investment.
               </p>
             )}
           </form>
         </div>
 
-        {/* =================================================
-            PRICE CARD
-        ================================================= */}
+        <div style={responsiveStyles.card}>
+          <div style={responsiveStyles.cardHeader}>
+            <div style={{ minWidth: 0 }}>
+              <h2 style={responsiveStyles.cardTitle}>Gold Price</h2>
 
-        <div style={styles.card}>
-          <div style={styles.cardHeader}>
-            <div>
-              <h2 style={styles.cardTitle}>
-                Gold Price
-              </h2>
-
-              <p style={styles.cardSubtitle}>
+              <p style={responsiveStyles.cardSubtitle}>
                 Current Avani Bank catalogue price
               </p>
             </div>
 
-            <div style={styles.priceIcon}>
-              ₹
-            </div>
+            <div style={responsiveStyles.priceIcon}>₹</div>
           </div>
 
-          <div style={styles.priceList}>
+          <div style={responsiveStyles.priceList}>
             {goldPrices.map((price) => (
               <div
                 key={`${price.goldType}-${price.purity}`}
-                style={styles.priceRow}
+                style={responsiveStyles.priceRow}
               >
-                <div>
-                  <strong style={styles.pricePurity}>
+                <div style={{ minWidth: 0 }}>
+                  <strong style={responsiveStyles.pricePurity}>
                     {price.purity}
                   </strong>
 
-                  <span style={styles.priceType}>
+                  <span style={responsiveStyles.priceType}>
                     Digital Gold
                   </span>
                 </div>
 
-                <div style={styles.priceRight}>
-                  <strong style={styles.priceAmount}>
-                    {formatCurrency(
-                      price.pricePerGram
-                    )}
+                <div style={responsiveStyles.priceRight}>
+                  <strong style={responsiveStyles.priceAmount}>
+                    {formatCurrency(price.pricePerGram)}
                   </strong>
 
-                  <span style={styles.priceUnit}>
+                  <span style={responsiveStyles.priceUnit}>
                     per gram
                   </span>
                 </div>
@@ -929,456 +1347,357 @@ export default function GoldInvestment() {
             ))}
           </div>
 
-          <div style={styles.infoBox}>
-            <span style={styles.infoIcon}>
-              ℹ
-            </span>
+          <div style={responsiveStyles.infoBox}>
+            <span style={responsiveStyles.infoIcon}>ℹ</span>
 
             <span>
-              Gold value is calculated according to
-              the current catalogue price and your
-              purchased quantity.
+              Gold value is calculated according to the current catalogue
+              price and your purchased quantity.
             </span>
           </div>
         </div>
       </div>
 
-      {/* =================================================
-          ACTIVE INVESTMENTS
-      ================================================= */}
-
-      <div style={styles.section}>
-        <div style={styles.sectionHeader}>
-          <div>
-            <h2 style={styles.sectionTitle}>
+      <div style={responsiveStyles.section}>
+        <div style={responsiveStyles.sectionHeader}>
+          <div style={{ minWidth: 0 }}>
+            <h2 style={responsiveStyles.sectionTitle}>
               Active Gold Investments
             </h2>
 
-            <p style={styles.sectionSubtitle}>
+            <p style={responsiveStyles.sectionSubtitle}>
               Track your current gold holdings
             </p>
           </div>
 
-          <span style={styles.countBadge}>
+          <span style={responsiveStyles.countBadge}>
             {activeInvestments.length} Active
           </span>
         </div>
 
         {activeInvestments.length === 0 ? (
-          <div style={styles.emptyCard}>
-            <div style={styles.emptyIcon}>
-              🪙
-            </div>
+          <div style={responsiveStyles.emptyCard}>
+            <div style={responsiveStyles.emptyIcon}>🪙</div>
 
-            <h3 style={styles.emptyTitle}>
+            <h3 style={responsiveStyles.emptyTitle}>
               No Active Gold Investments
             </h3>
 
-            <p style={styles.emptyText}>
-              Your purchased gold investments will
-              appear here.
+            <p style={responsiveStyles.emptyText}>
+              Your purchased gold investments will appear here.
             </p>
           </div>
         ) : (
-          <div style={styles.investmentGrid}>
-            {activeInvestments.map(
-              (investment) => {
-                const profit =
-                  Number(
-                    investment.profitLoss || 0
-                  ) >= 0;
+          <div style={responsiveStyles.investmentGrid}>
+            {activeInvestments.map((investment) => {
+              const profit =
+                Number(investment.profitLoss || 0) >= 0;
 
-                return (
-                  <div
-                    key={investment.id}
-                    style={styles.investmentCard}
-                  >
-                    <div style={styles.investmentTop}>
-                      <div>
-                        <div style={styles.goldTitleRow}>
-                          <span style={styles.goldMiniIcon}>
-                            🪙
+              return (
+                <div
+                  key={investment.id}
+                  style={responsiveStyles.investmentCard}
+                >
+                  <div style={responsiveStyles.investmentTop}>
+                    <div>
+                      <div style={responsiveStyles.goldTitleRow}>
+                        <span style={responsiveStyles.goldMiniIcon}>
+                          🪙
+                        </span>
+
+                        <div style={{ minWidth: 0 }}>
+                          <h3 style={responsiveStyles.investmentTitle}>
+                            Digital Gold
+                          </h3>
+
+                          <span style={responsiveStyles.investmentId}>
+                            Investment #{investment.id}
                           </span>
-
-                          <div>
-                            <h3 style={styles.investmentTitle}>
-                              Digital Gold
-                            </h3>
-
-                            <span style={styles.investmentId}>
-                              Investment #
-                              {investment.id}
-                            </span>
-                          </div>
                         </div>
                       </div>
-
-                      <span style={styles.activeBadge}>
-                        ACTIVE
-                      </span>
                     </div>
 
-                    <div style={styles.investmentDetails}>
-                      <div style={styles.detailItem}>
-                        <span style={styles.detailLabel}>
-                          Purity
-                        </span>
+                    <span style={responsiveStyles.activeBadge}>
+                      ACTIVE
+                    </span>
+                  </div>
 
-                        <strong style={styles.detailValue}>
-                          {investment.purity}
-                        </strong>
-                      </div>
-
-                      <div style={styles.detailItem}>
-                        <span style={styles.detailLabel}>
-                          Quantity
-                        </span>
-
-                        <strong style={styles.detailValue}>
-                          {formatNumber(
-                            investment.quantityGrams
-                          )}{" "}
-                          g
-                        </strong>
-                      </div>
-
-                      <div style={styles.detailItem}>
-                        <span style={styles.detailLabel}>
-                          Buy Price
-                        </span>
-
-                        <strong style={styles.detailValue}>
-                          {formatCurrency(
-                            investment.purchasePricePerGram
-                          )}
-                        </strong>
-                      </div>
-
-                      <div style={styles.detailItem}>
-                        <span style={styles.detailLabel}>
-                          Current Price
-                        </span>
-
-                        <strong style={styles.detailValue}>
-                          {formatCurrency(
-                            investment.currentPricePerGram
-                          )}
-                        </strong>
-                      </div>
-                    </div>
-
-                    <div style={styles.valueBox}>
-                      <div>
-                        <span style={styles.valueLabel}>
-                          Invested
-                        </span>
-
-                        <strong style={styles.valueAmount}>
-                          {formatCurrency(
-                            investment.investmentAmount
-                          )}
-                        </strong>
-                      </div>
-
-                      <div>
-                        <span style={styles.valueLabel}>
-                          Current Value
-                        </span>
-
-                        <strong style={styles.currentValue}>
-                          {formatCurrency(
-                            investment.currentValue
-                          )}
-                        </strong>
-                      </div>
-
-                      <div>
-                        <span style={styles.valueLabel}>
-                          Profit / Loss
-                        </span>
-
-                        <strong
-                          style={{
-                            ...styles.currentValue,
-                            color: profit
-                              ? "#198754"
-                              : "#dc3545",
-                          }}
-                        >
-                          {profit ? "+" : ""}
-                          {formatCurrency(
-                            investment.profitLoss
-                          )}
-                        </strong>
-                      </div>
-                    </div>
-
-                    <div style={styles.investmentFooter}>
-                      <span style={styles.purchaseDate}>
-                        Purchased:{" "}
-                        {investment.purchaseDate ||
-                          "—"}
+                  <div style={responsiveStyles.investmentDetails}>
+                    <div style={responsiveStyles.detailItem}>
+                      <span style={responsiveStyles.detailLabel}>
+                        Purity
                       </span>
 
-                      <button
-                        type="button"
-                        style={styles.sellButton}
-                        onClick={() =>
-                          openSellModal(
-                            investment
-                          )
-                        }
-                      >
-                        Sell Gold
-                      </button>
+                      <strong style={responsiveStyles.detailValue}>
+                        {investment.purity}
+                      </strong>
+                    </div>
+
+                    <div style={responsiveStyles.detailItem}>
+                      <span style={responsiveStyles.detailLabel}>
+                        Quantity
+                      </span>
+
+                      <strong style={responsiveStyles.detailValue}>
+                        {formatNumber(investment.quantityGrams)} g
+                      </strong>
+                    </div>
+
+                    <div style={responsiveStyles.detailItem}>
+                      <span style={responsiveStyles.detailLabel}>
+                        Buy Price
+                      </span>
+
+                      <strong style={responsiveStyles.detailValue}>
+                        {formatCurrency(
+                          investment.purchasePricePerGram
+                        )}
+                      </strong>
+                    </div>
+
+                    <div style={responsiveStyles.detailItem}>
+                      <span style={responsiveStyles.detailLabel}>
+                        Current Price
+                      </span>
+
+                      <strong style={responsiveStyles.detailValue}>
+                        {formatCurrency(
+                          investment.currentPricePerGram
+                        )}
+                      </strong>
                     </div>
                   </div>
-                );
-              }
-            )}
+
+                  <div style={responsiveStyles.valueBox}>
+                    <div>
+                      <span style={responsiveStyles.valueLabel}>
+                        Invested
+                      </span>
+
+                      <strong style={responsiveStyles.valueAmount}>
+                        {formatCurrency(investment.investmentAmount)}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span style={responsiveStyles.valueLabel}>
+                        Current Value
+                      </span>
+
+                      <strong style={responsiveStyles.currentValue}>
+                        {formatCurrency(investment.currentValue)}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span style={responsiveStyles.valueLabel}>
+                        Profit / Loss
+                      </span>
+
+                      <strong
+                        style={{
+                          ...responsiveStyles.currentValue,
+                          color: profit ? "#198754" : "#dc3545",
+                        }}
+                      >
+                        {profit ? "+" : ""}
+                        {formatCurrency(investment.profitLoss)}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div style={responsiveStyles.investmentFooter}>
+                    <span style={responsiveStyles.purchaseDate}>
+                      Purchased: {investment.purchaseDate || "—"}
+                    </span>
+
+                    <button
+                      type="button"
+                      style={responsiveStyles.sellButton}
+                      onClick={() => openSellModal(investment)}
+                    >
+                      Sell Gold
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
 
-      {/* =================================================
-          INVESTMENT HISTORY
-      ================================================= */}
-
-      <div style={styles.section}>
-        <div style={styles.sectionHeader}>
-          <div>
-            <h2 style={styles.sectionTitle}>
+      <div style={responsiveStyles.section}>
+        <div style={responsiveStyles.sectionHeader}>
+          <div style={{ minWidth: 0 }}>
+            <h2 style={responsiveStyles.sectionTitle}>
               Gold Investment History
             </h2>
 
-            <p style={styles.sectionSubtitle}>
+            <p style={responsiveStyles.sectionSubtitle}>
               Previously completed gold investments
             </p>
           </div>
         </div>
 
         {soldInvestments.length === 0 ? (
-          <div style={styles.emptyHistory}>
+          <div style={responsiveStyles.emptyHistory}>
             No sold gold investments yet.
           </div>
         ) : (
-          <div style={styles.tableWrapper}>
-            <table style={styles.table}>
+          <div style={responsiveStyles.tableWrapper}>
+            <table style={responsiveStyles.table}>
               <thead>
                 <tr>
-                  <th style={styles.th}>
-                    Investment
-                  </th>
-
-                  <th style={styles.th}>
-                    Purity
-                  </th>
-
-                  <th style={styles.th}>
-                    Quantity
-                  </th>
-
-                  <th style={styles.th}>
-                    Invested
-                  </th>
-
-                  <th style={styles.th}>
-                    Sale Value
-                  </th>
-
-                  <th style={styles.th}>
-                    Profit / Loss
-                  </th>
-
-                  <th style={styles.th}>
-                    Status
-                  </th>
+                  <th style={responsiveStyles.th}>Investment</th>
+                  <th style={responsiveStyles.th}>Purity</th>
+                  <th style={responsiveStyles.th}>Quantity</th>
+                  <th style={responsiveStyles.th}>Invested</th>
+                  <th style={responsiveStyles.th}>Sale Value</th>
+                  <th style={responsiveStyles.th}>Profit / Loss</th>
+                  <th style={responsiveStyles.th}>Status</th>
                 </tr>
               </thead>
 
               <tbody>
-                {soldInvestments.map(
-                  (investment) => {
-                    const profit =
-                      Number(
-                        investment.profitLoss || 0
-                      ) >= 0;
+                {soldInvestments.map((investment) => {
+                  const profit =
+                    Number(investment.profitLoss || 0) >= 0;
 
-                    return (
-                      <tr key={investment.id}>
-                        <td style={styles.td}>
-                          <strong>
-                            Gold #
-                            {investment.id}
-                          </strong>
-                        </td>
+                  return (
+                    <tr key={investment.id}>
+                      <td style={responsiveStyles.td}>
+                        <strong>Gold #{investment.id}</strong>
+                      </td>
 
-                        <td style={styles.td}>
-                          {investment.purity}
-                        </td>
+                      <td style={responsiveStyles.td}>
+                        {investment.purity}
+                      </td>
 
-                        <td style={styles.td}>
-                          {formatNumber(
-                            investment.quantityGrams
-                          )}{" "}
-                          g
-                        </td>
+                      <td style={responsiveStyles.td}>
+                        {formatNumber(investment.quantityGrams)} g
+                      </td>
 
-                        <td style={styles.td}>
-                          {formatCurrency(
-                            investment.investmentAmount
-                          )}
-                        </td>
+                      <td style={responsiveStyles.td}>
+                        {formatCurrency(investment.investmentAmount)}
+                      </td>
 
-                        <td style={styles.td}>
-                          {formatCurrency(
-                            investment.currentValue
-                          )}
-                        </td>
+                      <td style={responsiveStyles.td}>
+                        {formatCurrency(investment.currentValue)}
+                      </td>
 
-                        <td
-                          style={{
-                            ...styles.td,
-                            color: profit
-                              ? "#198754"
-                              : "#dc3545",
-                            fontWeight: 700,
-                          }}
-                        >
-                          {profit ? "+" : ""}
-                          {formatCurrency(
-                            investment.profitLoss
-                          )}
-                        </td>
+                      <td
+                        style={{
+                          ...responsiveStyles.td,
+                          color: profit ? "#198754" : "#dc3545",
+                          fontWeight: 700,
+                        }}
+                      >
+                        {profit ? "+" : ""}
+                        {formatCurrency(investment.profitLoss)}
+                      </td>
 
-                        <td style={styles.td}>
-                          <span style={styles.soldBadge}>
-                            SOLD
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  }
-                )}
+                      <td style={responsiveStyles.td}>
+                        <span style={responsiveStyles.soldBadge}>
+                          SOLD
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
         )}
       </div>
 
-      {/* =================================================
-          SELL CONFIRMATION MODAL
-      ================================================= */}
+      {showSellModal && selectedInvestment && (
+        <div style={responsiveStyles.modalOverlay}>
+          <div style={responsiveStyles.modal}>
+            <div style={responsiveStyles.modalIcon}>🪙</div>
 
-      {showSellModal &&
-        selectedInvestment && (
-          <div style={styles.modalOverlay}>
-            <div style={styles.modal}>
-              <div style={styles.modalIcon}>
-                🪙
+            <h2 style={responsiveStyles.modalTitle}>Sell Gold?</h2>
+
+            <p style={responsiveStyles.modalText}>
+              Are you sure you want to sell this gold investment?
+            </p>
+
+            <div style={responsiveStyles.modalDetails}>
+              <div style={styles.modalDetailsRow}>
+                <span>Gold Quantity</span>
+
+                <strong>
+                  {formatNumber(
+                    selectedInvestment.quantityGrams
+                  )}{" "}
+                  g
+                </strong>
               </div>
 
-              <h2 style={styles.modalTitle}>
-                Sell Gold?
-              </h2>
+              <div style={styles.modalDetailsRow}>
+                <span>Current Value</span>
 
-              <p style={styles.modalText}>
-                Are you sure you want to sell this
-                gold investment?
-              </p>
-
-              <div style={styles.modalDetails}>
-                <div>
-                  <span>
-                    Gold Quantity
-                  </span>
-
-                  <strong>
-                    {formatNumber(
-                      selectedInvestment.quantityGrams
-                    )}{" "}
-                    g
-                  </strong>
-                </div>
-
-                <div>
-                  <span>
-                    Current Value
-                  </span>
-
-                  <strong>
-                    {formatCurrency(
-                      selectedInvestment.currentValue
-                    )}
-                  </strong>
-                </div>
-
-                <div>
-                  <span>
-                    Current P/L
-                  </span>
-
-                  <strong
-                    style={{
-                      color:
-                        Number(
-                          selectedInvestment.profitLoss ||
-                            0
-                        ) >= 0
-                          ? "#198754"
-                          : "#dc3545",
-                    }}
-                  >
-                    {Number(
-                      selectedInvestment.profitLoss ||
-                        0
-                    ) >= 0
-                      ? "+"
-                      : ""}
-                    {formatCurrency(
-                      selectedInvestment.profitLoss
-                    )}
-                  </strong>
-                </div>
+                <strong>
+                  {formatCurrency(
+                    selectedInvestment.currentValue
+                  )}
+                </strong>
               </div>
 
-              <div style={styles.modalActions}>
-                <button
-                  type="button"
-                  onClick={closeSellModal}
-                  disabled={sellingId !== null}
-                  style={styles.cancelButton}
-                >
-                  Cancel
-                </button>
+              <div style={styles.modalDetailsRow}>
+                <span>Current P/L</span>
 
-                <button
-                  type="button"
-                  onClick={handleSell}
-                  disabled={sellingId !== null}
+                <strong
                   style={{
-                    ...styles.confirmSellButton,
-                    opacity:
-                      sellingId !== null
-                        ? 0.65
-                        : 1,
+                    color:
+                      Number(
+                        selectedInvestment.profitLoss || 0
+                      ) >= 0
+                        ? "#198754"
+                        : "#dc3545",
                   }}
                 >
-                  {sellingId !== null
-                    ? "Selling..."
-                    : "Confirm Sell"}
-                </button>
+                  {Number(
+                    selectedInvestment.profitLoss || 0
+                  ) >= 0
+                    ? "+"
+                    : ""}
+                  {formatCurrency(
+                    selectedInvestment.profitLoss
+                  )}
+                </strong>
               </div>
             </div>
+
+            <div style={responsiveStyles.modalActions}>
+              <button
+                type="button"
+                onClick={closeSellModal}
+                disabled={sellingId !== null}
+                style={responsiveStyles.cancelButton}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSell}
+                disabled={sellingId !== null}
+                style={{
+                  ...responsiveStyles.confirmSellButton,
+                  opacity: sellingId !== null ? 0.65 : 1,
+                }}
+              >
+                {sellingId !== null
+                  ? "Selling..."
+                  : "Confirm Sell"}
+              </button>
+            </div>
           </div>
-        )}
+        </div>
+      )}
     </div>
   );
 }
-
-// =======================================================
-// STYLES
-// =======================================================
 
 const styles = {
   page: {
@@ -1399,8 +1718,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "space-between",
     gap: "20px",
-    boxShadow:
-      "0 10px 30px rgba(36, 87, 198, 0.18)",
+    boxShadow: "0 10px 30px rgba(36, 87, 198, 0.18)",
     marginBottom: "22px",
   },
 
@@ -1419,8 +1737,7 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     fontSize: "27px",
-    boxShadow:
-      "0 4px 12px rgba(0,0,0,0.12)",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
   },
 
   headerTitle: {
@@ -1478,8 +1795,7 @@ const styles = {
 
   summaryGrid: {
     display: "grid",
-    gridTemplateColumns:
-      "repeat(4, minmax(0, 1fr))",
+    gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
     gap: "16px",
     marginBottom: "22px",
   },
@@ -1492,8 +1808,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     gap: "13px",
-    boxShadow:
-      "0 4px 14px rgba(26, 48, 79, 0.05)",
+    boxShadow: "0 4px 14px rgba(26, 48, 79, 0.05)",
   },
 
   summaryIcon: {
@@ -1534,8 +1849,7 @@ const styles = {
     border: "1px solid #e7ebf2",
     borderRadius: "17px",
     padding: "22px",
-    boxShadow:
-      "0 5px 18px rgba(26, 48, 79, 0.05)",
+    boxShadow: "0 5px 18px rgba(26, 48, 79, 0.05)",
   },
 
   cardHeader: {
@@ -1614,8 +1928,7 @@ const styles = {
 
   purityGrid: {
     display: "grid",
-    gridTemplateColumns:
-      "repeat(2, minmax(0, 1fr))",
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
     gap: "10px",
   },
 
@@ -1675,8 +1988,7 @@ const styles = {
     borderRadius: "12px",
     padding: "14px",
     display: "grid",
-    gridTemplateColumns:
-      "1fr auto 1fr",
+    gridTemplateColumns: "1fr auto 1fr",
     alignItems: "center",
     gap: "12px",
   },
@@ -1715,8 +2027,7 @@ const styles = {
     fontSize: "14px",
     fontWeight: 750,
     cursor: "pointer",
-    boxShadow:
-      "0 7px 16px rgba(36, 87, 198, 0.2)",
+    boxShadow: "0 7px 16px rgba(36, 87, 198, 0.2)",
   },
 
   warningText: {
@@ -1794,8 +2105,7 @@ const styles = {
     borderRadius: "17px",
     padding: "22px",
     marginBottom: "24px",
-    boxShadow:
-      "0 5px 18px rgba(26, 48, 79, 0.05)",
+    boxShadow: "0 5px 18px rgba(26, 48, 79, 0.05)",
   },
 
   sectionHeader: {
@@ -1830,8 +2140,7 @@ const styles = {
 
   investmentGrid: {
     display: "grid",
-    gridTemplateColumns:
-      "repeat(2, minmax(0, 1fr))",
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
     gap: "16px",
   },
 
@@ -1889,8 +2198,7 @@ const styles = {
 
   investmentDetails: {
     display: "grid",
-    gridTemplateColumns:
-      "repeat(2, minmax(0, 1fr))",
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
     gap: "12px",
     paddingBottom: "15px",
     borderBottom: "1px solid #edf0f4",
@@ -1918,8 +2226,7 @@ const styles = {
     borderRadius: "11px",
     padding: "12px",
     display: "grid",
-    gridTemplateColumns:
-      "repeat(3, minmax(0, 1fr))",
+    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
     gap: "10px",
   },
 
@@ -2051,8 +2358,7 @@ const styles = {
     background: "#ffffff",
     borderRadius: "17px",
     padding: "25px",
-    boxShadow:
-      "0 20px 60px rgba(0,0,0,0.2)",
+    boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
     textAlign: "center",
   },
 
@@ -2095,6 +2401,8 @@ const styles = {
   modalDetailsRow: {
     display: "flex",
     justifyContent: "space-between",
+    alignItems: "center",
+    gap: "12px",
   },
 
   modalActions: {
@@ -2134,8 +2442,7 @@ const styles = {
     borderRadius: "18px",
     padding: "45px 25px",
     textAlign: "center",
-    boxShadow:
-      "0 10px 35px rgba(26, 48, 79, 0.08)",
+    boxShadow: "0 10px 35px rgba(26, 48, 79, 0.08)",
   },
 
   loadingIcon: {

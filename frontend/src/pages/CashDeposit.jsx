@@ -29,6 +29,24 @@ function CashDeposit() {
 
   const branchCode = localStorage.getItem("branchCode") || "-";
 
+  // Responsive viewport state
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 700 : false
+  );
+  const [isTablet, setIsTablet] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 980 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 700);
+      setIsTablet(window.innerWidth <= 980);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const handleDeposit = async (e) => {
     e.preventDefault();
 
@@ -912,8 +930,222 @@ newDepositButton: {
     },
   };
 
+
+  const responsiveStyles = {
+    page: {
+      padding: isMobile ? "12px" : isTablet ? "16px" : "22px",
+    },
+    container: {
+      width: "100%",
+    },
+    topBar: {
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "stretch" : "center",
+      padding: isMobile ? "12px" : isTablet ? "12px 14px" : "10px 16px 10px 20px",
+      gap: isMobile ? "12px" : "18px",
+    },
+    brand: {
+      width: isMobile ? "100%" : "auto",
+    },
+    topRight: {
+      width: isMobile ? "100%" : "auto",
+      flexWrap: "wrap",
+      justifyContent: isMobile ? "stretch" : "flex-end",
+      gap: "8px",
+    },
+    cashierBadge: {
+      flex: isMobile ? "1 1 100%" : "0 1 auto",
+    },
+    onlineBadge: {
+      flex: isMobile ? "1 1 auto" : "0 0 auto",
+      textAlign: "center",
+    },
+    themeButton: {
+      flex: isMobile ? "1 1 auto" : "0 0 auto",
+    },
+    backButton: {
+      flex: isMobile ? "1 1 auto" : "0 0 auto",
+      minHeight: isMobile ? "40px" : "auto",
+    },
+    hero: {
+      minHeight: isMobile ? "auto" : isTablet ? "190px" : "215px",
+      flexDirection: isMobile ? "column" : "row",
+    },
+    heroContent: {
+      width: isMobile ? "100%" : isTablet ? "68%" : "63%",
+      padding: isMobile ? "22px 20px" : isTablet ? "24px" : "28px 34px",
+    },
+    heroTitle: {
+      fontSize: isMobile ? "28px" : isTablet ? "31px" : "34px",
+    },
+    heroText: {
+      fontSize: isMobile ? "12px" : "14px",
+      maxWidth: isMobile ? "100%" : "560px",
+    },
+    heroFeatures: {
+      gap: "7px",
+    },
+    heroFeature: {
+      fontSize: isMobile ? "9px" : "10px",
+      padding: isMobile ? "6px 8px" : "7px 10px",
+    },
+    heroImage: {
+      position: isMobile ? "relative" : "absolute",
+      width: isMobile ? "100%" : "43%",
+      height: isMobile ? "125px" : "100%",
+      minHeight: isMobile ? "125px" : "0",
+      clipPath: isMobile ? "none" : "polygon(16% 0, 100% 0, 100% 100%, 0 100%)",
+    },
+    mainLayout: {
+      gridTemplateColumns: isTablet ? "1fr" : "minmax(0, 1fr) 300px",
+      gap: isMobile ? "14px" : "18px",
+    },
+    card: {
+      padding: isMobile ? "18px" : isTablet ? "22px" : "26px",
+    },
+    cardHeader: {
+      alignItems: isMobile ? "flex-start" : "center",
+    },
+    sectionTitle: {
+      fontSize: isMobile ? "18px" : "21px",
+    },
+    formGrid: {
+      gridTemplateColumns: isMobile ? "1fr" : isTablet ? "1fr 1fr" : "repeat(2, minmax(0, 1fr))",
+      gap: isMobile ? "14px" : "18px",
+    },
+    input: {
+      height: isMobile ? "48px" : "50px",
+    },
+    amountInput: {
+      height: isMobile ? "54px" : "58px",
+      fontSize: isMobile ? "18px" : "20px",
+    },
+    quickAmounts: {
+      gridTemplateColumns: isMobile ? "repeat(3, minmax(0, 1fr))" : "repeat(6, minmax(0, 1fr))",
+      gap: isMobile ? "7px" : "8px",
+    },
+    quickAmount: {
+      fontSize: isMobile ? "10px" : "11px",
+      padding: isMobile ? "0 4px" : "0",
+    },
+    actionArea: {
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "stretch" : "center",
+      gap: "12px",
+    },
+    verificationText: {
+      fontSize: isMobile ? "10px" : "11px",
+    },
+    buttonRow: {
+      width: isMobile ? "100%" : "auto",
+    },
+    depositButton: {
+      width: isMobile ? "100%" : "auto",
+      minWidth: isMobile ? "0" : "205px",
+    },
+    sideStack: {
+      width: "100%",
+    },
+    staffGrid: {
+      gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+    },
+    staffItemWide: {
+      gridColumn: isMobile ? "auto" : "1 / -1",
+    },
+    receipt: {
+      margin: isMobile ? "14px auto" : "24px auto",
+      borderRadius: isMobile ? "8px" : "10px",
+    },
+    receiptHeader: {
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "flex-start" : "center",
+      gap: isMobile ? "12px" : "0",
+      padding: isMobile ? "18px" : "22px 26px",
+    },
+    receiptTitleBox: {
+      textAlign: isMobile ? "left" : "right",
+      width: isMobile ? "100%" : "auto",
+    },
+    receiptMeta: {
+      flexDirection: isMobile ? "column" : "row",
+      gap: isMobile ? "12px" : "0",
+      padding: isMobile ? "14px 18px" : "17px 26px",
+    },
+    metaRight: {
+      textAlign: isMobile ? "left" : "right",
+    },
+    receiptDetailsGrid: {
+      gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+      padding: isMobile ? "0 18px 14px" : "0 26px 17px",
+    },
+    sectionHeading: {
+      padding: isMobile ? "14px 18px 9px" : "17px 26px 10px",
+    },
+    amountSection: {
+      margin: isMobile ? "5px 18px 14px" : "5px 26px 15px",
+      padding: isMobile ? "14px 15px" : "17px 20px",
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "flex-start" : "center",
+      gap: isMobile ? "8px" : "0",
+    },
+    amountValue: {
+      fontSize: isMobile ? "22px" : "25px",
+      alignSelf: isMobile ? "flex-end" : "auto",
+    },
+    receiptTable: {
+      width: isMobile ? "calc(100% - 36px)" : "calc(100% - 52px)",
+      margin: isMobile ? "0 18px 14px" : "0 26px 17px",
+      fontSize: isMobile ? "11px" : "12px",
+    },
+    tableLabel: {
+      width: isMobile ? "45%" : "50%",
+      padding: isMobile ? "8px 9px" : "9px 12px",
+    },
+    tableValue: {
+      padding: isMobile ? "8px 9px" : "9px 12px",
+      wordBreak: "break-word",
+    },
+    acknowledgementBox: {
+      margin: isMobile ? "0 18px" : "0 26px",
+    },
+    acknowledgementText: {
+      padding: isMobile ? "0 14px" : "0 17px",
+      fontSize: isMobile ? "10px" : "11px",
+    },
+    signatureGrid: {
+      gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+      gap: isMobile ? "25px" : "50px",
+      padding: isMobile ? "12px 16px 18px" : "15px 22px 22px",
+    },
+    receiptNotice: {
+      margin: isMobile ? "14px 18px" : "17px 26px",
+    },
+    receiptFooter: {
+      padding: isMobile ? "14px 15px" : "16px 20px",
+    },
+    receiptActions: {
+      flexDirection: isMobile ? "column" : "row",
+      padding: isMobile ? "14px 18px" : "18px 26px",
+    },
+    printButton: {
+      width: isMobile ? "100%" : "auto",
+    },
+    newDepositButton: {
+      width: isMobile ? "100%" : "auto",
+    },
+  };
+
+  const getResponsiveStyle = (name) => ({
+    ...(styles[name] || {}),
+    ...(isMobile
+      ? responsiveStyles[name] || {}
+      : isTablet
+        ? responsiveStyles[name] || {}
+        : {}),
+  });
+
   return (
-    <div className={isDark ? "cash-deposit-page dark-mode" : "cash-deposit-page"} style={styles.page}>
+    <div className={isDark ? "cash-deposit-page dark-mode" : "cash-deposit-page"} style={getResponsiveStyle("page")}>
     <style>
   {`
     .cash-deposit-page.dark-mode {
@@ -1059,33 +1291,33 @@ newDepositButton: {
     }
   `}
 </style> 
-      <div style={styles.container}>
+      <div style={getResponsiveStyle("container")}>
         {/* TOP BAR */}
-        <div className="cash-deposit-topbar" style={styles.topBar}>
-          <div style={styles.brand}>
-            <div style={styles.brandLogo}>A</div>
+        <div className="cash-deposit-topbar" style={getResponsiveStyle("topBar")}>
+          <div style={getResponsiveStyle("brand")}>
+            <div style={getResponsiveStyle("brandLogo")}>A</div>
             <div>
-              <div style={styles.brandName}>AVANI BANK</div>
-              <div style={styles.brandTagline}>Secure • Simple • Trusted Banking</div>
+              <div style={getResponsiveStyle("brandName")}>AVANI BANK</div>
+              <div style={getResponsiveStyle("brandTagline")}>Secure • Simple • Trusted Banking</div>
             </div>
           </div>
 
-          <div style={styles.topRight}>
-            <div className="cash-deposit-cashier-badge" style={styles.cashierBadge}>
-              <div style={styles.cashierAvatar}>
+          <div style={getResponsiveStyle("topRight")}>
+            <div className="cash-deposit-cashier-badge" style={getResponsiveStyle("cashierBadge")}>
+              <div style={getResponsiveStyle("cashierAvatar")}>
                 {(staffName || "C").charAt(0).toUpperCase()}
               </div>
               <div>
-                <div style={styles.cashierName}>{staffName}</div>
-                <div style={styles.cashierRole}>Cashier • Employee {employeeCode}</div>
+                <div style={getResponsiveStyle("cashierName")}>{staffName}</div>
+                <div style={getResponsiveStyle("cashierRole")}>Cashier • Employee {employeeCode}</div>
               </div>
             </div>
 
-            <div style={styles.onlineBadge}>● ONLINE</div>
+            <div style={getResponsiveStyle("onlineBadge")}>● ONLINE</div>
 
             <button
               type="button"
-              style={styles.themeButton}
+              style={getResponsiveStyle("themeButton")}
               onClick={() => setIsDark((prev) => !prev)}
               title={isDark ? "Switch to light mode" : "Switch to dark mode"}
             >
@@ -1094,7 +1326,7 @@ newDepositButton: {
 
             <button
               type="button"
-              style={styles.backButton}
+              style={getResponsiveStyle("backButton")}
               onClick={() => navigate("/cashier/login")}
             >
               LOGOUT
@@ -1103,45 +1335,45 @@ newDepositButton: {
         </div>
 
         {/* PROFESSIONAL HERO */}
-        <div style={styles.hero}>
-          <div style={styles.heroContent}>
-            <div style={styles.heroEyebrow}>BRANCH OPERATIONS</div>
-            <h1 style={styles.heroTitle}>Cash Deposit</h1>
-            <p style={styles.heroText}>
+        <div style={getResponsiveStyle("hero")}>
+          <div style={getResponsiveStyle("heroContent")}>
+            <div style={getResponsiveStyle("heroEyebrow")}>BRANCH OPERATIONS</div>
+            <h1 style={getResponsiveStyle("heroTitle")}>Cash Deposit</h1>
+            <p style={getResponsiveStyle("heroText")}>
               Receive cash from customers and credit their accounts securely through
               the verified branch cash counter.
             </p>
 
-            <div style={styles.heroFeatures}>
-              <span style={styles.heroFeature}>✓ Secure Processing</span>
-              <span style={styles.heroFeature}>✓ Real-time Credit</span>
-              <span style={styles.heroFeature}>✓ Branch Verified</span>
-              <span style={styles.heroFeature}>✓ Instant Receipt</span>
+            <div style={getResponsiveStyle("heroFeatures")}>
+              <span style={getResponsiveStyle("heroFeature")}>✓ Secure Processing</span>
+              <span style={getResponsiveStyle("heroFeature")}>✓ Real-time Credit</span>
+              <span style={getResponsiveStyle("heroFeature")}>✓ Branch Verified</span>
+              <span style={getResponsiveStyle("heroFeature")}>✓ Instant Receipt</span>
             </div>
           </div>
 
-          <div style={styles.heroImage} aria-hidden="true" />
+          <div style={getResponsiveStyle("heroImage")} aria-hidden="true" />
         </div>
 
         {/* MAIN CONTENT */}
-        <div className="cash-deposit-responsive-grid" style={styles.mainLayout}>
-          <div className="cash-deposit-card" style={styles.card}>
-            <div style={styles.cardHeader}>
-              <div style={styles.cardIcon}>▣</div>
+        <div className="cash-deposit-responsive-grid" style={getResponsiveStyle("mainLayout")}>
+          <div className="cash-deposit-card" style={getResponsiveStyle("card")}>
+            <div style={getResponsiveStyle("cardHeader")}>
+              <div style={getResponsiveStyle("cardIcon")}>▣</div>
               <div>
-                <h2 style={styles.sectionTitle}>Deposit Details</h2>
-                <p style={styles.sectionText}>
+                <h2 style={getResponsiveStyle("sectionTitle")}>Deposit Details</h2>
+                <p style={getResponsiveStyle("sectionText")}>
                   Enter customer account information and the cash amount received.
                 </p>
               </div>
             </div>
 
             <form onSubmit={handleDeposit}>
-              <div style={styles.formGrid}>
+              <div style={getResponsiveStyle("formGrid")}>
                 {/* ACCOUNT */}
                 <div>
-                  <label style={styles.label}>
-                    Customer Account Number <span style={styles.required}>*</span>
+                  <label style={getResponsiveStyle("label")}>
+                    Customer Account Number <span style={getResponsiveStyle("required")}>*</span>
                   </label>
 
                   <input className="cash-deposit-input"
@@ -1149,20 +1381,20 @@ newDepositButton: {
                     value={accountNumber}
                     onChange={(e) => setAccountNumber(e.target.value)}
                     placeholder="Enter account number"
-                    style={styles.input}
+                    style={getResponsiveStyle("input")}
                     disabled={loading}
                     autoComplete="off"
                   />
 
-                  <div style={styles.hint}>
+                  <div style={getResponsiveStyle("hint")}>
                     Verify the customer account before processing the deposit.
                   </div>
                 </div>
 
                 {/* COUNTER */}
                 <div>
-                  <label style={styles.label}>
-                    Cash Counter Code <span style={styles.required}>*</span>
+                  <label style={getResponsiveStyle("label")}>
+                    Cash Counter Code <span style={getResponsiveStyle("required")}>*</span>
                   </label>
 
                   <input className="cash-deposit-input"
@@ -1170,20 +1402,20 @@ newDepositButton: {
                     value={counterCode}
                     onChange={(e) => setCounterCode(e.target.value.toUpperCase())}
                     placeholder="Example: CC-001"
-                    style={styles.input}
+                    style={getResponsiveStyle("input")}
                     disabled={loading}
                     autoComplete="off"
                   />
 
-                  <div style={styles.hint}>
+                  <div style={getResponsiveStyle("hint")}>
                     Use the active cash counter assigned to you.
                   </div>
                 </div>
 
                 {/* AMOUNT */}
-                <div style={styles.fullField}>
-                  <label style={styles.label}>
-                    Deposit Amount <span style={styles.required}>*</span>
+                <div style={getResponsiveStyle("fullField")}>
+                  <label style={getResponsiveStyle("label")}>
+                    Deposit Amount <span style={getResponsiveStyle("required")}>*</span>
                   </label>
 
                   <input
@@ -1193,20 +1425,20 @@ newDepositButton: {
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder="0.00"
-                    style={styles.amountInput}
+                    style={getResponsiveStyle("amountInput")}
                     disabled={loading}
                   />
 
-                  <div style={styles.hint}>
+                  <div style={getResponsiveStyle("hint")}>
                     Enter the exact cash amount received from the customer. Minimum ₹1.
                   </div>
 
-                  <div style={styles.quickAmounts}>
+                  <div style={getResponsiveStyle("quickAmounts")}>
                     {[500, 1000, 5000, 10000, 50000, 100000].map((value) => (
                       <button
                         key={value}
                         type="button"
-                        style={styles.quickAmount}
+                        style={getResponsiveStyle("quickAmount")}
                         disabled={loading}
                         onClick={() => setAmount(String(value))}
                       >
@@ -1242,13 +1474,13 @@ newDepositButton: {
               )}
 
               {!transaction && (
-                <div style={styles.actionArea}>
-                  <div style={styles.verificationText}>
+                <div style={getResponsiveStyle("actionArea")}>
+                  <div style={getResponsiveStyle("verificationText")}>
                     <strong>Important:</strong> Verify the account number and count
                     the cash carefully before processing this transaction.
                   </div>
 
-                  <div style={styles.buttonRow}>
+                  <div style={getResponsiveStyle("buttonRow")}>
                     <button
                       type="submit"
                       style={{
@@ -1266,56 +1498,56 @@ newDepositButton: {
           </div>
 
           {/* OPERATION INFORMATION */}
-          <div className="cash-deposit-side-stack" style={styles.sideStack}>
-            <div className="cash-deposit-side-card" style={styles.sideCard}>
-              <div style={styles.sideHeader}>
-                <div style={styles.sideTitle}>
-                  <div style={styles.sideIcon}>▣</div>
+          <div className="cash-deposit-side-stack" style={getResponsiveStyle("sideStack")}>
+            <div className="cash-deposit-side-card" style={getResponsiveStyle("sideCard")}>
+              <div style={getResponsiveStyle("sideHeader")}>
+                <div style={getResponsiveStyle("sideTitle")}>
+                  <div style={getResponsiveStyle("sideIcon")}>▣</div>
                   Cashier Information
                 </div>
-                <span style={styles.onlineBadge}>ONLINE</span>
+                <span style={getResponsiveStyle("onlineBadge")}>ONLINE</span>
               </div>
 
-              <div style={styles.staffGrid}>
-                <div style={styles.staffItem}>
-                  <span style={styles.sideLabel}>Cashier</span>
-                  <span style={styles.sideValue}>{staffName}</span>
+              <div style={getResponsiveStyle("staffGrid")}>
+                <div style={getResponsiveStyle("staffItem")}>
+                  <span style={getResponsiveStyle("sideLabel")}>Cashier</span>
+                  <span style={getResponsiveStyle("sideValue")}>{staffName}</span>
                 </div>
 
-                <div style={styles.staffItem}>
-                  <span style={styles.sideLabel}>Employee Code</span>
-                  <span style={styles.sideValue}>{employeeCode}</span>
+                <div style={getResponsiveStyle("staffItem")}>
+                  <span style={getResponsiveStyle("sideLabel")}>Employee Code</span>
+                  <span style={getResponsiveStyle("sideValue")}>{employeeCode}</span>
                 </div>
 
                 <div style={{ ...styles.staffItem, ...styles.staffItemWide }}>
-                  <span style={styles.sideLabel}>Branch</span>
-                  <span style={styles.sideValue}>{branchCode}</span>
+                  <span style={getResponsiveStyle("sideLabel")}>Branch</span>
+                  <span style={getResponsiveStyle("sideValue")}>{branchCode}</span>
                 </div>
               </div>
             </div>
 
             <div className="cash-deposit-side-card cash-deposit-secure-card" style={{ ...styles.sideCard, ...styles.secureCard }}>
-              <div style={styles.sideTitle}>
-                <div style={styles.sideIcon}>🛡</div>
+              <div style={getResponsiveStyle("sideTitle")}>
+                <div style={getResponsiveStyle("sideIcon")}>🛡</div>
                 Secure Transaction
               </div>
-              <p style={styles.secureText}>
+              <p style={getResponsiveStyle("secureText")}>
                 All cash deposits are recorded and monitored for security,
                 reconciliation and compliance.
               </p>
             </div>
 
-            <div style={styles.sideCard}>
-              <div style={styles.sideHeader}>
-                <div style={styles.sideTitle}>
-                  <div style={styles.sideIcon}>☷</div>
+            <div style={getResponsiveStyle("sideCard")}>
+              <div style={getResponsiveStyle("sideHeader")}>
+                <div style={getResponsiveStyle("sideTitle")}>
+                  <div style={getResponsiveStyle("sideIcon")}>☷</div>
                   Quick Guidelines
                 </div>
               </div>
 
               {["Verify customer account number", "Confirm the assigned cash counter", "Enter the exact cash received", "Review details before processing", "Provide the receipt to customer"].map((item, index) => (
-                <div key={item} style={styles.guideline}>
-                  <span style={styles.step}>{index + 1}</span>
+                <div key={item} style={getResponsiveStyle("guideline")}>
+                  <span style={getResponsiveStyle("step")}>{index + 1}</span>
                   <span>{item}</span>
                 </div>
               ))}
@@ -1328,45 +1560,45 @@ newDepositButton: {
 ===================================================== */}
 
           {transaction && (
-            <div className="cash-deposit-receipt" style={styles.receipt}>
+            <div className="cash-deposit-receipt" style={getResponsiveStyle("receipt")}>
               {/* BANK HEADER */}
-              <div style={styles.receiptHeader}>
-                <div style={styles.bankBrand}>
-                  <div style={styles.bankLogo}>A</div>
+              <div style={getResponsiveStyle("receiptHeader")}>
+                <div style={getResponsiveStyle("bankBrand")}>
+                  <div style={getResponsiveStyle("bankLogo")}>A</div>
 
                   <div>
-                    <div style={styles.bankName}>AVANI BANK</div>
+                    <div style={getResponsiveStyle("bankName")}>AVANI BANK</div>
 
-                    <div style={styles.bankTagline}>
+                    <div style={getResponsiveStyle("bankTagline")}>
                       Secure • Simple • Trusted Banking
                     </div>
                   </div>
                 </div>
 
-                <div style={styles.receiptTitleBox}>
-                  <div style={styles.receiptTitle}>CASH DEPOSIT RECEIPT</div>
+                <div style={getResponsiveStyle("receiptTitleBox")}>
+                  <div style={getResponsiveStyle("receiptTitle")}>CASH DEPOSIT RECEIPT</div>
 
-                  <div style={styles.receiptSubtitle}>
+                  <div style={getResponsiveStyle("receiptSubtitle")}>
                     Branch Counter Transaction
                   </div>
                 </div>
               </div>
 
               {/* SEPARATOR */}
-              <div style={styles.receiptLine} />
+              <div style={getResponsiveStyle("receiptLine")} />
 
               {/* RECEIPT META */}
-              <div style={styles.receiptMeta}>
+              <div style={getResponsiveStyle("receiptMeta")}>
                 <div>
-                  <span style={styles.metaLabel}>Transaction Reference</span>
+                  <span style={getResponsiveStyle("metaLabel")}>Transaction Reference</span>
 
-                  <strong style={styles.referenceValue}>
+                  <strong style={getResponsiveStyle("referenceValue")}>
                     {transaction.transactionReference || "-"}
                   </strong>
                 </div>
 
-                <div style={styles.metaRight}>
-                  <span style={styles.metaLabel}>Transaction Date</span>
+                <div style={getResponsiveStyle("metaRight")}>
+                  <span style={getResponsiveStyle("metaLabel")}>Transaction Date</span>
 
                   <strong>
                     {transaction.transactionDate
@@ -1386,45 +1618,45 @@ newDepositButton: {
               </div>
 
               {/* CUSTOMER DETAILS */}
-              <div style={styles.sectionHeading}>CUSTOMER DETAILS</div>
+              <div style={getResponsiveStyle("sectionHeading")}>CUSTOMER DETAILS</div>
 
-              <div style={styles.receiptDetailsGrid}>
-                <div style={styles.detailBox}>
-                  <span style={styles.detailLabel}>Account Number</span>
+              <div style={getResponsiveStyle("receiptDetailsGrid")}>
+                <div style={getResponsiveStyle("detailBox")}>
+                  <span style={getResponsiveStyle("detailLabel")}>Account Number</span>
 
                   <strong>{transaction.receiverAccountNumber || "-"}</strong>
                 </div>
 
-                <div style={styles.detailBox}>
-                  <span style={styles.detailLabel}>Transaction Type</span>
+                <div style={getResponsiveStyle("detailBox")}>
+                  <span style={getResponsiveStyle("detailLabel")}>Transaction Type</span>
 
                   <strong>CASH DEPOSIT</strong>
                 </div>
 
-                <div style={styles.detailBox}>
-                  <span style={styles.detailLabel}>Branch Code</span>
+                <div style={getResponsiveStyle("detailBox")}>
+                  <span style={getResponsiveStyle("detailLabel")}>Branch Code</span>
 
                   <strong>{transaction.branchCode || branchCode || "-"}</strong>
                 </div>
 
-                <div style={styles.detailBox}>
-                  <span style={styles.detailLabel}>Cash Counter</span>
+                <div style={getResponsiveStyle("detailBox")}>
+                  <span style={getResponsiveStyle("detailLabel")}>Cash Counter</span>
 
                   <strong>{transaction.cashCounterCode || "-"}</strong>
                 </div>
               </div>
 
               {/* AMOUNT SECTION */}
-              <div style={styles.amountSection}>
+              <div style={getResponsiveStyle("amountSection")}>
                 <div>
-                  <div style={styles.amountLabel}>DEPOSIT AMOUNT</div>
+                  <div style={getResponsiveStyle("amountLabel")}>DEPOSIT AMOUNT</div>
 
-                  <div style={styles.amountWords}>
+                  <div style={getResponsiveStyle("amountWords")}>
                     Cash received and credited to the above account
                   </div>
                 </div>
 
-                <div style={styles.amountValue}>
+                <div style={getResponsiveStyle("amountValue")}>
                   ₹{" "}
                   {Number(transaction.amount || 0).toLocaleString("en-IN", {
                     minimumFractionDigits: 2,
@@ -1434,30 +1666,30 @@ newDepositButton: {
               </div>
 
               {/* TRANSACTION INFORMATION */}
-              <div style={styles.sectionHeading}>TRANSACTION INFORMATION</div>
+              <div style={getResponsiveStyle("sectionHeading")}>TRANSACTION INFORMATION</div>
 
-              <table style={styles.receiptTable}>
+              <table style={getResponsiveStyle("receiptTable")}>
                 <tbody>
                   <tr>
-                    <td style={styles.tableLabel}>Transaction ID</td>
+                    <td style={getResponsiveStyle("tableLabel")}>Transaction ID</td>
 
-                    <td style={styles.tableValue}>{transaction.id || "-"}</td>
+                    <td style={getResponsiveStyle("tableValue")}>{transaction.id || "-"}</td>
                   </tr>
 
                   <tr>
-                    <td style={styles.tableLabel}>Transaction Status</td>
+                    <td style={getResponsiveStyle("tableLabel")}>Transaction Status</td>
 
-                    <td style={styles.tableValue}>
-                      <span style={styles.successBadge}>
+                    <td style={getResponsiveStyle("tableValue")}>
+                      <span style={getResponsiveStyle("successBadge")}>
                         {transaction.status || "SUCCESS"}
                       </span>
                     </td>
                   </tr>
 
                   <tr>
-                    <td style={styles.tableLabel}>Cashier Employee Code</td>
+                    <td style={getResponsiveStyle("tableLabel")}>Cashier Employee Code</td>
 
-                    <td style={styles.tableValue}>
+                    <td style={getResponsiveStyle("tableValue")}>
                       {transaction.cashierEmployeeCode || employeeCode || "-"}
                     </td>
                   </tr>
@@ -1465,58 +1697,58 @@ newDepositButton: {
               </table>
 
               {/* ACKNOWLEDGEMENT */}
-              <div style={styles.acknowledgementBox}>
-                <div style={styles.sectionHeading}>
+              <div style={getResponsiveStyle("acknowledgementBox")}>
+                <div style={getResponsiveStyle("sectionHeading")}>
                   CUSTOMER ACKNOWLEDGEMENT
                 </div>
 
-                <p style={styles.acknowledgementText}>
+                <p style={getResponsiveStyle("acknowledgementText")}>
                   I acknowledge that the above cash deposit has been received
                   and credited to the account mentioned on this receipt. I have
                   verified the transaction details.
                 </p>
 
-                <div style={styles.signatureGrid}>
-                  <div style={styles.signatureBox}>
-                    <div style={styles.signatureLine} />
+                <div style={getResponsiveStyle("signatureGrid")}>
+                  <div style={getResponsiveStyle("signatureBox")}>
+                    <div style={getResponsiveStyle("signatureLine")} />
 
-                    <div style={styles.signatureLabel}>Customer Signature</div>
+                    <div style={getResponsiveStyle("signatureLabel")}>Customer Signature</div>
                   </div>
 
-                  <div style={styles.signatureBox}>
-                    <div style={styles.signatureLine} />
+                  <div style={getResponsiveStyle("signatureBox")}>
+                    <div style={getResponsiveStyle("signatureLine")} />
 
-                    <div style={styles.signatureLabel}>Cashier Signature</div>
+                    <div style={getResponsiveStyle("signatureLabel")}>Cashier Signature</div>
                   </div>
                 </div>
               </div>
 
               {/* IMPORTANT NOTICE */}
-              <div style={styles.receiptNotice}>
+              <div style={getResponsiveStyle("receiptNotice")}>
                 <strong>Important:</strong> Please retain this receipt for your
                 records. In case of any discrepancy, please contact your branch
                 immediately.
               </div>
 
               {/* FOOTER */}
-              <div style={styles.receiptFooter}>
-                <div style={styles.footerMain}>AVANI BANK</div>
+              <div style={getResponsiveStyle("receiptFooter")}>
+                <div style={getResponsiveStyle("footerMain")}>AVANI BANK</div>
 
-                <div style={styles.footerText}>
+                <div style={getResponsiveStyle("footerText")}>
                   This is a system generated receipt and does not require a
                   physical stamp.
                 </div>
 
-                <div style={styles.footerText}>
+                <div style={getResponsiveStyle("footerText")}>
                   Thank you for banking with Avani Bank.
                 </div>
               </div>
 
               {/* PRINT / NEW DEPOSIT BUTTONS */}
-              <div className="receipt-actions" style={styles.receiptActions}>
+              <div className="receipt-actions" style={getResponsiveStyle("receiptActions")}>
                 <button
                   type="button"
-                  style={styles.printButton}
+                  style={getResponsiveStyle("printButton")}
                   onClick={handlePrintReceipt}
                 >
                   🖨 Print Receipt
@@ -1524,7 +1756,7 @@ newDepositButton: {
 
                 <button
                   type="button"
-                  style={styles.newDepositButton}
+                  style={getResponsiveStyle("newDepositButton")}
                   onClick={handleNewDeposit}
                 >
                   + New Cash Deposit

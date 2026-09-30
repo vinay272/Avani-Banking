@@ -3337,85 +3337,462 @@ function Payments() {
                     color: #8a96aa;
                     font-size: 11px;
                 }
+/* =========================================
+   RESPONSIVE
+========================================= */
 
-                /* =========================================
-                   RESPONSIVE
-                ========================================= */
+@media (max-width: 1024px) {
 
-                @media (max-width: 900px) {
-                    .payments-page {
-                        padding: 22px 18px 35px;
-                    }
+    .payments-page {
+        padding: 24px 20px 40px;
+    }
 
-                    .payment-layout,
-                    .qr-layout,
-                    .bill-layout {
-                        grid-template-columns: 1fr;
-                    }
-                }
+    .payments-header {
+        padding: 16px 24px;
+    }
 
-                @media (max-width: 600px) {
-                    .payments-page {
-                        padding: 12px 10px 25px;
-                    }
+    .payments-title {
+        font-size: 30px;
+    }
 
-                    .payments-header {
-                        border-radius: 16px;
-                        padding: 23px 19px;
-                    }
+    .payment-content {
+        padding: 28px 28px 32px;
+    }
 
-                    .payments-header-content {
-                        align-items: flex-start;
-                        flex-direction: column;
-                    }
+    .payment-layout,
+    .qr-layout,
+    .bill-layout,
+    .autopay-layout {
+        grid-template-columns: 1fr;
+    }
+}
 
-                    .payments-title {
-                        font-size: 27px;
-                    }
 
-                    .payments-subtitle {
-                        font-size: 13px;
-                    }
+/* =========================================
+   TABLET
+========================================= */
 
-                    .dashboard-button {
-                        width: 100%;
-                    }
+@media (max-width: 768px) {
 
-                    .payment-content {
-                        padding: 22px 18px 25px;
-                    }
+    .payments-page {
+        padding: 18px 14px 30px;
+    }
 
-                    .payment-content-header {
-                        align-items: flex-start;
-                        flex-direction: column;
-                    }
+    .payments-container {
+        width: 100%;
+        max-width: 100%;
+    }
 
-                    .secure-badge {
-                        display: none;
-                    }
+    .payments-header {
+        max-height: none;
+        min-height: 0;
+        padding: 20px;
+        border-radius: 18px;
+    }
 
-                    .form-card,
-                    .info-card,
-                    .qr-form-card,
-                    .qr-preview-card,
-                    .bill-form-card,
-                    .bill-info-card {
-                        padding: 20px;
-                    }
+    .payments-header-content {
+        gap: 18px;
+        align-items: flex-start;
+    }
 
-                    .qr-actions {
-                        grid-template-columns: 1fr;
-                    }
+    .payments-title {
+        font-size: 28px;
+    }
 
-                    .bill-category-grid {
-                        grid-template-columns: 1fr;
-                    }
+    .payments-subtitle {
+        font-size: 13px;
+    }
 
-                    .payments-footer {
-                        flex-direction: column;
-                        align-items: flex-start;
-                    }
-                }
+    .dashboard-button {
+        padding: 11px 16px;
+        font-size: 13px;
+    }
+
+    .payment-options-wrapper {
+        padding: 16px 16px 0;
+    }
+
+    .payment-options {
+        gap: 8px;
+        padding-bottom: 14px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .payment-option {
+        padding: 11px 15px;
+        font-size: 13px;
+    }
+
+    .payment-content {
+        padding: 24px 20px 28px;
+    }
+
+    .payment-content-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 22px;
+    }
+
+    .payment-content-title {
+        font-size: 22px;
+    }
+
+    .payment-content-description {
+        font-size: 13px;
+    }
+
+    .secure-badge {
+        align-self: flex-start;
+    }
+
+    .payment-layout,
+    .qr-layout,
+    .bill-layout,
+    .autopay-layout {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .form-card,
+    .info-card,
+    .qr-form-card,
+    .qr-preview-card,
+    .bill-form-card,
+    .bill-info-card,
+    .payment-form {
+        width: 100%;
+        min-width: 0;
+        padding: 22px;
+    }
+
+    .transfer-mode-tabs {
+        width: 100%;
+    }
+
+    .payments-footer {
+        flex-wrap: wrap;
+    }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .payments-page {
+        padding: 10px 8px 24px;
+    }
+
+    .payments-header {
+        padding: 20px 17px;
+        border-radius: 16px;
+        margin-bottom: 16px;
+    }
+
+    .payments-header-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .payments-eyebrow {
+        font-size: 10px;
+        letter-spacing: 1.1px;
+        margin-bottom: 6px;
+    }
+
+    .payments-title {
+        font-size: 25px;
+        line-height: 1.15;
+    }
+
+    .payments-subtitle {
+        font-size: 12px;
+        line-height: 1.5;
+        margin-top: 6px;
+    }
+
+    .dashboard-button {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    .payments-card {
+        border-radius: 17px;
+    }
+
+    .payment-options-wrapper {
+        padding: 14px 12px 0;
+    }
+
+    .payment-options {
+        gap: 7px;
+        padding-bottom: 12px;
+    }
+
+    .payment-option {
+        padding: 10px 13px;
+        border-radius: 9px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .payment-content {
+        padding: 20px 14px 24px;
+    }
+
+    .payment-content-title {
+        font-size: 20px;
+        line-height: 1.25;
+    }
+
+    .payment-content-description {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .secure-badge {
+        display: none;
+    }
+
+    .form-card,
+    .info-card,
+    .qr-form-card,
+    .qr-preview-card,
+    .bill-form-card,
+    .bill-info-card,
+    .payment-form {
+        padding: 17px;
+        border-radius: 14px;
+    }
+
+    .transfer-mode-tabs {
+        grid-template-columns: 1fr 1fr;
+        margin-bottom: 18px;
+    }
+
+    .transfer-mode-button {
+        padding: 11px 8px;
+        font-size: 12px;
+    }
+
+    .qr-actions {
+        grid-template-columns: 1fr !important;
+    }
+
+    .bill-category-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .autopay-details {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+    }
+
+    .autopay-card {
+        padding: 17px;
+        border-radius: 14px;
+    }
+
+    .autopay-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .autopay-card-header h3 {
+        font-size: 18px;
+    }
+
+    .autopay-card-header span {
+        font-size: 12px;
+    }
+
+    .autopay-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .autopay-actions .transfer-button {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .payments-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 7px;
+    }
+
+    /* Receipt */
+
+    .receipt-header {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .receipt-success-badge {
+        margin-left: 0;
+        width: auto;
+    }
+
+    .receipt-detail-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .receipt-detail-row strong {
+        text-align: left;
+        width: 100%;
+    }
+
+    .receipt-detail-row.amount-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .receipt-detail-row.amount-row strong {
+        width: auto;
+        text-align: right;
+    }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 430px) {
+
+    .payments-page {
+        padding: 8px 6px 20px;
+    }
+
+    .payments-header {
+        padding: 17px 14px;
+    }
+
+    .payments-title {
+        font-size: 23px;
+    }
+
+    .payments-subtitle {
+        font-size: 11.5px;
+    }
+
+    .payment-options-wrapper {
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+
+    .payment-option {
+        padding: 9px 11px;
+        font-size: 11px;
+    }
+
+    .payment-content {
+        padding: 18px 11px 22px;
+    }
+
+    .payment-content-title {
+        font-size: 18px;
+    }
+
+    .form-card,
+    .info-card,
+    .qr-form-card,
+    .qr-preview-card,
+    .bill-form-card,
+    .bill-info-card,
+    .payment-form {
+        padding: 14px;
+    }
+
+    .autopay-card {
+        padding: 14px;
+    }
+
+    .receipt-print-area {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .receipt-header h3 {
+        font-size: 16px;
+    }
+
+    .receipt-detail-row.amount-row strong {
+        font-size: 18px;
+    }
+}
+
+
+/* =========================================
+   VERY SMALL MOBILE
+========================================= */
+
+@media (max-width: 360px) {
+
+    .payments-page {
+        padding: 6px 5px 18px;
+    }
+
+    .payments-header {
+        padding: 15px 12px;
+        border-radius: 14px;
+    }
+
+    .payments-title {
+        font-size: 21px;
+    }
+
+    .payments-subtitle {
+        font-size: 11px;
+    }
+
+    .payment-content {
+        padding: 16px 9px 20px;
+    }
+
+    .payment-content-title {
+        font-size: 17px;
+    }
+
+    .payment-option {
+        padding: 8px 10px;
+        font-size: 10.5px;
+    }
+
+    .form-card,
+    .info-card,
+    .qr-form-card,
+    .qr-preview-card,
+    .bill-form-card,
+    .bill-info-card,
+    .payment-form {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .autopay-card {
+        padding: 12px;
+    }
+
+    .receipt-detail-row.amount-row {
+        padding: 11px;
+    }
+
+    .receipt-detail-row.amount-row strong {
+        font-size: 17px;
+    }
+}
 
             `}</style>
 
@@ -4993,111 +5370,20 @@ function Payments() {
                         </div>
 
                         <div className="receipt-details">
-
-    <div className="receipt-detail-row">
-        <span>Transaction ID</span>
-        <strong>
-            #{selectedReceipt.id}
-        </strong>
-    </div>
-
-    <div className="receipt-detail-row">
-        <span>Transaction Type</span>
-        <strong>
-            {selectedReceipt.transactionType}
-        </strong>
-    </div>
-
-    <div className="receipt-detail-row amount-row">
-        <span>Amount</span>
-
-        <strong>
-            ₹
-            {Number(
-                selectedReceipt.amount
-            ).toLocaleString(
-                "en-IN",
-                {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                }
-            )}
-        </strong>
-    </div>
-
-    <div className="receipt-divider"></div>
-
-    <div className="receipt-detail-row">
-        <span>From Account</span>
-
-        <strong>
-            {selectedReceipt.senderAccountNumber}
-        </strong>
-    </div>
-
-    <div className="receipt-detail-row">
-        <span>To Account / Reference</span>
-
-        <strong>
-            {selectedReceipt.receiverAccountNumber}
-        </strong>
-    </div>
-
-    <div className="receipt-detail-row">
-        <span>Status</span>
-
-        <strong className="receipt-status">
-            ✓ {selectedReceipt.status}
-        </strong>
-    </div>
-
-    <div className="receipt-detail-row">
-        <span>Transaction Date</span>
-
-        <strong>
-            {selectedReceipt.transactionDate
-                ? new Date(
-                    selectedReceipt.transactionDate
-                ).toLocaleString("en-IN")
-                : "N/A"}
-        </strong>
-    </div>
-
-</div>
-
-<div className="receipt-footer">
-
-    <p>
-        This is a digitally generated transaction receipt.
-    </p>
-
-    <span>
-        AVANI BANK • Secure Digital Banking
-    </span>
-
-</div>
-                            <div>
-                            <strong>Transaction ID</strong>
-
-                            <div>#{selectedReceipt.id}</div>
+                          <div className="receipt-detail-row">
+                            <span>Transaction ID</span>
+                            <strong>#{selectedReceipt.id}</strong>
                           </div>
 
-                          <div>
-                            <strong>Transaction Type</strong>
-
-                            <div>{selectedReceipt.transactionType}</div>
+                          <div className="receipt-detail-row">
+                            <span>Transaction Type</span>
+                            <strong>{selectedReceipt.transactionType}</strong>
                           </div>
 
-                          <div>
-                            <strong>Amount</strong>
+                          <div className="receipt-detail-row amount-row">
+                            <span>Amount</span>
 
-                            <div
-                              style={{
-                                fontSize: "22px",
-                                fontWeight: "800",
-                                color: "#158047",
-                              }}
-                            >
+                            <strong>
                               ₹
                               {Number(selectedReceipt.amount).toLocaleString(
                                 "en-IN",
@@ -5106,60 +5392,137 @@ function Payments() {
                                   maximumFractionDigits: 2,
                                 },
                               )}
-                            </div>
+                            </strong>
                           </div>
 
-                          <div>
-                            <strong>From Account</strong>
+                          <div className="receipt-divider"></div>
 
-                            <div>{selectedReceipt.senderAccountNumber}</div>
+                          <div className="receipt-detail-row">
+                            <span>From Account</span>
+
+                            <strong>
+                              {selectedReceipt.senderAccountNumber}
+                            </strong>
                           </div>
 
-                          <div>
-                            <strong>To Account / Reference</strong>
+                          <div className="receipt-detail-row">
+                            <span>To Account / Reference</span>
 
-                            <div>{selectedReceipt.receiverAccountNumber}</div>
+                            <strong>
+                              {selectedReceipt.receiverAccountNumber}
+                            </strong>
                           </div>
 
-                          <div>
-                            <strong>Status</strong>
+                          <div className="receipt-detail-row">
+                            <span>Status</span>
 
-                            <div
-                              style={{
-                                color: "#158047",
-                                fontWeight: "800",
-                              }}
-                            >
+                            <strong className="receipt-status">
                               ✓ {selectedReceipt.status}
-                            </div>
+                            </strong>
                           </div>
 
-                          <div>
-                            <strong>Transaction Date</strong>
+                          <div className="receipt-detail-row">
+                            <span>Transaction Date</span>
 
-                            <div>
+                            <strong>
                               {selectedReceipt.transactionDate
                                 ? new Date(
                                     selectedReceipt.transactionDate,
                                   ).toLocaleString("en-IN")
                                 : "N/A"}
-                            </div>
+                            </strong>
                           </div>
-                        
-                        
+                        </div>
+
+                        <div className="receipt-footer">
+                          <p>
+                            This is a digitally generated transaction receipt.
+                          </p>
+
+                          <span>AVANI BANK • Secure Digital Banking</span>
+                        </div>
+                        <div>
+                          <strong>Transaction ID</strong>
+
+                          <div>#{selectedReceipt.id}</div>
+                        </div>
+
+                        <div>
+                          <strong>Transaction Type</strong>
+
+                          <div>{selectedReceipt.transactionType}</div>
+                        </div>
+
+                        <div>
+                          <strong>Amount</strong>
+
+                          <div
+                            style={{
+                              fontSize: "22px",
+                              fontWeight: "800",
+                              color: "#158047",
+                            }}
+                          >
+                            ₹
+                            {Number(selectedReceipt.amount).toLocaleString(
+                              "en-IN",
+                              {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              },
+                            )}
+                          </div>
+                        </div>
+
+                        <div>
+                          <strong>From Account</strong>
+
+                          <div>{selectedReceipt.senderAccountNumber}</div>
+                        </div>
+
+                        <div>
+                          <strong>To Account / Reference</strong>
+
+                          <div>{selectedReceipt.receiverAccountNumber}</div>
+                        </div>
+
+                        <div>
+                          <strong>Status</strong>
+
+                          <div
+                            style={{
+                              color: "#158047",
+                              fontWeight: "800",
+                            }}
+                          >
+                            ✓ {selectedReceipt.status}
+                          </div>
+                        </div>
+
+                        <div>
+                          <strong>Transaction Date</strong>
+
+                          <div>
+                            {selectedReceipt.transactionDate
+                              ? new Date(
+                                  selectedReceipt.transactionDate,
+                                ).toLocaleString("en-IN")
+                              : "N/A"}
+                          </div>
+                        </div>
+
                         <button
                           type="button"
                           className="transfer-button receipt-print-button"
                           style={{
                             marginTop: "22px",
                           }}
-                          onClick={() => window.print()}>
-                              🖨️ Print / Save as PDF
-                          </button>
-            
+                          onClick={() => window.print()}
+                        >
+                          🖨️ Print / Save as PDF
+                        </button>
                       </>
                     )}
-
                   </div>
                 </div>
               )}

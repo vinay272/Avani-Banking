@@ -4,9 +4,24 @@ import { useNavigate } from "react-router-dom";
 function BalanceInquiry() {
   const navigate = useNavigate();
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
+  const [isTablet, setIsTablet] = useState(window.innerWidth <= 1000);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 700);
+      setIsTablet(window.innerWidth <= 1000);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [account, setAccount] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const responsiveStyles = getResponsiveStyles(isTablet, isMobile);
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -76,43 +91,43 @@ function BalanceInquiry() {
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.loadingCard}>
-          <div style={styles.loadingIcon}>₹</div>
+      <div style={responsiveStyles.loadingPage}>
+        <div style={responsiveStyles.loadingCard}>
+          <div style={responsiveStyles.loadingIcon}>₹</div>
 
-          <h2 style={styles.loadingTitle}>
+          <h2 style={responsiveStyles.loadingTitle}>
             Checking Balance
           </h2>
 
-          <p style={styles.loadingText}>
+          <p style={responsiveStyles.loadingText}>
             Please wait while we fetch your account balance...
           </p>
 
-          <div style={styles.loader}></div>
+          <div style={responsiveStyles.loader}></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={styles.page}>
+    <div style={responsiveStyles.page}>
 
       {/* ================= NAVBAR ================= */}
 
-      <header style={styles.navbar}>
+      <header style={responsiveStyles.navbar}>
 
-        <div style={styles.brandArea}>
+        <div style={responsiveStyles.brandArea}>
 
-          <div style={styles.brandIcon}>
+          <div style={responsiveStyles.brandIcon}>
             🏦
           </div>
 
           <div>
-            <div style={styles.brandName}>
+            <div style={responsiveStyles.brandName}>
               AVANI BANK
             </div>
 
-            <div style={styles.brandSubtitle}>
+            <div style={responsiveStyles.brandSubtitle}>
               Balance Inquiry
             </div>
           </div>
@@ -120,7 +135,7 @@ function BalanceInquiry() {
         </div>
 
         <button
-          style={styles.backButton}
+          style={responsiveStyles.backButton}
           onClick={() => navigate("/accounts")}
         >
           ← Account Management
@@ -130,19 +145,19 @@ function BalanceInquiry() {
 
       {/* ================= MAIN ================= */}
 
-      <main style={styles.container}>
+      <main style={responsiveStyles.container}>
 
-        <section style={styles.pageHeader}>
+        <section style={responsiveStyles.pageHeader}>
 
-          <p style={styles.eyebrow}>
+          <p style={responsiveStyles.eyebrow}>
             ACCOUNT SERVICES
           </p>
 
-          <h1 style={styles.title}>
+          <h1 style={responsiveStyles.title}>
             Balance Inquiry
           </h1>
 
-          <p style={styles.subtitle}>
+          <p style={responsiveStyles.subtitle}>
             Check your current account balance and account status.
           </p>
 
@@ -151,7 +166,7 @@ function BalanceInquiry() {
         {/* ================= ERROR ================= */}
 
         {error && (
-          <div style={styles.errorBox}>
+          <div style={responsiveStyles.errorBox}>
             ⚠️ {error}
           </div>
         )}
@@ -160,50 +175,50 @@ function BalanceInquiry() {
 
         {account ? (
 
-          <section style={styles.balanceCard}>
+          <section style={responsiveStyles.balanceCard}>
 
-            <div style={styles.balanceIcon}>
+            <div style={responsiveStyles.balanceIcon}>
               ₹
             </div>
 
-            <p style={styles.label}>
+            <p style={responsiveStyles.label}>
               AVAILABLE BALANCE
             </p>
 
-            <h2 style={styles.balance}>
+            <h2 style={responsiveStyles.balance}>
               ₹{formatCurrency(account.balance)}
             </h2>
 
-            <div style={styles.divider}></div>
+            <div style={responsiveStyles.divider}></div>
 
-            <div style={styles.accountInfo}>
+            <div style={responsiveStyles.accountInfo}>
 
               <div>
-                <p style={styles.infoLabel}>
+                <p style={responsiveStyles.infoLabel}>
                   ACCOUNT NUMBER
                 </p>
 
-                <p style={styles.infoValue}>
+                <p style={responsiveStyles.infoValue}>
                   {account.accountNumber || "N/A"}
                 </p>
               </div>
 
               <div>
-                <p style={styles.infoLabel}>
+                <p style={responsiveStyles.infoLabel}>
                   ACCOUNT TYPE
                 </p>
 
-                <p style={styles.infoValue}>
+                <p style={responsiveStyles.infoValue}>
                   {account.accountType || "N/A"}
                 </p>
               </div>
 
               <div>
-                <p style={styles.infoLabel}>
+                <p style={responsiveStyles.infoLabel}>
                   STATUS
                 </p>
 
-                <p style={styles.status}>
+                <p style={responsiveStyles.status}>
                   ● {account.status || "ACTIVE"}
                 </p>
               </div>
@@ -214,17 +229,17 @@ function BalanceInquiry() {
 
         ) : (
 
-          <div style={styles.emptyCard}>
+          <div style={responsiveStyles.emptyCard}>
 
-            <div style={styles.emptyIcon}>
+            <div style={responsiveStyles.emptyIcon}>
               🏦
             </div>
 
-            <h3 style={styles.emptyTitle}>
+            <h3 style={responsiveStyles.emptyTitle}>
               No Account Found
             </h3>
 
-            <p style={styles.emptyText}>
+            <p style={responsiveStyles.emptyText}>
               We could not find an account associated with your profile.
             </p>
 
@@ -234,10 +249,10 @@ function BalanceInquiry() {
 
         {/* ================= BACK BUTTON ================= */}
 
-        <div style={styles.bottomActions}>
+        <div style={responsiveStyles.bottomActions}>
 
           <button
-            style={styles.primaryButton}
+            style={responsiveStyles.primaryButton}
             onClick={() => navigate("/accounts")}
           >
             ← Back to Account Management
@@ -249,7 +264,7 @@ function BalanceInquiry() {
 
       {/* ================= FOOTER ================= */}
 
-      <footer style={styles.footer}>
+      <footer style={responsiveStyles.footer}>
 
         <div>
           © {new Date().getFullYear()} Avani Bank
@@ -280,7 +295,8 @@ const styles = {
 
   navbar: {
     minHeight: "72px",
-    background: "#ffffff",
+     background:
+      "linear-gradient(135deg, #102354 0%, #173f9d 48%, #2563d4 100%)",
     borderBottom: "1px solid #e8ecf2",
     padding: "0 6%",
     display: "flex",
@@ -313,7 +329,7 @@ const styles = {
     fontSize: "15px",
     fontWeight: "800",
     letterSpacing: "1.5px",
-    color: "#12224a",
+    color: "#ffffff",
   },
 
   brandSubtitle: {
@@ -575,5 +591,196 @@ const styles = {
     animation: "spin 0.8s linear infinite",
   },
 };
+
+const getResponsiveStyles = (isTablet, isMobile) => ({
+  ...styles,
+  navbar: {
+    ...styles.navbar,
+    ...(isTablet && {
+      padding: "0 4%",
+    }),
+    ...(isMobile && {
+      minHeight: "auto",
+      padding: "14px 18px",
+      flexDirection: "column",
+      alignItems: "stretch",
+      gap: "12px",
+    }),
+  },
+  brandArea: {
+    ...styles.brandArea,
+    ...(isMobile && {
+      justifyContent: "center",
+    }),
+  },
+  backButton: {
+    ...styles.backButton,
+    ...(isMobile && {
+      width: "100%",
+      padding: "11px 14px",
+      fontSize: "12px",
+    }),
+  },
+  container: {
+    ...styles.container,
+    ...(isTablet && {
+      padding: "35px 20px 50px",
+    }),
+    ...(isMobile && {
+      padding: "28px 14px 40px",
+    }),
+  },
+  pageHeader: {
+    ...styles.pageHeader,
+    ...(isMobile && {
+      marginBottom: "24px",
+    }),
+  },
+  title: {
+    ...styles.title,
+    ...(isTablet && {
+      fontSize: "32px",
+    }),
+    ...(isMobile && {
+      fontSize: "28px",
+      lineHeight: 1.15,
+    }),
+  },
+  subtitle: {
+    ...styles.subtitle,
+    ...(isMobile && {
+      fontSize: "13px",
+      lineHeight: 1.5,
+    }),
+  },
+  errorBox: {
+    ...styles.errorBox,
+    ...(isMobile && {
+      padding: "12px 13px",
+      fontSize: "11px",
+    }),
+  },
+  balanceCard: {
+    ...styles.balanceCard,
+    ...(isTablet && {
+      padding: "35px",
+    }),
+    ...(isMobile && {
+      padding: "28px 18px",
+      borderRadius: "18px",
+    }),
+  },
+  balanceIcon: {
+    ...styles.balanceIcon,
+    ...(isMobile && {
+      width: "60px",
+      height: "60px",
+      borderRadius: "17px",
+      fontSize: "26px",
+      marginBottom: "16px",
+    }),
+  },
+  balance: {
+    ...styles.balance,
+    ...(isTablet && {
+      fontSize: "40px",
+    }),
+    ...(isMobile && {
+      fontSize: "34px",
+      lineHeight: 1.15,
+      overflowWrap: "anywhere",
+      marginBottom: "24px",
+    }),
+  },
+  accountInfo: {
+    ...styles.accountInfo,
+    ...(isTablet && {
+      gap: "14px",
+    }),
+    ...(isMobile && {
+      gridTemplateColumns: "1fr",
+      gap: "16px",
+      textAlign: "center",
+    }),
+  },
+  infoValue: {
+    ...styles.infoValue,
+    ...(isMobile && {
+      fontSize: "13px",
+      overflowWrap: "anywhere",
+    }),
+  },
+  status: {
+    ...styles.status,
+    ...(isMobile && {
+      fontSize: "13px",
+    }),
+  },
+  bottomActions: {
+    ...styles.bottomActions,
+    ...(isMobile && {
+      marginTop: "20px",
+    }),
+  },
+  primaryButton: {
+    ...styles.primaryButton,
+    ...(isMobile && {
+      width: "100%",
+      padding: "13px 16px",
+      fontSize: "12px",
+    }),
+  },
+  emptyCard: {
+    ...styles.emptyCard,
+    ...(isMobile && {
+      minHeight: "220px",
+      padding: "24px 18px",
+      borderRadius: "16px",
+    }),
+  },
+  emptyText: {
+    ...styles.emptyText,
+    ...(isMobile && {
+      lineHeight: 1.5,
+      maxWidth: "280px",
+    }),
+  },
+  footer: {
+    ...styles.footer,
+    ...(isMobile && {
+      padding: "15px 18px",
+      flexDirection: "column",
+      alignItems: "center",
+      textAlign: "center",
+      gap: "6px",
+    }),
+  },
+  loadingPage: {
+    ...styles.loadingPage,
+    ...(isMobile && {
+      padding: "16px",
+    }),
+  },
+  loadingCard: {
+    ...styles.loadingCard,
+    ...(isMobile && {
+      padding: "28px 20px",
+      borderRadius: "18px",
+    }),
+  },
+  loadingTitle: {
+    ...styles.loadingTitle,
+    ...(isMobile && {
+      fontSize: "17px",
+    }),
+  },
+  loadingText: {
+    ...styles.loadingText,
+    ...(isMobile && {
+      fontSize: "11px",
+      lineHeight: 1.5,
+    }),
+  },
+});
 
 export default BalanceInquiry;

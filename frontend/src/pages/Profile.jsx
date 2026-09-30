@@ -4,6 +4,19 @@ import { useNavigate } from "react-router-dom";
 function Profile() {
   const navigate = useNavigate();
 
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 700
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 700);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [customer, setCustomer] = useState(null);
 
   const [loading, setLoading] = useState(true);
@@ -266,7 +279,7 @@ function Profile() {
 
   if (loading) {
     return (
-      <div style={styles.page}>
+      <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
         <div style={styles.loadingContainer}>
           <div style={styles.loadingIcon}>
             ⟳
@@ -304,7 +317,7 @@ function Profile() {
 
           <button
             onClick={() => navigate("/dashboard")}
-            style={styles.primaryButton}
+            style={{ ...styles.primaryButton, ...(isMobile ? responsiveStyles.primaryButton : {}) }}
           >
             ← Back to Dashboard
           </button>
@@ -315,45 +328,45 @@ function Profile() {
 
   return (
     <div style={styles.page}>
-      <div style={styles.container}>
+      <div style={{ ...styles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
 
         {/* =========================
             HEADER
         ========================= */}
 
-        <div style={styles.header}>
+        <div style={{ ...styles.header, ...(isMobile ? responsiveStyles.header : {}) }}>
 
-          <div style={styles.headerContent}>
+          <div style={{ ...styles.headerContent, ...(isMobile ? responsiveStyles.headerContent : {}) }}>
 
             <p style={styles.smallTitle}>
               AVANI BANK
             </p>
 
-            <h1 style={styles.title}>
+            <h1 style={{ ...styles.title, ...(isMobile ? responsiveStyles.title : {}) }}>
               My Profile
             </h1>
 
-            <p style={styles.subtitle}>
+            <p style={{ ...styles.subtitle, ...(isMobile ? responsiveStyles.subtitle : {}) }}>
               Manage your personal and account
               information securely.
             </p>
 
           </div>
 
-          <div style={styles.headerActions}>
+          <div style={{ ...styles.headerActions, ...(isMobile ? responsiveStyles.headerActions : {}) }}>
 
             <button
               onClick={() =>
                 navigate("/dashboard")
               }
-              style={styles.headerButton}
+              style={{ ...styles.headerButton, ...(isMobile ? responsiveStyles.headerButton : {}) }}
             >
               ← Dashboard
             </button>
 
             <button
               onClick={handleLogout}
-              style={styles.logoutButton}
+              style={{ ...styles.logoutButton, ...(isMobile ? responsiveStyles.logoutButton : {}) }}
             >
               Logout
             </button>
@@ -366,27 +379,27 @@ function Profile() {
             PROFILE HERO
         ========================= */}
 
-        <div style={styles.profileHero}>
+        <div style={{ ...styles.profileHero, ...(isMobile ? responsiveStyles.profileHero : {}) }}>
 
-          <div style={styles.avatar}>
+          <div style={{ ...styles.avatar, ...(isMobile ? responsiveStyles.avatar : {}) }}>
             {customer?.fullName
               ?.charAt(0)
               ?.toUpperCase() || "U"}
           </div>
 
-          <div style={styles.profileIdentity}>
+          <div style={{ ...styles.profileIdentity, ...(isMobile ? responsiveStyles.profileIdentity : {}) }}>
 
-            <h2 style={styles.profileName}>
+            <h2 style={{ ...styles.profileName, ...(isMobile ? responsiveStyles.profileName : {}) }}>
               {customer?.fullName ||
                 "Customer"}
             </h2>
 
-            <p style={styles.profileEmail}>
+            <p style={{ ...styles.profileEmail, ...(isMobile ? responsiveStyles.profileEmail : {}) }}>
               {customer?.email ||
                 "Email unavailable"}
             </p>
 
-            <div style={styles.profileMeta}>
+            <div style={{ ...styles.profileMeta, ...(isMobile ? responsiveStyles.profileMeta : {}) }}>
 
               <span style={styles.accountBadge}>
                 {customer?.accountType ||
@@ -396,6 +409,7 @@ function Profile() {
               <span
                 style={{
                   ...styles.statusBadge,
+                  ...(isMobile ? responsiveStyles.statusBadge : {}),
                   background:
                     customer?.status === "ACTIVE"
                       ? "#eaf8f0"
@@ -413,13 +427,13 @@ function Profile() {
 
           </div>
 
-          <div style={styles.balanceBox}>
+          <div style={{ ...styles.balanceBox, ...(isMobile ? responsiveStyles.balanceBox : {}) }}>
 
             <p style={styles.balanceLabel}>
               Available Balance
             </p>
 
-            <h2 style={styles.balance}>
+            <h2 style={{ ...styles.balance, ...(isMobile ? responsiveStyles.balance : {}) }}>
               ₹{formatBalance(
                 customer?.balance
               )}
@@ -433,16 +447,16 @@ function Profile() {
             PERSONAL INFORMATION
         ========================= */}
 
-        <div style={styles.card}>
+        <div style={{ ...styles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
 
-          <div style={styles.cardHeader}>
+          <div style={{ ...styles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
 
             <div>
-              <h2 style={styles.cardTitle}>
+              <h2 style={{ ...styles.cardTitle, ...(isMobile ? responsiveStyles.cardTitle : {}) }}>
                 Personal Information
               </h2>
 
-              <p style={styles.cardSubtitle}>
+              <p style={{ ...styles.cardSubtitle, ...(isMobile ? responsiveStyles.cardSubtitle : {}) }}>
                 Your registered personal details
               </p>
             </div>
@@ -453,26 +467,30 @@ function Profile() {
 
           </div>
 
-          <div style={styles.infoGrid}>
+          <div style={{ ...styles.infoGrid, ...(isMobile ? responsiveStyles.infoGrid : {}) }}>
 
             <InfoItem
               label="Full Name"
               value={customer?.fullName}
+              isMobile={isMobile}
             />
 
             <InfoItem
               label="Email Address"
               value={customer?.email}
+              isMobile={isMobile}
             />
 
             <InfoItem
               label="Phone Number"
               value={customer?.phone}
+              isMobile={isMobile}
             />
 
             <InfoItem
               label="Account Type"
               value={customer?.accountType}
+              isMobile={isMobile}
             />
 
           </div>
@@ -503,15 +521,15 @@ function Profile() {
 
           </div>
 
-          <div style={styles.accountGrid}>
+          <div style={{ ...styles.accountGrid, ...(isMobile ? responsiveStyles.accountGrid : {}) }}>
 
-            <div style={styles.accountNumberBox}>
+            <div style={{ ...styles.accountNumberBox, ...(isMobile ? responsiveStyles.accountNumberBox : {}) }}>
 
               <p style={styles.detailLabel}>
                 Account Number
               </p>
 
-              <h3 style={styles.accountNumber}>
+              <h3 style={{ ...styles.accountNumber, ...(isMobile ? responsiveStyles.accountNumber : {}) }}>
                 {customer?.accountNumber ||
                   "Not available"}
               </h3>
@@ -522,13 +540,13 @@ function Profile() {
 
             </div>
 
-            <div style={styles.detailBox}>
+            <div style={{ ...styles.detailBox, ...(isMobile ? responsiveStyles.detailBox : {}) }}>
 
               <p style={styles.detailLabel}>
                 Current Balance
               </p>
 
-              <h3 style={styles.detailValue}>
+              <h3 style={{ ...styles.detailValue, ...(isMobile ? responsiveStyles.detailValue : {}) }}>
                 ₹{formatBalance(
                   customer?.balance
                 )}
@@ -545,6 +563,7 @@ function Profile() {
               <h3
                 style={{
                   ...styles.detailValue,
+                  ...(isMobile ? responsiveStyles.detailValue : {}),
                   color:
                     customer?.status === "ACTIVE"
                       ? "#168653"
@@ -606,7 +625,7 @@ function Profile() {
             onSubmit={handleChangePassword}
           >
 
-            <div style={styles.passwordGrid}>
+            <div style={{ ...styles.passwordGrid, ...(isMobile ? responsiveStyles.passwordGrid : {}) }}>
 
               <div style={styles.field}>
 
@@ -685,9 +704,9 @@ function Profile() {
               </div>
             )}
 
-            <div style={styles.passwordFooter}>
+            <div style={{ ...styles.passwordFooter, ...(isMobile ? responsiveStyles.passwordFooter : {}) }}>
 
-              <p style={styles.securityNote}>
+              <p style={{ ...styles.securityNote, ...(isMobile ? responsiveStyles.securityNote : {}) }}>
                 🔒 Your password is securely
                 encrypted.
               </p>
@@ -697,6 +716,7 @@ function Profile() {
                 disabled={passwordLoading}
                 style={{
                   ...styles.primaryButton,
+                  ...(isMobile ? responsiveStyles.primaryButton : {}),
                   opacity: passwordLoading
                     ? 0.7
                     : 1,
@@ -725,15 +745,15 @@ function Profile() {
 // REUSABLE INFO COMPONENT
 // =========================
 
-function InfoItem({ label, value }) {
+function InfoItem({ label, value, isMobile }) {
   return (
-    <div style={styles.infoItem}>
+    <div style={{ ...styles.infoItem, ...(isMobile ? responsiveStyles.infoItem : {}) }}>
 
       <p style={styles.infoLabel}>
         {label}
       </p>
 
-      <p style={styles.infoValue}>
+      <p style={{ ...styles.infoValue, ...(isMobile ? responsiveStyles.infoValue : {}) }}>
         {value || "Not available"}
       </p>
 
@@ -1160,6 +1180,194 @@ const styles = {
   errorIcon: {
     fontSize: "35px",
     marginBottom: "10px",
+  },
+};
+
+
+/* =====================================================
+   RESPONSIVE STYLE OVERRIDES
+   ===================================================== */
+
+const responsiveStyles = {
+  page: {
+    paddingBottom: "25px",
+  },
+
+  container: {
+    padding: "18px 12px 30px",
+  },
+
+  header: {
+    maxHeight: "none",
+    padding: "18px",
+    borderRadius: "16px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "16px",
+  },
+
+  headerContent: {
+    width: "100%",
+  },
+
+  title: {
+    fontSize: "23px",
+    lineHeight: 1.25,
+  },
+
+  subtitle: {
+    fontSize: "12px",
+    lineHeight: 1.55,
+  },
+
+  headerActions: {
+    width: "100%",
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "8px",
+  },
+
+  headerButton: {
+    width: "100%",
+    minHeight: "43px",
+  },
+
+  logoutButton: {
+    width: "100%",
+    minHeight: "43px",
+  },
+
+  profileHero: {
+    padding: "18px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "16px",
+    borderRadius: "16px",
+  },
+
+  avatar: {
+    width: "58px",
+    height: "58px",
+    borderRadius: "15px",
+    fontSize: "23px",
+  },
+
+  profileIdentity: {
+    width: "100%",
+  },
+
+  profileName: {
+    fontSize: "20px",
+    overflowWrap: "anywhere",
+  },
+
+  profileEmail: {
+    overflowWrap: "anywhere",
+    wordBreak: "break-word",
+    lineHeight: 1.45,
+  },
+
+  profileMeta: {
+    gap: "7px",
+  },
+
+  statusBadge: {
+    whiteSpace: "nowrap",
+  },
+
+  balanceBox: {
+    width: "100%",
+    paddingLeft: "0",
+    paddingTop: "14px",
+    borderLeft: "none",
+    borderTop: "1px solid #edf0f5",
+    textAlign: "left",
+  },
+
+  balance: {
+    fontSize: "22px",
+    overflowWrap: "anywhere",
+  },
+
+  card: {
+    marginTop: "14px",
+    padding: "18px",
+    borderRadius: "15px",
+  },
+
+  cardHeader: {
+    alignItems: "flex-start",
+    marginBottom: "17px",
+  },
+
+  cardTitle: {
+    fontSize: "17px",
+  },
+
+  cardSubtitle: {
+    lineHeight: 1.5,
+  },
+
+  infoGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+  },
+
+  infoItem: {
+    padding: "13px",
+  },
+
+  infoValue: {
+    overflowWrap: "anywhere",
+    wordBreak: "break-word",
+    lineHeight: 1.45,
+  },
+
+  accountGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+  },
+
+  accountNumberBox: {
+    gridColumn: "auto",
+    padding: "15px",
+  },
+
+  accountNumber: {
+    fontSize: "19px",
+    overflowWrap: "anywhere",
+    wordBreak: "break-all",
+    lineHeight: 1.35,
+  },
+
+  detailBox: {
+    padding: "14px",
+  },
+
+  detailValue: {
+    overflowWrap: "anywhere",
+    wordBreak: "break-word",
+    lineHeight: 1.4,
+  },
+
+  passwordGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "12px",
+  },
+
+  passwordFooter: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "12px",
+  },
+
+  securityNote: {
+    lineHeight: 1.5,
+  },
+
+  primaryButton: {
+    width: "100%",
+    minHeight: "44px",
   },
 };
 

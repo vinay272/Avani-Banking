@@ -10,6 +10,20 @@ function CustomerRiskProfile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Responsive viewport state
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 600
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const token = localStorage.getItem("token");
 
   // =========================
@@ -200,24 +214,24 @@ function CustomerRiskProfile() {
   // =========================
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, ...(isMobile ? styles.mobilePage : {}) }}>
 
       {/* =========================
           HEADER
       ========================= */}
 
-      <header style={styles.header}>
+      <header style={{ ...styles.header, ...(isMobile ? styles.mobileHeader : {}) }}>
 
         <div>
           <div style={styles.brand}>
             AVANI BANK
           </div>
 
-          <h1 style={styles.title}>
+          <h1 style={{ ...styles.title, ...(isMobile ? styles.mobileTitle : {}) }}>
             Customer Risk Profile
           </h1>
 
-          <p style={styles.subtitle}>
+          <p style={{ ...styles.subtitle, ...(isMobile ? styles.mobileSubtitle : {}) }}>
             View your current customer risk assessment.
           </p>
         </div>
@@ -225,7 +239,7 @@ function CustomerRiskProfile() {
         <button
           type="button"
           onClick={() => navigate("/dashboard")}
-          style={styles.dashboardButton}
+          style={{ ...styles.dashboardButton, ...(isMobile ? styles.mobileDashboardButton : {}) }}
         >
           ← Dashboard
         </button>
@@ -246,7 +260,7 @@ function CustomerRiskProfile() {
           CUSTOMER INFORMATION
       ========================= */}
 
-      <div style={styles.customerCard}>
+      <div style={{ ...styles.customerCard, ...(isMobile ? styles.mobileCustomerCard : {}) }}>
 
         <div style={styles.customerAvatar}>
           {customer?.fullName
@@ -254,7 +268,7 @@ function CustomerRiskProfile() {
             ?.toUpperCase() || "C"}
         </div>
 
-        <div style={styles.customerInfo}>
+        <div style={{ ...styles.customerInfo, ...(isMobile ? styles.mobileCustomerInfo : {}) }}>
 
           <p style={styles.customerLabel}>
             CUSTOMER
@@ -270,7 +284,7 @@ function CustomerRiskProfile() {
 
         </div>
 
-        <div style={styles.accountInfo}>
+        <div style={{ ...styles.accountInfo, ...(isMobile ? styles.mobileAccountInfo : {}) }}>
 
           <p style={styles.customerLabel}>
             ACCOUNT NUMBER
@@ -290,17 +304,17 @@ function CustomerRiskProfile() {
 
       {!riskProfile ? (
 
-        <div style={styles.emptyCard}>
+        <div style={{ ...styles.emptyCard, ...(isMobile ? styles.mobileEmptyCard : {}) }}>
 
           <div style={styles.emptyIcon}>
             🛡️
           </div>
 
-          <h2 style={styles.emptyTitle}>
+          <h2 style={{ ...styles.emptyTitle, ...(isMobile ? styles.mobileEmptyTitle : {}) }}>
             Risk Profile Not Available
           </h2>
 
-          <p style={styles.emptyText}>
+          <p style={{ ...styles.emptyText, ...(isMobile ? styles.mobileEmptyText : {}) }}>
             A customer risk profile has not been
             created for your account yet.
           </p>
@@ -322,9 +336,9 @@ function CustomerRiskProfile() {
               MAIN RISK CARD
           ========================= */}
 
-          <div style={styles.mainCard}>
+          <div style={{ ...styles.mainCard, ...(isMobile ? styles.mobileCard : {}) }}>
 
-            <div style={styles.cardHeader}>
+            <div style={{ ...styles.cardHeader, ...(isMobile ? styles.mobileCardHeader : {}) }}>
 
               <div>
 
@@ -352,13 +366,13 @@ function CustomerRiskProfile() {
 
             </div>
 
-            <div style={styles.riskContent}>
+            <div style={{ ...styles.riskContent, ...(isMobile ? styles.mobileRiskContent : {}) }}>
 
               {/* SCORE */}
 
-              <div style={styles.scoreSection}>
+              <div style={{ ...styles.scoreSection, ...(isMobile ? styles.mobileScoreSection : {}) }}>
 
-                <div style={styles.scoreCircle}>
+                <div style={{ ...styles.scoreCircle, ...(isMobile ? styles.mobileScoreCircle : {}) }}>
 
                   <div style={styles.scoreNumber}>
                     {riskScore}
@@ -392,7 +406,7 @@ function CustomerRiskProfile() {
 
               {/* SCORE BAR */}
 
-              <div style={styles.scoreBarSection}>
+              <div style={{ ...styles.scoreBarSection, ...(isMobile ? styles.mobileScoreBarSection : {}) }}>
 
                 <div style={styles.scoreBarHeader}>
 
@@ -433,7 +447,7 @@ function CustomerRiskProfile() {
               PROFILE DETAILS
           ========================= */}
 
-          <div style={styles.detailsCard}>
+          <div style={{ ...styles.detailsCard, ...(isMobile ? styles.mobileCard : {}) }}>
 
             <div style={styles.cardHeader}>
 
@@ -451,7 +465,7 @@ function CustomerRiskProfile() {
 
             </div>
 
-            <div style={styles.detailsGrid}>
+            <div style={{ ...styles.detailsGrid, ...(isMobile ? styles.mobileDetailsGrid : {}) }}>
 
               <div style={styles.detailItem}>
 
@@ -524,7 +538,7 @@ function CustomerRiskProfile() {
               REMARKS
           ========================= */}
 
-          <div style={styles.remarksCard}>
+          <div style={{ ...styles.remarksCard, ...(isMobile ? styles.mobileRemarksCard : {}) }}>
 
             <div style={styles.remarksIcon}>
               ℹ️
@@ -552,7 +566,7 @@ function CustomerRiskProfile() {
           INFORMATION
       ========================= */}
 
-      <div style={styles.infoBox}>
+      <div style={{ ...styles.infoBox, ...(isMobile ? styles.mobileInfoBox : {}) }}>
 
         <span style={styles.infoIcon}>
           🔒
@@ -709,6 +723,7 @@ header: {
     margin: 0,
     color: "#7c879a",
     fontSize: "10px",
+    overflowWrap: "anywhere",
   },
 
   accountInfo: {
@@ -722,6 +737,8 @@ header: {
     marginTop: "4px",
     color: "#253453",
     fontSize: "12px",
+    overflowWrap: "anywhere",
+    wordBreak: "break-word",
   },
 
   mainCard: {
@@ -948,6 +965,7 @@ header: {
     color: "#718096",
     fontSize: "11px",
     lineHeight: "1.5",
+    overflowWrap: "anywhere",
   },
 
   infoBox: {
@@ -977,6 +995,7 @@ header: {
     color: "#778397",
     fontSize: "9px",
     lineHeight: "1.5",
+    overflowWrap: "anywhere",
   },
 
   emptyCard: {
@@ -1075,6 +1094,133 @@ header: {
     borderRadius: "50%",
     margin: "20px auto 0",
     animation: "riskSpin 0.8s linear infinite",
+  },
+
+  // =========================
+  // RESPONSIVE OVERRIDES
+  // =========================
+
+  mobilePage: {
+    padding: "12px",
+    overflowX: "hidden",
+  },
+
+  mobileHeader: {
+    minHeight: "auto",
+    maxHeight: "none",
+    padding: "18px 16px",
+    borderRadius: "14px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "14px",
+  },
+
+  mobileTitle: {
+    fontSize: "21px",
+    lineHeight: "1.2",
+    letterSpacing: "-0.3px",
+  },
+
+  mobileSubtitle: {
+    fontSize: "11px",
+    lineHeight: "1.45",
+    marginTop: "5px",
+  },
+
+  mobileDashboardButton: {
+    width: "100%",
+    textAlign: "center",
+    padding: "11px 14px",
+    fontSize: "11px",
+    boxSizing: "border-box",
+  },
+
+  mobileCustomerCard: {
+    margin: "12px 0 14px",
+    padding: "14px",
+    borderRadius: "13px",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: "11px",
+  },
+
+  mobileCustomerInfo: {
+    flex: "1 1 calc(100% - 65px)",
+    minWidth: "0",
+  },
+
+  mobileAccountInfo: {
+    width: "100%",
+    paddingLeft: "0",
+    paddingTop: "11px",
+    borderLeft: "none",
+    borderTop: "1px solid #edf0f5",
+    textAlign: "left",
+  },
+
+  mobileCard: {
+    margin: "0 0 14px",
+    padding: "16px 14px",
+    borderRadius: "14px",
+  },
+
+  mobileCardHeader: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "10px",
+    marginBottom: "16px",
+  },
+
+  mobileRiskContent: {
+    gridTemplateColumns: "1fr",
+    gap: "16px",
+  },
+
+  mobileScoreSection: {
+    gap: "14px",
+    alignItems: "center",
+  },
+
+  mobileScoreCircle: {
+    width: "82px",
+    height: "82px",
+    borderWidth: "6px",
+  },
+
+  mobileScoreBarSection: {
+    padding: "14px",
+  },
+
+  mobileDetailsGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+  },
+
+  mobileRemarksCard: {
+    padding: "14px",
+    gap: "10px",
+    alignItems: "flex-start",
+  },
+
+  mobileInfoBox: {
+    marginBottom: "4px",
+    padding: "13px 14px",
+    gap: "9px",
+  },
+
+  mobileEmptyCard: {
+    padding: "42px 16px",
+    marginBottom: "14px",
+  },
+
+  mobileEmptyTitle: {
+    fontSize: "16px",
+    lineHeight: "1.3",
+  },
+
+  mobileEmptyText: {
+    fontSize: "11px",
+    maxWidth: "100%",
   },
 };
 

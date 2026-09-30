@@ -14,6 +14,20 @@ function TransactionHistory() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("ALL");
 
+  // Responsive breakpoint for mobile/tablet layouts.
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 600 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     loadTransactions();
   }, []);
@@ -255,7 +269,12 @@ function TransactionHistory() {
     const isDebit = transaction.transactionDirection === "DEBIT";
 
     return (
-      <div style={styles.transactionRow}>
+      <div
+        style={{
+          ...styles.transactionRow,
+          ...(isMobile ? styles.mobileTransactionRow : {}),
+        }}
+      >
         <div
           style={{
             ...styles.directionIcon,
@@ -267,7 +286,12 @@ function TransactionHistory() {
         </div>
 
         <div style={styles.transactionMain}>
-          <div style={styles.transactionTitleRow}>
+          <div
+            style={{
+              ...styles.transactionTitleRow,
+              ...(isMobile ? styles.mobileTransactionTitleRow : {}),
+            }}
+          >
             <strong style={styles.transactionTitle}>
               {isDebit ? "Money Sent" : "Money Received"}
             </strong>
@@ -284,7 +308,12 @@ function TransactionHistory() {
             </span>
           </div>
 
-          <div style={styles.transactionMeta}>
+          <div
+            style={{
+              ...styles.transactionMeta,
+              ...(isMobile ? styles.mobileTransactionMeta : {}),
+            }}
+          >
             <span>Transaction ID: #{transaction.id}</span>
 
             <span>{formatDate(transaction.transactionDate)}</span>
@@ -304,6 +333,7 @@ function TransactionHistory() {
         <div
           style={{
             ...styles.transactionAmount,
+            ...(isMobile ? styles.mobileTransactionAmount : {}),
             color: isDebit ? "#c43d3d" : "#168653",
           }}
         >
@@ -335,28 +365,59 @@ function TransactionHistory() {
   // =========================
 
   return (
-    <div style={styles.page}>
+    <div
+      style={{
+        ...styles.page,
+        ...(isMobile ? styles.mobilePage : {}),
+      }}
+    >
       <div style={styles.container}>
         {/* HEADER */}
 
-        <div style={styles.header}>
+        <div
+          style={{
+            ...styles.header,
+            ...(isMobile ? styles.mobileHeader : {}),
+          }}
+        >
           <div>
             <p style={styles.brand}>AVANI BANK</p>
 
-            <h1 style={styles.title}>Account Statement</h1>
+            <h1
+              style={{
+                ...styles.title,
+                ...(isMobile ? styles.mobileTitle : {}),
+              }}
+            >
+              Account Statement
+            </h1>
 
             <p style={styles.subtitle}>
               View and track all your account transactions.
             </p>
           </div>
-          <div style={styles.headerButtons}>
-            <button onClick={downloadStatement} style={styles.downloadButton}>
+          <div
+            style={{
+              ...styles.headerButtons,
+              ...(isMobile ? styles.mobileHeaderButtons : {}),
+            }}
+          >
+            <button
+              onClick={downloadStatement}
+              style={{
+                ...styles.downloadButton,
+                ...(isMobile ? styles.mobileHeaderButton : {}),
+              }}
+            >
               ↓ Download Statement
             </button>
 
             <button
               onClick={() => navigate("/dashboard")}
-              style={styles.dashboardButton}
+              style={{
+                ...styles.dashboardButton,
+                ...(isMobile ? styles.mobileHeaderButton : {}),
+              }}
             >
               ← Dashboard
             </button>
@@ -369,7 +430,12 @@ function TransactionHistory() {
 
         {/* SUMMARY */}
 
-        <div style={styles.summaryGrid}>
+        <div
+          style={{
+            ...styles.summaryGrid,
+            ...(isMobile ? styles.mobileSummaryGrid : {}),
+          }}
+        >
           <div style={styles.summaryCard}>
             <div style={styles.summaryIcon}>⇄</div>
 
@@ -425,8 +491,18 @@ function TransactionHistory() {
 
         {/* TRANSACTIONS */}
 
-        <div style={styles.card}>
-          <div style={styles.cardHeader}>
+        <div
+          style={{
+            ...styles.card,
+            ...(isMobile ? styles.mobileCard : {}),
+          }}
+        >
+          <div
+            style={{
+              ...styles.cardHeader,
+              ...(isMobile ? styles.mobileCardHeader : {}),
+            }}
+          >
             <div>
               <h2 style={styles.cardTitle}>All Transactions</h2>
 
@@ -444,7 +520,12 @@ function TransactionHistory() {
 
           {/* FILTERS */}
 
-          <div style={styles.filterBar}>
+          <div
+            style={{
+              ...styles.filterBar,
+              ...(isMobile ? styles.mobileFilterBar : {}),
+            }}
+          >
             <input
               type="text"
               value={search}
@@ -492,7 +573,12 @@ function TransactionHistory() {
 
         {/* INFORMATION */}
 
-        <div style={styles.infoBox}>
+        <div
+          style={{
+            ...styles.infoBox,
+            ...(isMobile ? styles.mobileInfoBox : {}),
+          }}
+        >
           <div style={styles.infoIcon}>ℹ️</div>
 
           <div>
@@ -530,7 +616,7 @@ const styles = {
   },
 
   header: {
-    height: "60px",
+    height: "100px",
     background:
       "linear-gradient(135deg, #102354 0%, #173b8c 55%, #2457c6 100%)",
     color: "white",
@@ -649,6 +735,7 @@ const styles = {
     display: "block",
     fontSize: "16px",
     fontWeight: "800",
+    overflowWrap: "anywhere",
   },
 
   card: {
@@ -867,6 +954,101 @@ const styles = {
     color: "#728096",
     fontSize: "10px",
     lineHeight: "1.6",
+    overflowWrap: "anywhere",
+  },
+
+  // =========================
+  // RESPONSIVE STYLES
+  // =========================
+
+  mobilePage: {
+    padding: "15px 10px",
+  },
+
+  mobileHeader: {
+    height: "auto",
+    minHeight: "unset",
+    padding: "20px 16px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "16px",
+    borderRadius: "15px",
+  },
+
+  mobileHeaderButtons: {
+    width: "100%",
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "8px",
+  },
+
+  mobileHeaderButton: {
+    width: "100%",
+    minHeight: "40px",
+    padding: "9px 10px",
+    fontSize: "11px",
+  },
+
+  mobileTitle: {
+    fontSize: "23px",
+    lineHeight: "1.2",
+    margin: "7px 0 5px",
+  },
+
+  mobileSummaryGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+    marginTop: "14px",
+  },
+
+  mobileCard: {
+    marginTop: "14px",
+    padding: "15px",
+    borderRadius: "14px",
+  },
+
+  mobileCardHeader: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "12px",
+    marginBottom: "15px",
+  },
+
+  mobileFilterBar: {
+    gridTemplateColumns: "1fr",
+    gap: "9px",
+    marginBottom: "14px",
+  },
+
+  mobileTransactionRow: {
+    alignItems: "flex-start",
+    gap: "9px",
+    padding: "12px",
+    borderRadius: "11px",
+  },
+
+  mobileTransactionTitleRow: {
+    gap: "6px",
+  },
+
+  mobileTransactionMeta: {
+    gap: "8px",
+    lineHeight: "1.5",
+  },
+
+  mobileTransactionAmount: {
+    fontSize: "13px",
+    marginLeft: "2px",
+    maxWidth: "88px",
+    textAlign: "right",
+    overflowWrap: "anywhere",
+    whiteSpace: "normal",
+  },
+
+  mobileInfoBox: {
+    marginTop: "14px",
+    padding: "13px",
+    gap: "9px",
   },
 
   loading: {

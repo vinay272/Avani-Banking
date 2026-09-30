@@ -5,6 +5,39 @@ function TransferMoney() {
   const navigate = useNavigate();
 
   // =====================================================
+  // RESPONSIVE STATE
+  // =====================================================
+
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 768 : false
+  );
+
+  const [isTablet, setIsTablet] = useState(
+    typeof window !== "undefined"
+      ? window.innerWidth > 768 && window.innerWidth <= 980
+      : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width <= 768);
+      setIsTablet(width > 768 && width <= 980);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const getResponsiveStyle = (name) => ({
+    ...(styles[name] || {}),
+    ...(isTablet ? (responsiveStyles.tablet?.[name] || {}) : {}),
+    ...(isMobile ? (responsiveStyles.mobile?.[name] || {}) : {}),
+  });
+
+  // =====================================================
   // STATE
   // =====================================================
 
@@ -451,9 +484,9 @@ function TransferMoney() {
 
   if (loadingCustomer) {
     return (
-      <div style={styles.page}>
-        <div style={styles.loadingContainer}>
-          <div style={styles.loader}></div>
+      <div style={getResponsiveStyle("page")}>
+        <div style={getResponsiveStyle("loadingContainer")}>
+          <div style={getResponsiveStyle("loader")}></div>
 
           <p>
             Loading account information...
@@ -468,43 +501,43 @@ function TransferMoney() {
   // =====================================================
 
   return (
-    <div style={styles.page}>
-      <div style={styles.container}>
+    <div style={getResponsiveStyle("page")}>
+      <div style={getResponsiveStyle("container")}>
 
         {/* =================================================
             HEADER
         ================================================= */}
 
-        <div style={styles.header}>
+        <div style={getResponsiveStyle("header")}>
 
           <div>
-            <p style={styles.smallTitle}>
+            <p style={getResponsiveStyle("smallTitle")}>
               AVANI BANK
             </p>
 
-            <h1 style={styles.title}>
+            <h1 style={getResponsiveStyle("title")}>
               Transfer Money
             </h1>
 
-            <p style={styles.subtitle}>
+            <p style={getResponsiveStyle("subtitle")}>
               Send money securely to another
               Avani Bank account.
             </p>
           </div>
 
-          <div style={styles.headerRight}>
+          <div style={getResponsiveStyle("headerRight")}>
 
             <button
               type="button"
               onClick={() =>
                 navigate("/dashboard")
               }
-              style={styles.dashboardButton}
+              style={getResponsiveStyle("dashboardButton")}
             >
               ← Dashboard
             </button>
 
-            <div style={styles.icon}>
+            <div style={getResponsiveStyle("icon")}>
               ⇄
             </div>
 
@@ -517,7 +550,7 @@ function TransferMoney() {
         ================================================= */}
 
         {error && (
-          <div style={styles.errorTop}>
+          <div style={getResponsiveStyle("errorTop")}>
             ⚠ {error}
           </div>
         )}
@@ -527,7 +560,7 @@ function TransferMoney() {
         ================================================= */}
 
         {message && (
-          <div style={styles.successTop}>
+          <div style={getResponsiveStyle("successTop")}>
             ✓ {message}
           </div>
         )}
@@ -536,15 +569,15 @@ function TransferMoney() {
             BALANCE CARD
         ================================================= */}
 
-        <div style={styles.balanceCard}>
+        <div style={getResponsiveStyle("balanceCard")}>
 
           <div>
 
-            <p style={styles.balanceLabel}>
+            <p style={getResponsiveStyle("balanceLabel")}>
               Available Balance
             </p>
 
-            <h2 style={styles.balance}>
+            <h2 style={getResponsiveStyle("balance")}>
               ₹
               {customer?.balance != null
                 ? Number(
@@ -559,7 +592,7 @@ function TransferMoney() {
                 : "0.00"}
             </h2>
 
-            <p style={styles.accountText}>
+            <p style={getResponsiveStyle("accountText")}>
               Account:{" "}
               {customer?.accountNumber ||
                 "Not available"}
@@ -567,7 +600,7 @@ function TransferMoney() {
 
           </div>
 
-          <div style={styles.balanceIcon}>
+          <div style={getResponsiveStyle("balanceIcon")}>
             ₹
           </div>
 
@@ -577,15 +610,15 @@ function TransferMoney() {
             TRANSFER CARD
         ================================================= */}
 
-        <div style={styles.card}>
+        <div style={getResponsiveStyle("card")}>
 
-          <div style={styles.cardHeader}>
+          <div style={getResponsiveStyle("cardHeader")}>
 
-            <h2 style={styles.cardTitle}>
+            <h2 style={getResponsiveStyle("cardTitle")}>
               Make a Transfer
             </h2>
 
-            <span style={styles.secure}>
+            <span style={getResponsiveStyle("secure")}>
               🔒 Secure
             </span>
 
@@ -597,13 +630,13 @@ function TransferMoney() {
                 TRANSFER TYPE
             ============================================= */}
 
-            <div style={styles.field}>
+            <div style={getResponsiveStyle("field")}>
 
-              <label style={styles.label}>
+              <label style={getResponsiveStyle("label")}>
                 Transfer Type
               </label>
 
-              <div style={styles.transferTypes}>
+              <div style={getResponsiveStyle("transferTypes")}>
 
                 {/* ACCOUNT TRANSFER */}
 
@@ -616,7 +649,7 @@ function TransferMoney() {
                     )
                   }
                   style={{
-                    ...styles.transferTypeButton,
+                    ...getResponsiveStyle("transferTypeButton"),
 
                     ...(transferType ===
                     "TRANSFER"
@@ -650,7 +683,7 @@ function TransferMoney() {
                     )
                   }
                   style={{
-                    ...styles.transferTypeButton,
+                    ...getResponsiveStyle("transferTypeButton"),
 
                     ...(transferType ===
                     "NEFT"
@@ -684,7 +717,7 @@ function TransferMoney() {
                     )
                   }
                   style={{
-                    ...styles.transferTypeButton,
+                    ...getResponsiveStyle("transferTypeButton"),
 
                     ...(transferType ===
                     "RTGS"
@@ -718,7 +751,7 @@ function TransferMoney() {
                     )
                   }
                   style={{
-                    ...styles.transferTypeButton,
+                    ...getResponsiveStyle("transferTypeButton"),
 
                     ...(transferType ===
                     "IMPS"
@@ -749,9 +782,9 @@ function TransferMoney() {
                 RECEIVER ACCOUNT NUMBER
             ============================================= */}
 
-            <div style={styles.field}>
+            <div style={getResponsiveStyle("field")}>
 
-              <label style={styles.label}>
+              <label style={getResponsiveStyle("label")}>
                 Receiver Account Number
               </label>
 
@@ -766,7 +799,7 @@ function TransferMoney() {
                   )
                 }
                 placeholder="Enter receiver account number"
-                style={styles.input}
+                style={getResponsiveStyle("input")}
                 disabled={loading}
                 autoComplete="off"
                 inputMode="numeric"
@@ -782,9 +815,9 @@ function TransferMoney() {
             {transferType !==
               "TRANSFER" && (
 
-              <div style={styles.field}>
+              <div style={getResponsiveStyle("field")}>
 
-                <label style={styles.label}>
+                <label style={getResponsiveStyle("label")}>
                   Receiver IFSC Code
                 </label>
 
@@ -801,7 +834,7 @@ function TransferMoney() {
                   }
                   placeholder="Enter receiver IFSC code"
                   style={{
-                    ...styles.input,
+                    ...getResponsiveStyle("input"),
                     textTransform:
                       "uppercase",
                   }}
@@ -827,9 +860,9 @@ function TransferMoney() {
                 AMOUNT
             ============================================= */}
 
-            <div style={styles.field}>
+            <div style={getResponsiveStyle("field")}>
 
-              <label style={styles.label}>
+              <label style={getResponsiveStyle("label")}>
                 Transfer Amount
               </label>
 
@@ -904,7 +937,7 @@ function TransferMoney() {
               type="submit"
               disabled={loading}
               style={{
-                ...styles.button,
+                ...getResponsiveStyle("button"),
 
                 opacity: loading
                   ? 0.7
@@ -930,11 +963,11 @@ function TransferMoney() {
             INFORMATION CARDS
         ================================================= */}
 
-        <div style={styles.infoGrid}>
+        <div style={getResponsiveStyle("infoGrid")}>
 
-          <div style={styles.infoCard}>
+          <div style={getResponsiveStyle("infoCard")}>
 
-            <div style={styles.infoIcon}>
+            <div style={getResponsiveStyle("infoIcon")}>
               🛡️
             </div>
 
@@ -961,9 +994,9 @@ function TransferMoney() {
 
           </div>
 
-          <div style={styles.infoCard}>
+          <div style={getResponsiveStyle("infoCard")}>
 
-            <div style={styles.infoIcon}>
+            <div style={getResponsiveStyle("infoIcon")}>
               ⚡
             </div>
 
@@ -1000,6 +1033,212 @@ function TransferMoney() {
 // =========================================================
 // STYLES
 // =========================================================
+
+
+// =========================================================
+// RESPONSIVE OVERRIDES
+// =========================================================
+
+const responsiveStyles = {
+  tablet: {
+    container: {
+      padding: "28px 18px",
+    },
+    header: {
+      padding: "24px",
+    },
+    title: {
+      fontSize: "27px",
+    },
+    balanceCard: {
+      padding: "22px 24px",
+    },
+    card: {
+      padding: "24px",
+    },
+    transferTypes: {
+      gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+      gap: "8px",
+    },
+    transferTypeButton: {
+      minHeight: "66px",
+      padding: "7px 5px",
+      fontSize: "10px",
+    },
+    infoGrid: {
+      gap: "12px",
+    },
+  },
+
+  mobile: {
+    page: {
+      padding: 0,
+    },
+    container: {
+      width: "100%",
+      maxWidth: "100%",
+      padding: "14px 12px 24px",
+    },
+    header: {
+      flexDirection: "column",
+      alignItems: "stretch",
+      padding: "20px 17px",
+      borderRadius: "16px",
+      gap: "16px",
+    },
+    headerRight: {
+      width: "100%",
+      marginLeft: 0,
+      display: "grid",
+      gridTemplateColumns: "1fr",
+      gap: "10px",
+    },
+    dashboardButton: {
+      width: "100%",
+      minHeight: "44px",
+    },
+    icon: {
+      display: "none",
+    },
+    title: {
+      fontSize: "25px",
+      lineHeight: 1.2,
+    },
+    subtitle: {
+      fontSize: "12px",
+    },
+    smallTitle: {
+      fontSize: "10px",
+    },
+    errorTop: {
+      marginTop: "12px",
+      fontSize: "11px",
+    },
+    successTop: {
+      marginTop: "12px",
+      fontSize: "11px",
+    },
+    balanceCard: {
+      marginTop: "14px",
+      padding: "19px 17px",
+      borderRadius: "15px",
+      gap: "12px",
+    },
+    balanceLabel: {
+      fontSize: "10px",
+    },
+    balance: {
+      fontSize: "24px",
+      lineHeight: 1.2,
+      wordBreak: "break-word",
+    },
+    accountText: {
+      fontSize: "10px",
+      wordBreak: "break-word",
+    },
+    balanceIcon: {
+      width: "46px",
+      height: "46px",
+      borderRadius: "12px",
+      fontSize: "19px",
+    },
+    card: {
+      marginTop: "14px",
+      padding: "18px 15px",
+      borderRadius: "15px",
+    },
+    cardHeader: {
+      alignItems: "flex-start",
+      marginBottom: "20px",
+      gap: "10px",
+    },
+    cardTitle: {
+      fontSize: "18px",
+    },
+    secure: {
+      fontSize: "10px",
+      padding: "6px 8px",
+    },
+    field: {
+      marginBottom: "17px",
+    },
+    label: {
+      fontSize: "11px",
+      marginBottom: "7px",
+    },
+    input: {
+      height: "48px",
+      padding: "0 12px",
+      fontSize: "13px",
+    },
+    fieldHint: {
+      fontSize: "9px",
+    },
+    transferTypes: {
+      gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+      gap: "8px",
+    },
+    transferTypeButton: {
+      minHeight: "64px",
+      fontSize: "10px",
+      padding: "7px 5px",
+    },
+    transferTypeIcon: {
+      fontSize: "18px",
+    },
+    amountBox: {
+      height: "50px",
+      padding: "0 12px",
+    },
+    currency: {
+      fontSize: "17px",
+    },
+    amountInput: {
+      height: "46px",
+      fontSize: "17px",
+      padding: "0 8px",
+    },
+    transferInfo: {
+      alignItems: "flex-start",
+      fontSize: "10px",
+      padding: "10px",
+    },
+    transferInfoIcon: {
+      marginTop: "1px",
+    },
+    button: {
+      height: "48px",
+      fontSize: "13px",
+      marginTop: "4px",
+    },
+    infoGrid: {
+      gridTemplateColumns: "1fr",
+      gap: "10px",
+      marginTop: "14px",
+    },
+    infoCard: {
+      padding: "15px",
+      borderRadius: "12px",
+    },
+    infoIcon: {
+      width: "37px",
+      height: "37px",
+      borderRadius: "9px",
+    },
+    infoTitle: {
+      fontSize: "12px",
+    },
+    infoText: {
+      fontSize: "9px",
+    },
+    loadingContainer: {
+      minHeight: "75vh",
+      padding: "20px",
+      boxSizing: "border-box",
+      textAlign: "center",
+    },
+  },
+};
 
 const styles = {
 

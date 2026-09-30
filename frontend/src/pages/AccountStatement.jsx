@@ -3,6 +3,19 @@ import { useNavigate } from "react-router-dom";
 
 function AccountStatement() {
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width <= 700);
+      setIsTablet(width <= 1000);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const [account, setAccount] = useState(null);
   const [transactions, setTransactions] = useState([]);
@@ -228,29 +241,53 @@ function AccountStatement() {
     );
   };
 
+  const responsiveStyles = {
+    ...styles,
+    header: { ...styles.header, flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "stretch" : "center", padding: isMobile ? "14px 16px" : "0 6%" },
+    brandArea: { ...styles.brandArea, gap: isMobile ? "9px" : "13px" },
+    headerButton: { ...styles.headerButton, width: isMobile ? "100%" : "auto", textAlign: "center" },
+    container: { ...styles.container, padding: isMobile ? "30px 14px 40px" : isTablet ? "38px 18px 50px" : "48px 24px 60px" },
+    pageHeading: { ...styles.pageHeading, marginBottom: isMobile ? "22px" : "30px" },
+    title: { ...styles.title, fontSize: isMobile ? "26px" : isTablet ? "30px" : "34px" },
+    subtitle: { ...styles.subtitle, fontSize: isMobile ? "12px" : "13px" },
+    summaryCard: { ...styles.summaryCard, flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "stretch" : "center", padding: isMobile ? "15px" : "18px 20px" },
+    accountSummary: { ...styles.accountSummary, minWidth: 0 },
+    accountNumber: { ...styles.accountNumber, fontSize: isMobile ? "13px" : "15px", overflowWrap: "anywhere" },
+    balanceSummary: { ...styles.balanceSummary, width: isMobile ? "100%" : "auto", minWidth: isMobile ? 0 : "190px", boxSizing: "border-box" },
+    statementCard: { ...styles.statementCard },
+    tableWrapper: { ...styles.tableWrapper, WebkitOverflowScrolling: "touch" },
+    table: { ...styles.table, minWidth: isMobile ? "650px" : "720px" },
+    securityCard: { ...styles.securityCard, alignItems: isMobile ? "flex-start" : "center", padding: isMobile ? "15px" : "18px 20px" },
+    securityText: { ...styles.securityText, lineHeight: isMobile ? "1.5" : "normal" },
+    errorBox: { ...styles.errorBox, padding: isMobile ? "14px" : "18px", fontSize: isMobile ? "12px" : "14px" },
+    emptyState: { ...styles.emptyState, padding: isMobile ? "45px 15px" : "60px 20px" },
+    loadingPage: { ...styles.loadingPage, padding: "16px", boxSizing: "border-box" },
+    loadingCard: { ...styles.loadingCard, width: "100%", maxWidth: "380px", padding: isMobile ? "25px 18px" : "35px", boxSizing: "border-box" },
+  };
+
   // =====================================================
   // LOADING
   // =====================================================
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.loadingCard}>
+      <div style={responsiveStyles.loadingPage}>
+        <div style={responsiveStyles.loadingCard}>
 
-          <div style={styles.loadingIcon}>
+          <div style={responsiveStyles.loadingIcon}>
             📄
           </div>
 
-          <h2 style={styles.loadingTitle}>
+          <h2 style={responsiveStyles.loadingTitle}>
             Loading statement
           </h2>
 
-          <p style={styles.loadingText}>
+          <p style={responsiveStyles.loadingText}>
             Please wait while we fetch your
             account statement...
           </p>
 
-          <div style={styles.loader}></div>
+          <div style={responsiveStyles.loader}></div>
 
         </div>
       </div>
@@ -262,25 +299,25 @@ function AccountStatement() {
   // =====================================================
 
   return (
-    <div style={styles.page}>
+    <div style={responsiveStyles.page}>
 
       {/* ================= HEADER ================= */}
 
-      <header style={styles.header}>
+      <header style={responsiveStyles.header}>
 
-        <div style={styles.brandArea}>
+        <div style={responsiveStyles.brandArea}>
 
-          <div style={styles.brandIcon}>
+          <div style={responsiveStyles.brandIcon}>
             🏦
           </div>
 
           <div>
 
-            <div style={styles.brandName}>
+            <div style={responsiveStyles.brandName}>
               AVANI BANK
             </div>
 
-            <div style={styles.brandSubtitle}>
+            <div style={responsiveStyles.brandSubtitle}>
               Account Statement
             </div>
 
@@ -289,7 +326,7 @@ function AccountStatement() {
         </div>
 
         <button
-          style={styles.headerButton}
+          style={responsiveStyles.headerButton}
           onClick={() =>
             navigate("/accounts")
           }
@@ -301,19 +338,19 @@ function AccountStatement() {
 
       {/* ================= MAIN ================= */}
 
-      <main style={styles.container}>
+      <main style={responsiveStyles.container}>
 
-        <section style={styles.pageHeading}>
+        <section style={responsiveStyles.pageHeading}>
 
-          <p style={styles.eyebrow}>
+          <p style={responsiveStyles.eyebrow}>
             ACCOUNT SERVICES
           </p>
 
-          <h1 style={styles.title}>
+          <h1 style={responsiveStyles.title}>
             Account Statement
           </h1>
 
-          <p style={styles.subtitle}>
+          <p style={responsiveStyles.subtitle}>
             View your recent transactions and
             account activity.
           </p>
@@ -322,7 +359,7 @@ function AccountStatement() {
 
         {error ? (
 
-          <div style={styles.errorBox}>
+          <div style={responsiveStyles.errorBox}>
             {error}
           </div>
 
@@ -332,21 +369,21 @@ function AccountStatement() {
 
             {/* ================= SUMMARY ================= */}
 
-            <section style={styles.summaryCard}>
+            <section style={responsiveStyles.summaryCard}>
 
-              <div style={styles.accountSummary}>
+              <div style={responsiveStyles.accountSummary}>
 
-                <div style={styles.summaryIcon}>
+                <div style={responsiveStyles.summaryIcon}>
                   💳
                 </div>
 
                 <div>
 
-                  <p style={styles.label}>
+                  <p style={responsiveStyles.label}>
                     ACCOUNT NUMBER
                   </p>
 
-                  <p style={styles.accountNumber}>
+                  <p style={responsiveStyles.accountNumber}>
                     {account?.accountNumber ||
                       "N/A"}
                   </p>
@@ -355,13 +392,13 @@ function AccountStatement() {
 
               </div>
 
-              <div style={styles.balanceSummary}>
+              <div style={responsiveStyles.balanceSummary}>
 
-                <p style={styles.balanceLabel}>
+                <p style={responsiveStyles.balanceLabel}>
                   AVAILABLE BALANCE
                 </p>
 
-                <p style={styles.summaryBalance}>
+                <p style={responsiveStyles.summaryBalance}>
                   ₹
                   {formatCurrency(
                     account?.balance
@@ -374,21 +411,21 @@ function AccountStatement() {
 
             {/* ================= TRANSACTIONS ================= */}
 
-            <section style={styles.statementCard}>
+            <section style={responsiveStyles.statementCard}>
 
               {transactions.length === 0 ? (
 
-                <div style={styles.emptyState}>
+                <div style={responsiveStyles.emptyState}>
 
-                  <div style={styles.emptyIcon}>
+                  <div style={responsiveStyles.emptyIcon}>
                     📄
                   </div>
 
-                  <h3 style={styles.emptyTitle}>
+                  <h3 style={responsiveStyles.emptyTitle}>
                     No Transactions Found
                   </h3>
 
-                  <p style={styles.emptyText}>
+                  <p style={responsiveStyles.emptyText}>
                     There are no transactions
                     available for this account.
                   </p>
@@ -397,29 +434,29 @@ function AccountStatement() {
 
               ) : (
 
-                <div style={styles.tableWrapper}>
+                <div style={responsiveStyles.tableWrapper}>
 
-                  <table style={styles.table}>
+                  <table style={responsiveStyles.table}>
 
                     <thead>
 
                       <tr>
 
-                        <th style={styles.th}>
+                        <th style={responsiveStyles.th}>
                           DATE
                         </th>
 
-                        <th style={styles.th}>
+                        <th style={responsiveStyles.th}>
                           DESCRIPTION
                         </th>
 
-                        <th style={styles.th}>
+                        <th style={responsiveStyles.th}>
                           TYPE
                         </th>
 
                         <th
                           style={{
-                            ...styles.th,
+                            ...responsiveStyles.th,
                             textAlign: "right",
                           }}
                         >
@@ -428,7 +465,7 @@ function AccountStatement() {
 
                         <th
                           style={{
-                            ...styles.th,
+                            ...responsiveStyles.th,
                             textAlign: "right",
                           }}
                         >
@@ -477,7 +514,7 @@ function AccountStatement() {
                             >
 
                               <td
-                                style={styles.td}
+                                style={responsiveStyles.td}
                               >
                                 {formatDate(
                                   transaction.transactionDate ||
@@ -487,7 +524,7 @@ function AccountStatement() {
                               </td>
 
                               <td
-                                style={styles.td}
+                                style={responsiveStyles.td}
                               >
 
                                 <span
@@ -503,12 +540,12 @@ function AccountStatement() {
                               </td>
 
                               <td
-                                style={styles.td}
+                                style={responsiveStyles.td}
                               >
 
                                 <span
                                   style={{
-                                    ...styles.typeBadge,
+                                    ...responsiveStyles.typeBadge,
                                     ...(isCredit
                                       ? styles.creditBadge
                                       : styles.debitBadge),
@@ -570,19 +607,19 @@ function AccountStatement() {
 
             {/* ================= SECURITY ================= */}
 
-            <section style={styles.securityCard}>
+            <section style={responsiveStyles.securityCard}>
 
-              <div style={styles.securityIcon}>
+              <div style={responsiveStyles.securityIcon}>
                 🛡️
               </div>
 
               <div>
 
-                <h3 style={styles.securityTitle}>
+                <h3 style={responsiveStyles.securityTitle}>
                   This is your account statement
                 </h3>
 
-                <p style={styles.securityText}>
+                <p style={responsiveStyles.securityText}>
                   This statement contains your
                   recent transactions and account
                   activity.

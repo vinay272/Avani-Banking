@@ -3646,6 +3646,317 @@ const portalStyles = `
     align-items: flex-start;
   }
 }
+
+/* =====================================================
+   ENHANCED MOBILE RESPONSIVE OVERRIDES
+   ===================================================== */
+
+@media (max-width: 700px) {
+  .support-page {
+    padding: 12px 9px 24px;
+  }
+
+  .support-container {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .support-header {
+    max-height: none;
+    padding: 18px 15px;
+    margin-bottom: 14px;
+    border-radius: 15px;
+  }
+
+  .support-header-content {
+    margin-bottom: 0;
+    width: 100%;
+    gap: 14px;
+  }
+
+  .support-header h1 {
+    font-size: 23px;
+    line-height: 1.25;
+  }
+
+  .support-header p {
+    max-width: 100%;
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
+  .support-dashboard-button {
+    width: 100%;
+    align-self: stretch;
+    padding: 11px 14px;
+  }
+
+  .support-message {
+    align-items: flex-start;
+    font-size: 11px;
+  }
+
+  .support-tabs {
+    gap: 4px;
+    margin-bottom: 18px;
+    padding: 5px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .support-tab {
+    flex: 0 0 auto;
+    min-width: 112px;
+    padding: 10px 11px;
+    font-size: 10px;
+  }
+
+  .section-heading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .section-heading h2 {
+    font-size: 20px;
+  }
+
+  .section-heading p {
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
+  .support-stat-grid {
+    grid-template-columns: 1fr;
+    gap: 9px;
+  }
+
+  .support-stat-card {
+    min-width: 0;
+  }
+
+  .quick-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .quick-card {
+    min-height: 120px;
+  }
+
+  .security-note {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .two-column {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .support-card {
+    min-width: 0;
+    padding: 16px 13px;
+    border-radius: 14px;
+  }
+
+  .card-heading {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .card-heading h3 {
+    font-size: 15px;
+  }
+
+  .card-heading p {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 12px;
+  }
+
+  .primary-button {
+    width: 100%;
+  }
+
+  .ticket-list,
+  .request-list,
+  .appointment-list,
+  .feedback-list {
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .ticket-item,
+  .request-item,
+  .feedback-item {
+    min-width: 0;
+    padding: 13px;
+  }
+
+  .ticket-top,
+  .feedback-top {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .ticket-top strong,
+  .ticket-item h4,
+  .request-item h4,
+  .feedback-item > strong {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .ticket-meta {
+    row-gap: 6px;
+  }
+
+  .appointment-item {
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .appointment-date-box {
+    width: 52px;
+    min-width: 52px;
+    height: 58px;
+  }
+
+  .appointment-info {
+    min-width: 0;
+  }
+
+  .appointment-info h4,
+  .appointment-info p {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .small-danger-button {
+    width: 100%;
+  }
+
+  .online-badge,
+  .ai-badge {
+    align-self: flex-start;
+  }
+
+  .chat-header,
+  .assistant-header {
+    flex-wrap: wrap;
+    padding: 15px;
+  }
+
+  .chat-session {
+    width: 100%;
+    margin-left: 54px;
+    overflow-wrap: anywhere;
+  }
+
+  .chat-messages,
+  .assistant-messages {
+    height: 360px;
+    padding: 14px 11px;
+  }
+
+  .chat-bubble,
+  .assistant-bubble {
+    max-width: 90%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .chat-input-area,
+  .assistant-input {
+    gap: 7px;
+    padding: 10px;
+  }
+
+  .chat-input-area input,
+  .assistant-input input {
+    min-width: 0;
+  }
+
+  .assistant-suggestions {
+    max-height: 125px;
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .assistant-input {
+    flex-direction: column;
+  }
+
+  .assistant-input .primary-button {
+    width: 100%;
+    min-width: 0;
+    height: 45px;
+  }
+
+  .stars {
+    flex-wrap: wrap;
+  }
+
+  .star {
+    font-size: 25px;
+  }
+
+  .support-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+    padding: 15px 3px 0;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 380px) {
+  .support-page {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .support-header {
+    padding: 16px 13px;
+  }
+
+  .support-header h1 {
+    font-size: 21px;
+  }
+
+  .support-tab {
+    min-width: 105px;
+    padding: 9px 10px;
+  }
+
+  .support-card {
+    padding: 14px 11px;
+  }
+
+  .chat-messages,
+  .assistant-messages {
+    height: 330px;
+  }
+
+  .chat-bubble,
+  .assistant-bubble {
+    max-width: 94%;
+  }
+}
+
 `;
 
 export default CustomerServicePortal;

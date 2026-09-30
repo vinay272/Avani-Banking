@@ -890,7 +890,7 @@ const handleViewStatement = async (cardId) => {
           className="cards-page-header"
           style={{
             width: "100%",
-            maxHeight: "100px",
+            maxHeight: "none",
             margin: "0 0 32px 0",
             padding: "26px 30px",
             display: "flex",
@@ -6523,6 +6523,150 @@ const cardsStyles = `
     .cards-footer {
       flex-direction: column;
       align-items: flex-start;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .cards-page {
+      padding: 12px 10px 24px;
+    }
+
+    .cards-page-header {
+      padding: 16px 13px;
+      margin-bottom: 20px;
+      border-radius: 16px;
+      gap: 15px;
+    }
+
+    .cards-header-left {
+      gap: 9px;
+    }
+
+    .cards-header-icon {
+      width: 44px;
+      height: 44px;
+      font-size: 21px;
+      border-radius: 11px;
+    }
+
+    .cards-page-header h1 {
+      font-size: 22px;
+    }
+
+    .cards-page-header p {
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    .cards-header-actions {
+      gap: 8px;
+    }
+
+    .dashboard-btn,
+    .cards-page-header .issue-card-btn {
+      min-height: 42px;
+      padding: 9px 10px;
+      font-size: 12px;
+    }
+
+    .bank-card {
+      padding: 17px;
+      border-radius: 15px;
+    }
+
+    .bank-logo {
+      width: 34px;
+      height: 34px;
+      font-size: 16px;
+    }
+
+    .bank-name {
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .bank-subtitle {
+      font-size: 6px;
+      letter-spacing: 1.2px;
+    }
+
+    .card-network {
+      font-size: 10px;
+    }
+
+    .card-chip {
+      width: 39px;
+      height: 29px;
+      margin-top: 18px;
+    }
+
+    .card-number {
+      margin-top: 13px;
+      font-size: 11.5px;
+      letter-spacing: 0.8px;
+    }
+
+    .card-bottom {
+      gap: 7px;
+      margin-top: 13px;
+    }
+
+    .card-label {
+      font-size: 6px;
+      letter-spacing: 0.7px;
+    }
+
+    .card-bottom strong {
+      font-size: 8px;
+    }
+
+    .card-network-small {
+      font-size: 10px;
+    }
+
+    .card-item {
+      padding: 17px 15px 18px;
+      border-radius: 15px;
+    }
+
+    .card-info {
+      padding: 16px 4px 0;
+    }
+
+    .card-info-header h3 {
+      font-size: 16px;
+    }
+
+    .card-subtitle {
+      font-size: 11px;
+    }
+
+    .card-id {
+      font-size: 9px;
+    }
+
+    .detail-box {
+      min-height: 60px;
+      padding: 10px;
+    }
+
+    .detail-content strong {
+      font-size: 12px;
+    }
+
+    .view-card-btn,
+    .activate-card-btn,
+    .set-pin-card-btn,
+    .card-action-btn,
+    .manage-limits-btn,
+    .rewards-btn,
+    .international-usage-btn,
+    .statement-btn,
+    .block-card-btn,
+    .replace-card-btn {
+      min-height: 42px;
+      font-size: 12px;
+      padding: 9px 11px;
     }
   }
 

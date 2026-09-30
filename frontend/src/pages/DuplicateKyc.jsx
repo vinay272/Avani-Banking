@@ -17,6 +17,20 @@ function DuplicateKyc() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  // Responsive viewport state
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 600
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const token = localStorage.getItem("token");
 
   // =========================
@@ -227,24 +241,24 @@ function DuplicateKyc() {
   }
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, ...(isMobile ? styles.mobilePage : {}) }}>
 
       {/* =========================
           HEADER
       ========================= */}
 
-      <header style={styles.header}>
+      <header style={{ ...styles.header, ...(isMobile ? styles.mobileHeader : {}) }}>
 
         <div>
           <div style={styles.brand}>
             AVANI BANK
           </div>
 
-          <h1 style={styles.title}>
+          <h1 style={{ ...styles.title, ...(isMobile ? styles.mobileTitle : {}) }}>
             Duplicate KYC Check
           </h1>
 
-          <p style={styles.subtitle}>
+          <p style={{ ...styles.subtitle, ...(isMobile ? styles.mobileSubtitle : {}) }}>
             Check whether a KYC document is already
             associated with another customer.
           </p>
@@ -253,7 +267,7 @@ function DuplicateKyc() {
         <button
           type="button"
           onClick={() => navigate("/dashboard")}
-          style={styles.dashboardButton}
+          style={{ ...styles.dashboardButton, ...(isMobile ? styles.mobileDashboardButton : {}) }}
         >
           ← Dashboard
         </button>
@@ -264,7 +278,7 @@ function DuplicateKyc() {
           CUSTOMER CARD
       ========================= */}
 
-      <div style={styles.customerCard}>
+      <div style={{ ...styles.customerCard, ...(isMobile ? styles.mobileCustomerCard : {}) }}>
 
         <div style={styles.customerAvatar}>
           {customer?.fullName
@@ -272,7 +286,7 @@ function DuplicateKyc() {
             ?.toUpperCase() || "C"}
         </div>
 
-        <div style={styles.customerInfo}>
+        <div style={{ ...styles.customerInfo, ...(isMobile ? styles.mobileCustomerInfo : {}) }}>
 
           <p style={styles.customerLabel}>
             CUSTOMER
@@ -288,7 +302,7 @@ function DuplicateKyc() {
 
         </div>
 
-        <div style={styles.accountInfo}>
+        <div style={{ ...styles.accountInfo, ...(isMobile ? styles.mobileAccountInfo : {}) }}>
 
           <p style={styles.customerLabel}>
             ACCOUNT NUMBER
@@ -334,9 +348,9 @@ function DuplicateKyc() {
           CHECK CARD
       ========================= */}
 
-      <div style={styles.mainCard}>
+      <div style={{ ...styles.mainCard, ...(isMobile ? styles.mobileMainCard : {}) }}>
 
-        <div style={styles.cardHeader}>
+        <div style={{ ...styles.cardHeader, ...(isMobile ? styles.mobileCardHeader : {}) }}>
 
           <div>
 
@@ -356,7 +370,7 @@ function DuplicateKyc() {
 
           </div>
 
-          <div style={styles.cardIcon}>
+          <div style={{ ...styles.cardIcon, ...(isMobile ? styles.mobileCardIcon : {}) }}>
             🛡️
           </div>
 
@@ -430,7 +444,7 @@ function DuplicateKyc() {
 
           {/* BUTTON */}
 
-          <div style={styles.formFooter}>
+          <div style={{ ...styles.formFooter, ...(isMobile ? styles.mobileFormFooter : {}) }}>
 
             <p style={styles.footerNote}>
               The document will be checked against
@@ -484,7 +498,7 @@ function DuplicateKyc() {
               : "✓"}
           </div>
 
-          <div style={styles.resultContent}>
+          <div style={{ ...styles.resultContent, ...(isMobile ? styles.mobileResultContent : {}) }}>
 
             <p style={styles.resultLabel}>
               DUPLICATE CHECK RESULT
@@ -503,7 +517,7 @@ function DuplicateKyc() {
                   : "No duplicate document was found.")}
             </p>
 
-            <div style={styles.resultDetails}>
+            <div style={{ ...styles.resultDetails, ...(isMobile ? styles.mobileResultDetails : {}) }}>
 
               <div>
                 <span style={styles.detailLabel}>
@@ -538,7 +552,7 @@ function DuplicateKyc() {
           INFORMATION
       ========================= */}
 
-      <div style={styles.infoBox}>
+      <div style={{ ...styles.infoBox, ...(isMobile ? styles.mobileInfoBox : {}) }}>
 
         <span style={styles.infoIcon}>
           🔒
@@ -684,6 +698,7 @@ const styles = {
     margin: 0,
     color: "#7c879a",
     fontSize: "10px",
+    overflowWrap: "anywhere",
   },
 
   accountInfo: {
@@ -697,6 +712,8 @@ const styles = {
     marginTop: "4px",
     color: "#253453",
     fontSize: "12px",
+    overflowWrap: "anywhere",
+    wordBreak: "break-word",
   },
 
   errorMessage: {
@@ -885,6 +902,7 @@ const styles = {
     margin: 0,
     fontSize: "11px",
     lineHeight: "1.5",
+    overflowWrap: "anywhere",
   },
 
   resultDetails: {
@@ -905,6 +923,8 @@ const styles = {
 
   detailValue: {
     fontSize: "10px",
+    overflowWrap: "anywhere",
+    wordBreak: "break-word",
   },
 
   infoBox: {
@@ -934,6 +954,7 @@ const styles = {
     color: "#778397",
     fontSize: "9px",
     lineHeight: "1.5",
+    overflowWrap: "anywhere",
   },
 
   loadingPage: {
@@ -982,6 +1003,122 @@ const styles = {
     borderRadius: "50%",
     margin: "20px auto 0",
     animation: "duplicateKycSpin 0.8s linear infinite",
+  },
+
+  // =========================
+  // RESPONSIVE OVERRIDES
+  // =========================
+
+  mobilePage: {
+    padding: "12px",
+    overflowX: "hidden",
+  },
+
+  mobileHeader: {
+    minHeight: "auto",
+    maxHeight: "none",
+    padding: "18px 16px",
+    borderRadius: "14px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "14px",
+  },
+
+  mobileTitle: {
+    fontSize: "21px",
+    lineHeight: "1.2",
+    letterSpacing: "-0.3px",
+  },
+
+  mobileSubtitle: {
+    fontSize: "11px",
+    lineHeight: "1.45",
+    marginTop: "5px",
+  },
+
+  mobileDashboardButton: {
+    width: "100%",
+    textAlign: "center",
+    padding: "11px 14px",
+    fontSize: "11px",
+    boxSizing: "border-box",
+  },
+
+  mobileCustomerCard: {
+    margin: "12px 0 14px",
+    padding: "14px",
+    borderRadius: "13px",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: "11px",
+  },
+
+  mobileCustomerInfo: {
+    flex: "1 1 calc(100% - 65px)",
+    minWidth: "0",
+  },
+
+  mobileAccountInfo: {
+    width: "100%",
+    paddingLeft: "0",
+    paddingTop: "11px",
+    borderLeft: "none",
+    borderTop: "1px solid #edf0f5",
+    textAlign: "left",
+  },
+
+  mobileMainCard: {
+    margin: "0 0 14px",
+    padding: "16px 14px",
+    borderRadius: "14px",
+  },
+
+  mobileCardHeader: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "10px",
+    marginBottom: "17px",
+  },
+
+  mobileCardIcon: {
+    width: "38px",
+    height: "38px",
+    fontSize: "16px",
+  },
+
+  mobileFormFooter: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "11px",
+  },
+
+  mobileCheckButton: {
+    width: "100%",
+    padding: "12px 16px",
+  },
+
+  mobileResultCard: {
+    padding: "15px 14px",
+    borderRadius: "13px",
+    gap: "11px",
+    flexDirection: "column",
+  },
+
+  mobileResultContent: {
+    width: "100%",
+    minWidth: "0",
+  },
+
+  mobileResultDetails: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+    marginTop: "13px",
+  },
+
+  mobileInfoBox: {
+    padding: "13px 14px",
+    gap: "9px",
+    marginBottom: "4px",
   },
 };
 

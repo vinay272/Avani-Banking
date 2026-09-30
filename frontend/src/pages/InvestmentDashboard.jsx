@@ -10,6 +10,24 @@ function InvestmentDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // =========================
+  // RESPONSIVE VIEW
+  // =========================
+
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 700
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 700);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const getToken = () => localStorage.getItem("token");
 
   const formatCurrency = (value) => {
@@ -279,7 +297,7 @@ function InvestmentDashboard() {
 
   if (loading) {
     return (
-      <div style={styles.page}>
+      <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
         <div style={styles.loadingCard}>
           <div style={styles.loadingIcon}>💼</div>
           <div style={styles.loadingTitle}>Loading Investment Portfolio...</div>
@@ -292,14 +310,14 @@ function InvestmentDashboard() {
   }
 
   return (
-    <div style={styles.page}>
-      <div style={styles.container}>
+    <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
+      <div style={{ ...styles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
         {/* =========================
     HEADER
 ========================= */}
 
-        <div style={styles.header}>
-          <div style={styles.headerLeft}>
+        <div style={{ ...styles.header, ...(isMobile ? responsiveStyles.header : {}) }}>
+          <div style={{ ...styles.headerLeft, ...(isMobile ? responsiveStyles.headerLeft : {}) }}>
             <div style={styles.headerIcon}>💼</div>
 
             <div>
@@ -316,7 +334,7 @@ function InvestmentDashboard() {
             onClick={() => {
               window.location.href = "/dashboard";
             }}
-            style={styles.backButton}
+            style={{ ...styles.backButton, ...(isMobile ? responsiveStyles.backButton : {}) }}
           >
             ← Dashboard
           </button>
@@ -332,7 +350,7 @@ function InvestmentDashboard() {
             PORTFOLIO SUMMARY
         ========================= */}
 
-        <div style={styles.summaryGrid}>
+        <div style={{ ...styles.summaryGrid, ...(isMobile ? responsiveStyles.summaryGrid : {}) }}>
           <div style={styles.summaryCard}>
             <div style={styles.summaryLabel}>Total Invested</div>
 
@@ -402,7 +420,7 @@ function InvestmentDashboard() {
           </div>
         </div>
 
-        <div style={styles.productGrid}>
+        <div style={{ ...styles.productGrid, ...(isMobile ? responsiveStyles.productGrid : {}) }}>
           {investmentCards.map((card) => (
             <div key={card.title} style={styles.productCard}>
               <div style={styles.productTop}>
@@ -471,7 +489,7 @@ function InvestmentDashboard() {
         </div>
 
         {/* PORTFOLIO DASHBOARD */}
-        <div style={styles.analyticsGrid}>
+        <div style={{ ...styles.analyticsGrid, ...(isMobile ? responsiveStyles.analyticsGrid : {}) }}>
           <div
             style={{
               ...styles.analyticsCard,
@@ -576,10 +594,10 @@ function InvestmentDashboard() {
         </div>
       </div>
 
-      <div style={styles.breakdownCard}>
+      <div style={{ ...styles.breakdownCard, ...(isMobile ? responsiveStyles.breakdownCard : {}) }}>
         {/* Mutual Funds */}
-        <div style={styles.breakdownRow}>
-          <div style={styles.breakdownLeft}>
+        <div style={{ ...styles.breakdownRow, ...(isMobile ? responsiveStyles.breakdownRow : {}) }}>
+          <div style={{ ...styles.breakdownLeft, ...(isMobile ? responsiveStyles.breakdownLeft : {}) }}>
             <span style={styles.breakdownIcon}>📈</span>
 
             <div>
@@ -592,7 +610,7 @@ function InvestmentDashboard() {
             </div>
           </div>
 
-          <div style={styles.breakdownValueBox}>
+          <div style={{ ...styles.breakdownValueBox, ...(isMobile ? responsiveStyles.breakdownValueBox : {}) }}>
             <div style={styles.breakdownAmount}>
               {formatCurrency(portfolioSummary?.mutualFundValue || 0)}
             </div>
@@ -614,8 +632,8 @@ function InvestmentDashboard() {
         <div style={styles.divider} />
 
         {/* Fixed Deposits */}
-        <div style={styles.breakdownRow}>
-          <div style={styles.breakdownLeft}>
+        <div style={{ ...styles.breakdownRow, ...(isMobile ? responsiveStyles.breakdownRow : {}) }}>
+          <div style={{ ...styles.breakdownLeft, ...(isMobile ? responsiveStyles.breakdownLeft : {}) }}>
             <span style={styles.breakdownIcon}>🏦</span>
 
             <div>
@@ -628,7 +646,7 @@ function InvestmentDashboard() {
             </div>
           </div>
 
-          <div style={styles.breakdownValueBox}>
+          <div style={{ ...styles.breakdownValueBox, ...(isMobile ? responsiveStyles.breakdownValueBox : {}) }}>
             <div style={styles.breakdownAmount}>
               {formatCurrency(portfolioSummary?.fixedDepositValue || 0)}
             </div>
@@ -650,8 +668,8 @@ function InvestmentDashboard() {
         <div style={styles.divider} />
 
         {/* SIP */}
-        <div style={styles.breakdownRow}>
-          <div style={styles.breakdownLeft}>
+        <div style={{ ...styles.breakdownRow, ...(isMobile ? responsiveStyles.breakdownRow : {}) }}>
+          <div style={{ ...styles.breakdownLeft, ...(isMobile ? responsiveStyles.breakdownLeft : {}) }}>
             <span style={styles.breakdownIcon}>🔄</span>
 
             <div>
@@ -661,7 +679,7 @@ function InvestmentDashboard() {
             </div>
           </div>
 
-          <div style={styles.breakdownValueBox}>
+          <div style={{ ...styles.breakdownValueBox, ...(isMobile ? responsiveStyles.breakdownValueBox : {}) }}>
             <div style={styles.breakdownAmount}>
               {formatCurrency(portfolioSummary?.sipValue || 0)}
             </div>
@@ -683,8 +701,8 @@ function InvestmentDashboard() {
         <div style={styles.divider} />
 
         {/* Bonds */}
-        <div style={styles.breakdownRow}>
-          <div style={styles.breakdownLeft}>
+        <div style={{ ...styles.breakdownRow, ...(isMobile ? responsiveStyles.breakdownRow : {}) }}>
+          <div style={{ ...styles.breakdownLeft, ...(isMobile ? responsiveStyles.breakdownLeft : {}) }}>
             <span style={styles.breakdownIcon}>📜</span>
 
             <div>
@@ -694,7 +712,7 @@ function InvestmentDashboard() {
             </div>
           </div>
 
-          <div style={styles.breakdownValueBox}>
+          <div style={{ ...styles.breakdownValueBox, ...(isMobile ? responsiveStyles.breakdownValueBox : {}) }}>
             <div style={styles.breakdownAmount}>
               {formatCurrency(portfolioSummary?.bondValue || 0)}
             </div>
@@ -716,8 +734,8 @@ function InvestmentDashboard() {
         <div style={styles.divider} />
 
         {/* Gold */}
-        <div style={styles.breakdownRow}>
-          <div style={styles.breakdownLeft}>
+        <div style={{ ...styles.breakdownRow, ...(isMobile ? responsiveStyles.breakdownRow : {}) }}>
+          <div style={{ ...styles.breakdownLeft, ...(isMobile ? responsiveStyles.breakdownLeft : {}) }}>
             <span style={styles.breakdownIcon}>🪙</span>
 
             <div>
@@ -727,7 +745,7 @@ function InvestmentDashboard() {
             </div>
           </div>
 
-          <div style={styles.breakdownValueBox}>
+          <div style={{ ...styles.breakdownValueBox, ...(isMobile ? responsiveStyles.breakdownValueBox : {}) }}>
             <div style={styles.breakdownAmount}>
               {formatCurrency(portfolioSummary?.goldValue || 0)}
             </div>
@@ -749,7 +767,7 @@ function InvestmentDashboard() {
         <div style={styles.divider} />
 
         {/* Total */}
-        <div style={styles.totalRow}>
+        <div style={{ ...styles.totalRow, ...(isMobile ? responsiveStyles.totalRow : {}) }}>
           <div style={styles.totalLabel}>Total Portfolio Value</div>
 
           <div style={styles.totalAmount}>
@@ -760,6 +778,93 @@ function InvestmentDashboard() {
     </div>
   );
 }
+
+const responsiveStyles = {
+  page: {
+    padding: "16px 10px 25px",
+  },
+
+  container: {
+    maxWidth: "100%",
+  },
+
+  header: {
+    maxHeight: "none",
+    padding: "18px 16px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "14px",
+    borderRadius: "15px",
+  },
+
+  headerLeft: {
+    width: "100%",
+    alignItems: "flex-start",
+    gap: "12px",
+  },
+
+  backButton: {
+    width: "100%",
+    padding: "11px 14px",
+    textAlign: "center",
+  },
+
+  summaryGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+    marginBottom: "24px",
+  },
+
+  summaryValue: {
+    fontSize: "20px",
+    overflowWrap: "anywhere",
+    wordBreak: "break-word",
+  },
+
+  productGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+    marginBottom: "24px",
+  },
+
+  analyticsGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+    marginBottom: "24px",
+  },
+
+  breakdownCard: {
+    padding: "4px 12px",
+  },
+
+  breakdownRow: {
+    minHeight: "auto",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "10px",
+    padding: "13px 0",
+  },
+
+  breakdownLeft: {
+    width: "100%",
+    alignItems: "flex-start",
+  },
+
+  breakdownValueBox: {
+    width: "100%",
+    alignItems: "flex-start",
+    paddingLeft: "47px",
+  },
+
+  totalRow: {
+    minHeight: "70px",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    gap: "5px",
+    padding: "12px 0",
+  },
+};
 
 const styles = {
   page: {

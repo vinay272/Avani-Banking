@@ -15,6 +15,15 @@ export default function BondManagement() {
   const [purchasing, setPurchasing] = useState(false);
   const [sellingId, setSellingId] = useState(null);
 
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 600 : false
+  );
+  const [isTablet, setIsTablet] = useState(
+    typeof window !== "undefined"
+      ? window.innerWidth > 600 && window.innerWidth <= 900
+      : false
+  );
+
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -124,6 +133,19 @@ export default function BondManagement() {
 
   useEffect(() => {
     loadData();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width <= 600);
+      setIsTablet(width > 600 && width <= 900);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // =====================================================
@@ -421,31 +443,331 @@ export default function BondManagement() {
     );
   };
 
+  const responsiveStyles = {
+    ...styles,
+    page: { ...styles.page, overflowX: "hidden" },
+    header: {
+      ...styles.header,
+      margin: isMobile ? "10px" : isTablet ? "14px" : styles.header.margin,
+      padding: isMobile ? "16px" : isTablet ? "19px 20px" : styles.header.padding,
+      flexDirection: isMobile || isTablet ? "column" : "row",
+      alignItems: isMobile || isTablet ? "stretch" : "center",
+      gap: isMobile ? "14px" : "18px",
+      borderRadius: isMobile ? "14px" : styles.header.borderRadius,
+    },
+    headerLeft: {
+      ...styles.headerLeft,
+      alignItems: isMobile ? "flex-start" : "center",
+      gap: isMobile ? "10px" : styles.headerLeft.gap,
+      minWidth: 0,
+    },
+    headerIcon: {
+      ...styles.headerIcon,
+      width: isMobile ? "44px" : isTablet ? "48px" : styles.headerIcon.width,
+      height: isMobile ? "44px" : isTablet ? "48px" : styles.headerIcon.height,
+      fontSize: isMobile ? "22px" : styles.headerIcon.fontSize,
+      flexShrink: 0,
+    },
+    headerTitle: {
+      ...styles.headerTitle,
+      fontSize: isMobile ? "20px" : isTablet ? "23px" : styles.headerTitle.fontSize,
+      lineHeight: 1.25,
+    },
+    headerSubtitle: {
+      ...styles.headerSubtitle,
+      fontSize: isMobile ? "11px" : styles.headerSubtitle.fontSize,
+      lineHeight: 1.45,
+    },
+    backButton: {
+      ...styles.backButton,
+      width: isMobile || isTablet ? "100%" : "auto",
+      boxSizing: "border-box",
+      textAlign: "center",
+      padding: isMobile ? "11px 13px" : styles.backButton.padding,
+    },
+    container: {
+      ...styles.container,
+      padding: isMobile ? "0 10px 30px" : isTablet ? "0 14px 35px" : styles.container.padding,
+    },
+    successMessage: {
+      ...styles.successMessage,
+      fontSize: isMobile ? "12px" : styles.successMessage.fontSize,
+      lineHeight: 1.45,
+    },
+    errorMessage: {
+      ...styles.errorMessage,
+      fontSize: isMobile ? "12px" : styles.errorMessage.fontSize,
+      lineHeight: 1.45,
+    },
+    summaryGrid: {
+      ...styles.summaryGrid,
+      gridTemplateColumns: isMobile
+        ? "1fr"
+        : isTablet
+        ? "repeat(2, minmax(0, 1fr))"
+        : styles.summaryGrid.gridTemplateColumns,
+      gap: isMobile ? "10px" : styles.summaryGrid.gap,
+    },
+    summaryCard: {
+      ...styles.summaryCard,
+      padding: isMobile ? "15px" : styles.summaryCard.padding,
+      minWidth: 0,
+    },
+    summaryValue: {
+      ...styles.summaryValue,
+      fontSize: isMobile ? "18px" : styles.summaryValue.fontSize,
+      overflowWrap: "anywhere",
+    },
+    mainGrid: {
+      ...styles.mainGrid,
+      gridTemplateColumns: isMobile || isTablet ? "1fr" : styles.mainGrid.gridTemplateColumns,
+      gap: isMobile ? "12px" : styles.mainGrid.gap,
+    },
+    card: {
+      ...styles.card,
+      padding: isMobile ? "16px" : isTablet ? "19px" : styles.card.padding,
+      borderRadius: isMobile ? "14px" : styles.card.borderRadius,
+    },
+    sectionHeader: {
+      ...styles.sectionHeader,
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "flex-start" : "center",
+      gap: isMobile ? "12px" : styles.sectionHeader.gap,
+      marginBottom: isMobile ? "17px" : styles.sectionHeader.marginBottom,
+    },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      fontSize: isMobile ? "18px" : styles.sectionTitle.fontSize,
+    },
+    sectionSubtitle: {
+      ...styles.sectionSubtitle,
+      fontSize: isMobile ? "11px" : styles.sectionSubtitle.fontSize,
+      lineHeight: 1.45,
+    },
+    sectionIcon: {
+      ...styles.sectionIcon,
+      alignSelf: isMobile ? "flex-start" : "auto",
+    },
+    activeBadge: {
+      ...styles.activeBadge,
+      alignSelf: isMobile ? "flex-start" : "auto",
+    },
+    input: {
+      ...styles.input,
+      minHeight: isMobile ? "43px" : "auto",
+      fontSize: isMobile ? "13px" : styles.input.fontSize,
+    },
+    amountWrapper: {
+      ...styles.amountWrapper,
+      minHeight: isMobile ? "43px" : "auto",
+    },
+    amountInput: {
+      ...styles.amountInput,
+      minWidth: 0,
+      fontSize: isMobile ? "13px" : styles.amountInput.fontSize,
+    },
+    planDetails: {
+      ...styles.planDetails,
+      padding: isMobile ? "13px" : styles.planDetails.padding,
+    },
+    planTop: {
+      ...styles.planTop,
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "flex-start" : "center",
+      gap: isMobile ? "12px" : styles.planTop.gap,
+    },
+    planName: {
+      ...styles.planName,
+      fontSize: isMobile ? "15px" : styles.planName.fontSize,
+      overflowWrap: "anywhere",
+    },
+    rateBox: {
+      ...styles.rateBox,
+      alignItems: isMobile ? "flex-start" : "flex-end",
+    },
+    detailGrid: {
+      ...styles.detailGrid,
+      gridTemplateColumns: isMobile
+        ? "1fr"
+        : isTablet
+        ? "repeat(2, minmax(0, 1fr))"
+        : styles.detailGrid.gridTemplateColumns,
+      gap: isMobile ? "11px" : styles.detailGrid.gap,
+    },
+    description: {
+      ...styles.description,
+      fontSize: isMobile ? "11px" : styles.description.fontSize,
+    },
+    calculationBox: {
+      ...styles.calculationBox,
+      padding: isMobile ? "12px" : styles.calculationBox.padding,
+    },
+    calcRow: {
+      ...styles.calcRow,
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "flex-start" : "center",
+      gap: isMobile ? "3px" : styles.calcRow.gap,
+      fontSize: isMobile ? "12px" : styles.calcRow.fontSize,
+    },
+    primaryButton: {
+      ...styles.primaryButton,
+      minHeight: isMobile ? "44px" : "auto",
+      fontSize: isMobile ? "13px" : styles.primaryButton.fontSize,
+    },
+    infoCard: {
+      ...styles.infoCard,
+      padding: isMobile ? "18px" : isTablet ? "21px" : styles.infoCard.padding,
+      borderRadius: isMobile ? "14px" : styles.infoCard.borderRadius,
+    },
+    infoTitle: {
+      ...styles.infoTitle,
+      fontSize: isMobile ? "18px" : styles.infoTitle.fontSize,
+    },
+    infoItem: {
+      ...styles.infoItem,
+      gap: isMobile ? "9px" : styles.infoItem.gap,
+    },
+    infoItemP: {
+      ...styles.infoItemP,
+      fontSize: isMobile ? "11px" : styles.infoItemP.fontSize,
+    },
+    infoNote: {
+      ...styles.infoNote,
+      fontSize: isMobile ? "10px" : styles.infoNote.fontSize,
+    },
+    bondGrid: {
+      ...styles.bondGrid,
+      gridTemplateColumns: isMobile
+        ? "1fr"
+        : isTablet
+        ? "repeat(2, minmax(0, 1fr))"
+        : styles.bondGrid.gridTemplateColumns,
+      gap: isMobile ? "12px" : styles.bondGrid.gap,
+    },
+    bondCard: {
+      ...styles.bondCard,
+      padding: isMobile ? "14px" : styles.bondCard.padding,
+      minWidth: 0,
+    },
+    bondHeader: {
+      ...styles.bondHeader,
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: "flex-start",
+      gap: isMobile ? "9px" : styles.bondHeader.gap,
+    },
+    bondName: {
+      ...styles.bondName,
+      fontSize: isMobile ? "15px" : styles.bondName.fontSize,
+      overflowWrap: "anywhere",
+    },
+    statusBadge: {
+      ...styles.statusBadge,
+      alignSelf: isMobile ? "flex-start" : "auto",
+    },
+    bondAmount: {
+      ...styles.bondAmount,
+      fontSize: isMobile ? "20px" : styles.bondAmount.fontSize,
+      overflowWrap: "anywhere",
+    },
+    bondDetails: {
+      ...styles.bondDetails,
+      gridTemplateColumns: isMobile ? "1fr" : "repeat(2, minmax(0, 1fr))",
+      gap: isMobile ? "10px" : styles.bondDetails.gap,
+    },
+    sellButton: {
+      ...styles.sellButton,
+      minHeight: isMobile ? "42px" : "auto",
+    },
+    emptyState: {
+      ...styles.emptyState,
+      padding: isMobile ? "32px 14px" : styles.emptyState.padding,
+    },
+    historyTableWrapper: {
+      ...styles.historyTableWrapper,
+      width: "100%",
+      overflowX: "auto",
+      WebkitOverflowScrolling: "touch",
+    },
+    table: {
+      ...styles.table,
+      minWidth: isMobile ? "720px" : styles.table.minWidth,
+    },
+    th: {
+      ...styles.th,
+      padding: isMobile ? "10px" : styles.th.padding,
+      whiteSpace: "nowrap",
+    },
+    td: {
+      ...styles.td,
+      padding: isMobile ? "11px 10px" : styles.td.padding,
+      whiteSpace: "nowrap",
+    },
+    loading: {
+      ...styles.loading,
+      padding: isMobile ? "25px 10px" : styles.loading.padding,
+    },
+    modalOverlay: {
+      ...styles.modalOverlay,
+      padding: isMobile ? "12px" : styles.modalOverlay.padding,
+    },
+    modal: {
+      ...styles.modal,
+      maxWidth: isMobile ? "100%" : styles.modal.maxWidth,
+      padding: isMobile ? "18px" : styles.modal.padding,
+      borderRadius: isMobile ? "14px" : styles.modal.borderRadius,
+      maxHeight: isMobile ? "92vh" : "none",
+      overflowY: isMobile ? "auto" : "visible",
+    },
+    modalTitle: {
+      ...styles.modalTitle,
+      fontSize: isMobile ? "19px" : styles.modalTitle.fontSize,
+    },
+    modalText: {
+      ...styles.modalText,
+      fontSize: isMobile ? "12px" : styles.modalText.fontSize,
+    },
+    modalActions: {
+      ...styles.modalActions,
+      flexDirection: isMobile ? "column-reverse" : "row",
+      marginTop: isMobile ? "16px" : styles.modalActions.marginTop,
+    },
+    cancelButton: {
+      ...styles.cancelButton,
+      width: isMobile ? "100%" : "auto",
+      minHeight: isMobile ? "42px" : "auto",
+    },
+    confirmSellButton: {
+      ...styles.confirmSellButton,
+      width: isMobile ? "100%" : "auto",
+      minHeight: isMobile ? "42px" : "auto",
+    },
+  };
+
   // =====================================================
   // UI
   // =====================================================
 
   return (
-    <div style={styles.page}>
+    <div style={responsiveStyles.page}>
 
       {/* =================================================
           HEADER
       ================================================= */}
 
-      <div style={styles.header}>
+      <div style={responsiveStyles.header}>
 
-        <div style={styles.headerLeft}>
+        <div style={responsiveStyles.headerLeft}>
 
-          <div style={styles.headerIcon}>
+          <div style={responsiveStyles.headerIcon}>
             🏦
           </div>
 
           <div>
-            <h1 style={styles.headerTitle}>
+            <h1 style={responsiveStyles.headerTitle}>
               Bond Management
             </h1>
 
-            <p style={styles.headerSubtitle}>
+            <p style={responsiveStyles.headerSubtitle}>
               Invest in bonds and manage your fixed-income portfolio
             </p>
           </div>
@@ -453,7 +775,7 @@ export default function BondManagement() {
         </div>
 
         <button
-          style={styles.backButton}
+          style={responsiveStyles.backButton}
           onClick={() => {
             window.location.href =
               "/investments";
@@ -464,20 +786,20 @@ export default function BondManagement() {
 
       </div>
 
-      <div style={styles.container}>
+      <div style={responsiveStyles.container}>
 
         {/* =================================================
             MESSAGES
         ================================================= */}
 
         {message && (
-          <div style={styles.successMessage}>
+          <div style={responsiveStyles.successMessage}>
             ✓ {message}
           </div>
         )}
 
         {error && (
-          <div style={styles.errorMessage}>
+          <div style={responsiveStyles.errorMessage}>
             ⚠ {error}
           </div>
         )}
@@ -486,67 +808,67 @@ export default function BondManagement() {
             SUMMARY
         ================================================= */}
 
-        <div style={styles.summaryGrid}>
+        <div style={responsiveStyles.summaryGrid}>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryIcon}>
+          <div style={responsiveStyles.summaryCard}>
+            <div style={responsiveStyles.summaryIcon}>
               💰
             </div>
 
             <div>
-              <div style={styles.summaryLabel}>
+              <div style={responsiveStyles.summaryLabel}>
                 Total Investment
               </div>
 
-              <div style={styles.summaryValue}>
+              <div style={responsiveStyles.summaryValue}>
                 {formatMoney(totalInvestment)}
               </div>
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryIcon}>
+          <div style={responsiveStyles.summaryCard}>
+            <div style={responsiveStyles.summaryIcon}>
               📈
             </div>
 
             <div>
-              <div style={styles.summaryLabel}>
+              <div style={responsiveStyles.summaryLabel}>
                 Interest Earned
               </div>
 
-              <div style={styles.summaryValue}>
+              <div style={responsiveStyles.summaryValue}>
                 {formatMoney(totalInterest)}
               </div>
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryIcon}>
+          <div style={responsiveStyles.summaryCard}>
+            <div style={responsiveStyles.summaryIcon}>
               🏦
             </div>
 
             <div>
-              <div style={styles.summaryLabel}>
+              <div style={responsiveStyles.summaryLabel}>
                 Current Value
               </div>
 
-              <div style={styles.summaryValue}>
+              <div style={responsiveStyles.summaryValue}>
                 {formatMoney(currentValue)}
               </div>
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryIcon}>
+          <div style={responsiveStyles.summaryCard}>
+            <div style={responsiveStyles.summaryIcon}>
               📊
             </div>
 
             <div>
-              <div style={styles.summaryLabel}>
+              <div style={responsiveStyles.summaryLabel}>
                 Active Bonds
               </div>
 
-              <div style={styles.summaryValue}>
+              <div style={responsiveStyles.summaryValue}>
                 {activeBonds.length}
               </div>
             </div>
@@ -558,41 +880,41 @@ export default function BondManagement() {
             PURCHASE SECTION
         ================================================= */}
 
-        <div style={styles.mainGrid}>
+        <div style={responsiveStyles.mainGrid}>
 
-          <div style={styles.card}>
+          <div style={responsiveStyles.card}>
 
-            <div style={styles.sectionHeader}>
+            <div style={responsiveStyles.sectionHeader}>
               <div>
-                <h2 style={styles.sectionTitle}>
+                <h2 style={responsiveStyles.sectionTitle}>
                   Invest in Bonds
                 </h2>
 
-                <p style={styles.sectionSubtitle}>
+                <p style={responsiveStyles.sectionSubtitle}>
                   Choose a bond plan and start investing
                 </p>
               </div>
 
-              <div style={styles.sectionIcon}>
+              <div style={responsiveStyles.sectionIcon}>
                 💼
               </div>
             </div>
 
             {loading ? (
-              <div style={styles.loading}>
+              <div style={responsiveStyles.loading}>
                 Loading bond plans...
               </div>
             ) : (
               <form onSubmit={handlePurchase}>
 
-                <label style={styles.label}>
+                <label style={responsiveStyles.label}>
                   Select Bond Plan
                 </label>
 
                 <select
                   value={selectedPlanCode}
                   onChange={handlePlanChange}
-                  style={styles.input}
+                  style={responsiveStyles.input}
                   required
                 >
                   <option value="">
@@ -610,20 +932,20 @@ export default function BondManagement() {
                 </select>
 
                 {selectedPlan && (
-                  <div style={styles.planDetails}>
+                  <div style={responsiveStyles.planDetails}>
 
-                    <div style={styles.planTop}>
+                    <div style={responsiveStyles.planTop}>
                       <div>
-                        <h3 style={styles.planName}>
+                        <h3 style={responsiveStyles.planName}>
                           {selectedPlan.bondName}
                         </h3>
 
-                        <span style={styles.planType}>
+                        <span style={responsiveStyles.planType}>
                           {selectedPlan.bondType}
                         </span>
                       </div>
 
-                      <div style={styles.rateBox}>
+                      <div style={responsiveStyles.rateBox}>
                         <strong>
                           {selectedPlan.couponRate}%
                         </strong>
@@ -634,10 +956,10 @@ export default function BondManagement() {
                       </div>
                     </div>
 
-                    <div style={styles.detailGrid}>
+                    <div style={responsiveStyles.detailGrid}>
 
                       <div>
-                        <span style={styles.detailLabel}>
+                        <span style={responsiveStyles.detailLabel}>
                           Face Value
                         </span>
 
@@ -649,7 +971,7 @@ export default function BondManagement() {
                       </div>
 
                       <div>
-                        <span style={styles.detailLabel}>
+                        <span style={responsiveStyles.detailLabel}>
                           Minimum Investment
                         </span>
 
@@ -661,7 +983,7 @@ export default function BondManagement() {
                       </div>
 
                       <div>
-                        <span style={styles.detailLabel}>
+                        <span style={responsiveStyles.detailLabel}>
                           Tenure
                         </span>
 
@@ -671,7 +993,7 @@ export default function BondManagement() {
                       </div>
 
                       <div>
-                        <span style={styles.detailLabel}>
+                        <span style={responsiveStyles.detailLabel}>
                           Interest
                         </span>
 
@@ -682,14 +1004,14 @@ export default function BondManagement() {
 
                     </div>
 
-                    <p style={styles.description}>
+                    <p style={responsiveStyles.description}>
                       {selectedPlan.description}
                     </p>
 
                   </div>
                 )}
 
-                <label style={styles.label}>
+                <label style={responsiveStyles.label}>
                   Debit Account
                 </label>
 
@@ -698,7 +1020,7 @@ export default function BondManagement() {
                   onChange={(e) =>
                     setAccountId(e.target.value)
                   }
-                  style={styles.input}
+                  style={responsiveStyles.input}
                   required
                 >
                   <option value="">
@@ -718,12 +1040,12 @@ export default function BondManagement() {
                   ))}
                 </select>
 
-                <label style={styles.label}>
+                <label style={responsiveStyles.label}>
                   Investment Amount
                 </label>
 
-                <div style={styles.amountWrapper}>
-                  <span style={styles.currency}>
+                <div style={responsiveStyles.amountWrapper}>
+                  <span style={responsiveStyles.currency}>
                     ₹
                   </span>
 
@@ -742,16 +1064,16 @@ export default function BondManagement() {
                       )
                     }
                     placeholder="Enter investment amount"
-                    style={styles.amountInput}
+                    style={responsiveStyles.amountInput}
                     required
                   />
                 </div>
 
                 {selectedPlan &&
                   Number(investmentAmount) > 0 && (
-                    <div style={styles.calculationBox}>
+                    <div style={responsiveStyles.calculationBox}>
 
-                      <div style={styles.calcRow}>
+                      <div style={responsiveStyles.calcRow}>
                         <span>
                           Investment
                         </span>
@@ -763,21 +1085,21 @@ export default function BondManagement() {
                         </strong>
                       </div>
 
-                      <div style={styles.calcRow}>
+                      <div style={responsiveStyles.calcRow}>
                         <span>
                           Expected Total Interest
                         </span>
 
-                        <strong style={styles.greenText}>
+                        <strong style={responsiveStyles.greenText}>
                           {formatMoney(
                             expectedInterest
                           )}
                         </strong>
                       </div>
 
-                      <div style={styles.calcDivider} />
+                      <div style={responsiveStyles.calcDivider} />
 
-                      <div style={styles.calcRow}>
+                      <div style={responsiveStyles.calcRow}>
                         <span>
                           Expected Total Value
                         </span>
@@ -801,7 +1123,7 @@ export default function BondManagement() {
                     !selectedPlan
                   }
                   style={{
-                    ...styles.primaryButton,
+                    ...responsiveStyles.primaryButton,
                     opacity:
                       purchasing ||
                       loading ||
@@ -824,17 +1146,17 @@ export default function BondManagement() {
               BOND INFO
           ================================================= */}
 
-          <div style={styles.infoCard}>
+          <div style={responsiveStyles.infoCard}>
 
-            <div style={styles.infoIcon}>
+            <div style={responsiveStyles.infoIcon}>
               🛡️
             </div>
 
-            <h2 style={styles.infoTitle}>
+            <h2 style={responsiveStyles.infoTitle}>
               Why Invest in Bonds?
             </h2>
 
-            <div style={styles.infoItem}>
+            <div style={responsiveStyles.infoItem}>
               <span>✓</span>
               <div>
                 <strong>Fixed Coupon Income</strong>
@@ -845,7 +1167,7 @@ export default function BondManagement() {
               </div>
             </div>
 
-            <div style={styles.infoItem}>
+            <div style={responsiveStyles.infoItem}>
               <span>✓</span>
               <div>
                 <strong>Defined Maturity</strong>
@@ -856,7 +1178,7 @@ export default function BondManagement() {
               </div>
             </div>
 
-            <div style={styles.infoItem}>
+            <div style={responsiveStyles.infoItem}>
               <span>✓</span>
               <div>
                 <strong>Portfolio Tracking</strong>
@@ -867,7 +1189,7 @@ export default function BondManagement() {
               </div>
             </div>
 
-            <div style={styles.infoNote}>
+            <div style={responsiveStyles.infoNote}>
               Bond returns and availability are
               based on the selected Avani Bank
               product plan.
@@ -881,31 +1203,31 @@ export default function BondManagement() {
             ACTIVE BONDS
         ================================================= */}
 
-        <div style={styles.card}>
+        <div style={responsiveStyles.card}>
 
-          <div style={styles.sectionHeader}>
+          <div style={responsiveStyles.sectionHeader}>
             <div>
-              <h2 style={styles.sectionTitle}>
+              <h2 style={responsiveStyles.sectionTitle}>
                 My Active Bonds
               </h2>
 
-              <p style={styles.sectionSubtitle}>
+              <p style={responsiveStyles.sectionSubtitle}>
                 Manage your currently active bond investments
               </p>
             </div>
 
-            <div style={styles.activeBadge}>
+            <div style={responsiveStyles.activeBadge}>
               {activeBonds.length} Active
             </div>
           </div>
 
           {loading ? (
-            <div style={styles.loading}>
+            <div style={responsiveStyles.loading}>
               Loading bonds...
             </div>
           ) : activeBonds.length === 0 ? (
-            <div style={styles.emptyState}>
-              <div style={styles.emptyIcon}>
+            <div style={responsiveStyles.emptyState}>
+              <div style={responsiveStyles.emptyIcon}>
                 📋
               </div>
 
@@ -919,7 +1241,7 @@ export default function BondManagement() {
               </p>
             </div>
           ) : (
-            <div style={styles.bondGrid}>
+            <div style={responsiveStyles.bondGrid}>
 
               {activeBonds.map((bond) => {
 
@@ -936,28 +1258,28 @@ export default function BondManagement() {
                 return (
                   <div
                     key={bond.id}
-                    style={styles.bondCard}
+                    style={responsiveStyles.bondCard}
                   >
 
-                    <div style={styles.bondHeader}>
+                    <div style={responsiveStyles.bondHeader}>
 
                       <div>
-                        <h3 style={styles.bondName}>
+                        <h3 style={responsiveStyles.bondName}>
                           {bond.bondName}
                         </h3>
 
-                        <span style={styles.bondType}>
+                        <span style={responsiveStyles.bondType}>
                           {bond.bondType}
                         </span>
                       </div>
 
-                      <span style={styles.statusBadge}>
+                      <span style={responsiveStyles.statusBadge}>
                         ACTIVE
                       </span>
 
                     </div>
 
-                    <div style={styles.bondAmount}>
+                    <div style={responsiveStyles.bondAmount}>
                       {formatMoney(investment)}
 
                       <span>
@@ -965,7 +1287,7 @@ export default function BondManagement() {
                       </span>
                     </div>
 
-                    <div style={styles.bondDetails}>
+                    <div style={responsiveStyles.bondDetails}>
 
                       <div>
                         <span>
@@ -1016,7 +1338,7 @@ export default function BondManagement() {
                           Interest Earned
                         </span>
 
-                        <strong style={styles.greenText}>
+                        <strong style={responsiveStyles.greenText}>
                           {formatMoney(
                             bondInterest
                           )}
@@ -1038,7 +1360,7 @@ export default function BondManagement() {
                     </div>
 
                     <button
-                      style={styles.sellButton}
+                      style={responsiveStyles.sellButton}
                       onClick={() =>
                         openSellConfirmation(bond)
                       }
@@ -1064,47 +1386,47 @@ export default function BondManagement() {
             String(bond.status || "").toUpperCase() !==
             "ACTIVE"
         ) && (
-          <div style={styles.card}>
+          <div style={responsiveStyles.card}>
 
-            <div style={styles.sectionHeader}>
+            <div style={responsiveStyles.sectionHeader}>
               <div>
-                <h2 style={styles.sectionTitle}>
+                <h2 style={responsiveStyles.sectionTitle}>
                   Bond History
                 </h2>
 
-                <p style={styles.sectionSubtitle}>
+                <p style={responsiveStyles.sectionSubtitle}>
                   Previously sold or matured investments
                 </p>
               </div>
             </div>
 
-            <div style={styles.historyTableWrapper}>
+            <div style={responsiveStyles.historyTableWrapper}>
 
-              <table style={styles.table}>
+              <table style={responsiveStyles.table}>
 
                 <thead>
                   <tr>
-                    <th style={styles.th}>
+                    <th style={responsiveStyles.th}>
                       Bond
                     </th>
 
-                    <th style={styles.th}>
+                    <th style={responsiveStyles.th}>
                       Investment
                     </th>
 
-                    <th style={styles.th}>
+                    <th style={responsiveStyles.th}>
                       Interest
                     </th>
 
-                    <th style={styles.th}>
+                    <th style={responsiveStyles.th}>
                       Purchase Date
                     </th>
 
-                    <th style={styles.th}>
+                    <th style={responsiveStyles.th}>
                       Maturity Date
                     </th>
 
-                    <th style={styles.th}>
+                    <th style={responsiveStyles.th}>
                       Status
                     </th>
                   </tr>
@@ -1124,37 +1446,37 @@ export default function BondManagement() {
 
                       <tr key={bond.id}>
 
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           <strong>
                             {bond.bondName}
                           </strong>
                         </td>
 
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           {formatMoney(
                             bond.investmentAmount
                           )}
                         </td>
 
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           {formatMoney(
                             bond.totalInterestEarned
                           )}
                         </td>
 
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           {formatDate(
                             bond.purchaseDate
                           )}
                         </td>
 
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           {formatDate(
                             bond.maturityDate
                           )}
                         </td>
 
-                        <td style={styles.td}>
+                        <td style={responsiveStyles.td}>
                           <span
                             style={
                               String(
@@ -1189,24 +1511,24 @@ export default function BondManagement() {
       =================================================== */}
 
       {sellBondData && (
-        <div style={styles.modalOverlay}>
+        <div style={responsiveStyles.modalOverlay}>
 
-          <div style={styles.modal}>
+          <div style={responsiveStyles.modal}>
 
-            <div style={styles.modalIcon}>
+            <div style={responsiveStyles.modalIcon}>
               ⚠️
             </div>
 
-            <h2 style={styles.modalTitle}>
+            <h2 style={responsiveStyles.modalTitle}>
               Sell Bond?
             </h2>
 
-            <p style={styles.modalText}>
+            <p style={responsiveStyles.modalText}>
               Are you sure you want to sell this
               bond before maturity?
             </p>
 
-            <div style={styles.modalDetails}>
+            <div style={responsiveStyles.modalDetails}>
 
               <div>
                 <span>Bond</span>
@@ -1235,16 +1557,16 @@ export default function BondManagement() {
 
             </div>
 
-            <div style={styles.warningBox}>
+            <div style={responsiveStyles.warningBox}>
               Premature selling may reduce your
               earned interest according to the
               applicable early-exit adjustment.
             </div>
 
-            <div style={styles.modalActions}>
+            <div style={responsiveStyles.modalActions}>
 
               <button
-                style={styles.cancelButton}
+                style={responsiveStyles.cancelButton}
                 onClick={closeSellConfirmation}
                 disabled={sellingId !== null}
               >
@@ -1252,7 +1574,7 @@ export default function BondManagement() {
               </button>
 
               <button
-                style={styles.confirmSellButton}
+                style={responsiveStyles.confirmSellButton}
                 onClick={handleSellBond}
                 disabled={sellingId !== null}
               >
@@ -1268,43 +1590,7 @@ export default function BondManagement() {
         </div>
       )}
 
-      {/* ===================================================
-          RESPONSIVE STYLES
-      =================================================== */}
 
-      <style>
-        {`
-          @media (max-width: 900px) {
-            .bond-main-grid {
-              grid-template-columns: 1fr !important;
-            }
-
-            .bond-summary-grid {
-              grid-template-columns: repeat(2, 1fr) !important;
-            }
-          }
-
-          @media (max-width: 600px) {
-            .bond-summary-grid {
-              grid-template-columns: 1fr !important;
-            }
-
-            .bond-header {
-              flex-direction: column !important;
-              align-items: flex-start !important;
-              gap: 15px !important;
-            }
-
-            .bond-back-button {
-              width: 100% !important;
-            }
-
-            .bond-detail-grid {
-              grid-template-columns: 1fr !important;
-            }
-          }
-        `}
-      </style>
 
     </div>
   );

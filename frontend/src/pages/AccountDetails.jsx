@@ -9,6 +9,28 @@ function AccountDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // =========================
+  // RESPONSIVE VIEW
+  // =========================
+  const [isTablet, setIsTablet] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 1000
+  );
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 700
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsTablet(window.innerWidth <= 1000);
+      setIsMobile(window.innerWidth <= 700);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     const fetchAccount = async () => {
       const token = localStorage.getItem("token");
@@ -96,21 +118,273 @@ function AccountDetails() {
     };
   };
 
+  // =========================
+  // RESPONSIVE STYLES
+  // =========================
+  const responsiveStyles = {
+    ...styles,
+
+    header: {
+      ...styles.header,
+      ...(isTablet && {
+        padding: "0 4%",
+      }),
+      ...(isMobile && {
+        minHeight: "auto",
+        padding: "14px 16px",
+        flexDirection: "column",
+        alignItems: "stretch",
+        gap: "12px",
+      }),
+    },
+
+    brandArea: {
+      ...styles.brandArea,
+      ...(isMobile && {
+        gap: "10px",
+      }),
+    },
+
+    brandIcon: {
+      ...styles.brandIcon,
+      ...(isMobile && {
+        width: "38px",
+        height: "38px",
+        minWidth: "38px",
+        fontSize: "18px",
+      }),
+    },
+
+    brandName: {
+      ...styles.brandName,
+      ...(isMobile && {
+        fontSize: "13px",
+      }),
+    },
+
+    brandSubtitle: {
+      ...styles.brandSubtitle,
+      ...(isMobile && {
+        fontSize: "10px",
+      }),
+    },
+
+    headerButton: {
+      ...styles.headerButton,
+      ...(isMobile && {
+        width: "100%",
+        padding: "11px 14px",
+      }),
+    },
+
+    container: {
+      ...styles.container,
+      ...(isTablet && {
+        padding: "38px 20px 50px",
+      }),
+      ...(isMobile && {
+        padding: "30px 14px 40px",
+      }),
+    },
+
+    pageHeading: {
+      ...styles.pageHeading,
+      ...(isMobile && {
+        marginBottom: "20px",
+      }),
+    },
+
+    title: {
+      ...styles.title,
+      ...(isTablet && {
+        fontSize: "30px",
+      }),
+      ...(isMobile && {
+        fontSize: "27px",
+        letterSpacing: "-0.5px",
+      }),
+    },
+
+    subtitle: {
+      ...styles.subtitle,
+      ...(isMobile && {
+        fontSize: "12px",
+        lineHeight: "1.5",
+      }),
+    },
+
+    detailsCard: {
+      ...styles.detailsCard,
+      ...(isMobile && {
+        padding: "6px 14px",
+        borderRadius: "15px",
+      }),
+    },
+
+    detailRow: {
+      ...responsiveStyles.detailRow,
+      ...(isMobile && {
+        minHeight: "68px",
+        gap: "10px",
+      }),
+    },
+
+    detailIcon: {
+      ...responsiveStyles.detailIcon,
+      ...(isMobile && {
+        width: "38px",
+        height: "38px",
+        minWidth: "38px",
+        borderRadius: "10px",
+        fontSize: "15px",
+      }),
+    },
+
+    detailContent: {
+      ...styles.detailContent,
+      ...(isMobile && {
+        minWidth: 0,
+      }),
+    },
+
+    label: {
+      ...styles.label,
+      ...(isMobile && {
+        fontSize: "8px",
+        letterSpacing: "0.7px",
+      }),
+    },
+
+    value: {
+      ...styles.value,
+      ...(isMobile && {
+        fontSize: "13px",
+        overflowWrap: "anywhere",
+      }),
+    },
+
+    balance: {
+      ...styles.balance,
+      ...(isMobile && {
+        fontSize: "19px",
+      }),
+    },
+
+    interest: {
+      ...styles.interest,
+      ...(isMobile && {
+        fontSize: "14px",
+      }),
+    },
+
+    copyButton: {
+      ...styles.copyButton,
+      ...(isMobile && {
+        width: "34px",
+        height: "34px",
+        minWidth: "34px",
+        fontSize: "14px",
+      }),
+    },
+
+    statusBadge: {
+      ...responsiveStyles.statusBadge,
+      ...(isMobile && {
+        fontSize: "8px",
+        padding: "4px 8px",
+      }),
+    },
+
+    securityCard: {
+      ...styles.securityCard,
+      ...(isMobile && {
+        padding: "15px",
+        alignItems: "flex-start",
+        gap: "11px",
+      }),
+    },
+
+    securityIcon: {
+      ...styles.securityIcon,
+      ...(isMobile && {
+        width: "38px",
+        height: "38px",
+        minWidth: "38px",
+        fontSize: "16px",
+      }),
+    },
+
+    securityTitle: {
+      ...styles.securityTitle,
+      ...(isMobile && {
+        fontSize: "12px",
+      }),
+    },
+
+    securityText: {
+      ...styles.securityText,
+      ...(isMobile && {
+        fontSize: "9px",
+        lineHeight: "1.5",
+      }),
+    },
+
+    errorBox: {
+      ...styles.errorBox,
+      ...(isMobile && {
+        padding: "14px",
+        fontSize: "12px",
+      }),
+    },
+
+    loadingPage: {
+      ...styles.loadingPage,
+      ...(isMobile && {
+        padding: "16px",
+      }),
+    },
+
+    loadingCard: {
+      ...styles.loadingCard,
+      ...(isMobile && {
+        width: "100%",
+        maxWidth: "360px",
+        padding: "28px 20px",
+        boxSizing: "border-box",
+      }),
+    },
+
+    loadingTitle: {
+      ...styles.loadingTitle,
+      ...(isMobile && {
+        fontSize: "17px",
+      }),
+    },
+
+    loadingText: {
+      ...styles.loadingText,
+      ...(isMobile && {
+        fontSize: "11px",
+        lineHeight: "1.5",
+      }),
+    },
+  };
+
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.loadingCard}>
-          <div style={styles.loadingIcon}>🏦</div>
+      <div style={responsiveStyles.loadingPage}>
+        <div style={responsiveStyles.loadingCard}>
+          <div style={responsiveStyles.loadingIcon}>🏦</div>
 
-          <h2 style={styles.loadingTitle}>
+          <h2 style={responsiveStyles.loadingTitle}>
             Loading account
           </h2>
 
-          <p style={styles.loadingText}>
+          <p style={responsiveStyles.loadingText}>
             Please wait while we fetch your account details...
           </p>
 
-          <div style={styles.loader}></div>
+          <div style={responsiveStyles.loader}></div>
         </div>
       </div>
     );
@@ -118,32 +392,32 @@ function AccountDetails() {
 
   if (error) {
     return (
-      <div style={styles.page}>
-        <header style={styles.header}>
-          <div style={styles.brandArea}>
-            <div style={styles.brandIcon}>🏦</div>
+      <div style={responsiveStyles.page}>
+        <header style={responsiveStyles.header}>
+          <div style={responsiveStyles.brandArea}>
+            <div style={responsiveStyles.brandIcon}>🏦</div>
 
             <div>
-              <div style={styles.brandName}>
+              <div style={responsiveStyles.brandName}>
                 AVANI BANK
               </div>
 
-              <div style={styles.brandSubtitle}>
+              <div style={responsiveStyles.brandSubtitle}>
                 Account Details
               </div>
             </div>
           </div>
 
           <button
-            style={styles.headerButton}
+            style={responsiveStyles.headerButton}
             onClick={() => navigate("/accounts")}
           >
             ← Back to Accounts
           </button>
         </header>
 
-        <main style={styles.container}>
-          <div style={styles.errorBox}>
+        <main style={responsiveStyles.container}>
+          <div style={responsiveStyles.errorBox}>
             {error}
           </div>
         </main>
@@ -153,25 +427,25 @@ function AccountDetails() {
 
   if (!account) {
     return (
-      <div style={styles.page}>
-        <header style={styles.header}>
-          <div style={styles.brandArea}>
-            <div style={styles.brandIcon}>🏦</div>
+      <div style={responsiveStyles.page}>
+        <header style={responsiveStyles.header}>
+          <div style={responsiveStyles.brandArea}>
+            <div style={responsiveStyles.brandIcon}>🏦</div>
 
             <div>
-              <div style={styles.brandName}>
+              <div style={responsiveStyles.brandName}>
                 AVANI BANK
               </div>
 
-              <div style={styles.brandSubtitle}>
+              <div style={responsiveStyles.brandSubtitle}>
                 Account Details
               </div>
             </div>
           </div>
         </header>
 
-        <main style={styles.container}>
-          <div style={styles.errorBox}>
+        <main style={responsiveStyles.container}>
+          <div style={responsiveStyles.errorBox}>
             Account not found.
           </div>
         </main>
@@ -182,24 +456,24 @@ function AccountDetails() {
   const statusStyle = getStatusStyle(account.status);
 
   return (
-    <div style={styles.page}>
+    <div style={responsiveStyles.page}>
 
       {/* ================= HEADER ================= */}
 
-      <header style={styles.header}>
+      <header style={responsiveStyles.header}>
 
-        <div style={styles.brandArea}>
+        <div style={responsiveStyles.brandArea}>
 
-          <div style={styles.brandIcon}>
+          <div style={responsiveStyles.brandIcon}>
             🏦
           </div>
 
           <div>
-            <div style={styles.brandName}>
+            <div style={responsiveStyles.brandName}>
               AVANI BANK
             </div>
 
-            <div style={styles.brandSubtitle}>
+            <div style={responsiveStyles.brandSubtitle}>
               Account Details
             </div>
           </div>
@@ -207,7 +481,7 @@ function AccountDetails() {
         </div>
 
         <button
-          style={styles.headerButton}
+          style={responsiveStyles.headerButton}
           onClick={() => navigate("/accounts")}
         >
           ← Back to Accounts
@@ -217,19 +491,19 @@ function AccountDetails() {
 
       {/* ================= MAIN ================= */}
 
-      <main style={styles.container}>
+      <main style={responsiveStyles.container}>
 
-        <section style={styles.pageHeading}>
+        <section style={responsiveStyles.pageHeading}>
 
-          <p style={styles.eyebrow}>
+          <p style={responsiveStyles.eyebrow}>
             ACCOUNT INFORMATION
           </p>
 
-          <h1 style={styles.title}>
+          <h1 style={responsiveStyles.title}>
             Account Details
           </h1>
 
-          <p style={styles.subtitle}>
+          <p style={responsiveStyles.subtitle}>
             View your account information and details.
           </p>
 
@@ -237,30 +511,30 @@ function AccountDetails() {
 
         {/* ================= DETAILS CARD ================= */}
 
-        <section style={styles.detailsCard}>
+        <section style={responsiveStyles.detailsCard}>
 
           {/* ACCOUNT NUMBER */}
 
-          <div style={styles.detailRow}>
+          <div style={responsiveStyles.detailRow}>
 
-            <div style={styles.detailIcon}>
+            <div style={responsiveStyles.detailIcon}>
               💳
             </div>
 
-            <div style={styles.detailContent}>
+            <div style={responsiveStyles.detailContent}>
 
-              <p style={styles.label}>
+              <p style={responsiveStyles.label}>
                 ACCOUNT NUMBER
               </p>
 
-              <p style={styles.value}>
+              <p style={responsiveStyles.value}>
                 {account.accountNumber || "N/A"}
               </p>
 
             </div>
 
             <button
-              style={styles.copyButton}
+              style={responsiveStyles.copyButton}
               onClick={() =>
                 navigator.clipboard?.writeText(
                   account.accountNumber || ""
@@ -274,19 +548,19 @@ function AccountDetails() {
 
           {/* ACCOUNT TYPE */}
 
-          <div style={styles.detailRow}>
+          <div style={responsiveStyles.detailRow}>
 
-            <div style={styles.detailIcon}>
+            <div style={responsiveStyles.detailIcon}>
               👛
             </div>
 
-            <div style={styles.detailContent}>
+            <div style={responsiveStyles.detailContent}>
 
-              <p style={styles.label}>
+              <p style={responsiveStyles.label}>
                 ACCOUNT TYPE
               </p>
 
-              <p style={styles.value}>
+              <p style={responsiveStyles.value}>
                 {account.accountType || "N/A"}
               </p>
 
@@ -296,26 +570,26 @@ function AccountDetails() {
 
           {/* STATUS */}
 
-          <div style={styles.detailRow}>
+          <div style={responsiveStyles.detailRow}>
 
             <div
               style={{
-                ...styles.detailIcon,
+                ...responsiveStyles.detailIcon,
                 background: "#eaf9f2",
               }}
             >
               ●
             </div>
 
-            <div style={styles.detailContent}>
+            <div style={responsiveStyles.detailContent}>
 
-              <p style={styles.label}>
+              <p style={responsiveStyles.label}>
                 ACCOUNT STATUS
               </p>
 
               <span
                 style={{
-                  ...styles.statusBadge,
+                  ...responsiveStyles.statusBadge,
                   ...statusStyle,
                 }}
               >
@@ -328,11 +602,11 @@ function AccountDetails() {
 
           {/* BALANCE */}
 
-          <div style={styles.detailRow}>
+          <div style={responsiveStyles.detailRow}>
 
             <div
               style={{
-                ...styles.detailIcon,
+                ...responsiveStyles.detailIcon,
                 background: "#eaf9f2",
                 color: "#11915e",
               }}
@@ -340,13 +614,13 @@ function AccountDetails() {
               ₹
             </div>
 
-            <div style={styles.detailContent}>
+            <div style={responsiveStyles.detailContent}>
 
-              <p style={styles.label}>
+              <p style={responsiveStyles.label}>
                 AVAILABLE BALANCE
               </p>
 
-              <p style={styles.balance}>
+              <p style={responsiveStyles.balance}>
                 ₹{formatCurrency(account.balance)}
               </p>
 
@@ -358,22 +632,22 @@ function AccountDetails() {
 
           <div
             style={{
-              ...styles.detailRow,
+              ...responsiveStyles.detailRow,
               borderBottom: "none",
             }}
           >
 
-            <div style={styles.detailIcon}>
+            <div style={responsiveStyles.detailIcon}>
               %
             </div>
 
-            <div style={styles.detailContent}>
+            <div style={responsiveStyles.detailContent}>
 
-              <p style={styles.label}>
+              <p style={responsiveStyles.label}>
                 INTEREST RATE
               </p>
 
-              <p style={styles.interest}>
+              <p style={responsiveStyles.interest}>
                 {account.interestRate || 0}%
               </p>
 
@@ -385,19 +659,19 @@ function AccountDetails() {
 
         {/* ================= SECURITY CARD ================= */}
 
-        <section style={styles.securityCard}>
+        <section style={responsiveStyles.securityCard}>
 
-          <div style={styles.securityIcon}>
+          <div style={responsiveStyles.securityIcon}>
             🛡️
           </div>
 
           <div>
 
-            <h3 style={styles.securityTitle}>
+            <h3 style={responsiveStyles.securityTitle}>
               Your account is secure
             </h3>
 
-            <p style={styles.securityText}>
+            <p style={responsiveStyles.securityText}>
               Your account information is protected
               with bank-level security.
             </p>

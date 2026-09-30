@@ -32,6 +32,194 @@ const getPercentage = (value, total) => {
 function PortfolioDashboard() {
   const navigate = useNavigate();
 
+  // Responsive layout state
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 640
+  );
+  const [isTablet, setIsTablet] = useState(
+    typeof window !== "undefined" &&
+      window.innerWidth > 640 &&
+      window.innerWidth <= 1050
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width <= 640);
+      setIsTablet(width > 640 && width <= 1050);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const responsiveStyles = useMemo(() => ({
+    page: {
+      padding: isMobile ? "10px" : isTablet ? "14px 18px" : "20px 32px",
+      overflowX: "hidden",
+    },
+    header: {
+      minHeight: isMobile ? "auto" : "92px",
+      padding: isMobile ? "16px" : isTablet ? "18px 22px" : "18px 32px",
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "stretch" : "center",
+      gap: isMobile ? "14px" : "20px",
+    },
+    headerLeft: {
+      width: isMobile ? "100%" : "auto",
+      minWidth: 0,
+    },
+    headerIcon: {
+      width: isMobile ? "44px" : "50px",
+      height: isMobile ? "44px" : "50px",
+      minWidth: isMobile ? "44px" : "50px",
+      fontSize: isMobile ? "21px" : "25px",
+    },
+    headerTitle: {
+      fontSize: isMobile ? "21px" : isTablet ? "23px" : "26px",
+    },
+    headerSubtitle: {
+      fontSize: isMobile ? "11px" : "13px",
+    },
+    backButton: {
+      width: isMobile ? "100%" : "auto",
+      minHeight: "44px",
+      justifyContent: "center",
+    },
+    container: {
+      padding: isMobile ? "16px 0 28px" : isTablet ? "22px 0 36px" : "28px 32px 45px",
+    },
+    heroCard: {
+      minHeight: isMobile ? "auto" : "190px",
+      padding: isMobile ? "22px 18px" : isTablet ? "25px 24px" : "30px 34px",
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "flex-start" : "center",
+      gap: isMobile ? "20px" : "15px",
+    },
+    heroTitle: {
+      fontSize: isMobile ? "25px" : isTablet ? "28px" : "30px",
+    },
+    heroText: {
+      fontSize: isMobile ? "12px" : "14px",
+      maxWidth: isMobile ? "100%" : "570px",
+    },
+    heroCircle: {
+      width: isMobile ? "110px" : isTablet ? "125px" : "145px",
+      height: isMobile ? "110px" : isTablet ? "125px" : "145px",
+      marginRight: isMobile ? "0" : isTablet ? "10px" : "30px",
+      alignSelf: isMobile ? "center" : "auto",
+    },
+    summaryGrid: {
+      gridTemplateColumns: isMobile ? "1fr" : isTablet ? "repeat(2, minmax(0, 1fr))" : "repeat(5, minmax(0, 1fr))",
+      gap: isMobile ? "10px" : "16px",
+    },
+    summaryCard: {
+      padding: isMobile ? "15px" : "18px",
+    },
+    summaryValue: {
+      fontSize: isMobile ? "20px" : "22px",
+    },
+    mainGrid: {
+      gridTemplateColumns: isMobile || isTablet ? "1fr" : "1.1fr 0.9fr",
+      gap: isMobile ? "12px" : "20px",
+    },
+    panel: {
+      padding: isMobile ? "16px" : isTablet ? "19px" : "23px",
+      borderRadius: isMobile ? "16px" : "20px",
+    },
+    panelHeader: {
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "stretch" : "flex-start",
+    },
+    panelTitle: {
+      fontSize: isMobile ? "16px" : "18px",
+    },
+    allocationContent: {
+      gridTemplateColumns: isMobile ? "1fr" : isTablet ? "minmax(190px, 0.8fr) 1.2fr" : "minmax(250px, 0.9fr) 1.1fr",
+      gap: isMobile ? "16px" : "20px",
+    },
+    donut: {
+      width: isMobile ? "175px" : isTablet ? "190px" : "215px",
+      height: isMobile ? "175px" : isTablet ? "190px" : "215px",
+    },
+    donutCenter: {
+      width: isMobile ? "116px" : isTablet ? "127px" : "143px",
+      height: isMobile ? "116px" : isTablet ? "127px" : "143px",
+    },
+    donutValue: {
+      fontSize: isMobile ? "14px" : "17px",
+      textAlign: "center",
+    },
+    legendRow: {
+      padding: isMobile ? "11px 6px" : "10px 8px",
+      minHeight: "42px",
+    },
+    legendLeft: {
+      fontSize: isMobile ? "11px" : "12px",
+      minWidth: 0,
+    },
+    legendRight: {
+      fontSize: isMobile ? "10px" : "11px",
+      gap: isMobile ? "6px" : "10px",
+      whiteSpace: "nowrap",
+    },
+    performanceContent: {
+      flexDirection: isMobile ? "column" : "row",
+      gap: isMobile ? "20px" : "25px",
+      justifyContent: isMobile ? "center" : "space-around",
+    },
+    returnCircle: {
+      width: isMobile ? "155px" : isTablet ? "165px" : "180px",
+      height: isMobile ? "155px" : isTablet ? "165px" : "180px",
+    },
+    performanceStats: {
+      width: isMobile ? "100%" : "auto",
+    },
+    breakdownCard: {
+      gridTemplateColumns: isMobile ? "42px 1fr" : isTablet ? "42px 1fr 130px 20px" : "45px 1fr 150px 20px",
+      gap: isMobile ? "10px" : "14px",
+      padding: isMobile ? "12px 10px" : "12px 14px",
+    },
+    breakdownValue: {
+      gridColumn: isMobile ? "2" : "auto",
+      alignItems: isMobile ? "flex-start" : "flex-end",
+    },
+    arrow: {
+      display: isMobile ? "none" : "inline",
+    },
+    quickSection: {
+      padding: isMobile ? "18px 16px" : "22px 24px",
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "stretch" : "center",
+      gap: isMobile ? "16px" : "20px",
+    },
+    quickActions: {
+      width: isMobile ? "100%" : "auto",
+      display: "grid",
+      gridTemplateColumns: isMobile ? "1fr" : "repeat(2, minmax(0, 1fr))",
+      justifyContent: "stretch",
+    },
+    quickButton: {
+      width: "100%",
+      minHeight: "44px",
+      justifyContent: "space-between",
+      padding: isMobile ? "11px 12px" : "10px 12px",
+    },
+    errorCard: {
+      width: isMobile ? "calc(100% - 4px)" : "auto",
+      margin: isMobile ? "40px auto" : "100px auto",
+      padding: isMobile ? "24px 18px" : "35px",
+      boxSizing: "border-box",
+    },
+    retryButton: {
+      minHeight: "44px",
+      width: isMobile ? "100%" : "auto",
+    },
+  }), [isMobile, isTablet]);
+
+
   const [portfolio, setPortfolio] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -188,28 +376,28 @@ function PortfolioDashboard() {
 
   if (loading) {
     return (
-      <div style={styles.page}>
-        <div style={styles.header}>
+      <div style={{ ...styles.page, ...responsiveStyles.page }}>
+        <div style={{ ...styles.header, ...responsiveStyles.header }}>
           <div>
-            <div style={styles.headerTitle}>
+            <div style={{ ...styles.headerTitle, ...responsiveStyles.headerTitle }}>
               Portfolio Dashboard
             </div>
-            <div style={styles.headerSubtitle}>
+            <div style={{ ...styles.headerSubtitle, ...responsiveStyles.headerSubtitle }}>
               Track, analyze and grow your investments
             </div>
           </div>
 
           <button
-            style={styles.backButton}
+            style={{ ...styles.backButton, ...responsiveStyles.backButton }}
             onClick={() => navigate("/investments")}
           >
             ← Investments
           </button>
         </div>
 
-        <div style={styles.loaderContainer}>
-          <div style={styles.spinner}></div>
-          <p style={styles.loadingText}>
+        <div style={{ ...styles.loaderContainer, ...responsiveStyles.loaderContainer }}>
+          <div style={{ ...styles.spinner, ...responsiveStyles.spinner }}></div>
+          <p style={{ ...styles.loadingText, ...responsiveStyles.loadingText }}>
             Loading your portfolio...
           </p>
         </div>
@@ -219,34 +407,34 @@ function PortfolioDashboard() {
 
   if (error) {
     return (
-      <div style={styles.page}>
-        <div style={styles.header}>
+      <div style={{ ...styles.page, ...responsiveStyles.page }}>
+        <div style={{ ...styles.header, ...responsiveStyles.header }}>
           <div>
-            <div style={styles.headerTitle}>
+            <div style={{ ...styles.headerTitle, ...responsiveStyles.headerTitle }}>
               Portfolio Dashboard
             </div>
-            <div style={styles.headerSubtitle}>
+            <div style={{ ...styles.headerSubtitle, ...responsiveStyles.headerSubtitle }}>
               Track, analyze and grow your investments
             </div>
           </div>
 
           <button
-            style={styles.backButton}
+            style={{ ...styles.backButton, ...responsiveStyles.backButton }}
             onClick={() => navigate("/investments")}
           >
             ← Back to Investments
           </button>
         </div>
 
-        <div style={styles.errorCard}>
-          <div style={styles.errorIcon}>⚠️</div>
+        <div style={{ ...styles.errorCard, ...responsiveStyles.errorCard }}>
+          <div style={{ ...styles.errorIcon, ...responsiveStyles.errorIcon }}>⚠️</div>
 
           <h2>Unable to load portfolio</h2>
 
           <p>{error}</p>
 
           <button
-            style={styles.retryButton}
+            style={{ ...styles.retryButton, ...responsiveStyles.retryButton }}
             onClick={fetchPortfolio}
           >
             Try Again
@@ -257,59 +445,59 @@ function PortfolioDashboard() {
   }
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, ...responsiveStyles.page }}>
       {/* =====================================================
           HEADER
       ====================================================== */}
 
-      <header style={styles.header}>
-        <div style={styles.headerLeft}>
-          <div style={styles.headerIcon}>📊</div>
+      <header style={{ ...styles.header, ...responsiveStyles.header }}>
+        <div style={{ ...styles.headerLeft, ...responsiveStyles.headerLeft }}>
+          <div style={{ ...styles.headerIcon, ...responsiveStyles.headerIcon }}>📊</div>
 
           <div>
-            <div style={styles.headerTitle}>
+            <div style={{ ...styles.headerTitle, ...responsiveStyles.headerTitle }}>
               Portfolio Dashboard
             </div>
 
-            <div style={styles.headerSubtitle}>
+            <div style={{ ...styles.headerSubtitle, ...responsiveStyles.headerSubtitle }}>
               Your complete investment portfolio in one place
             </div>
           </div>
         </div>
 
         <button
-          style={styles.backButton}
+          style={{ ...styles.backButton, ...responsiveStyles.backButton }}
           onClick={() => navigate("/investments")}
         >
           ← Back to Investments
         </button>
       </header>
 
-      <main style={styles.container}>
+      <main style={{ ...styles.container, ...responsiveStyles.container }}>
         {/* =====================================================
             HERO
         ====================================================== */}
 
-        <section style={styles.heroCard}>
+        <section style={{ ...styles.heroCard, ...responsiveStyles.heroCard }}>
           <div>
-            <div style={styles.heroSmall}>
+            <div style={{ ...styles.heroSmall, ...responsiveStyles.heroSmall }}>
               YOUR WEALTH JOURNEY
             </div>
 
-            <h1 style={styles.heroTitle}>
+            <h1 style={{ ...styles.heroTitle, ...responsiveStyles.heroTitle }}>
               Invest today,
               <br />
               grow for tomorrow.
             </h1>
 
-            <p style={styles.heroText}>
+            <p style={{ ...styles.heroText, ...responsiveStyles.heroText }}>
               Keep track of your investments, returns and
               portfolio allocation from one dashboard.
             </p>
           </div>
 
-          <div style={styles.heroCircle}>
-            <div style={styles.heroCircleInner}>
+          <div style={{ ...styles.heroCircle, ...responsiveStyles.heroCircle }}>
+            <div style={{ ...styles.heroCircleInner, ...responsiveStyles.heroCircleInner }}>
               <span>PORTFOLIO</span>
               <strong>LIVE</strong>
             </div>
@@ -320,9 +508,9 @@ function PortfolioDashboard() {
             SUMMARY CARDS
         ====================================================== */}
 
-        <section style={styles.summaryGrid}>
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryTop}>
+        <section style={{ ...styles.summaryGrid, ...responsiveStyles.summaryGrid }}>
+          <div style={{ ...styles.summaryCard, ...responsiveStyles.summaryCard }}>
+            <div style={{ ...styles.summaryTop, ...responsiveStyles.summaryTop }}>
               <div
                 style={{
                   ...styles.summaryIcon,
@@ -333,22 +521,22 @@ function PortfolioDashboard() {
                 💰
               </div>
 
-              <span style={styles.cardLabel}>
+              <span style={{ ...styles.cardLabel, ...responsiveStyles.cardLabel }}>
                 Total Invested
               </span>
             </div>
 
-            <div style={styles.summaryValue}>
+            <div style={{ ...styles.summaryValue, ...responsiveStyles.summaryValue }}>
               {formatCurrency(portfolio?.totalInvested)}
             </div>
 
-            <div style={styles.summaryBottom}>
+            <div style={{ ...styles.summaryBottom, ...responsiveStyles.summaryBottom }}>
               Capital deployed
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryTop}>
+          <div style={{ ...styles.summaryCard, ...responsiveStyles.summaryCard }}>
+            <div style={{ ...styles.summaryTop, ...responsiveStyles.summaryTop }}>
               <div
                 style={{
                   ...styles.summaryIcon,
@@ -359,22 +547,22 @@ function PortfolioDashboard() {
                 📈
               </div>
 
-              <span style={styles.cardLabel}>
+              <span style={{ ...styles.cardLabel, ...responsiveStyles.cardLabel }}>
                 Current Value
               </span>
             </div>
 
-            <div style={styles.summaryValue}>
+            <div style={{ ...styles.summaryValue, ...responsiveStyles.summaryValue }}>
               {formatCurrency(portfolio?.currentValue)}
             </div>
 
-            <div style={styles.positiveText}>
+            <div style={{ ...styles.positiveText, ...responsiveStyles.positiveText }}>
               ● Live portfolio value
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryTop}>
+          <div style={{ ...styles.summaryCard, ...responsiveStyles.summaryCard }}>
+            <div style={{ ...styles.summaryTop, ...responsiveStyles.summaryTop }}>
               <div
                 style={{
                   ...styles.summaryIcon,
@@ -389,7 +577,7 @@ function PortfolioDashboard() {
                 {isProfit ? "↗" : "↘"}
               </div>
 
-              <span style={styles.cardLabel}>
+              <span style={{ ...styles.cardLabel, ...responsiveStyles.cardLabel }}>
                 Profit / Loss
               </span>
             </div>
@@ -420,8 +608,8 @@ function PortfolioDashboard() {
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryTop}>
+          <div style={{ ...styles.summaryCard, ...responsiveStyles.summaryCard }}>
+            <div style={{ ...styles.summaryTop, ...responsiveStyles.summaryTop }}>
               <div
                 style={{
                   ...styles.summaryIcon,
@@ -432,7 +620,7 @@ function PortfolioDashboard() {
                 %
               </div>
 
-              <span style={styles.cardLabel}>
+              <span style={{ ...styles.cardLabel, ...responsiveStyles.cardLabel }}>
                 Overall Return
               </span>
             </div>
@@ -459,13 +647,13 @@ function PortfolioDashboard() {
               %
             </div>
 
-            <div style={styles.summaryBottom}>
+            <div style={{ ...styles.summaryBottom, ...responsiveStyles.summaryBottom }}>
               Portfolio performance
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryTop}>
+          <div style={{ ...styles.summaryCard, ...responsiveStyles.summaryCard }}>
+            <div style={{ ...styles.summaryTop, ...responsiveStyles.summaryTop }}>
               <div
                 style={{
                   ...styles.summaryIcon,
@@ -476,16 +664,16 @@ function PortfolioDashboard() {
                 ◉
               </div>
 
-              <span style={styles.cardLabel}>
+              <span style={{ ...styles.cardLabel, ...responsiveStyles.cardLabel }}>
                 Active Investments
               </span>
             </div>
 
-            <div style={styles.summaryValue}>
+            <div style={{ ...styles.summaryValue, ...responsiveStyles.summaryValue }}>
               {portfolio?.activeInvestments || 0}
             </div>
 
-            <div style={styles.summaryBottom}>
+            <div style={{ ...styles.summaryBottom, ...responsiveStyles.summaryBottom }}>
               Across investment products
             </div>
           </div>
@@ -495,43 +683,43 @@ function PortfolioDashboard() {
             MAIN ANALYTICS
         ====================================================== */}
 
-        <section style={styles.mainGrid}>
+        <section style={{ ...styles.mainGrid, ...responsiveStyles.mainGrid }}>
           {/* =================================================
               LIVE DONUT
           ================================================== */}
 
-          <div style={styles.panel}>
-            <div style={styles.panelHeader}>
+          <div style={{ ...styles.panel, ...responsiveStyles.panel }}>
+            <div style={{ ...styles.panelHeader, ...responsiveStyles.panelHeader }}>
               <div>
-                <h2 style={styles.panelTitle}>
+                <h2 style={{ ...styles.panelTitle, ...responsiveStyles.panelTitle }}>
                   Portfolio Allocation
                 </h2>
 
-                <p style={styles.panelSubtitle}>
+                <p style={{ ...styles.panelSubtitle, ...responsiveStyles.panelSubtitle }}>
                   Live distribution of your current portfolio
                 </p>
               </div>
 
-              <div style={styles.liveBadge}>
-                <span style={styles.liveDot}></span>
+              <div style={{ ...styles.liveBadge, ...responsiveStyles.liveBadge }}>
+                <span style={{ ...styles.liveDot, ...responsiveStyles.liveDot }}></span>
                 LIVE
               </div>
             </div>
 
-            <div style={styles.allocationContent}>
-              <div style={styles.donutWrapper}>
+            <div style={{ ...styles.allocationContent, ...responsiveStyles.allocationContent }}>
+              <div style={{ ...styles.donutWrapper, ...responsiveStyles.donutWrapper }}>
                 <div
                   style={{
                     ...styles.donut,
                     background: donutGradient,
                   }}
                 >
-                  <div style={styles.donutCenter}>
-                    <span style={styles.donutLabel}>
+                  <div style={{ ...styles.donutCenter, ...responsiveStyles.donutCenter }}>
+                    <span style={{ ...styles.donutLabel, ...responsiveStyles.donutLabel }}>
                       Current Value
                     </span>
 
-                    <strong style={styles.donutValue}>
+                    <strong style={{ ...styles.donutValue, ...responsiveStyles.donutValue }}>
                       {formatCurrency(
                         portfolio?.currentValue
                       )}
@@ -539,12 +727,12 @@ function PortfolioDashboard() {
                   </div>
                 </div>
 
-                <div style={styles.donutCaption}>
+                <div style={{ ...styles.donutCaption, ...responsiveStyles.donutCaption }}>
                   Updated from your live investment data
                 </div>
               </div>
 
-              <div style={styles.legend}>
+              <div style={{ ...styles.legend, ...responsiveStyles.legend }}>
                 {allocation.map((item, index) => {
                   const percentage =
                     getPercentage(
@@ -563,14 +751,14 @@ function PortfolioDashboard() {
                   return (
                     <div
                       key={item.name}
-                      style={styles.legendRow}
+                      style={{ ...styles.legendRow, ...responsiveStyles.legendRow }}
                       onClick={() => {
                         if (item.value > 0) {
                           navigate(item.route);
                         }
                       }}
                     >
-                      <div style={styles.legendLeft}>
+                      <div style={{ ...styles.legendLeft, ...responsiveStyles.legendLeft }}>
                         <span
                           style={{
                             ...styles.legendDot,
@@ -579,7 +767,7 @@ function PortfolioDashboard() {
                           }}
                         />
 
-                        <span style={styles.legendIcon}>
+                        <span style={{ ...styles.legendIcon, ...responsiveStyles.legendIcon }}>
                           {item.icon}
                         </span>
 
@@ -588,7 +776,7 @@ function PortfolioDashboard() {
                         </span>
                       </div>
 
-                      <div style={styles.legendRight}>
+                      <div style={{ ...styles.legendRight, ...responsiveStyles.legendRight }}>
                         <strong>
                           {percentage.toFixed(1)}%
                         </strong>
@@ -608,24 +796,24 @@ function PortfolioDashboard() {
               CIRCULAR RETURN
           ================================================== */}
 
-          <div style={styles.panel}>
-            <div style={styles.panelHeader}>
+          <div style={{ ...styles.panel, ...responsiveStyles.panel }}>
+            <div style={{ ...styles.panelHeader, ...responsiveStyles.panelHeader }}>
               <div>
-                <h2 style={styles.panelTitle}>
+                <h2 style={{ ...styles.panelTitle, ...responsiveStyles.panelTitle }}>
                   Portfolio Performance
                 </h2>
 
-                <p style={styles.panelSubtitle}>
+                <p style={{ ...styles.panelSubtitle, ...responsiveStyles.panelSubtitle }}>
                   Your overall investment return
                 </p>
               </div>
 
-              <div style={styles.performanceIcon}>
+              <div style={{ ...styles.performanceIcon, ...responsiveStyles.performanceIcon }}>
                 ↗
               </div>
             </div>
 
-            <div style={styles.performanceContent}>
+            <div style={{ ...styles.performanceContent, ...responsiveStyles.performanceContent }}>
               <div
                 style={{
                   ...styles.returnCircle,
@@ -637,7 +825,7 @@ function PortfolioDashboard() {
                       : "conic-gradient(#ef4444 0deg, #ef4444 90deg, #fee2e2 90deg, #fee2e2 360deg)",
                 }}
               >
-                <div style={styles.returnCircleInner}>
+                <div style={{ ...styles.returnCircleInner, ...responsiveStyles.returnCircleInner }}>
                   <span>RETURN</span>
 
                   <strong>
@@ -649,8 +837,8 @@ function PortfolioDashboard() {
                 </div>
               </div>
 
-              <div style={styles.performanceStats}>
-                <div style={styles.performanceStat}>
+              <div style={{ ...styles.performanceStats, ...responsiveStyles.performanceStats }}>
+                <div style={{ ...styles.performanceStat, ...responsiveStyles.performanceStat }}>
                   <span>Invested</span>
                   <strong>
                     {formatCurrency(
@@ -659,7 +847,7 @@ function PortfolioDashboard() {
                   </strong>
                 </div>
 
-                <div style={styles.performanceStat}>
+                <div style={{ ...styles.performanceStat, ...responsiveStyles.performanceStat }}>
                   <span>Current Value</span>
                   <strong>
                     {formatCurrency(
@@ -668,7 +856,7 @@ function PortfolioDashboard() {
                   </strong>
                 </div>
 
-                <div style={styles.performanceStat}>
+                <div style={{ ...styles.performanceStat, ...responsiveStyles.performanceStat }}>
                   <span>Net Gain</span>
                   <strong
                     style={{
@@ -684,7 +872,7 @@ function PortfolioDashboard() {
               </div>
             </div>
 
-            <div style={styles.performanceMessage}>
+            <div style={{ ...styles.performanceMessage, ...responsiveStyles.performanceMessage }}>
               {isProfit
                 ? "Your portfolio is currently growing. Keep investing consistently for long-term wealth creation."
                 : "Review your portfolio allocation and investment strategy."}
@@ -696,27 +884,27 @@ function PortfolioDashboard() {
             INVESTMENT BREAKDOWN
         ====================================================== */}
 
-        <section style={styles.panel}>
-          <div style={styles.panelHeader}>
+        <section style={{ ...styles.panel, ...responsiveStyles.panel }}>
+          <div style={{ ...styles.panelHeader, ...responsiveStyles.panelHeader }}>
             <div>
-              <h2 style={styles.panelTitle}>
+              <h2 style={{ ...styles.panelTitle, ...responsiveStyles.panelTitle }}>
                 Investment Breakdown
               </h2>
 
-              <p style={styles.panelSubtitle}>
+              <p style={{ ...styles.panelSubtitle, ...responsiveStyles.panelSubtitle }}>
                 Explore each investment category
               </p>
             </div>
 
             <button
-              style={styles.refreshButton}
+              style={{ ...styles.refreshButton, ...responsiveStyles.refreshButton }}
               onClick={fetchPortfolio}
             >
               ↻ Refresh
             </button>
           </div>
 
-          <div style={styles.breakdownGrid}>
+          <div style={{ ...styles.breakdownGrid, ...responsiveStyles.breakdownGrid }}>
             {allocation.map((item) => {
               const percentage =
                 getPercentage(
@@ -727,7 +915,7 @@ function PortfolioDashboard() {
               return (
                 <div
                   key={item.name}
-                  style={styles.breakdownCard}
+                  style={{ ...styles.breakdownCard, ...responsiveStyles.breakdownCard }}
                   onClick={() => {
                     navigate(item.route);
                   }}
@@ -750,12 +938,12 @@ function PortfolioDashboard() {
                     {item.icon}
                   </div>
 
-                  <div style={styles.breakdownInfo}>
-                    <div style={styles.breakdownName}>
+                  <div style={{ ...styles.breakdownInfo, ...responsiveStyles.breakdownInfo }}>
+                    <div style={{ ...styles.breakdownName, ...responsiveStyles.breakdownName }}>
                       {item.name}
                     </div>
 
-                    <div style={styles.progressTrack}>
+                    <div style={{ ...styles.progressTrack, ...responsiveStyles.progressTrack }}>
                       <div
                         style={{
                           ...styles.progressFill,
@@ -778,7 +966,7 @@ function PortfolioDashboard() {
                     </div>
                   </div>
 
-                  <div style={styles.breakdownValue}>
+                  <div style={{ ...styles.breakdownValue, ...responsiveStyles.breakdownValue }}>
                     <strong>
                       {formatCurrency(item.value)}
                     </strong>
@@ -788,7 +976,7 @@ function PortfolioDashboard() {
                     </span>
                   </div>
 
-                  <span style={styles.arrow}>
+                  <span style={{ ...styles.arrow, ...responsiveStyles.arrow }}>
                     →
                   </span>
                 </div>
@@ -801,21 +989,21 @@ function PortfolioDashboard() {
             QUICK ACTIONS
         ====================================================== */}
 
-        <section style={styles.quickSection}>
+        <section style={{ ...styles.quickSection, ...responsiveStyles.quickSection }}>
           <div>
-            <h2 style={styles.quickTitle}>
+            <h2 style={{ ...styles.quickTitle, ...responsiveStyles.quickTitle }}>
               Grow Your Portfolio
             </h2>
 
-            <p style={styles.quickSubtitle}>
+            <p style={{ ...styles.quickSubtitle, ...responsiveStyles.quickSubtitle }}>
               Explore more investment opportunities with
               Avani Bank.
             </p>
           </div>
 
-          <div style={styles.quickActions}>
+          <div style={{ ...styles.quickActions, ...responsiveStyles.quickActions }}>
             <button
-              style={styles.quickButton}
+              style={{ ...styles.quickButton, ...responsiveStyles.quickButton }}
               onClick={() =>
                 navigate("/investments/mutual-funds")
               }
@@ -828,7 +1016,7 @@ function PortfolioDashboard() {
             </button>
 
             <button
-              style={styles.quickButton}
+              style={{ ...styles.quickButton, ...responsiveStyles.quickButton }}
               onClick={() =>
                 navigate("/investments/sip")
               }
@@ -841,7 +1029,7 @@ function PortfolioDashboard() {
             </button>
 
             <button
-              style={styles.quickButton}
+              style={{ ...styles.quickButton, ...responsiveStyles.quickButton }}
               onClick={() =>
                 navigate("/investments/bonds")
               }
@@ -854,7 +1042,7 @@ function PortfolioDashboard() {
             </button>
 
             <button
-              style={styles.quickButton}
+              style={{ ...styles.quickButton, ...responsiveStyles.quickButton }}
               onClick={() =>
                 navigate("/investments/gold")
               }
@@ -868,6 +1056,25 @@ function PortfolioDashboard() {
           </div>
         </section>
       </main>
+
+      <style>
+        {`
+          * {
+            box-sizing: border-box;
+          }
+
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+
+          @media (max-width: 640px) {
+            button {
+              -webkit-tap-highlight-color: transparent;
+            }
+          }
+        `}
+      </style>
     </div>
   );
 }

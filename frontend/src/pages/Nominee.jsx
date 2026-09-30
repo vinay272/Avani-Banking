@@ -4,6 +4,17 @@ import { useNavigate } from "react-router-dom";
 function Nominee() {
   const navigate = useNavigate();
 
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 600
+  );
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 600);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [nominees, setNominees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -301,7 +312,7 @@ function Nominee() {
 
   if (loading) {
     return (
-      <div style={styles.page}>
+      <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
         <div style={styles.loadingCard}>
           <div style={styles.loader}></div>
           <p>Loading nominee details...</p>
@@ -321,23 +332,23 @@ function Nominee() {
           HEADER
       ========================= */}
 
-      <div style={styles.header}>
+      <div style={{ ...styles.header, ...(isMobile ? responsiveStyles.header : {}) }}>
 
         <div>
           <div style={styles.brand}>AVANI BANK</div>
 
-          <h1 style={styles.title}>
+          <h1 style={{ ...styles.title, ...(isMobile ? responsiveStyles.title : {}) }}>
             Nominee Management
           </h1>
 
-          <p style={styles.subtitle}>
+          <p style={{ ...styles.subtitle, ...(isMobile ? responsiveStyles.subtitle : {}) }}>
             Manage the nominee details linked to your bank account.
           </p>
         </div>
 
         <button
           onClick={() => navigate("/dashboard")}
-          style={styles.dashboardButton}
+          style={{ ...styles.dashboardButton, ...(isMobile ? responsiveStyles.dashboardButton : {}) }}
         >
           ← Dashboard
         </button>
@@ -364,13 +375,13 @@ function Nominee() {
           TOP CARD
       ========================= */}
 
-      <div style={styles.summaryCard}>
+      <div style={{ ...styles.summaryCard, ...(isMobile ? responsiveStyles.summaryCard : {}) }}>
 
         <div style={styles.summaryIcon}>
           👥
         </div>
 
-        <div style={styles.summaryContent}>
+        <div style={{ ...styles.summaryContent, ...(isMobile ? responsiveStyles.summaryContent : {}) }}>
           <h2 style={styles.summaryTitle}>
             Your Nominee
           </h2>
@@ -384,7 +395,7 @@ function Nominee() {
         {!showForm && (
           <button
             onClick={openAddForm}
-            style={styles.addButton}
+            style={{ ...styles.addButton, ...(isMobile ? responsiveStyles.addButton : {}) }}
           >
             + Add Nominee
           </button>
@@ -397,9 +408,9 @@ function Nominee() {
       ========================= */}
 
       {showForm && (
-        <div style={styles.formCard}>
+        <div style={{ ...styles.formCard, ...(isMobile ? responsiveStyles.formCard : {}) }}>
 
-          <div style={styles.formHeader}>
+          <div style={{ ...styles.formHeader, ...(isMobile ? responsiveStyles.formHeader : {}) }}>
             <div>
               <h2 style={styles.formTitle}>
                 {editingId ? "Edit Nominee" : "Add Nominee"}
@@ -421,7 +432,7 @@ function Nominee() {
 
           <form onSubmit={handleSubmit}>
 
-            <div style={styles.formGrid}>
+            <div style={{ ...styles.formGrid, ...(isMobile ? responsiveStyles.formGrid : {}) }}>
 
               {/* Full Name */}
 
@@ -568,12 +579,12 @@ function Nominee() {
 
             {/* Form Buttons */}
 
-            <div style={styles.formActions}>
+            <div style={{ ...styles.formActions, ...(isMobile ? responsiveStyles.formActions : {}) }}>
 
               <button
                 type="button"
                 onClick={resetForm}
-                style={styles.cancelButton}
+                style={{ ...styles.cancelButton, ...(isMobile ? responsiveStyles.cancelButton : {}) }}
                 disabled={saving}
               >
                 Cancel
@@ -581,7 +592,7 @@ function Nominee() {
 
               <button
                 type="submit"
-                style={styles.saveButton}
+                style={{ ...styles.saveButton, ...(isMobile ? responsiveStyles.saveButton : {}) }}
                 disabled={saving}
               >
                 {saving
@@ -602,7 +613,7 @@ function Nominee() {
           NOMINEE LIST
       ========================= */}
 
-      <div style={styles.listCard}>
+      <div style={{ ...styles.listCard, ...(isMobile ? responsiveStyles.listCard : {}) }}>
 
         <div style={styles.listHeader}>
           <div>
@@ -622,7 +633,7 @@ function Nominee() {
 
         {nominees.length === 0 ? (
 
-          <div style={styles.emptyState}>
+          <div style={{ ...styles.emptyState, ...(isMobile ? responsiveStyles.emptyState : {}) }}>
 
             <div style={styles.emptyIcon}>
               👤
@@ -639,7 +650,7 @@ function Nominee() {
 
             <button
               onClick={openAddForm}
-              style={styles.emptyButton}
+              style={{ ...styles.emptyButton, ...(isMobile ? responsiveStyles.emptyButton : {}) }}
             >
               + Add Your Nominee
             </button>
@@ -654,7 +665,7 @@ function Nominee() {
 
               <div
                 key={nominee.id}
-                style={styles.nomineeCard}
+                style={{ ...styles.nomineeCard, ...(isMobile ? responsiveStyles.nomineeCard : {}) }}
               >
 
                 <div style={styles.nomineeIcon}>
@@ -697,7 +708,7 @@ function Nominee() {
 
                 </div>
 
-                <div style={styles.nomineeRight}>
+                <div style={{ ...styles.nomineeRight, ...(isMobile ? responsiveStyles.nomineeRight : {}) }}>
 
                   <div style={styles.shareBadge}>
                     {nominee.sharePercentage}%
@@ -707,13 +718,13 @@ function Nominee() {
                     Share
                   </span>
 
-                  <div style={styles.actionButtons}>
+                  <div style={{ ...styles.actionButtons, ...(isMobile ? responsiveStyles.actionButtons : {}) }}>
 
                     <button
                       onClick={() =>
                         openEditForm(nominee)
                       }
-                      style={styles.editButton}
+                      style={{ ...styles.editButton, ...(isMobile ? responsiveStyles.actionButton : {}) }}
                     >
                       Edit
                     </button>
@@ -722,7 +733,7 @@ function Nominee() {
                       onClick={() =>
                         handleDelete(nominee.id)
                       }
-                      style={styles.deleteButton}
+                      style={{ ...styles.deleteButton, ...(isMobile ? responsiveStyles.actionButton : {}) }}
                     >
                       Delete
                     </button>
@@ -1197,6 +1208,111 @@ const styles = {
     borderRadius: "50%",
     marginBottom: "12px",
     animation: "spin 1s linear infinite",
+  },
+};
+
+
+/* =====================================================
+   RESPONSIVE STYLE OVERRIDES
+   ===================================================== */
+
+const responsiveStyles = {
+  page: {
+    padding: "12px",
+  },
+  header: {
+    maxHeight: "none",
+    padding: "18px",
+    borderRadius: "16px",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: "16px",
+  },
+  title: {
+    fontSize: "22px",
+    lineHeight: 1.25,
+  },
+  subtitle: {
+    fontSize: "12px",
+    lineHeight: 1.55,
+  },
+  dashboardButton: {
+    width: "100%",
+    minHeight: "44px",
+    padding: "11px 14px",
+  },
+  summaryCard: {
+    padding: "18px",
+    marginTop: "16px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "13px",
+  },
+  summaryContent: {
+    width: "100%",
+  },
+  addButton: {
+    width: "100%",
+    minHeight: "44px",
+  },
+  formCard: {
+    padding: "18px",
+    borderRadius: "14px",
+  },
+  formHeader: {
+    gap: "12px",
+    marginBottom: "18px",
+  },
+  formGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "15px",
+  },
+  formActions: {
+    flexDirection: "column-reverse",
+    alignItems: "stretch",
+    gap: "9px",
+  },
+  cancelButton: {
+    width: "100%",
+    minHeight: "44px",
+  },
+  saveButton: {
+    width: "100%",
+    minHeight: "44px",
+  },
+  listCard: {
+    padding: "18px",
+    borderRadius: "14px",
+  },
+  nomineeCard: {
+    padding: "15px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "13px",
+  },
+  nomineeRight: {
+    width: "100%",
+    alignItems: "stretch",
+    borderTop: "1px solid #e8edf3",
+    paddingTop: "12px",
+  },
+  actionButtons: {
+    width: "100%",
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "8px",
+    marginTop: "8px",
+  },
+  actionButton: {
+    minHeight: "42px",
+    width: "100%",
+  },
+  emptyState: {
+    padding: "35px 10px",
+  },
+  emptyButton: {
+    width: "100%",
+    minHeight: "44px",
   },
 };
 

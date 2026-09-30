@@ -7,6 +7,24 @@ function Settings() {
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // =========================
+  // RESPONSIVE VIEW
+  // =========================
+
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 700
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 700);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [transactionNotifications, setTransactionNotifications] =
     useState(true);
 
@@ -157,7 +175,7 @@ function Settings() {
 
   if (loading) {
     return (
-      <div style={styles.page}>
+      <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
         <div style={styles.loading}>
           <div style={styles.loadingIcon}>⟳</div>
 
@@ -174,14 +192,14 @@ function Settings() {
   }
 
   return (
-    <div style={styles.page}>
-      <div style={styles.container}>
+    <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
+      <div style={{ ...styles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
 
         {/* =========================
             HEADER
         ========================= */}
 
-        <div style={styles.header}>
+        <div style={{ ...styles.header, ...(isMobile ? responsiveStyles.header : {}) }}>
 
           <div>
             <p style={styles.smallTitle}>
@@ -197,18 +215,18 @@ function Settings() {
             </p>
           </div>
 
-          <div style={styles.headerActions}>
+          <div style={{ ...styles.headerActions, ...(isMobile ? responsiveStyles.headerActions : {}) }}>
 
             <button
               onClick={() => navigate("/dashboard")}
-              style={styles.headerButton}
+              style={{ ...styles.headerButton, ...(isMobile ? responsiveStyles.headerButton : {}) }}
             >
               ← Dashboard
             </button>
 
             <button
               onClick={() => navigate("/profile")}
-              style={styles.profileButton}
+              style={{ ...styles.profileButton, ...(isMobile ? responsiveStyles.profileButton : {}) }}
             >
               👤 Profile
             </button>
@@ -231,9 +249,9 @@ function Settings() {
             ACCOUNT OVERVIEW
         ========================= */}
 
-        <div style={styles.card}>
+        <div style={{ ...styles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
 
-          <div style={styles.cardHeader}>
+          <div style={{ ...styles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
 
             <div>
               <h2 style={styles.cardTitle}>
@@ -251,7 +269,7 @@ function Settings() {
 
           </div>
 
-          <div style={styles.accountGrid}>
+          <div style={{ ...styles.accountGrid, ...(isMobile ? responsiveStyles.accountGrid : {}) }}>
 
             <div style={styles.accountItem}>
               <span style={styles.label}>
@@ -291,7 +309,8 @@ function Settings() {
               <strong
                 style={{
                   ...styles.value,
-                  color:
+                   ...(isMobile ? responsiveStyles.value : {}),
+                   color:
                     customer?.status === "ACTIVE"
                       ? "#168653"
                       : "#d13c3c",
@@ -309,9 +328,9 @@ function Settings() {
             SECURITY
         ========================= */}
 
-        <div style={styles.card}>
+        <div style={{ ...styles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
 
-          <div style={styles.cardHeader}>
+          <div style={{ ...styles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
 
             <div>
               <h2 style={styles.cardTitle}>
@@ -329,9 +348,9 @@ function Settings() {
 
           </div>
 
-          <div style={styles.settingRow}>
+          <div style={{ ...styles.settingRow, ...(isMobile ? responsiveStyles.settingRow : {}) }}>
 
-            <div style={styles.settingLeft}>
+            <div style={{ ...styles.settingLeft, ...(isMobile ? responsiveStyles.settingLeft : {}) }}>
 
               <div style={styles.settingIcon}>
                 🔑
@@ -352,16 +371,16 @@ function Settings() {
 
             <button
               onClick={() => navigate("/profile")}
-              style={styles.actionButton}
+              style={{ ...styles.actionButton, ...(isMobile ? responsiveStyles.actionButton : {}) }}
             >
               Change Password →
             </button>
 
           </div>
 
-          <div style={styles.settingRow}>
+          <div style={{ ...styles.settingRow, ...(isMobile ? responsiveStyles.settingRow : {}) }}>
 
-            <div style={styles.settingLeft}>
+            <div style={{ ...styles.settingLeft, ...(isMobile ? responsiveStyles.settingLeft : {}) }}>
 
               <div style={styles.settingIcon}>
                 🛡️
@@ -392,9 +411,9 @@ function Settings() {
             NOTIFICATIONS
         ========================= */}
 
-        <div style={styles.card}>
+        <div style={{ ...styles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
 
-          <div style={styles.cardHeader}>
+          <div style={{ ...styles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
 
             <div>
               <h2 style={styles.cardTitle}>
@@ -414,9 +433,9 @@ function Settings() {
 
           {/* Transaction Notification */}
 
-          <div style={styles.settingRow}>
+          <div style={{ ...styles.settingRow, ...(isMobile ? responsiveStyles.settingRow : {}) }}>
 
-            <div style={styles.settingLeft}>
+            <div style={{ ...styles.settingLeft, ...(isMobile ? responsiveStyles.settingLeft : {}) }}>
 
               <div style={styles.settingIcon}>
                 💸
@@ -460,9 +479,9 @@ function Settings() {
 
           {/* Security Notification */}
 
-          <div style={styles.settingRow}>
+          <div style={{ ...styles.settingRow, ...(isMobile ? responsiveStyles.settingRow : {}) }}>
 
-            <div style={styles.settingLeft}>
+            <div style={{ ...styles.settingLeft, ...(isMobile ? responsiveStyles.settingLeft : {}) }}>
 
               <div style={styles.settingIcon}>
                 🚨
@@ -510,9 +529,9 @@ function Settings() {
             QUICK LINKS
         ========================= */}
 
-        <div style={styles.card}>
+        <div style={{ ...styles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
 
-          <div style={styles.cardHeader}>
+          <div style={{ ...styles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
 
             <div>
               <h2 style={styles.cardTitle}>
@@ -526,7 +545,7 @@ function Settings() {
 
           </div>
 
-          <div style={styles.quickGrid}>
+          <div style={{ ...styles.quickGrid, ...(isMobile ? responsiveStyles.quickGrid : {}) }}>
 
             <button
               onClick={() => navigate("/profile")}
@@ -584,7 +603,7 @@ function Settings() {
             LOGOUT
         ========================= */}
 
-        <div style={styles.logoutCard}>
+        <div style={{ ...styles.logoutCard, ...(isMobile ? responsiveStyles.logoutCard : {}) }}>
 
           <div>
             <h3 style={styles.logoutTitle}>
@@ -599,7 +618,7 @@ function Settings() {
 
           <button
             onClick={handleLogout}
-            style={styles.logoutAction}
+            style={{ ...styles.logoutAction, ...(isMobile ? responsiveStyles.logoutAction : {}) }}
           >
             Logout
           </button>
@@ -978,6 +997,106 @@ const styles = {
     margin: 0,
     color: "#8993a8",
     fontSize: "12px",
+  },
+};
+
+// =========================
+// RESPONSIVE STYLES
+// =========================
+
+const responsiveStyles = {
+  page: {
+    paddingBottom: "25px",
+  },
+
+  container: {
+    maxWidth: "100%",
+    padding: "16px 12px",
+  },
+
+  header: {
+    maxHeight: "none",
+    padding: "20px 18px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "16px",
+    borderRadius: "15px",
+  },
+
+  headerActions: {
+    width: "100%",
+    flexDirection: "column",
+    gap: "8px",
+  },
+
+  headerButton: {
+    width: "100%",
+    padding: "11px 12px",
+    textAlign: "center",
+  },
+
+  profileButton: {
+    width: "100%",
+    padding: "11px 12px",
+    textAlign: "center",
+  },
+
+  card: {
+    marginTop: "14px",
+    padding: "18px 15px",
+    borderRadius: "15px",
+  },
+
+  cardHeader: {
+    alignItems: "flex-start",
+    marginBottom: "16px",
+  },
+
+  accountGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+  },
+
+  value: {
+    overflowWrap: "anywhere",
+    wordBreak: "break-word",
+  },
+
+  settingRow: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "12px",
+    padding: "15px 0",
+  },
+
+  settingLeft: {
+    width: "100%",
+    alignItems: "flex-start",
+    gap: "11px",
+  },
+
+  actionButton: {
+    width: "100%",
+    padding: "11px 12px",
+    textAlign: "center",
+    whiteSpace: "normal",
+  },
+
+  quickGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+  },
+
+  logoutCard: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "12px",
+    padding: "17px 15px",
+  },
+
+  logoutAction: {
+    width: "100%",
+    padding: "11px 15px",
   },
 };
 

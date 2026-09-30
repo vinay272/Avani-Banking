@@ -4,6 +4,20 @@ import { useNavigate } from "react-router-dom";
 function JointAccount() {
   const navigate = useNavigate();
 
+  // Responsive viewport handling
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 768 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [customer, setCustomer] = useState(null);
   const [accounts, setAccounts] = useState([]);
 
@@ -338,23 +352,23 @@ function JointAccount() {
   }
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.mobilePage : {}) }}>
 
       {/* =========================
           HEADER
       ========================= */}
 
-      <header style={styles.header}>
+      <header style={{ ...styles.header, ...(isMobile ? responsiveStyles.mobileHeader : {}) }}>
         <div>
           <div style={styles.brand}>
             AVANI BANK
           </div>
 
-          <h1 style={styles.title}>
+          <h1 style={{ ...styles.title, ...(isMobile ? responsiveStyles.mobileTitle : {}) }}>
             Joint Account Management
           </h1>
 
-          <p style={styles.subtitle}>
+          <p style={{ ...styles.subtitle, ...(isMobile ? responsiveStyles.mobileSubtitle : {}) }}>
             Manage accounts shared with another customer.
           </p>
         </div>
@@ -362,7 +376,7 @@ function JointAccount() {
         <button
           type="button"
           onClick={() => navigate("/dashboard")}
-          style={styles.dashboardButton}
+          style={{ ...styles.dashboardButton, ...(isMobile ? responsiveStyles.mobileDashboardButton : {}) }}
         >
           ← Dashboard
         </button>
@@ -372,14 +386,14 @@ function JointAccount() {
           CUSTOMER CARD
       ========================= */}
 
-      <div style={styles.customerCard}>
+      <div style={{ ...styles.customerCard, ...(isMobile ? responsiveStyles.mobileCustomerCard : {}) }}>
         <div style={styles.customerAvatar}>
           {customer?.fullName
             ?.charAt(0)
             ?.toUpperCase() || "C"}
         </div>
 
-        <div style={styles.customerInfo}>
+        <div style={{ ...styles.customerInfo, ...(isMobile ? responsiveStyles.mobileCustomerInfo : {}) }}>
           <p style={styles.customerLabel}>
             PRIMARY CUSTOMER
           </p>
@@ -388,17 +402,17 @@ function JointAccount() {
             {customer?.fullName || "Customer"}
           </h2>
 
-          <p style={styles.customerEmail}>
+          <p style={{ ...styles.customerEmail, overflowWrap: "anywhere" }}>
             {customer?.email || "Email unavailable"}
           </p>
         </div>
 
-        <div style={styles.accountInfo}>
+        <div style={{ ...styles.accountInfo, ...(isMobile ? responsiveStyles.mobileAccountInfo : {}) }}>
           <p style={styles.customerLabel}>
             CUSTOMER ID
           </p>
 
-          <strong style={styles.accountNumber}>
+          <strong style={{ ...styles.accountNumber, overflowWrap: "anywhere" }}>
             {customer?.id || "N/A"}
           </strong>
         </div>
@@ -409,7 +423,7 @@ function JointAccount() {
       ========================= */}
 
       {error && (
-        <div style={styles.errorMessage}>
+        <div style={{ ...styles.errorMessage, overflowWrap: "anywhere" }}>
           ⚠️ {error}
         </div>
       )}
@@ -419,7 +433,7 @@ function JointAccount() {
       ========================= */}
 
       {message && (
-        <div style={styles.successMessage}>
+        <div style={{ ...styles.successMessage, overflowWrap: "anywhere" }}>
           ✓ {message}
         </div>
       )}
@@ -428,7 +442,7 @@ function JointAccount() {
           CREATE JOINT ACCOUNT
       ========================= */}
 
-      <div style={styles.formCard}>
+      <div style={{ ...styles.formCard, ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
 
         <div style={styles.cardHeader}>
           <div>
@@ -453,7 +467,7 @@ function JointAccount() {
 
         <form onSubmit={handleCreate}>
 
-          <div style={styles.twoColumn}>
+          <div style={{ ...styles.twoColumn, ...(isMobile ? responsiveStyles.mobileTwoColumn : {}) }}>
 
             {/* JOINT CUSTOMER ID */}
 
@@ -530,7 +544,7 @@ function JointAccount() {
             </select>
           </div>
 
-          <div style={styles.formFooter}>
+          <div style={{ ...styles.formFooter, ...(isMobile ? responsiveStyles.mobileFormFooter : {}) }}>
 
             <p style={styles.footerNote}>
               The joint customer must be a valid
@@ -542,6 +556,7 @@ function JointAccount() {
               disabled={saving}
               style={{
                 ...styles.submitButton,
+                 ...(isMobile ? responsiveStyles.mobileSubmitButton : {}),
                 opacity: saving ? 0.7 : 1,
                 cursor: saving
                   ? "not-allowed"
@@ -562,7 +577,7 @@ function JointAccount() {
           EXISTING ACCOUNTS
       ========================= */}
 
-      <div style={styles.accountsCard}>
+      <div style={{ ...styles.accountsCard, ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
 
         <div style={styles.cardHeader}>
           <div>
@@ -581,7 +596,7 @@ function JointAccount() {
         </div>
 
         {accounts.length === 0 ? (
-          <div style={styles.emptyState}>
+          <div style={{ ...styles.emptyState, ...(isMobile ? responsiveStyles.mobileEmptyState : {}) }}>
             <div style={styles.emptyIcon}>
               👥
             </div>
@@ -602,24 +617,24 @@ function JointAccount() {
 
               <div
                 key={account.id}
-                style={styles.accountItem}
+                style={{ ...styles.accountItem, ...(isMobile ? responsiveStyles.mobileAccountItem : {}) }}
               >
 
                 <div style={styles.accountIcon}>
                   👥
                 </div>
 
-                <div style={styles.accountDetails}>
+                <div style={{ ...styles.accountDetails, ...(isMobile ? responsiveStyles.mobileAccountDetails : {}) }}>
 
                   <p style={styles.accountLabel}>
                     ACCOUNT NUMBER
                   </p>
 
-                  <h3 style={styles.accountTitle}>
+                  <h3 style={{ ...styles.accountTitle, overflowWrap: "anywhere" }}>
                     {account.accountNumber}
                   </h3>
 
-                  <p style={styles.jointHolder}>
+                  <p style={{ ...styles.jointHolder, overflowWrap: "anywhere" }}>
                     Joint Holder ID:{" "}
                     {account.jointCustomer?.id ||
                       "N/A"}
@@ -627,7 +642,7 @@ function JointAccount() {
 
                 </div>
 
-                <div style={styles.accountMeta}>
+                <div style={{ ...styles.accountMeta, ...(isMobile ? responsiveStyles.mobileAccountMeta : {}) }}>
 
                   <span
                     style={{
@@ -640,7 +655,7 @@ function JointAccount() {
                     {account.status}
                   </span>
 
-                  <span style={styles.ownershipText}>
+                  <span style={{ ...styles.ownershipText, overflowWrap: "anywhere" }}>
                     {account.ownershipType}
                   </span>
 
@@ -658,7 +673,7 @@ function JointAccount() {
                           : "ACTIVE"
                       )
                     }
-                    style={styles.statusButton}
+                    style={{ ...styles.statusButton, ...(isMobile ? responsiveStyles.mobileStatusButton : {}) }}
                   >
                     {updatingId === account.id
                       ? "Updating..."
@@ -683,7 +698,7 @@ function JointAccount() {
           INFORMATION
       ========================= */}
 
-      <div style={styles.infoBox}>
+      <div style={{ ...styles.infoBox, ...(isMobile ? responsiveStyles.mobileInfoBox : {}) }}>
         <span style={styles.infoIcon}>
           🔒
         </span>
@@ -693,7 +708,7 @@ function JointAccount() {
             Joint Account Information
           </strong>
 
-          <p style={styles.infoText}>
+          <p style={{ ...styles.infoText, overflowWrap: "anywhere" }}>
             Joint account details are linked to the
             registered customer accounts. Account
             status changes are managed through the
@@ -1223,5 +1238,106 @@ styleElement.innerHTML = `
 if (!document.head.contains(styleElement)) {
   document.head.appendChild(styleElement);
 }
+
+
+// =====================================================
+// RESPONSIVE OVERRIDES
+// =====================================================
+
+const responsiveStyles = {
+  mobilePage: {
+    padding: "14px",
+  },
+  mobileHeader: {
+    padding: "18px 16px",
+    minHeight: "auto",
+    maxHeight: "none",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "14px",
+  },
+  mobileTitle: {
+    fontSize: "22px",
+    lineHeight: "1.25",
+  },
+  mobileSubtitle: {
+    fontSize: "11px",
+    lineHeight: "1.5",
+  },
+  mobileDashboardButton: {
+    width: "100%",
+    textAlign: "center",
+    padding: "11px 14px",
+  },
+  mobileCustomerCard: {
+    padding: "15px",
+    alignItems: "flex-start",
+    flexWrap: "wrap",
+  },
+  mobileCustomerInfo: {
+    minWidth: 0,
+    flex: "1 1 calc(100% - 62px)",
+  },
+  mobileAccountInfo: {
+    width: "100%",
+    paddingLeft: 0,
+    paddingTop: "12px",
+    marginTop: "2px",
+    borderLeft: "none",
+    borderTop: "1px solid #edf0f5",
+    textAlign: "left",
+  },
+  mobileCard: {
+    padding: "17px",
+  },
+  mobileCardTitle: {
+    fontSize: "17px",
+    lineHeight: "1.3",
+  },
+  mobileTwoColumn: {
+    gridTemplateColumns: "1fr",
+    gap: "0",
+  },
+  mobileFormFooter: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "12px",
+  },
+  mobileSubmitButton: {
+    width: "100%",
+  },
+  mobileAccountItem: {
+    alignItems: "flex-start",
+    flexWrap: "wrap",
+    padding: "13px",
+  },
+  mobileAccountDetails: {
+    flex: "1 1 calc(100% - 55px)",
+    minWidth: 0,
+  },
+  mobileAccountMeta: {
+    width: "100%",
+    paddingTop: "10px",
+    marginTop: "2px",
+    borderTop: "1px solid #edf0f5",
+    alignItems: "stretch",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    gap: "8px",
+  },
+  mobileStatusButton: {
+    flex: "1 1 100%",
+    width: "100%",
+    padding: "9px 10px",
+  },
+  mobileEmptyState: {
+    padding: "32px 15px",
+  },
+  mobileInfoBox: {
+    padding: "13px 14px",
+    alignItems: "flex-start",
+  },
+};
 
 export default JointAccount;

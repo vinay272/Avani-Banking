@@ -4,6 +4,24 @@ import { useNavigate } from "react-router-dom";
 function LoanManagement() {
   const navigate = useNavigate();
   const [accounts, setAccounts] = React.useState([]);
+
+  // =========================
+  // RESPONSIVE VIEW
+  // =========================
+
+  const [isMobile, setIsMobile] = React.useState(
+    typeof window !== "undefined" && window.innerWidth <= 700
+  );
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 700);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   const [loanSubmitting, setLoanSubmitting] = React.useState(false);
   const [loanMessage, setLoanMessage] = React.useState("");
   const [loanMessageType, setLoanMessageType] = React.useState("");
@@ -858,6 +876,59 @@ if (!response.ok) {
     },
   };
 
+  // =========================
+  // RESPONSIVE STYLE OVERRIDES
+  // =========================
+
+  const responsiveStyles = {
+    loanHeader: {
+      maxHeight: "none",
+      padding: "18px 16px",
+      borderRadius: "16px",
+    },
+
+    loanHeaderContent: {
+      flexDirection: "column",
+      alignItems: "stretch",
+      gap: "14px",
+    },
+
+    loanHeaderLeft: {
+      width: "100%",
+      flex: "1 1 auto",
+      alignItems: "flex-start",
+      gap: "12px",
+    },
+
+    dashboardButton: {
+      width: "100%",
+      marginBottom: 0,
+      padding: "11px 14px",
+    },
+
+    twoColumnGrid: {
+      gridTemplateColumns: "1fr",
+    },
+
+    threeColumnGrid: {
+      gridTemplateColumns: "1fr",
+    },
+
+    actionGrid: {
+      gridTemplateColumns: "1fr",
+      alignItems: "stretch",
+    },
+
+    autoFitGrid: {
+      gridTemplateColumns: "1fr",
+    },
+
+    activeServiceHeader: {
+      flexDirection: "column",
+      alignItems: "stretch",
+    },
+  };
+
   return (
     <>
       <style>{`
@@ -1089,9 +1160,9 @@ if (!response.ok) {
 
       <div className="loan-page">
         <div className="loan-container">
-          <div style={styles.loanHeader}>
-            <div style={styles.loanHeaderContent}>
-              <div style={styles.loanHeaderLeft}>
+          <div style={{ ...styles.loanHeader, ...(isMobile ? responsiveStyles.loanHeader : {}) }}>
+            <div style={{ ...styles.loanHeaderContent, ...(isMobile ? responsiveStyles.loanHeaderContent : {}) }}>
+              <div style={{ ...styles.loanHeaderLeft, ...(isMobile ? responsiveStyles.loanHeaderLeft : {}) }}>
                 <div style={styles.loanHeaderIcon}>🏦</div>
 
                 <div style={styles.loanHeaderText}>
@@ -1112,7 +1183,7 @@ if (!response.ok) {
 
               <button
                 type="button"
-                style={styles.dashboardButton}
+                style={{ ...styles.dashboardButton, ...(isMobile ? responsiveStyles.dashboardButton : {}) }}
                 onClick={() => navigate("/dashboard")}
               >
                 ← Dashboard
@@ -1153,6 +1224,7 @@ if (!response.ok) {
                 style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(2, 1fr)",
+                           ...(isMobile ? responsiveStyles.twoColumnGrid : {}),
                   gap: "16px",
                 }}
               >
@@ -1605,6 +1677,7 @@ if (!response.ok) {
                         style={{
                           display: "grid",
                           gridTemplateColumns: "repeat(3, 1fr)",
+                           ...(isMobile ? responsiveStyles.threeColumnGrid : {}),
                           gap: "12px",
                           marginTop: "18px",
                         }}
@@ -1690,6 +1763,7 @@ if (!response.ok) {
                             borderTop: "1px solid #edf0f5",
                             display: "grid",
                             gridTemplateColumns: "repeat(3, 1fr)",
+                           ...(isMobile ? responsiveStyles.threeColumnGrid : {}),
                             gap: "12px",
                           }}
                         >
@@ -1824,6 +1898,7 @@ if (!response.ok) {
                   alignItems: "center",
                   gap: "15px",
                   marginBottom: "18px",
+                  ...(isMobile ? responsiveStyles.activeServiceHeader : {}),
                 }}
               >
                 <div>
@@ -1966,6 +2041,7 @@ if (!response.ok) {
                     style={{
                       display: "grid",
                       gridTemplateColumns: "repeat(2, 1fr)",
+                           ...(isMobile ? responsiveStyles.twoColumnGrid : {}),
                       gap: "15px",
                     }}
                   >
@@ -2146,6 +2222,7 @@ if (!response.ok) {
                         style={{
                           display: "grid",
                           gridTemplateColumns: "repeat(2, 1fr)",
+                           ...(isMobile ? responsiveStyles.twoColumnGrid : {}),
                           gap: "12px",
                         }}
                       >
@@ -2294,6 +2371,7 @@ if (!response.ok) {
                         style={{
                           display: "grid",
                           gridTemplateColumns: "1fr 1fr",
+                           ...(isMobile ? responsiveStyles.twoColumnGrid : {}),
                           gap: "12px",
                           marginTop: "20px",
                         }}
@@ -2386,6 +2464,7 @@ if (!response.ok) {
                     style={{
                       display: "grid",
                       gridTemplateColumns: "repeat(3, 1fr)",
+                           ...(isMobile ? responsiveStyles.threeColumnGrid : {}),
                       gap: "15px",
                     }}
                   >
@@ -2511,6 +2590,7 @@ if (!response.ok) {
                         marginTop: "20px",
                         display: "grid",
                         gridTemplateColumns: "repeat(3, 1fr)",
+                           ...(isMobile ? responsiveStyles.threeColumnGrid : {}),
                         gap: "12px",
                       }}
                     >
@@ -2617,6 +2697,7 @@ if (!response.ok) {
                       marginTop: "17px",
                       display: "grid",
                       gridTemplateColumns: "1fr auto",
+                           ...(isMobile ? responsiveStyles.actionGrid : {}),
                       gap: "12px",
                       alignItems: "end",
                     }}
@@ -3140,6 +3221,7 @@ if (!response.ok) {
                               display: "grid",
                               gridTemplateColumns:
                                 "repeat(auto-fit, minmax(220px, 1fr))",
+                           ...(isMobile ? responsiveStyles.autoFitGrid : {}),
                               gap: "14px",
                               marginTop: "10px",
                             }}

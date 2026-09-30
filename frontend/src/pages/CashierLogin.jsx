@@ -88,6 +88,7 @@ function CashierLogin() {
     page: {
   width: "100%",
   height: "100vh",
+  minHeight: "100svh",
   overflow: "hidden",
   display: "flex",
   alignItems: "center",
@@ -100,8 +101,9 @@ function CashierLogin() {
   },
 
     wrapper: {
-  width: "760px",
-  maxWidth: "calc(100vw - 30px)",
+  width: "min(760px, 94vw)",
+  maxWidth: "760px",
+  minWidth: 0,
   height: "450px",
   maxHeight: "calc(100vh - 30px)",
   display: "grid",
@@ -327,89 +329,249 @@ function CashierLogin() {
   };
 
   return (
-    <div style={styles.page}>
+    <div className="cashier-page" style={styles.page}>
       <style>
-        {`
-          html,
-          body,
-          #root {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden !important;
-          }
+  {`
+    html,
+    body,
+    #root {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+    }
 
-          * {
-            box-sizing: border-box;
-          }
+    html,
+    body {
+      overflow-x: hidden;
+    }
 
-          input:focus {
-            border-color: #078c91 !important;
-            box-shadow:
-              0 0 0 3px rgba(7,140,145,0.09);
-            background: #ffffff !important;
-          }
+    * {
+      box-sizing: border-box;
+    }
 
-          button:not(:disabled):hover {
-            transform: translateY(-1px);
-          }
+    input:focus {
+      border-color: #078c91 !important;
+      box-shadow:
+        0 0 0 3px rgba(7, 140, 145, 0.09);
+      background: #ffffff !important;
+    }
 
-          @media (max-width: 760px) {
-            .cashier-wrapper {
-              grid-template-columns: 1fr !important;
-              max-width: 480px !important;
-              height: min(510px, calc(100vh - 30px)) !important;
-            }
+    button:not(:disabled):hover {
+      transform: translateY(-1px);
+    }
 
-            .cashier-branding {
-              display: none !important;
-            }
+    /* =========================
+       TABLET
+    ========================= */
 
-            .cashier-form {
-              padding: 32px 30px !important;
-            }
-          }
+    @media (max-width: 900px) {
+      .cashier-page {
+        min-height: 100svh !important;
+        height: auto !important;
+        padding: 16px !important;
+        align-items: flex-start !important;
+      }
 
-          @media (max-height: 650px) and (min-width: 761px) {
-            .cashier-wrapper {
-              height: calc(100vh - 24px) !important;
-              min-height: 400px !important;
-            }
+      .cashier-wrapper {
+        width: 100% !important;
+        max-width: 620px !important;
+        min-width: 0 !important;
+        height: auto !important;
+        max-height: none !important;
 
-            .cashier-branding {
-              padding: 22px !important;
-            }
+        grid-template-columns: 1fr !important;
 
-            .cashier-form {
-              padding: 25px 38px !important;
-            }
+        border-radius: 22px !important;
+      }
 
-            .cashier-security {
-              margin-top: 15px !important;
-            }
-          }
+      .cashier-branding {
+        width: 100% !important;
+        min-height: 240px !important;
+        padding: 24px !important;
+      }
 
-          @media (max-width: 430px) {
-            .cashier-page {
-              padding: 12px !important;
-            }
+      .cashier-form {
+        width: 100% !important;
+        padding: 30px 28px !important;
+      }
 
-            .cashier-wrapper {
-              height: calc(100vh - 24px) !important;
-              border-radius: 17px !important;
-            }
+      .cashier-security {
+        margin-top: 16px !important;
+      }
+    }
 
-            .cashier-form {
-              padding: 26px 20px !important;
-            }
+    /* =========================
+       MOBILE
+    ========================= */
 
-            .cashier-title {
-              font-size: 23px !important;
-            }
-          }
-        `}
-      </style>
+    @media (max-width: 600px) {
+      .cashier-page {
+        padding: 10px !important;
+      }
+
+      .cashier-wrapper {
+        width: 100% !important;
+        max-width: 520px !important;
+        border-radius: 20px !important;
+      }
+
+      .cashier-branding {
+        min-height: 215px !important;
+        padding: 22px 20px !important;
+      }
+
+      .cashier-logo {
+        width: 42px !important;
+        height: 42px !important;
+        font-size: 20px !important;
+        margin-bottom: 10px !important;
+      }
+
+      .cashier-brand-title {
+        font-size: 23px !important;
+      }
+
+      .cashier-badge {
+        margin-top: 12px !important;
+        margin-bottom: 7px !important;
+        font-size: 8px !important;
+        padding: 5px 9px !important;
+      }
+
+      .cashier-heading {
+        font-size: 24px !important;
+      }
+
+      .cashier-brand-text {
+        margin-top: 7px !important;
+        font-size: 10.5px !important;
+        line-height: 1.5 !important;
+      }
+
+      .cashier-security {
+        margin-top: 13px !important;
+        padding: 11px !important;
+      }
+
+      .cashier-security-title {
+        margin-bottom: 6px !important;
+        font-size: 10px !important;
+      }
+
+      .cashier-security-item {
+        margin-top: 4px !important;
+        font-size: 9px !important;
+      }
+
+      .cashier-form {
+        padding: 26px 20px !important;
+      }
+
+      .cashier-title {
+        font-size: 24px !important;
+      }
+
+      .cashier-subtitle {
+        margin-bottom: 18px !important;
+      }
+    }
+
+    /* =========================
+       SMALL MOBILE
+    ========================= */
+
+    @media (max-width: 430px) {
+      .cashier-page {
+        padding: 8px !important;
+      }
+
+      .cashier-wrapper {
+        border-radius: 18px !important;
+      }
+
+      .cashier-branding {
+        min-height: 195px !important;
+        padding: 19px 17px !important;
+      }
+
+      .cashier-logo {
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 11px !important;
+        font-size: 18px !important;
+      }
+
+      .cashier-brand-title {
+        font-size: 21px !important;
+      }
+
+      .cashier-heading {
+        font-size: 22px !important;
+      }
+
+      .cashier-brand-text {
+        font-size: 10px !important;
+      }
+
+      .cashier-security {
+        margin-top: 10px !important;
+        padding: 9px !important;
+      }
+
+      .cashier-security-item {
+        font-size: 8.5px !important;
+      }
+
+      .cashier-form {
+        padding: 24px 17px !important;
+      }
+
+      .cashier-title {
+        font-size: 22px !important;
+      }
+
+      .cashier-subtitle {
+        font-size: 11px !important;
+      }
+    }
+
+    /* =========================
+       VERY SMALL MOBILE
+    ========================= */
+
+    @media (max-width: 360px) {
+      .cashier-branding {
+        min-height: 180px !important;
+        padding: 17px 15px !important;
+      }
+
+      .cashier-brand-title {
+        font-size: 19px !important;
+      }
+
+      .cashier-heading {
+        font-size: 20px !important;
+      }
+
+      .cashier-brand-text {
+        font-size: 9.5px !important;
+      }
+
+      .cashier-security {
+        display: none !important;
+      }
+
+      .cashier-form {
+        padding: 22px 15px !important;
+      }
+
+      .cashier-title {
+        font-size: 21px !important;
+      }
+    }
+  `}
+</style>
 
       <div
         className="cashier-wrapper"
@@ -421,21 +583,21 @@ function CashierLogin() {
           className="cashier-branding"
           style={styles.branding}
         >
-          <div style={styles.logo}>🏦</div>
+          <div className="cashier-logo" style={styles.logo}>🏦</div>
 
-          <h1 style={styles.brandTitle}>
+          <h1 className="cashier-brand-title" style={styles.brandTitle}>
             Avani Bank
           </h1>
 
-          <div style={styles.badge}>
+          <div className="cashier-badge" style={styles.badge}>
             Staff Operations Portal
           </div>
 
-          <h2 style={styles.heading}>
+          <h2 className="cashier-heading" style={styles.heading}>
             Cashier Login
           </h2>
 
-          <p style={styles.brandText}>
+          <p className="cashier-brand-text" style={styles.brandText}>
             Secure access for authorized cashiers
             to manage branch cash operations.
           </p>
@@ -444,11 +606,11 @@ function CashierLogin() {
             className="cashier-security"
             style={styles.securityBox}
           >
-            <p style={styles.securityTitle}>
+            <p className="cashier-security-title" style={styles.securityTitle}>
               🔐 Secure Cashier Access
             </p>
 
-            <div style={styles.securityItem}>
+            <div className="cashier-security-item" style={styles.securityItem}>
               ✓ Branch-level access
             </div>
 
@@ -479,7 +641,7 @@ function CashierLogin() {
             Welcome Back
           </h2>
 
-          <p style={styles.subtitle}>
+          <p className="cashier-subtitle" style={styles.subtitle}>
             Sign in to your cashier workspace.
           </p>
 

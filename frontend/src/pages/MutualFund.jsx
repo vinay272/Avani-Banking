@@ -68,6 +68,23 @@ const getRiskStyle = (risk) => {
 export default function MutualFund() {
   const navigate = useNavigate();
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
+  const [isTablet, setIsTablet] = useState(
+    window.innerWidth > 600 && window.innerWidth <= 900
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width <= 600);
+      setIsTablet(width > 600 && width <= 900);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [funds, setFunds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -226,22 +243,252 @@ export default function MutualFund() {
   };
 
   // =====================================================
+  // RESPONSIVE STYLES
+  // =====================================================
+
+  const responsiveStyles = {
+    ...styles,
+    page: {
+      ...styles.page,
+      padding: isMobile ? "12px" : isTablet ? "18px" : styles.page.padding,
+    },
+    header: {
+      ...styles.header,
+      padding: isMobile ? "16px" : isTablet ? "18px 20px" : styles.header.padding,
+      flexDirection: isMobile ? "column" : styles.header.flexDirection,
+      alignItems: isMobile ? "stretch" : styles.header.alignItems,
+      gap: isMobile ? "14px" : styles.header.gap,
+    },
+    headerLeft: {
+      ...styles.headerLeft,
+      gap: isMobile ? "10px" : styles.headerLeft.gap,
+    },
+    headerIcon: {
+      ...styles.headerIcon,
+      width: isMobile ? "44px" : styles.headerIcon.width,
+      height: isMobile ? "44px" : styles.headerIcon.height,
+      fontSize: isMobile ? "22px" : styles.headerIcon.fontSize,
+    },
+    headerTitle: {
+      ...styles.headerTitle,
+      fontSize: isMobile ? "20px" : isTablet ? "23px" : styles.headerTitle.fontSize,
+    },
+    headerSubtitle: {
+      ...styles.headerSubtitle,
+      fontSize: isMobile ? "11px" : styles.headerSubtitle.fontSize,
+      lineHeight: 1.4,
+    },
+    backButton: {
+      ...styles.backButton,
+      width: isMobile ? "100%" : "auto",
+      boxSizing: "border-box",
+      textAlign: "center",
+    },
+    errorAlert: {
+      ...styles.errorAlert,
+      alignItems: isMobile ? "flex-start" : styles.errorAlert.alignItems,
+      flexWrap: isMobile ? "wrap" : "nowrap",
+      padding: isMobile ? "11px 12px" : styles.errorAlert.padding,
+    },
+    retryButton: {
+      ...styles.retryButton,
+      marginLeft: isMobile ? "32px" : styles.retryButton.marginLeft,
+      marginTop: isMobile ? "2px" : 0,
+    },
+    summaryGrid: {
+      ...styles.summaryGrid,
+      gridTemplateColumns: isMobile
+        ? "1fr"
+        : isTablet
+          ? "repeat(2, minmax(0, 1fr))"
+          : styles.summaryGrid.gridTemplateColumns,
+      gap: isMobile ? "10px" : styles.summaryGrid.gap,
+    },
+    summaryCard: {
+      ...styles.summaryCard,
+      padding: isMobile ? "14px" : styles.summaryCard.padding,
+    },
+    filterCard: {
+      ...styles.filterCard,
+      padding: isMobile ? "15px" : isTablet ? "18px" : styles.filterCard.padding,
+    },
+    filterHeading: {
+      ...styles.filterHeading,
+      flexDirection: isMobile ? "column" : styles.filterHeading.flexDirection,
+      alignItems: isMobile ? "stretch" : styles.filterHeading.alignItems,
+    },
+    filterTitle: {
+      ...styles.filterTitle,
+      fontSize: isMobile ? "16px" : styles.filterTitle.fontSize,
+    },
+    resultBadge: {
+      ...styles.resultBadge,
+      alignSelf: isMobile ? "flex-start" : "auto",
+    },
+    filterGrid: {
+      ...styles.filterGrid,
+      gridTemplateColumns: isMobile
+        ? "1fr"
+        : isTablet
+          ? "1fr 1fr"
+          : styles.filterGrid.gridTemplateColumns,
+    },
+    searchInput: {
+      ...styles.searchInput,
+      minWidth: 0,
+    },
+    sectionHeader: {
+      ...styles.sectionHeader,
+      alignItems: isMobile ? "flex-start" : styles.sectionHeader.alignItems,
+    },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      fontSize: isMobile ? "17px" : styles.sectionTitle.fontSize,
+    },
+    fundGrid: {
+      ...styles.fundGrid,
+      gridTemplateColumns: isMobile
+        ? "1fr"
+        : isTablet
+          ? "repeat(2, minmax(0, 1fr))"
+          : styles.fundGrid.gridTemplateColumns,
+    },
+    fundCard: {
+      ...styles.fundCard,
+      padding: isMobile ? "15px" : styles.fundCard.padding,
+    },
+    fundTop: {
+      ...styles.fundTop,
+      flexDirection: isMobile ? "column" : styles.fundTop.flexDirection,
+    },
+    fundName: {
+      ...styles.fundName,
+      fontSize: isMobile ? "14px" : styles.fundName.fontSize,
+      overflowWrap: "anywhere",
+    },
+    riskBadge: {
+      ...styles.riskBadge,
+      alignSelf: isMobile ? "flex-start" : "auto",
+    },
+    returnBox: {
+      ...styles.returnBox,
+      gridTemplateColumns: isMobile ? "1fr" : styles.returnBox.gridTemplateColumns,
+      gap: isMobile ? "9px" : styles.returnBox.gap,
+    },
+    returnDivider: {
+      ...styles.returnDivider,
+      width: isMobile ? "100%" : styles.returnDivider.width,
+      height: isMobile ? "1px" : styles.returnDivider.height,
+    },
+    detailRow: {
+      ...styles.detailRow,
+      alignItems: isMobile ? "flex-start" : styles.detailRow.alignItems,
+      flexWrap: isMobile ? "wrap" : "nowrap",
+    },
+    infoSection: {
+      ...styles.infoSection,
+      padding: isMobile ? "13px" : styles.infoSection.padding,
+      gap: isMobile ? "9px" : styles.infoSection.gap,
+    },
+    infoSectionText: {
+      ...styles.infoSectionText,
+      fontSize: isMobile ? "10.5px" : styles.infoSectionText.fontSize,
+    },
+    modalOverlay: {
+      ...styles.modalOverlay,
+      padding: isMobile ? "10px" : styles.modalOverlay.padding,
+      alignItems: isMobile ? "flex-start" : styles.modalOverlay.alignItems,
+    },
+    modal: {
+      ...styles.modal,
+      maxHeight: isMobile ? "calc(100vh - 20px)" : styles.modal.maxHeight,
+      borderRadius: isMobile ? "14px" : styles.modal.borderRadius,
+      marginTop: isMobile ? "10px" : 0,
+    },
+    modalHeader: {
+      ...styles.modalHeader,
+      padding: isMobile ? "15px" : styles.modalHeader.padding,
+      gap: isMobile ? "10px" : styles.modalHeader.gap,
+    },
+    modalFundIdentity: {
+      ...styles.modalFundIdentity,
+      minWidth: 0,
+    },
+    modalFundIcon: {
+      ...styles.modalFundIcon,
+      width: isMobile ? "40px" : styles.modalFundIcon.width,
+      height: isMobile ? "40px" : styles.modalFundIcon.height,
+      fontSize: isMobile ? "19px" : styles.modalFundIcon.fontSize,
+      flexShrink: 0,
+    },
+    modalTitle: {
+      ...styles.modalTitle,
+      fontSize: isMobile ? "15px" : styles.modalTitle.fontSize,
+      overflowWrap: "anywhere",
+    },
+    modalContent: {
+      ...styles.modalContent,
+      padding: isMobile ? "15px" : styles.modalContent.padding,
+    },
+    modalHighlightGrid: {
+      ...styles.modalHighlightGrid,
+      gridTemplateColumns: isMobile
+        ? "1fr"
+        : styles.modalHighlightGrid.gridTemplateColumns,
+    },
+    modalInfoRow: {
+      ...styles.modalInfoRow,
+      alignItems: isMobile ? "flex-start" : styles.modalInfoRow.alignItems,
+      padding: isMobile ? "9px 0" : 0,
+      minHeight: isMobile ? "auto" : styles.modalInfoRow.minHeight,
+    },
+    modalNotice: {
+      ...styles.modalNotice,
+      alignItems: "flex-start",
+    },
+    modalFooter: {
+      ...styles.modalFooter,
+      padding: isMobile ? "12px 15px 15px" : styles.modalFooter.padding,
+    },
+    modalCloseButton: {
+      ...styles.modalCloseButton,
+      width: isMobile ? "100%" : "auto",
+    },
+    loadingPage: {
+      ...styles.loadingPage,
+      padding: isMobile ? "15px" : styles.loadingPage.padding,
+    },
+    loadingCard: {
+      ...styles.loadingCard,
+      padding: isMobile ? "35px 18px" : styles.loadingCard.padding,
+    },
+    loadingTitle: {
+      ...styles.loadingTitle,
+      fontSize: isMobile ? "18px" : styles.loadingTitle.fontSize,
+    },
+    loadingText: {
+      ...styles.loadingText,
+      fontSize: isMobile ? "12px" : styles.loadingText.fontSize,
+    },
+  };
+
+  // =====================================================
   // LOADING
   // =====================================================
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.loadingCard}>
-          <div style={styles.loadingIcon}>
+      <div style={responsiveStyles.loadingPage}>
+        <div style={responsiveStyles.loadingCard}>
+          <div style={responsiveStyles.loadingIcon}>
             📈
           </div>
 
-          <h2 style={styles.loadingTitle}>
+          <h2 style={responsiveStyles.loadingTitle}>
             Loading Mutual Funds...
           </h2>
 
-          <p style={styles.loadingText}>
+          <p style={responsiveStyles.loadingText}>
             Please wait while we load available
             investment funds.
           </p>
@@ -251,24 +498,24 @@ export default function MutualFund() {
   }
 
   return (
-    <div style={styles.page}>
+    <div style={responsiveStyles.page}>
 
       {/* =================================================
           HEADER
       ================================================= */}
 
-      <div style={styles.header}>
-        <div style={styles.headerLeft}>
-          <div style={styles.headerIcon}>
+      <div style={responsiveStyles.header}>
+        <div style={responsiveStyles.headerLeft}>
+          <div style={responsiveStyles.headerIcon}>
             📈
           </div>
 
           <div>
-            <h1 style={styles.headerTitle}>
+            <h1 style={responsiveStyles.headerTitle}>
               Mutual Fund Investments
             </h1>
 
-            <p style={styles.headerSubtitle}>
+            <p style={responsiveStyles.headerSubtitle}>
               Explore and compare mutual fund opportunities
             </p>
           </div>
@@ -276,7 +523,7 @@ export default function MutualFund() {
 
         <button
           type="button"
-          style={styles.backButton}
+          style={responsiveStyles.backButton}
           onClick={() =>
             navigate("/investments")
           }
@@ -290,8 +537,8 @@ export default function MutualFund() {
       ================================================= */}
 
       {error && (
-        <div style={styles.errorAlert}>
-          <span style={styles.alertIcon}>
+        <div style={responsiveStyles.errorAlert}>
+          <span style={responsiveStyles.alertIcon}>
             !
           </span>
 
@@ -299,7 +546,7 @@ export default function MutualFund() {
 
           <button
             type="button"
-            style={styles.retryButton}
+            style={responsiveStyles.retryButton}
             onClick={loadFunds}
           >
             Retry
@@ -311,12 +558,12 @@ export default function MutualFund() {
           SUMMARY
       ================================================= */}
 
-      <div style={styles.summaryGrid}>
+      <div style={responsiveStyles.summaryGrid}>
 
-        <div style={styles.summaryCard}>
+        <div style={responsiveStyles.summaryCard}>
           <div
             style={{
-              ...styles.summaryIcon,
+              ...responsiveStyles.summaryIcon,
               background: "#eef4ff",
               color: "#2457c6",
             }}
@@ -325,20 +572,20 @@ export default function MutualFund() {
           </div>
 
           <div>
-            <p style={styles.summaryLabel}>
+            <p style={responsiveStyles.summaryLabel}>
               Available Funds
             </p>
 
-            <h2 style={styles.summaryValue}>
+            <h2 style={responsiveStyles.summaryValue}>
               {totalFunds}
             </h2>
           </div>
         </div>
 
-        <div style={styles.summaryCard}>
+        <div style={responsiveStyles.summaryCard}>
           <div
             style={{
-              ...styles.summaryIcon,
+              ...responsiveStyles.summaryIcon,
               background: "#eef8f1",
               color: "#198754",
             }}
@@ -347,20 +594,20 @@ export default function MutualFund() {
           </div>
 
           <div>
-            <p style={styles.summaryLabel}>
+            <p style={responsiveStyles.summaryLabel}>
               Equity Funds
             </p>
 
-            <h2 style={styles.summaryValue}>
+            <h2 style={responsiveStyles.summaryValue}>
               {equityFunds}
             </h2>
           </div>
         </div>
 
-        <div style={styles.summaryCard}>
+        <div style={responsiveStyles.summaryCard}>
           <div
             style={{
-              ...styles.summaryIcon,
+              ...responsiveStyles.summaryIcon,
               background: "#fff7e6",
               color: "#c57b00",
             }}
@@ -369,20 +616,20 @@ export default function MutualFund() {
           </div>
 
           <div>
-            <p style={styles.summaryLabel}>
+            <p style={responsiveStyles.summaryLabel}>
               Low Risk Funds
             </p>
 
-            <h2 style={styles.summaryValue}>
+            <h2 style={responsiveStyles.summaryValue}>
               {lowRiskFunds}
             </h2>
           </div>
         </div>
 
-        <div style={styles.summaryCard}>
+        <div style={responsiveStyles.summaryCard}>
           <div
             style={{
-              ...styles.summaryIcon,
+              ...responsiveStyles.summaryIcon,
               background: "#f2edff",
               color: "#6842c2",
             }}
@@ -391,11 +638,11 @@ export default function MutualFund() {
           </div>
 
           <div>
-            <p style={styles.summaryLabel}>
+            <p style={responsiveStyles.summaryLabel}>
               Avg. Expected Return
             </p>
 
-            <h2 style={styles.summaryValue}>
+            <h2 style={responsiveStyles.summaryValue}>
               {formatPercent(
                 averageExpectedReturn
               )}
@@ -409,31 +656,31 @@ export default function MutualFund() {
           FILTER CARD
       ================================================= */}
 
-      <div style={styles.filterCard}>
+      <div style={responsiveStyles.filterCard}>
 
-        <div style={styles.filterHeading}>
+        <div style={responsiveStyles.filterHeading}>
           <div>
-            <h2 style={styles.filterTitle}>
+            <h2 style={responsiveStyles.filterTitle}>
               Find Your Mutual Fund
             </h2>
 
-            <p style={styles.filterSubtitle}>
+            <p style={responsiveStyles.filterSubtitle}>
               Compare funds based on category and
               risk level.
             </p>
           </div>
 
-          <span style={styles.resultBadge}>
+          <span style={responsiveStyles.resultBadge}>
             {filteredFunds.length} Funds
           </span>
         </div>
 
-        <div style={styles.filterGrid}>
+        <div style={responsiveStyles.filterGrid}>
 
           {/* SEARCH */}
 
-          <div style={styles.searchWrapper}>
-            <span style={styles.searchIcon}>
+          <div style={responsiveStyles.searchWrapper}>
+            <span style={responsiveStyles.searchIcon}>
               🔍
             </span>
 
@@ -446,7 +693,7 @@ export default function MutualFund() {
                 )
               }
               placeholder="Search fund name or category..."
-              style={styles.searchInput}
+              style={responsiveStyles.searchInput}
             />
           </div>
 
@@ -459,7 +706,7 @@ export default function MutualFund() {
                 event.target.value
               )
             }
-            style={styles.select}
+            style={responsiveStyles.select}
           >
             <option value="ALL">
               All Categories
@@ -495,7 +742,7 @@ export default function MutualFund() {
                 event.target.value
               )
             }
-            style={styles.select}
+            style={responsiveStyles.select}
           >
             <option value="ALL">
               All Risk Levels
@@ -521,14 +768,14 @@ export default function MutualFund() {
           FUND CATALOGUE
       ================================================= */}
 
-      <div style={styles.sectionHeader}>
+      <div style={responsiveStyles.sectionHeader}>
 
         <div>
-          <h2 style={styles.sectionTitle}>
+          <h2 style={responsiveStyles.sectionTitle}>
             Mutual Fund Catalogue
           </h2>
 
-          <p style={styles.sectionSubtitle}>
+          <p style={responsiveStyles.sectionSubtitle}>
             Explore available Avani Bank mutual fund
             products.
           </p>
@@ -537,24 +784,24 @@ export default function MutualFund() {
       </div>
 
       {filteredFunds.length === 0 ? (
-        <div style={styles.emptyCard}>
+        <div style={responsiveStyles.emptyCard}>
 
-          <div style={styles.emptyIcon}>
+          <div style={responsiveStyles.emptyIcon}>
             🔎
           </div>
 
-          <h3 style={styles.emptyTitle}>
+          <h3 style={responsiveStyles.emptyTitle}>
             No Mutual Funds Found
           </h3>
 
-          <p style={styles.emptyText}>
+          <p style={responsiveStyles.emptyText}>
             Try changing your search or filter
             selection.
           </p>
 
           <button
             type="button"
-            style={styles.clearButton}
+            style={responsiveStyles.clearButton}
             onClick={() => {
               setSearchText("");
               setSelectedCategory("ALL");
@@ -566,7 +813,7 @@ export default function MutualFund() {
 
         </div>
       ) : (
-        <div style={styles.fundGrid}>
+        <div style={responsiveStyles.fundGrid}>
 
           {filteredFunds.map((fund) => {
             const riskStyle =
@@ -577,27 +824,27 @@ export default function MutualFund() {
             return (
               <div
                 key={fund.id}
-                style={styles.fundCard}
+                style={responsiveStyles.fundCard}
               >
 
                 {/* CARD TOP */}
 
-                <div style={styles.fundTop}>
+                <div style={responsiveStyles.fundTop}>
 
-                  <div style={styles.fundIdentity}>
+                  <div style={responsiveStyles.fundIdentity}>
 
-                    <div style={styles.fundIcon}>
+                    <div style={responsiveStyles.fundIcon}>
                       {getCategoryIcon(
                         fund.fundCategory
                       )}
                     </div>
 
                     <div>
-                      <h3 style={styles.fundName}>
+                      <h3 style={responsiveStyles.fundName}>
                         {fund.fundName}
                       </h3>
 
-                      <span style={styles.categoryText}>
+                      <span style={responsiveStyles.categoryText}>
                         {fund.fundCategory}
                       </span>
                     </div>
@@ -620,28 +867,28 @@ export default function MutualFund() {
 
                 {/* RETURN */}
 
-                <div style={styles.returnBox}>
+                <div style={responsiveStyles.returnBox}>
 
                   <div>
-                    <span style={styles.detailLabel}>
+                    <span style={responsiveStyles.detailLabel}>
                       Expected Return
                     </span>
 
-                    <strong style={styles.returnValue}>
+                    <strong style={responsiveStyles.returnValue}>
                       {formatPercent(
                         fund.expectedReturnRate
                       )}
                     </strong>
                   </div>
 
-                  <div style={styles.returnDivider} />
+                  <div style={responsiveStyles.returnDivider} />
 
                   <div>
-                    <span style={styles.detailLabel}>
+                    <span style={responsiveStyles.detailLabel}>
                       Minimum Investment
                     </span>
 
-                    <strong style={styles.minimumValue}>
+                    <strong style={responsiveStyles.minimumValue}>
                       {formatCurrency(
                         fund.minimumInvestment
                       )}
@@ -652,9 +899,9 @@ export default function MutualFund() {
 
                 {/* DETAILS */}
 
-                <div style={styles.fundDetails}>
+                <div style={responsiveStyles.fundDetails}>
 
-                  <div style={styles.detailRow}>
+                  <div style={responsiveStyles.detailRow}>
                     <span>
                       Fund Category
                     </span>
@@ -664,7 +911,7 @@ export default function MutualFund() {
                     </strong>
                   </div>
 
-                  <div style={styles.detailRow}>
+                  <div style={responsiveStyles.detailRow}>
                     <span>
                       Risk Level
                     </span>
@@ -674,7 +921,7 @@ export default function MutualFund() {
                     </strong>
                   </div>
 
-                  <div style={styles.detailRow}>
+                  <div style={responsiveStyles.detailRow}>
                     <span>
                       Exit Load
                     </span>
@@ -694,7 +941,7 @@ export default function MutualFund() {
 
                 <button
                   type="button"
-                  style={styles.detailsButton}
+                  style={responsiveStyles.detailsButton}
                   onClick={() =>
                     openDetails(fund)
                   }
@@ -714,18 +961,18 @@ export default function MutualFund() {
           INFORMATION SECTION
       ================================================= */}
 
-      <div style={styles.infoSection}>
+      <div style={responsiveStyles.infoSection}>
 
-        <div style={styles.infoSectionIcon}>
+        <div style={responsiveStyles.infoSectionIcon}>
           💡
         </div>
 
         <div>
-          <h3 style={styles.infoSectionTitle}>
+          <h3 style={responsiveStyles.infoSectionTitle}>
             About Mutual Fund Investments
           </h3>
 
-          <p style={styles.infoSectionText}>
+          <p style={responsiveStyles.infoSectionText}>
             Mutual funds allow investors to participate
             in professionally managed investment
             portfolios. Review the fund category,
@@ -743,11 +990,11 @@ export default function MutualFund() {
 
       {showDetails && selectedFund && (
         <div
-          style={styles.modalOverlay}
+          style={responsiveStyles.modalOverlay}
           onClick={closeDetails}
         >
           <div
-            style={styles.modal}
+            style={responsiveStyles.modal}
             onClick={(event) =>
               event.stopPropagation()
             }
@@ -755,22 +1002,22 @@ export default function MutualFund() {
 
             {/* MODAL HEADER */}
 
-            <div style={styles.modalHeader}>
+            <div style={responsiveStyles.modalHeader}>
 
-              <div style={styles.modalFundIdentity}>
+              <div style={responsiveStyles.modalFundIdentity}>
 
-                <div style={styles.modalFundIcon}>
+                <div style={responsiveStyles.modalFundIcon}>
                   {getCategoryIcon(
                     selectedFund.fundCategory
                   )}
                 </div>
 
                 <div>
-                  <h2 style={styles.modalTitle}>
+                  <h2 style={responsiveStyles.modalTitle}>
                     {selectedFund.fundName}
                   </h2>
 
-                  <p style={styles.modalSubtitle}>
+                  <p style={responsiveStyles.modalSubtitle}>
                     {selectedFund.fundCategory} Mutual Fund
                   </p>
                 </div>
@@ -779,7 +1026,7 @@ export default function MutualFund() {
 
               <button
                 type="button"
-                style={styles.closeButton}
+                style={responsiveStyles.closeButton}
                 onClick={closeDetails}
               >
                 ×
@@ -789,11 +1036,11 @@ export default function MutualFund() {
 
             {/* MODAL CONTENT */}
 
-            <div style={styles.modalContent}>
+            <div style={responsiveStyles.modalContent}>
 
-              <div style={styles.modalHighlightGrid}>
+              <div style={responsiveStyles.modalHighlightGrid}>
 
-                <div style={styles.modalHighlight}>
+                <div style={responsiveStyles.modalHighlight}>
                   <span>
                     Expected Return
                   </span>
@@ -809,7 +1056,7 @@ export default function MutualFund() {
                   </strong>
                 </div>
 
-                <div style={styles.modalHighlight}>
+                <div style={responsiveStyles.modalHighlight}>
                   <span>
                     Risk Level
                   </span>
@@ -826,7 +1073,7 @@ export default function MutualFund() {
                   </strong>
                 </div>
 
-                <div style={styles.modalHighlight}>
+                <div style={responsiveStyles.modalHighlight}>
                   <span>
                     Minimum Investment
                   </span>
@@ -838,7 +1085,7 @@ export default function MutualFund() {
                   </strong>
                 </div>
 
-                <div style={styles.modalHighlight}>
+                <div style={responsiveStyles.modalHighlight}>
                   <span>
                     Exit Load
                   </span>
@@ -854,9 +1101,9 @@ export default function MutualFund() {
 
               </div>
 
-              <div style={styles.modalInfoBox}>
+              <div style={responsiveStyles.modalInfoBox}>
 
-                <div style={styles.modalInfoRow}>
+                <div style={responsiveStyles.modalInfoRow}>
                   <span>
                     Fund ID
                   </span>
@@ -866,7 +1113,7 @@ export default function MutualFund() {
                   </strong>
                 </div>
 
-                <div style={styles.modalInfoRow}>
+                <div style={responsiveStyles.modalInfoRow}>
                   <span>
                     Fund Category
                   </span>
@@ -876,7 +1123,7 @@ export default function MutualFund() {
                   </strong>
                 </div>
 
-                <div style={styles.modalInfoRow}>
+                <div style={responsiveStyles.modalInfoRow}>
                   <span>
                     Risk Profile
                   </span>
@@ -886,7 +1133,7 @@ export default function MutualFund() {
                   </strong>
                 </div>
 
-                <div style={styles.modalInfoRow}>
+                <div style={responsiveStyles.modalInfoRow}>
                   <span>
                     Minimum Investment
                   </span>
@@ -898,7 +1145,7 @@ export default function MutualFund() {
                   </strong>
                 </div>
 
-                <div style={styles.modalInfoRow}>
+                <div style={responsiveStyles.modalInfoRow}>
                   <span>
                     Expected Return
                   </span>
@@ -910,7 +1157,7 @@ export default function MutualFund() {
                   </strong>
                 </div>
 
-                <div style={styles.modalInfoRow}>
+                <div style={responsiveStyles.modalInfoRow}>
                   <span>
                     Exit Load
                   </span>
@@ -924,19 +1171,19 @@ export default function MutualFund() {
                   </strong>
                 </div>
 
-                <div style={styles.modalInfoRow}>
+                <div style={responsiveStyles.modalInfoRow}>
                   <span>
                     Status
                   </span>
 
-                  <span style={styles.activeStatus}>
+                  <span style={responsiveStyles.activeStatus}>
                     ACTIVE
                   </span>
                 </div>
 
               </div>
 
-              <div style={styles.modalNotice}>
+              <div style={responsiveStyles.modalNotice}>
                 <span>ℹ</span>
 
                 <p>
@@ -950,11 +1197,11 @@ export default function MutualFund() {
 
             {/* MODAL FOOTER */}
 
-            <div style={styles.modalFooter}>
+            <div style={responsiveStyles.modalFooter}>
 
               <button
                 type="button"
-                style={styles.modalCloseButton}
+                style={responsiveStyles.modalCloseButton}
                 onClick={closeDetails}
               >
                 Close

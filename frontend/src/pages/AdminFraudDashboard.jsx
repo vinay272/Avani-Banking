@@ -362,12 +362,12 @@ function AdminFraudDashboard() {
   };
 
   return (
-    <div style={styles.page}>
+    <div style={styles.page} className="admin-fraud-page">
       {/* ================= HEADER ================= */}
 
-      <header style={styles.navbar}>
-        <div style={styles.brandArea}>
-          <div style={styles.brandIcon}>🛡️</div>
+      <header style={styles.navbar} className="admin-fraud-navbar">
+        <div style={styles.brandArea} className="admin-fraud-brand">
+          <div style={styles.brandIcon} className="admin-fraud-brand-icon">🛡️</div>
 
           <div>
             <div style={styles.brandName}>
@@ -380,7 +380,7 @@ function AdminFraudDashboard() {
           </div>
         </div>
 
-        <div style={styles.navRight}>
+        <div style={styles.navRight} className="admin-fraud-nav-right">
           <span style={styles.adminBadge}>
             ADMIN SECURITY PANEL
           </span>
@@ -396,8 +396,8 @@ function AdminFraudDashboard() {
 
       {/* ================= MAIN ================= */}
 
-      <main style={styles.container}>
-        <section style={styles.heading}>
+      <main style={styles.container} className="admin-fraud-container">
+        <section style={styles.heading} className="admin-fraud-heading">
           <div>
             <p style={styles.eyebrow}>
               SECURITY OPERATIONS
@@ -429,7 +429,7 @@ function AdminFraudDashboard() {
 
         {/* ================= KPI ================= */}
 
-        <section style={styles.kpiGrid}>
+        <section style={styles.kpiGrid} className="admin-fraud-kpi">
           <div style={styles.kpiCard}>
             <div style={styles.kpiIcon}>🔔</div>
 
@@ -604,7 +604,7 @@ function AdminFraudDashboard() {
 
           {/* FILTERS */}
 
-          <div style={styles.filterBar}>
+          <div style={styles.filterBar} className="admin-fraud-filter-bar">
             <select
               value={riskFilter}
               onChange={(event) =>
@@ -828,7 +828,7 @@ function AdminFraudDashboard() {
         </section>
         {/* ================= RISK ANALYTICS ================= */}
 
-<section style={styles.analyticsSection}>
+<section style={styles.analyticsSection} className="admin-fraud-analytics-section">
   <div style={styles.sectionHeader}>
     <div>
       <p style={styles.eyebrow}>
@@ -841,7 +841,7 @@ function AdminFraudDashboard() {
     </div>
   </div>
 
-  <div style={styles.analyticsGrid}>
+  <div style={styles.analyticsGrid} className="admin-fraud-analytics">
 
     {/* RISK DISTRIBUTION */}
 
@@ -1199,7 +1199,7 @@ function AdminFraudDashboard() {
               </button>
             </div>
 
-            <div style={styles.detailGrid}>
+            <div style={styles.detailGrid} className="admin-fraud-detail-grid">
               <div>
                 <span style={styles.detailLabel}>
                   CUSTOMER
@@ -1939,6 +1939,144 @@ styleSheet.innerHTML = `
     grid-template-columns: 1fr;
   }
 }
+
+  @media (max-width: 1000px) {
+    .admin-fraud-page {
+      padding: 18px 20px;
+    }
+
+    .admin-fraud-navbar {
+      height: auto !important;
+      min-height: 86px;
+      padding: 16px 22px !important;
+      flex-wrap: wrap;
+    }
+
+    .admin-fraud-nav-right {
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .admin-fraud-kpi {
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .admin-fraud-page {
+      padding: 12px;
+      overflow-x: hidden;
+    }
+
+    .admin-fraud-navbar {
+      border-radius: 14px;
+      padding: 14px !important;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .admin-fraud-brand {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .admin-fraud-nav-right {
+      width: 100%;
+      justify-content: stretch;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .admin-fraud-nav-right .admin-fraud-back-button {
+      flex: 1;
+    }
+
+    .admin-fraud-container {
+      padding: 24px 4px 40px !important;
+    }
+
+    .admin-fraud-heading {
+      flex-direction: column;
+      align-items: stretch !important;
+      gap: 14px !important;
+    }
+
+    .admin-fraud-heading button {
+      width: 100%;
+    }
+
+    .admin-fraud-kpi {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 9px !important;
+    }
+
+    .admin-fraud-filter-bar {
+      flex-direction: column;
+      align-items: stretch !important;
+    }
+
+    .admin-fraud-filter-bar select,
+    .admin-fraud-filter-bar button {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .admin-fraud-analytics {
+      grid-template-columns: 1fr !important;
+    }
+
+    .admin-fraud-modal {
+      max-height: 94vh !important;
+      padding: 18px !important;
+      border-radius: 14px !important;
+    }
+
+    .admin-fraud-detail-grid {
+      grid-template-columns: 1fr !important;
+      gap: 14px !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .admin-fraud-page {
+      padding: 8px;
+    }
+
+    .admin-fraud-navbar {
+      padding: 12px !important;
+    }
+
+    .admin-fraud-brand {
+      gap: 9px;
+    }
+
+    .admin-fraud-brand .admin-fraud-brand-icon {
+      width: 38px;
+      height: 38px;
+    }
+
+    .admin-fraud-nav-right {
+      flex-direction: column;
+    }
+
+    .admin-fraud-nav-right > * {
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .admin-fraud-kpi {
+      grid-template-columns: 1fr !important;
+    }
+
+    .admin-fraud-kpi > div {
+      min-width: 0;
+    }
+
+    .admin-fraud-modal {
+      padding: 15px !important;
+    }
+  }
 `;
 
 if (!document.head.contains(styleSheet)) {

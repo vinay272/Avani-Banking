@@ -33,6 +33,37 @@ const getChartColor = (type) => {
 function InvestmentReports() {
   const navigate = useNavigate();
 
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 640 : false
+  );
+  const [isTablet, setIsTablet] = useState(
+    typeof window !== "undefined"
+      ? window.innerWidth > 640 && window.innerWidth <= 1024
+      : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width <= 640);
+      setIsTablet(width > 640 && width <= 1024);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const getResponsiveStyle = (key) => ({
+    ...styles[key],
+    ...(isMobile
+      ? responsiveStyles.mobile[key]
+      : isTablet
+      ? responsiveStyles.tablet[key]
+      : {}),
+  });
+
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -188,10 +219,10 @@ function InvestmentReports() {
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.loader}></div>
+      <div style={getResponsiveStyle("loadingPage")}>
+        <div style={getResponsiveStyle("loader")}></div>
 
-        <p style={styles.loadingText}>
+        <p style={getResponsiveStyle("loadingText")}>
           Preparing your investment report...
         </p>
       </div>
@@ -204,27 +235,27 @@ function InvestmentReports() {
 
   if (error) {
     return (
-      <div style={styles.page}>
-        <div style={styles.errorCard}>
-          <div style={styles.errorIcon}>⚠️</div>
+      <div style={getResponsiveStyle("page")}>
+        <div style={getResponsiveStyle("errorCard")}>
+          <div style={getResponsiveStyle("errorIcon")}>⚠️</div>
 
-          <h2 style={styles.errorTitle}>
+          <h2 style={getResponsiveStyle("errorTitle")}>
             Report Unavailable
           </h2>
 
-          <p style={styles.errorText}>
+          <p style={getResponsiveStyle("errorText")}>
             {error}
           </p>
 
           <button
-            style={styles.primaryButton}
+            style={getResponsiveStyle("primaryButton")}
             onClick={fetchReport}
           >
             Try Again
           </button>
 
           <button
-            style={styles.secondaryButton}
+            style={getResponsiveStyle("secondaryButton")}
             onClick={() => navigate("/investments")}
           >
             ← Back to Investments
@@ -239,26 +270,26 @@ function InvestmentReports() {
   // =========================================================
 
   return (
-    <div style={styles.page}>
+    <div style={getResponsiveStyle("page")}>
 
       {/* =====================================================
           HEADER
       ===================================================== */}
 
-      <header style={styles.header}>
+      <header style={getResponsiveStyle("header")}>
 
-        <div style={styles.headerLeft}>
+        <div style={getResponsiveStyle("headerLeft")}>
 
-          <div style={styles.headerIcon}>
+          <div style={getResponsiveStyle("headerIcon")}>
             📑
           </div>
 
           <div>
-            <h1 style={styles.headerTitle}>
+            <h1 style={getResponsiveStyle("headerTitle")}>
               Investment Reports
             </h1>
 
-            <p style={styles.headerSubtitle}>
+            <p style={getResponsiveStyle("headerSubtitle")}>
               Complete overview of your investment activity
             </p>
           </div>
@@ -266,7 +297,7 @@ function InvestmentReports() {
         </div>
 
         <button
-          style={styles.backButton}
+          style={getResponsiveStyle("backButton")}
           onClick={() => navigate("/investments")}
         >
           ← Investment Page
@@ -274,36 +305,36 @@ function InvestmentReports() {
 
       </header>
 
-      <main style={styles.container}>
+      <main style={getResponsiveStyle("container")}>
 
         {/* ===================================================
             REPORT INTRO
         =================================================== */}
 
-        <section style={styles.intro}>
+        <section style={getResponsiveStyle("intro")}>
 
           <div>
-            <span style={styles.overline}>
+            <span style={getResponsiveStyle("overline")}>
               INVESTMENT REPORT
             </span>
 
-            <h2 style={styles.pageTitle}>
+            <h2 style={getResponsiveStyle("pageTitle")}>
               Your investment summary
             </h2>
 
-            <p style={styles.pageDescription}>
+            <p style={getResponsiveStyle("pageDescription")}>
               Review your investments, current values and
               overall performance in one place.
             </p>
           </div>
 
-          <div style={styles.reportDateBox}>
+          <div style={getResponsiveStyle("reportDateBox")}>
 
-            <span style={styles.reportDateLabel}>
+            <span style={getResponsiveStyle("reportDateLabel")}>
               Report Generated
             </span>
 
-            <strong style={styles.reportDate}>
+            <strong style={getResponsiveStyle("reportDate")}>
               {report?.generatedAt
                 ? new Date(
                     report.generatedAt
@@ -322,7 +353,7 @@ function InvestmentReports() {
             SUMMARY CARDS
         =================================================== */}
 
-        <section style={styles.summaryGrid}>
+        <section style={getResponsiveStyle("summaryGrid")}>
 
           <ReportCard
             icon="💰"
@@ -376,21 +407,21 @@ function InvestmentReports() {
             INVESTMENT COUNTS
         ===================================================== */}
 
-        <section style={styles.countSection}>
+        <section style={getResponsiveStyle("countSection")}>
 
-          <div style={styles.countHeader}>
+          <div style={getResponsiveStyle("countHeader")}>
 
             <div>
-              <h3 style={styles.sectionTitle}>
+              <h3 style={getResponsiveStyle("sectionTitle")}>
                 Investment Overview
               </h3>
 
-              <p style={styles.sectionSubtitle}>
+              <p style={getResponsiveStyle("sectionSubtitle")}>
                 Your active investment products
               </p>
             </div>
 
-            <div style={styles.totalCount}>
+            <div style={getResponsiveStyle("totalCount")}>
               <span>Total Active</span>
 
               <strong>
@@ -400,13 +431,13 @@ function InvestmentReports() {
 
           </div>
 
-          <div style={styles.countGrid}>
+          <div style={getResponsiveStyle("countGrid")}>
 
             {productData.map((product) => (
               <button
                 type="button"
                 key={product.name}
-                style={styles.countCard}
+                style={getResponsiveStyle("countCard")}
                 onClick={() =>
                   product.route &&
                   navigate(product.route)
@@ -425,17 +456,17 @@ function InvestmentReports() {
                   {product.icon}
                 </div>
 
-                <div style={styles.countInfo}>
+                <div style={getResponsiveStyle("countInfo")}>
 
-                  <span style={styles.countName}>
+                  <span style={getResponsiveStyle("countName")}>
                     {product.name}
                   </span>
 
-                  <strong style={styles.countNumber}>
+                  <strong style={getResponsiveStyle("countNumber")}>
                     {product.count}
                   </strong>
 
-                  <span style={styles.countLabel}>
+                  <span style={getResponsiveStyle("countLabel")}>
                     {product.count === 1
                       ? "Investment"
                       : "Investments"}
@@ -454,32 +485,32 @@ function InvestmentReports() {
             PRODUCT PERFORMANCE
         ===================================================== */}
 
-        <section style={styles.card}>
+        <section style={getResponsiveStyle("card")}>
 
-          <div style={styles.cardHeader}>
+          <div style={getResponsiveStyle("cardHeader")}>
 
             <div>
-              <h3 style={styles.sectionTitle}>
+              <h3 style={getResponsiveStyle("sectionTitle")}>
                 Product-wise Performance
               </h3>
 
-              <p style={styles.sectionSubtitle}>
+              <p style={getResponsiveStyle("sectionSubtitle")}>
                 Invested amount compared with current value
               </p>
             </div>
 
           </div>
 
-          <div style={styles.performanceList}>
+          <div style={getResponsiveStyle("performanceList")}>
 
             {productData.map((product) => (
 
               <div
                 key={product.name}
-                style={styles.performanceRow}
+                style={getResponsiveStyle("performanceRow")}
               >
 
-                <div style={styles.performanceName}>
+                <div style={getResponsiveStyle("performanceName")}>
 
                   <div
                     style={{
@@ -508,9 +539,9 @@ function InvestmentReports() {
 
                 </div>
 
-                <div style={styles.barArea}>
+                <div style={getResponsiveStyle("barArea")}>
 
-                  <div style={styles.barLabels}>
+                  <div style={getResponsiveStyle("barLabels")}>
 
                     <span>
                       Invested{" "}
@@ -528,7 +559,7 @@ function InvestmentReports() {
 
                   </div>
 
-                  <div style={styles.barTrack}>
+                  <div style={getResponsiveStyle("barTrack")}>
 
                     <div
                       style={{
@@ -568,7 +599,7 @@ function InvestmentReports() {
 
                 </div>
 
-                <div style={styles.returnColumn}>
+                <div style={getResponsiveStyle("returnColumn")}>
 
                   <strong
                     className={
@@ -614,22 +645,22 @@ function InvestmentReports() {
             REPORT TABLE
         ===================================================== */}
 
-        <section style={styles.card}>
+        <section style={getResponsiveStyle("card")}>
 
-          <div style={styles.cardHeader}>
+          <div style={getResponsiveStyle("cardHeader")}>
 
             <div>
-              <h3 style={styles.sectionTitle}>
+              <h3 style={getResponsiveStyle("sectionTitle")}>
                 Detailed Investment Report
               </h3>
 
-              <p style={styles.sectionSubtitle}>
+              <p style={getResponsiveStyle("sectionSubtitle")}>
                 Complete product-wise financial summary
               </p>
             </div>
 
             <button
-              style={styles.refreshButton}
+              style={getResponsiveStyle("refreshButton")}
               onClick={fetchReport}
             >
               ↻ Refresh Report
@@ -637,9 +668,9 @@ function InvestmentReports() {
 
           </div>
 
-          <div style={styles.tableWrapper}>
+          <div style={getResponsiveStyle("tableWrapper")}>
 
-            <div style={styles.tableHeader}>
+            <div style={getResponsiveStyle("tableHeader")}>
 
               <span>Investment</span>
               <span>Count</span>
@@ -654,10 +685,10 @@ function InvestmentReports() {
 
               <div
                 key={product.name}
-                style={styles.tableRow}
+                style={getResponsiveStyle("tableRow")}
               >
 
-                <div style={styles.tableProduct}>
+                <div style={getResponsiveStyle("tableProduct")}>
 
                   <div
                     style={{
@@ -677,17 +708,17 @@ function InvestmentReports() {
 
                 </div>
 
-                <span style={styles.tableText}>
+                <span style={getResponsiveStyle("tableText")}>
                   {product.count}
                 </span>
 
-                <span style={styles.tableText}>
+                <span style={getResponsiveStyle("tableText")}>
                   {formatCurrency(
                     product.invested
                   )}
                 </span>
 
-                <span style={styles.tableText}>
+                <span style={getResponsiveStyle("tableText")}>
                   {formatCurrency(
                     product.current
                   )}
@@ -699,7 +730,7 @@ function InvestmentReports() {
                       ? "positive"
                       : "negative"
                   }
-                  style={styles.tableText}
+                  style={getResponsiveStyle("tableText")}
                 >
                   {product.profitLoss >= 0
                     ? "+"
@@ -715,7 +746,7 @@ function InvestmentReports() {
                       ? "positive"
                       : "negative"
                   }
-                  style={styles.tableText}
+                  style={getResponsiveStyle("tableText")}
                 >
                   {formatPercent(
                     product.returnPercentage
@@ -728,7 +759,7 @@ function InvestmentReports() {
 
             {/* TOTAL ROW */}
 
-            <div style={styles.totalRow}>
+            <div style={getResponsiveStyle("totalRow")}>
 
               <strong>
                 TOTAL PORTFOLIO
@@ -793,19 +824,19 @@ function InvestmentReports() {
             REPORT NOTE
         ===================================================== */}
 
-        <section style={styles.noteCard}>
+        <section style={getResponsiveStyle("noteCard")}>
 
-          <div style={styles.noteIcon}>
+          <div style={getResponsiveStyle("noteIcon")}>
             💡
           </div>
 
           <div>
 
-            <h3 style={styles.noteTitle}>
+            <h3 style={getResponsiveStyle("noteTitle")}>
               About this report
             </h3>
 
-            <p style={styles.noteText}>
+            <p style={getResponsiveStyle("noteText")}>
               This report is generated using your current
               investment data. Values may change as your
               investments earn interest, mature, or their
@@ -820,19 +851,19 @@ function InvestmentReports() {
             FOOTER
         ===================================================== */}
 
-        <div style={styles.footerQuote}>
-          <span style={styles.quoteMark}>
+        <div style={getResponsiveStyle("footerQuote")}>
+          <span style={getResponsiveStyle("quoteMark")}>
             “
           </span>
 
           <div>
-            <p style={styles.quoteText}>
+            <p style={getResponsiveStyle("quoteText")}>
               Invest wisely today,
               <br />
               build confidently for tomorrow.
             </p>
 
-            <span style={styles.quoteAuthor}>
+            <span style={getResponsiveStyle("quoteAuthor")}>
               — Avani Bank
             </span>
           </div>
@@ -1552,6 +1583,211 @@ const styles = {
     borderRadius: "9px",
     cursor: "pointer",
     fontWeight: 700,
+  },
+};
+
+/* =============================================================
+   RESPONSIVE OVERRIDES
+   Keeps the existing UI/business logic intact while adapting
+   layout, spacing and controls for tablet/mobile screens.
+============================================================= */
+
+const responsiveStyles = {
+  tablet: {
+    page: { padding: "18px 20px" },
+    header: { padding: "22px 24px" },
+    container: { padding: "24px 20px 40px" },
+    intro: { alignItems: "flex-start" },
+    summaryGrid: { gridTemplateColumns: "repeat(2, minmax(0, 1fr))" },
+    countGrid: { gridTemplateColumns: "repeat(3, minmax(0, 1fr))" },
+    performanceRow: {
+      gridTemplateColumns: "170px minmax(180px, 1fr) 110px",
+      gap: "16px",
+    },
+    card: { padding: "20px" },
+    countSection: { padding: "20px" },
+  },
+
+  mobile: {
+    page: { padding: "10px" },
+    header: {
+      padding: "18px 16px",
+      minHeight: "auto",
+      flexDirection: "column",
+      alignItems: "stretch",
+      gap: "14px",
+      borderRadius: "15px",
+    },
+    headerLeft: { gap: "11px", alignItems: "flex-start" },
+    headerIcon: {
+      width: "44px",
+      height: "44px",
+      minWidth: "44px",
+      borderRadius: "12px",
+      fontSize: "21px",
+    },
+    headerTitle: { fontSize: "21px" },
+    headerSubtitle: { fontSize: "11px", lineHeight: 1.45 },
+    backButton: {
+      width: "100%",
+      padding: "11px 14px",
+      fontSize: "13px",
+    },
+    container: { padding: "20px 4px 35px" },
+    intro: {
+      flexDirection: "column",
+      alignItems: "stretch",
+      gap: "14px",
+      marginBottom: "18px",
+    },
+    pageTitle: { fontSize: "22px", lineHeight: 1.25 },
+    pageDescription: { fontSize: "12px", lineHeight: 1.55 },
+    reportDateBox: {
+      width: "100%",
+      minWidth: 0,
+      boxSizing: "border-box",
+      padding: "12px 14px",
+    },
+    summaryGrid: {
+      gridTemplateColumns: "1fr",
+      gap: "10px",
+      marginBottom: "16px",
+    },
+    summaryCard: {
+      minHeight: "auto",
+      padding: "16px",
+      marginBottom: 0,
+    },
+    summaryValue: { fontSize: "20px" },
+    countSection: {
+      padding: "16px",
+      borderRadius: "14px",
+      marginBottom: "16px",
+    },
+    countHeader: {
+      alignItems: "flex-start",
+      gap: "12px",
+      flexDirection: "column",
+    },
+    sectionTitle: { fontSize: "16px" },
+    sectionSubtitle: { fontSize: "11px", lineHeight: 1.45 },
+    totalCount: { alignSelf: "flex-start" },
+    countGrid: {
+      gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+      gap: "9px",
+    },
+    countCard: {
+      padding: "12px 10px",
+      gap: "9px",
+      minWidth: 0,
+    },
+    productIcon: {
+      width: "36px",
+      height: "36px",
+      minWidth: "36px",
+      fontSize: "16px",
+    },
+    countName: {
+      fontSize: "10px",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    },
+    countNumber: { fontSize: "18px" },
+    card: {
+      padding: "16px",
+      borderRadius: "14px",
+      marginBottom: "16px",
+    },
+    cardHeader: {
+      flexDirection: "column",
+      alignItems: "stretch",
+      gap: "12px",
+      marginBottom: "16px",
+    },
+    performanceRow: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "stretch",
+      gap: "12px",
+      padding: "14px 2px",
+    },
+    performanceName: { width: "100%" },
+    barArea: { width: "100%" },
+    barLabels: {
+      fontSize: "9px",
+      gap: "10px",
+    },
+    returnColumn: {
+      alignItems: "flex-start",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      width: "100%",
+      gap: "10px",
+      fontSize: "10px",
+    },
+    refreshButton: {
+      width: "100%",
+      padding: "11px 12px",
+      fontSize: "12px",
+    },
+    tableWrapper: {
+      width: "100%",
+      overflowX: "auto",
+      WebkitOverflowScrolling: "touch",
+    },
+    tableHeader: {
+      minWidth: "850px",
+      fontSize: "9px",
+      gap: "10px",
+      padding: "11px 10px",
+    },
+    tableRow: {
+      minWidth: "850px",
+      gap: "10px",
+      padding: "12px 10px",
+    },
+    tableText: { fontSize: "10px" },
+    totalRow: {
+      minWidth: "850px",
+      gap: "10px",
+      padding: "13px 10px",
+    },
+    noteCard: {
+      padding: "15px",
+      gap: "11px",
+      alignItems: "flex-start",
+      marginBottom: "16px",
+    },
+    noteIcon: {
+      width: "36px",
+      height: "36px",
+      minWidth: "36px",
+      fontSize: "17px",
+    },
+    noteText: { fontSize: "10px", lineHeight: 1.55 },
+    footerQuote: {
+      padding: "18px 16px",
+      gap: "11px",
+      alignItems: "flex-start",
+    },
+    quoteMark: { fontSize: "40px" },
+    quoteText: { fontSize: "12px" },
+    quoteAuthor: { fontSize: "10px" },
+    errorCard: {
+      margin: "50px auto",
+      padding: "25px 18px",
+      width: "calc(100% - 20px)",
+      boxSizing: "border-box",
+    },
+    primaryButton: {
+      width: "100%",
+      marginRight: 0,
+      marginBottom: "10px",
+    },
+    secondaryButton: { width: "100%" },
+    loadingPage: { padding: "20px" },
+    loadingText: { textAlign: "center", fontSize: "12px" },
   },
 };
 

@@ -36,22 +36,15 @@ function Login() {
       localStorage.setItem("token", response.data.token);
 
       // Customer information save
-      localStorage.setItem(
-        "customer",
-        JSON.stringify(response.data.customer)
-      );
+      localStorage.setItem("customer", JSON.stringify(response.data.customer));
 
       // Dashboard par bhejo
       navigate("/dashboard");
-
     } catch (error) {
       console.error("Login Error:", error);
 
       if (error.response) {
-        setError(
-          error.response.data?.message ||
-          "Invalid email or password"
-        );
+        setError(error.response.data?.message || "Invalid email or password");
       } else {
         setError("Unable to connect with server");
       }
@@ -63,99 +56,209 @@ function Login() {
   return (
     <>
       <style>
-        {`
-          html,
-          body,
-          #root {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            min-height: 100%;
-          }
+  {`
+    html,
+    body,
+    #root {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+    }
 
-          body {
-            overflow-x: hidden;
-            overflow-y: hidden;
-          }
+    html,
+    body {
+      overflow-x: hidden;
+    }
 
-          @media (max-width: 850px) {
-            body {
-              overflow-y: auto;
-            }
-          }
+    * {
+      box-sizing: border-box;
+    }
 
-          * {
-            box-sizing: border-box;
-          }
-        `}
-      </style>
+    /* ==========================================
+       TABLET / MOBILE
+    ========================================== */
 
-      <div style={styles.page}>
+    @media (max-width: 900px) {
+      body {
+        overflow-y: auto;
+      }
 
+      .login-page {
+        min-height: 100svh !important;
+        height: auto !important;
+        padding: 12px !important;
+        align-items: flex-start !important;
+      }
+
+      .login-card {
+        width: 100% !important;
+        max-width: 560px !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        height: auto !important;
+
+        flex-direction: column !important;
+
+        border-radius: 24px !important;
+      }
+
+      .login-welcome-panel {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 285px !important;
+
+        padding: 24px 22px !important;
+
+        flex-shrink: 0 !important;
+      }
+
+      .login-panel {
+        width: 100% !important;
+        height: auto !important;
+
+        padding: 30px 24px !important;
+
+        flex-shrink: 0 !important;
+      }
+
+      .login-content {
+        width: 100% !important;
+        max-width: 430px !important;
+        margin: 0 auto !important;
+      }
+
+      .mobile-brand-icon {
+        margin-left: 0 !important;
+      }
+
+      .mobile-brand-name {
+        margin-left: 0 !important;
+      }
+
+      .mobile-brand-subtitle {
+        margin-left: 0 !important;
+      }
+
+      .mobile-welcome-title {
+        font-size: 32px !important;
+      }
+
+      .mobile-welcome-text {
+        font-size: 12px !important;
+      }
+
+      .mobile-benefits {
+        margin-top: 14px !important;
+      }
+    }
+
+    /* ==========================================
+       SMALL MOBILE
+    ========================================== */
+
+    @media (max-width: 480px) {
+      .login-page {
+        padding: 8px !important;
+      }
+
+      .login-card {
+        border-radius: 20px !important;
+      }
+
+      .login-welcome-panel {
+        min-height: 260px !important;
+        padding: 20px 18px !important;
+      }
+
+      .login-panel {
+        padding: 26px 18px !important;
+      }
+
+      .mobile-welcome-title {
+        font-size: 28px !important;
+      }
+
+      .mobile-welcome-text {
+        font-size: 11px !important;
+      }
+
+      .login-content {
+        max-width: 100% !important;
+      }
+    }
+
+    /* ==========================================
+       VERY SMALL MOBILE
+    ========================================== */
+
+    @media (max-width: 380px) {
+      .login-welcome-panel {
+        min-height: 245px !important;
+        padding: 18px 16px !important;
+      }
+
+      .login-panel {
+        padding: 24px 16px !important;
+      }
+
+      .mobile-welcome-title {
+        font-size: 25px !important;
+      }
+
+      .mobile-benefits {
+        gap: 5px !important;
+      }
+    }
+  `}
+</style>
+
+      <div className="login-page" style={styles.page}>
         {/* Decorative background elements */}
         <div style={styles.backgroundCircleOne}></div>
         <div style={styles.backgroundCircleTwo}></div>
 
-        <div style={styles.card}>
-
+        <div className="login-card" style={styles.card}>
           {/* =================================================
               LEFT CUSTOMER WELCOME PANEL
           ================================================== */}
 
-          <div style={styles.welcomePanel}>
-
+          <div className="login-welcome-panel" style={styles.welcomePanel}>
             <div>
-
               {/* Brand */}
               <div style={styles.brand}>
-                <div style={styles.brandIcon}>🏦
-                  
-                </div>
+                <div style={styles.brandIcon}>🏦</div>
 
                 <div>
-                  <div style={styles.brandName}>
-                    AVANI BANK
-                  </div>
+                  <div style={styles.brandName}>AVANI BANK</div>
 
-                  <div style={styles.brandSubtitle}>
-                    PERSONAL BANKING
-                  </div>
+                  <div style={styles.brandSubtitle}>PERSONAL BANKING</div>
                 </div>
               </div>
 
-
               {/* Welcome content */}
               <div style={styles.welcomeContent}>
+                <div style={styles.welcomeTag}>YOUR BANK. YOUR WAY.</div>
 
-                <div style={styles.welcomeTag}>
-                  YOUR BANK. YOUR WAY.
-                </div>
-
-                <h1 style={styles.welcomeTitle}>
+                <h1 className="mobile-welcome-title" style={styles.welcomeTitle}>
                   Banking made
                   <br />
                   simple for you.
                 </h1>
 
-                <p style={styles.welcomeText}>
-                  Manage your money, payments and everyday
-                  banking from one simple and secure place.
+                <p className="mobile-welcome-text" style={styles.welcomeText}>
+                  Manage your money, payments and everyday banking from one
+                  simple and secure place.
                 </p>
-
 
                 {/* Benefits */}
 
-                <div style={styles.benefits}>
-
+                <div className="mobile-benefits" style={styles.benefits}>
                   <div style={styles.benefitItem}>
-                    <div style={styles.benefitIcon}>
-                      ↗
-                    </div>
+                    <div style={styles.benefitIcon}>↗</div>
 
                     <div>
-                      <div style={styles.benefitTitle}>
-                        Easy Banking
-                      </div>
+                      <div style={styles.benefitTitle}>Easy Banking</div>
 
                       <div style={styles.benefitText}>
                         Manage your account with ease
@@ -163,16 +266,11 @@ function Login() {
                     </div>
                   </div>
 
-
                   <div style={styles.benefitItem}>
-                    <div style={styles.benefitIcon}>
-                      ₹
-                    </div>
+                    <div style={styles.benefitIcon}>₹</div>
 
                     <div>
-                      <div style={styles.benefitTitle}>
-                        Smart Payments
-                      </div>
+                      <div style={styles.benefitTitle}>Smart Payments</div>
 
                       <div style={styles.benefitText}>
                         Pay and transfer anytime
@@ -180,117 +278,76 @@ function Login() {
                     </div>
                   </div>
 
-
                   <div style={styles.benefitItem}>
-                    <div style={styles.benefitIcon}>
-                      ✓
-                    </div>
+                    <div style={styles.benefitIcon}>✓</div>
 
                     <div>
-                      <div style={styles.benefitTitle}>
-                        Secure Account
-                      </div>
+                      <div style={styles.benefitTitle}>Secure Account</div>
 
                       <div style={styles.benefitText}>
                         Your banking stays protected
                       </div>
                     </div>
                   </div>
-
                 </div>
-
               </div>
-
             </div>
-
 
             {/* Bottom text */}
 
             <div style={styles.welcomeFooter}>
               <span style={styles.statusDot}></span>
 
-              <span>
-                Avani Bank digital banking
-              </span>
+              <span>Avani Bank digital banking</span>
             </div>
-
           </div>
-
 
           {/* =================================================
               RIGHT LOGIN PANEL
           ================================================== */}
 
-          <div style={styles.loginPanel}>
-
-            <div style={styles.loginContent}>
-
+          <div className="login-panel" style={styles.loginPanel}>
+            <div className="login-content" style={styles.loginContent}>
               {/* Header */}
 
               <div style={styles.loginHeader}>
-
-                <div style={styles.loginIcon}>
-                  👋
-                </div>
+                <div style={styles.loginIcon}>👋</div>
 
                 <div>
-                  <div style={styles.loginLabel}>
-                    CUSTOMER BANKING
-                  </div>
+                  <div style={styles.loginLabel}>CUSTOMER BANKING</div>
 
-                  <h2 style={styles.title}>
-                    Welcome back
-                  </h2>
+                  <h2 style={styles.title}>Welcome back</h2>
                 </div>
-
               </div>
-
 
               <p style={styles.subtitle}>
                 Sign in to continue to your Avani Bank account.
               </p>
 
-
               {/* Error */}
 
               {error && (
                 <div style={styles.errorBox}>
-
-                  <div style={styles.errorIcon}>
-                    !
-                  </div>
+                  <div style={styles.errorIcon}>!</div>
 
                   <div>
-                    <div style={styles.errorTitle}>
-                      Login failed
-                    </div>
+                    <div style={styles.errorTitle}>Login failed</div>
 
-                    <div style={styles.errorMessage}>
-                      {error}
-                    </div>
+                    <div style={styles.errorMessage}>{error}</div>
                   </div>
-
                 </div>
               )}
-
 
               {/* Login Form */}
 
               <form onSubmit={handleSubmit}>
-
                 {/* EMAIL */}
 
                 <div style={styles.inputGroup}>
-
-                  <label style={styles.label}>
-                    Email Address
-                  </label>
+                  <label style={styles.label}>Email Address</label>
 
                   <div style={styles.inputWrapper}>
-
-                    <span style={styles.inputIcon}>
-                      ✉
-                    </span>
+                    <span style={styles.inputIcon}>✉</span>
 
                     <input
                       type="email"
@@ -302,40 +359,23 @@ function Login() {
                       autoComplete="email"
                       style={styles.input}
                     />
-
                   </div>
-
                 </div>
-
 
                 {/* PASSWORD */}
 
                 <div style={styles.inputGroup}>
-
                   <div style={styles.passwordLabelRow}>
+                    <label style={styles.label}>Password</label>
 
-                    <label style={styles.label}>
-                      Password
-                    </label>
-
-                    <span style={styles.secureHint}>
-                      Secure login
-                    </span>
-
+                    <span style={styles.secureHint}>Secure login</span>
                   </div>
 
                   <div style={styles.inputWrapper}>
-
-                    <span style={styles.inputIcon}>
-                      🔑
-                    </span>
+                    <span style={styles.inputIcon}>🔑</span>
 
                     <input
-                      type={
-                        showPassword
-                          ? "text"
-                          : "password"
-                      }
+                      type={showPassword ? "text" : "password"}
                       name="password"
                       placeholder="Enter your password"
                       value={formData.password}
@@ -347,38 +387,23 @@ function Login() {
 
                     <button
                       type="button"
-                      onClick={() =>
-                        setShowPassword(
-                          (prev) => !prev
-                        )
-                      }
+                      onClick={() => setShowPassword((prev) => !prev)}
                       style={styles.showButton}
                     >
-                      {showPassword
-                        ? "Hide"
-                        : "Show"}
+                      {showPassword ? "Hide" : "Show"}
                     </button>
-
                   </div>
-
                 </div>
-
 
                 {/* Security information */}
 
                 <div style={styles.securityBox}>
-
-                  <span style={styles.securityIcon}>
-                    🛡
-                  </span>
+                  <span style={styles.securityIcon}>🛡</span>
 
                   <span>
-                    Your login details are protected
-                    with secure authentication.
+                    Your login details are protected with secure authentication.
                   </span>
-
                 </div>
-
 
                 {/* Login button */}
 
@@ -387,96 +412,63 @@ function Login() {
                   disabled={loading}
                   style={{
                     ...styles.button,
-                    ...(loading
-                      ? styles.buttonDisabled
-                      : {}),
+                    ...(loading ? styles.buttonDisabled : {}),
                   }}
                 >
-
                   {loading ? (
                     <>
-                      <span style={styles.loadingIcon}>
-                        ⟳
-                      </span>
-
+                      <span style={styles.loadingIcon}>⟳</span>
                       Signing in...
                     </>
                   ) : (
                     <>
                       Continue to My Account
-
-                      <span style={styles.buttonArrow}>
-                        →
-                      </span>
+                      <span style={styles.buttonArrow}>→</span>
                     </>
                   )}
-
                 </button>
-
               </form>
-
 
               {/* Register */}
 
               <div style={styles.registerSection}>
-
-                <span style={styles.registerText}>
-                  New to Avani Bank?
-                </span>
+                <span style={styles.registerText}>New to Avani Bank?</span>
 
                 <button
                   type="button"
-                  onClick={() =>
-                    navigate("/register")
-                  }
+                  onClick={() => navigate("/register")}
                   style={styles.registerButton}
                 >
                   Create New Account
                 </button>
-
               </div>
-
 
               {/* Footer */}
 
               <div style={styles.footerDivider}></div>
 
               <div style={styles.footer}>
-
                 <span>🔒</span>
 
-                <span>
-                  Secure personal banking
-                </span>
+                <span>Secure personal banking</span>
 
-                <span style={styles.footerDot}>
-                  •
-                </span>
+                <span style={styles.footerDot}>•</span>
 
-                <span>
-                  Avani Bank
-                </span>
-
+                <span>Avani Bank</span>
               </div>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
     </>
   );
 }
-
 
 /* ============================================================
    STYLES
 ============================================================ */
 
 const styles = {
-
   /* ============================================================
      PAGE
   ============================================================ */
@@ -484,7 +476,7 @@ const styles = {
   page: {
     width: "100%",
     height: "100vh",
-
+    minHeight: "100svh",
     position: "relative",
 
     overflow: "hidden",
@@ -504,7 +496,6 @@ const styles = {
       "Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
   },
 
-
   /* ============================================================
      BACKGROUND
   ============================================================ */
@@ -520,12 +511,10 @@ const styles = {
     top: "-270px",
     right: "-100px",
 
-    background:
-      "rgba(14, 164, 233, 0.38)",
+    background: "rgba(14, 164, 233, 0.38)",
 
     pointerEvents: "none",
   },
-
 
   backgroundCircleTwo: {
     position: "absolute",
@@ -538,12 +527,10 @@ const styles = {
     bottom: "-210px",
     left: "-120px",
 
-    background:
-      "rgba(21, 196, 172, 0.48)",
+    background: "rgba(21, 196, 172, 0.48)",
 
     pointerEvents: "none",
   },
-
 
   /* ============================================================
      MAIN CARD
@@ -554,15 +541,14 @@ const styles = {
 
     zIndex: 2,
 
-    width: "58vw",
+    width: "min(1040px, 94vw)",
 
     maxWidth: "1040px",
 
-    minWidth: "760px",
+    minWidth: "0",
 
-    height:
-      "min(540px, calc(100vh - 30px))",
-
+    height: "min(540px, calc(100vh - 30px))",
+    //minHeight: "540px",
     display: "flex",
 
     background: "#ffffff",
@@ -571,13 +557,10 @@ const styles = {
 
     overflow: "hidden",
 
-    border:
-      "1px solid rgba(148,163,184,0.20)",
+    border: "1px solid rgba(148,163,184,0.20)",
 
-    boxShadow:
-      "0 25px 70px rgba(30,64,175,0.15)",
+    boxShadow: "0 25px 70px rgba(30,64,175,0.15)",
   },
-
 
   /* ============================================================
      LEFT WELCOME PANEL
@@ -606,7 +589,6 @@ const styles = {
     position: "relative",
   },
 
-
   brand: {
     display: "flex",
 
@@ -615,11 +597,10 @@ const styles = {
     gap: "10px",
   },
 
-
   brandIcon: {
     width: "44px",
     height: "44px",
-    marginLeft:"45px",
+    marginLeft: "0",
     borderRadius: "13px",
 
     display: "flex",
@@ -628,11 +609,9 @@ const styles = {
 
     justifyContent: "center",
 
-    background:
-      "rgba(255,255,255,0.16)",
+    background: "rgba(255,255,255,0.16)",
 
-    border:
-      "1px solid rgba(255,255,255,0.28)",
+    border: "1px solid rgba(255,255,255,0.28)",
 
     fontSize: "22px",
 
@@ -641,29 +620,20 @@ const styles = {
     fontStyle: "italic",
   },
 
-
   brandName: {
     fontSize: "17px",
-    textAlign:"center",
+    textAlign: "left",
     fontWeight: 850,
-    justifyContent:"center",
+    justifyContent: "center",
     letterSpacing: "1.6px",
-    marginLeft:"10px"
+    marginLeft: "0",
   },
-
 
   brandSubtitle: {
     marginTop: "2px",
-    marginLeft:"15px",
-    fontSize: "7px",
-
-    fontWeight: 700,
-
-    letterSpacing: "1.3px",
-
-    opacity: 0.78,
+    marginLeft: "0",
+    
   },
-
 
   /* ============================================================
      WELCOME CONTENT
@@ -677,7 +647,6 @@ const styles = {
     width: "100%",
   },
 
-
   welcomeIcon: {
     width: "50px",
     height: "50px",
@@ -690,17 +659,14 @@ const styles = {
 
     justifyContent: "center",
 
-    background:
-      "rgba(255,255,255,0.15)",
+    background: "rgba(255,255,255,0.15)",
 
-    border:
-      "1px solid rgba(255,255,255,0.24)",
+    border: "1px solid rgba(255,255,255,0.24)",
 
     fontSize: "23px",
 
     marginBottom: "10px",
   },
-
 
   welcomeTag: {
     display: "inline-flex",
@@ -709,11 +675,9 @@ const styles = {
 
     borderRadius: "20px",
 
-    background:
-      "rgba(255,255,255,0.13)",
+    background: "rgba(255,255,255,0.13)",
 
-    border:
-      "1px solid rgba(255,255,255,0.20)",
+    border: "1px solid rgba(255,255,255,0.20)",
 
     fontSize: "7px",
 
@@ -723,7 +687,6 @@ const styles = {
 
     marginBottom: "9px",
   },
-
 
   welcomeTitle: {
     margin: 0,
@@ -737,18 +700,15 @@ const styles = {
     fontWeight: 800,
   },
 
-
   welcomeText: {
     margin: "10px 0 0",
 
-    color:
-      "rgba(255,255,255,0.84)",
+    color: "rgba(255,255,255,0.84)",
 
     fontSize: "10.5px",
 
     lineHeight: "1.5",
   },
-
 
   /* ============================================================
      BENEFITS
@@ -762,7 +722,6 @@ const styles = {
     marginTop: "15px",
   },
 
-
   benefitItem: {
     display: "flex",
 
@@ -770,7 +729,6 @@ const styles = {
 
     gap: "9px",
   },
-
 
   benefitIcon: {
     width: "27px",
@@ -784,11 +742,9 @@ const styles = {
 
     justifyContent: "center",
 
-    background:
-      "rgba(255,255,255,0.14)",
+    background: "rgba(255,255,255,0.14)",
 
-    border:
-      "1px solid rgba(255,255,255,0.18)",
+    border: "1px solid rgba(255,255,255,0.18)",
 
     fontSize: "12px",
 
@@ -797,23 +753,19 @@ const styles = {
     flexShrink: 0,
   },
 
-
   benefitTitle: {
     fontSize: "9.5px",
 
     fontWeight: 750,
   },
 
-
   benefitText: {
     marginTop: "1px",
 
     fontSize: "7.5px",
 
-    color:
-      "rgba(255,255,255,0.68)",
+    color: "rgba(255,255,255,0.68)",
   },
-
 
   /* ============================================================
      LEFT FOOTER
@@ -826,12 +778,10 @@ const styles = {
 
     gap: "7px",
 
-    color:
-      "rgba(255,255,255,0.68)",
+    color: "rgba(255,255,255,0.68)",
 
     fontSize: "8px",
   },
-
 
   statusDot: {
     width: "6px",
@@ -841,10 +791,8 @@ const styles = {
 
     background: "#99f6e4",
 
-    boxShadow:
-      "0 0 0 3px rgba(153,246,228,0.12)",
+    boxShadow: "0 0 0 3px rgba(153,246,228,0.12)",
   },
-
 
   /* ============================================================
      RIGHT LOGIN PANEL
@@ -868,13 +816,11 @@ const styles = {
     background: "#ffffff",
   },
 
-
   loginContent: {
     width: "100%",
 
     maxWidth: "430px",
   },
-
 
   /* ============================================================
      LOGIN HEADER
@@ -890,7 +836,6 @@ const styles = {
     marginBottom: "5px",
   },
 
-
   loginIcon: {
     width: "40px",
     height: "40px",
@@ -903,14 +848,12 @@ const styles = {
 
     justifyContent: "center",
 
-    background:
-      "linear-gradient(135deg, #e0f2fe, #ccfbf1)",
+    background: "linear-gradient(135deg, #e0f2fe, #ccfbf1)",
 
     fontSize: "18px",
 
     flexShrink: 0,
   },
-
 
   loginLabel: {
     color: "#0891b2",
@@ -923,7 +866,6 @@ const styles = {
 
     marginBottom: "2px",
   },
-
 
   title: {
     margin: 0,
@@ -939,7 +881,6 @@ const styles = {
     letterSpacing: "-0.6px",
   },
 
-
   subtitle: {
     margin: "0 0 15px",
 
@@ -949,7 +890,6 @@ const styles = {
 
     lineHeight: "1.45",
   },
-
 
   /* ============================================================
      ERROR
@@ -970,8 +910,7 @@ const styles = {
 
     background: "#fff4f4",
 
-    border:
-      "1px solid #ffd2d2",
+    border: "1px solid #ffd2d2",
 
     color: "#b4232d",
 
@@ -979,7 +918,6 @@ const styles = {
 
     lineHeight: "1.35",
   },
-
 
   errorIcon: {
     width: "18px",
@@ -1002,18 +940,15 @@ const styles = {
     flexShrink: 0,
   },
 
-
   errorTitle: {
     fontWeight: 800,
 
     marginBottom: "1px",
   },
 
-
   errorMessage: {
     wordBreak: "break-word",
   },
-
 
   /* ============================================================
      INPUTS
@@ -1023,7 +958,6 @@ const styles = {
     marginBottom: "10px",
   },
 
-
   passwordLabelRow: {
     display: "flex",
 
@@ -1031,7 +965,6 @@ const styles = {
 
     justifyContent: "space-between",
   },
-
 
   label: {
     display: "block",
@@ -1045,7 +978,6 @@ const styles = {
     fontWeight: 750,
   },
 
-
   secureHint: {
     color: "#94a3b8",
 
@@ -1053,7 +985,6 @@ const styles = {
 
     marginBottom: "4px",
   },
-
 
   inputWrapper: {
     width: "100%",
@@ -1064,17 +995,14 @@ const styles = {
 
     alignItems: "center",
 
-    border:
-      "1px solid #d9e4ed",
+    border: "1px solid #d9e4ed",
 
     borderRadius: "10px",
 
     background: "#fbfdff",
 
-    transition:
-      "border-color 0.2s ease",
+    transition: "border-color 0.2s ease",
   },
-
 
   inputIcon: {
     width: "36px",
@@ -1092,7 +1020,6 @@ const styles = {
     flexShrink: 0,
   },
 
-
   input: {
     flex: 1,
 
@@ -1106,12 +1033,10 @@ const styles = {
 
     color: "#172033",
 
-    padding:
-      "9px 10px 9px 0",
+    padding: "9px 10px 9px 0",
 
     fontSize: "11.5px",
   },
-
 
   passwordInput: {
     flex: 1,
@@ -1126,12 +1051,10 @@ const styles = {
 
     color: "#172033",
 
-    padding:
-      "9px 4px 9px 0",
+    padding: "9px 4px 9px 0",
 
     fontSize: "11.5px",
   },
-
 
   showButton: {
     border: "none",
@@ -1153,7 +1076,6 @@ const styles = {
     fontWeight: 750,
   },
 
-
   /* ============================================================
      SECURITY BOX
   ============================================================ */
@@ -1173,11 +1095,9 @@ const styles = {
 
     borderRadius: "9px",
 
-    background:
-      "linear-gradient(135deg, #f0f9ff, #f0fdfa)",
+    background: "linear-gradient(135deg, #f0f9ff, #f0fdfa)",
 
-    border:
-      "1px solid #d9edf1",
+    border: "1px solid #d9edf1",
 
     color: "#66808e",
 
@@ -1186,13 +1106,11 @@ const styles = {
     lineHeight: "1.35",
   },
 
-
   securityIcon: {
     fontSize: "11px",
 
     flexShrink: 0,
   },
-
 
   /* ============================================================
      LOGIN BUTTON
@@ -1228,29 +1146,24 @@ const styles = {
 
     cursor: "pointer",
 
-    boxShadow:
-      "0 9px 22px rgba(8,145,178,0.20)",
+    boxShadow: "0 9px 22px rgba(8,145,178,0.20)",
   },
 
-
   buttonDisabled: {
-    opacity: 0.70,
+    opacity: 0.7,
 
     cursor: "not-allowed",
 
     boxShadow: "none",
   },
 
-
   loadingIcon: {
     fontSize: "14px",
   },
 
-
   buttonArrow: {
     fontSize: "15px",
   },
-
 
   /* ============================================================
      REGISTER
@@ -1263,17 +1176,14 @@ const styles = {
 
     paddingTop: "12px",
 
-    borderTop:
-      "1px solid #e7eef3",
+    borderTop: "1px solid #e7eef3",
   },
-
 
   registerText: {
     color: "#718096",
 
     fontSize: "8.5px",
   },
-
 
   registerButton: {
     border: "none",
@@ -1293,7 +1203,6 @@ const styles = {
     padding: 0,
   },
 
-
   /* ============================================================
      FOOTER
   ============================================================ */
@@ -1305,13 +1214,10 @@ const styles = {
 
     borderRadius: "10px",
 
-    margin:
-      "11px auto 7px",
+    margin: "11px auto 7px",
 
-    background:
-      "linear-gradient(90deg, #bae6fd, #14b8a6, #bae6fd)",
+    background: "linear-gradient(90deg, #bae6fd, #14b8a6, #bae6fd)",
   },
-
 
   footer: {
     display: "flex",
@@ -1329,10 +1235,11 @@ const styles = {
     textAlign: "center",
   },
 
-
   footerDot: {
     color: "#cbd5e1",
   },
+
+  
 };
 
 export default Login;

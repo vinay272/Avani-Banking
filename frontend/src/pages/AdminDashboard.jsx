@@ -725,13 +725,220 @@ function AdminDashboard() {
           background: #192944 !important;
           border-color: #2b3e5d !important;
         }
+
+        /* ================= RESPONSIVE LAYOUT ================= */
+
+        .admin-dashboard,
+        .admin-dashboard * {
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 900px) {
+          .admin-header {
+            min-height: auto !important;
+            padding: 14px 4% !important;
+            align-items: flex-start !important;
+          }
+
+          .admin-header .navRight {
+            flex-wrap: wrap !important;
+            justify-content: flex-end !important;
+          }
+
+          .admin-main {
+            width: 92% !important;
+            padding-top: 24px !important;
+          }
+
+          .admin-greeting-card {
+            padding: 21px !important;
+          }
+
+          .admin-management-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+
+          .admin-quick-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+
+          .admin-status-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          }
+        }
+
+        @media (max-width: 700px) {
+          .admin-header {
+            flex-direction: column !important;
+            gap: 13px !important;
+            padding: 15px 5% !important;
+          }
+
+          .admin-header .brandArea {
+            width: 100% !important;
+          }
+
+          .admin-header .navRight {
+            width: 100% !important;
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 8px !important;
+          }
+
+          .admin-header .adminBadge {
+            grid-column: 1 / -1 !important;
+            justify-content: center !important;
+            width: 100% !important;
+          }
+
+          .admin-header .themeButton,
+          .admin-header .logoutButton {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+
+          .admin-main {
+            width: 94% !important;
+            padding: 20px 0 35px !important;
+          }
+
+          .admin-breadcrumb {
+            margin-bottom: 16px !important;
+            flex-wrap: wrap !important;
+            row-gap: 4px !important;
+          }
+
+          .admin-greeting-card {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 17px !important;
+            padding: 19px !important;
+            margin-bottom: 22px !important;
+          }
+
+          .admin-greeting-card h2 {
+            font-size: 22px !important;
+          }
+
+          .admin-greeting-card p {
+            max-width: none !important;
+          }
+
+          .admin-greeting-icon {
+            width: 58px !important;
+            height: 58px !important;
+            border-radius: 15px !important;
+            font-size: 27px !important;
+            align-self: flex-end !important;
+          }
+
+          .admin-section {
+            margin-top: 22px !important;
+          }
+
+          .admin-section > div:first-child {
+            align-items: flex-start !important;
+          }
+
+          .admin-management-grid,
+          .admin-quick-grid,
+          .admin-status-grid {
+            grid-template-columns: 1fr !important;
+          }
+
+          .admin-module-card {
+            padding: 18px !important;
+          }
+
+          .admin-module-card h4 {
+            font-size: 13px !important;
+            overflow-wrap: anywhere !important;
+          }
+
+          .admin-module-card p {
+            overflow-wrap: anywhere !important;
+          }
+
+          .admin-quick-card {
+            width: 100% !important;
+            padding: 14px !important;
+          }
+
+          .admin-status-panel {
+            padding: 16px !important;
+            margin-top: 22px !important;
+          }
+
+          .admin-status-panel > div:first-child {
+            align-items: flex-start !important;
+            flex-direction: column !important;
+          }
+
+          .admin-footer {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            margin-top: 25px !important;
+            gap: 7px !important;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .admin-header {
+            padding: 13px 4% !important;
+          }
+
+          .admin-header .brand {
+            font-size: 16px !important;
+          }
+
+          .admin-header .subtitle {
+            font-size: 8px !important;
+            letter-spacing: .8px !important;
+          }
+
+          .admin-header .brandIcon {
+            width: 38px !important;
+            height: 38px !important;
+            font-size: 18px !important;
+          }
+
+          .admin-header .navRight {
+            grid-template-columns: 1fr !important;
+          }
+
+          .admin-header .adminBadge {
+            grid-column: auto !important;
+          }
+
+          .admin-main {
+            width: 95% !important;
+          }
+
+          .admin-greeting-card {
+            padding: 16px !important;
+          }
+
+          .admin-greeting-card h2 {
+            font-size: 20px !important;
+          }
+
+          .admin-module-card,
+          .admin-quick-card {
+            padding: 15px !important;
+          }
+
+          .admin-footer {
+            font-size: 8px !important;
+          }
+        }
+
       `}</style>
 
       {/* =================================================
           HEADER
       ================================================= */}
 
-      <header style={styles.header}>
+      <header className="admin-header" style={styles.header}>
 
         <div style={styles.brandArea}>
 
@@ -861,7 +1068,7 @@ function AdminDashboard() {
 
           </div>
 
-          <div style={styles.grid}>
+          <div className="admin-management-grid" style={styles.grid}>
 
             {adminModules.map((module) => (
 
@@ -957,7 +1164,7 @@ function AdminDashboard() {
 
           </div>
 
-          <div style={styles.quickGrid}>
+          <div className="admin-quick-grid" style={styles.quickGrid}>
 
             {quickAccess.map((item) => (
 
@@ -1026,7 +1233,7 @@ function AdminDashboard() {
 
           </div>
 
-          <div style={styles.statusGrid}>
+          <div className="admin-status-grid" style={styles.statusGrid}>
 
             <div className="admin-status-item" style={styles.statusItem}>
 

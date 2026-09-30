@@ -4,6 +4,20 @@ import { useNavigate } from "react-router-dom";
 function CustomerRelationshipHistory() {
   const navigate = useNavigate();
 
+  // Responsive viewport handling
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 768 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [customer, setCustomer] = useState(null);
   const [history, setHistory] = useState([]);
 
@@ -337,23 +351,23 @@ function CustomerRelationshipHistory() {
   }
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.mobilePage : {}) }}>
 
       {/* =========================
           HEADER
       ========================= */}
 
-      <header style={styles.header}>
+      <header style={{ ...styles.header, ...(isMobile ? responsiveStyles.mobileHeader : {}) }}>
         <div>
           <p style={styles.eyebrow}>
             CUSTOMER MANAGEMENT
           </p>
 
-          <h1 style={styles.title}>
+          <h1 style={{ ...styles.title, ...(isMobile ? responsiveStyles.mobileTitle : {}) }}>
             Relationship History
           </h1>
 
-          <p style={styles.subtitle}>
+          <p style={{ ...styles.subtitle, ...(isMobile ? responsiveStyles.mobileSubtitle : {}) }}>
             View and record important customer
             relationship events.
           </p>
@@ -362,7 +376,7 @@ function CustomerRelationshipHistory() {
         <button
           type="button"
           onClick={() => navigate("/dashboard")}
-          style={styles.dashboardButton}
+          style={{ ...styles.dashboardButton, ...(isMobile ? responsiveStyles.mobileDashboardButton : {}) }}
         >
           ← Dashboard
         </button>
@@ -372,14 +386,14 @@ function CustomerRelationshipHistory() {
           CUSTOMER SUMMARY
       ========================= */}
 
-      <section style={styles.customerCard}>
+      <section style={{ ...styles.customerCard, ...(isMobile ? responsiveStyles.mobileCustomerCard : {}) }}>
         <div style={styles.avatar}>
           {customer?.fullName
             ?.charAt(0)
             ?.toUpperCase() || "C"}
         </div>
 
-        <div style={styles.customerInfo}>
+        <div style={{ ...styles.customerInfo, ...(isMobile ? responsiveStyles.mobileCustomerInfo : {}) }}>
           <p style={styles.smallLabel}>
             PRIMARY CUSTOMER
           </p>
@@ -388,17 +402,17 @@ function CustomerRelationshipHistory() {
             {customer?.fullName || "Customer"}
           </h2>
 
-          <p style={styles.customerEmail}>
+          <p style={{ ...styles.customerEmail, overflowWrap: "anywhere" }}>
             {customer?.email || "Email unavailable"}
           </p>
         </div>
 
-        <div style={styles.customerIdBox}>
+        <div style={{ ...styles.customerIdBox, ...(isMobile ? responsiveStyles.mobileCustomerIdBox : {}) }}>
           <p style={styles.smallLabel}>
             CUSTOMER ID
           </p>
 
-          <strong style={styles.customerId}>
+          <strong style={{ ...styles.customerId, overflowWrap: "anywhere" }}>
             {customer?.id || "N/A"}
           </strong>
         </div>
@@ -409,13 +423,13 @@ function CustomerRelationshipHistory() {
       ========================= */}
 
       {error && (
-        <div style={styles.errorMessage}>
+        <div style={{ ...styles.errorMessage, overflowWrap: "anywhere" }}>
           ⚠️ {error}
         </div>
       )}
 
       {message && (
-        <div style={styles.successMessage}>
+        <div style={{ ...styles.successMessage, overflowWrap: "anywhere" }}>
           ✓ {message}
         </div>
       )}
@@ -424,7 +438,7 @@ function CustomerRelationshipHistory() {
           ADD HISTORY
       ========================= */}
 
-      <section style={styles.formCard}>
+      <section style={{ ...styles.formCard, ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
 
         <div style={styles.cardHeader}>
           <div>
@@ -449,7 +463,7 @@ function CustomerRelationshipHistory() {
 
         <form onSubmit={handleSubmit}>
 
-          <div style={styles.twoColumn}>
+          <div style={{ ...styles.twoColumn, ...(isMobile ? responsiveStyles.mobileTwoColumn : {}) }}>
 
             {/* RELATIONSHIP TYPE */}
 
@@ -538,7 +552,7 @@ function CustomerRelationshipHistory() {
             />
           </div>
 
-          <div style={styles.formFooter}>
+          <div style={{ ...styles.formFooter, ...(isMobile ? responsiveStyles.mobileFormFooter : {}) }}>
 
             <p style={styles.footerNote}>
               This record will be linked to customer ID{" "}
@@ -552,6 +566,7 @@ function CustomerRelationshipHistory() {
               disabled={saving}
               style={{
                 ...styles.submitButton,
+                 ...(isMobile ? responsiveStyles.mobileSubmitButton : {}),
                 opacity: saving ? 0.7 : 1,
                 cursor: saving
                   ? "not-allowed"
@@ -572,7 +587,7 @@ function CustomerRelationshipHistory() {
           HISTORY LIST
       ========================= */}
 
-      <section style={styles.historyCard}>
+      <section style={{ ...styles.historyCard, ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
 
         <div style={styles.cardHeader}>
           <div>
@@ -596,7 +611,7 @@ function CustomerRelationshipHistory() {
         </div>
 
         {history.length === 0 ? (
-          <div style={styles.emptyState}>
+          <div style={{ ...styles.emptyState, ...(isMobile ? responsiveStyles.mobileEmptyState : {}) }}>
             <div style={styles.emptyIcon}>
               📋
             </div>
@@ -617,16 +632,16 @@ function CustomerRelationshipHistory() {
 
               <div
                 key={item.id || index}
-                style={styles.timelineItem}
+                style={{ ...styles.timelineItem, ...(isMobile ? responsiveStyles.mobileTimelineItem : {}) }}
               >
 
-                <div style={styles.timelineMarker}>
+                <div style={{ ...styles.timelineMarker, ...(isMobile ? responsiveStyles.mobileTimelineMarker : {}) }}>
                   {index + 1}
                 </div>
 
                 <div style={styles.timelineContent}>
 
-                  <div style={styles.timelineTop}>
+                  <div style={{ ...styles.timelineTop, ...(isMobile ? responsiveStyles.mobileTimelineTop : {}) }}>
 
                     <div>
                       <span
@@ -640,7 +655,7 @@ function CustomerRelationshipHistory() {
                       </span>
 
                       <h3
-                        style={styles.timelineTitle}
+                        style={{ ...styles.timelineTitle, overflowWrap: "anywhere" }}
                       >
                         {item.description ||
                           "Relationship event"}
@@ -648,7 +663,7 @@ function CustomerRelationshipHistory() {
                     </div>
 
                     <div
-                      style={styles.dateBlock}
+                      style={{ ...styles.dateBlock, ...(isMobile ? responsiveStyles.mobileDateBlock : {}) }}
                     >
                       <span
                         style={styles.date}
@@ -670,7 +685,7 @@ function CustomerRelationshipHistory() {
                   </div>
 
                   <div
-                    style={styles.timelineMeta}
+                    style={{ ...styles.timelineMeta, ...(isMobile ? responsiveStyles.mobileTimelineMeta : {}) }}
                   >
                     <span>
                       Customer ID:{" "}
@@ -701,7 +716,7 @@ function CustomerRelationshipHistory() {
           INFORMATION
       ========================= */}
 
-      <div style={styles.infoBox}>
+      <div style={{ ...styles.infoBox, ...(isMobile ? responsiveStyles.mobileInfoBox : {}) }}>
         <span style={styles.infoIcon}>
           🔒
         </span>
@@ -711,7 +726,7 @@ function CustomerRelationshipHistory() {
             Secure Customer Record
           </strong>
 
-          <p style={styles.infoText}>
+          <p style={{ ...styles.infoText, overflowWrap: "anywhere" }}>
             Relationship history is stored against
             the customer record and can be used for
             future customer relationship management.
@@ -1260,5 +1275,111 @@ styleElement.innerHTML = `
 if (!document.head.contains(styleElement)) {
   document.head.appendChild(styleElement);
 }
+
+
+// =====================================================
+// RESPONSIVE OVERRIDES
+// =====================================================
+
+const responsiveStyles = {
+  mobilePage: {
+    padding: "14px",
+  },
+  mobileHeader: {
+    padding: "18px 16px",
+    minHeight: "auto",
+    maxHeight: "none",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "14px",
+  },
+  mobileTitle: {
+    fontSize: "22px",
+    lineHeight: "1.25",
+  },
+  mobileSubtitle: {
+    fontSize: "11px",
+    lineHeight: "1.5",
+  },
+  mobileDashboardButton: {
+    width: "100%",
+    textAlign: "center",
+    padding: "11px 14px",
+  },
+  mobileCustomerCard: {
+    padding: "15px",
+    alignItems: "flex-start",
+    flexWrap: "wrap",
+  },
+  mobileCustomerInfo: {
+    minWidth: 0,
+    flex: "1 1 calc(100% - 62px)",
+  },
+  mobileCustomerIdBox: {
+    width: "100%",
+    paddingLeft: 0,
+    paddingTop: "12px",
+    marginTop: "2px",
+    borderLeft: "none",
+    borderTop: "1px solid #edf0f5",
+    textAlign: "left",
+  },
+  mobileCard: {
+    padding: "17px",
+  },
+  mobileCardHeader: {
+    gap: "11px",
+  },
+  mobileCardTitle: {
+    fontSize: "17px",
+    lineHeight: "1.3",
+  },
+  mobileCardDescription: {
+    fontSize: "10px",
+  },
+  mobileTwoColumn: {
+    gridTemplateColumns: "1fr",
+    gap: "0",
+  },
+  mobileFormFooter: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "12px",
+  },
+  mobileSubmitButton: {
+    width: "100%",
+  },
+  mobileTimelineItem: {
+    gap: "9px",
+    paddingBottom: "12px",
+    marginBottom: "12px",
+  },
+  mobileTimelineMarker: {
+    width: "27px",
+    height: "27px",
+    borderRadius: "8px",
+    fontSize: "8px",
+  },
+  mobileTimelineTop: {
+    flexDirection: "column",
+    gap: "9px",
+  },
+  mobileDateBlock: {
+    alignItems: "flex-start",
+    width: "100%",
+  },
+  mobileTimelineMeta: {
+    flexDirection: "column",
+    gap: "5px",
+  },
+  mobileEmptyState: {
+    padding: "30px 14px",
+  },
+  mobileInfoBox: {
+    padding: "13px 14px",
+    alignItems: "flex-start",
+  },
+};
+
 
 export default CustomerRelationshipHistory;

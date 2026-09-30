@@ -19,6 +19,20 @@ function AddressVerification() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  // Responsive viewport state
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 600
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const token = localStorage.getItem("token");
 
   // =========================
@@ -318,20 +332,20 @@ function AddressVerification() {
   // =========================
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, ...(isMobile ? styles.mobilePage : {}) }}>
       {/* =========================
           HEADER
       ========================= */}
 
-      <header style={styles.header}>
+      <header style={{ ...styles.header, ...(isMobile ? styles.mobileHeader : {}) }}>
         <div>
           <div style={styles.brand}>AVANI BANK</div>
 
-          <h1 style={styles.title}>
+          <h1 style={{ ...styles.title, ...(isMobile ? styles.mobileTitle : {}) }}>
             Address Verification
           </h1>
 
-          <p style={styles.subtitle}>
+          <p style={{ ...styles.subtitle, ...(isMobile ? styles.mobileSubtitle : {}) }}>
             Submit and manage your registered address.
           </p>
         </div>
@@ -339,7 +353,7 @@ function AddressVerification() {
         <button
           type="button"
           onClick={() => navigate("/dashboard")}
-          style={styles.dashboardButton}
+          style={{ ...styles.dashboardButton, ...(isMobile ? styles.mobileDashboardButton : {}) }}
         >
           ← Dashboard
         </button>
@@ -349,14 +363,14 @@ function AddressVerification() {
           CUSTOMER CARD
       ========================= */}
 
-      <div style={styles.customerCard}>
+      <div style={{ ...styles.customerCard, ...(isMobile ? styles.mobileCustomerCard : {}) }}>
         <div style={styles.customerAvatar}>
           {customer?.fullName
             ?.charAt(0)
             ?.toUpperCase() || "C"}
         </div>
 
-        <div style={styles.customerInfo}>
+        <div style={{ ...styles.customerInfo, ...(isMobile ? styles.mobileCustomerInfo : {}) }}>
           <p style={styles.customerLabel}>CUSTOMER</p>
 
           <h2 style={styles.customerName}>
@@ -368,7 +382,7 @@ function AddressVerification() {
           </p>
         </div>
 
-        <div style={styles.accountInfo}>
+        <div style={{ ...styles.accountInfo, ...(isMobile ? styles.mobileAccountInfo : {}) }}>
           <p style={styles.customerLabel}>
             ACCOUNT NUMBER
           </p>
@@ -400,15 +414,15 @@ function AddressVerification() {
       ========================= */}
 
       {addressData && (
-        <div style={styles.statusCard}>
+        <div style={{ ...styles.statusCard, ...(isMobile ? styles.mobileStatusCard : {}) }}>
           <div style={styles.statusIcon}>✓</div>
 
-          <div style={styles.statusContent}>
+          <div style={{ ...styles.statusContent, ...(isMobile ? styles.mobileStatusContent : {}) }}>
             <p style={styles.statusLabel}>
               VERIFICATION STATUS
             </p>
 
-            <div style={styles.statusRow}>
+            <div style={{ ...styles.statusRow, ...(isMobile ? styles.mobileStatusRow : {}) }}>
               <span
                 style={{
                   ...styles.statusBadge,
@@ -435,8 +449,8 @@ function AddressVerification() {
           ADDRESS FORM
       ========================= */}
 
-      <div style={styles.formCard}>
-        <div style={styles.cardHeader}>
+      <div style={{ ...styles.formCard, ...(isMobile ? styles.mobileFormCard : {}) }}>
+        <div style={{ ...styles.cardHeader, ...(isMobile ? styles.mobileCardHeader : {}) }}>
           <div>
             <p style={styles.cardEyebrow}>
               ADDRESS DETAILS
@@ -452,7 +466,7 @@ function AddressVerification() {
             </p>
           </div>
 
-          <div style={styles.locationIcon}>📍</div>
+          <div style={{ ...styles.locationIcon, ...(isMobile ? styles.mobileLocationIcon : {}) }}>📍</div>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -479,7 +493,7 @@ function AddressVerification() {
 
           {/* CITY + STATE */}
 
-          <div style={styles.twoColumn}>
+          <div style={{ ...styles.twoColumn, ...(isMobile ? styles.mobileTwoColumn : {}) }}>
             <div style={styles.fieldGroup}>
               <label style={styles.label}>
                 City
@@ -547,7 +561,7 @@ function AddressVerification() {
 
           {/* SUBMIT */}
 
-          <div style={styles.formFooter}>
+          <div style={{ ...styles.formFooter, ...(isMobile ? styles.mobileFormFooter : {}) }}>
             <p style={styles.footerNote}>
               Your address will be submitted for bank
               verification.
@@ -579,7 +593,7 @@ function AddressVerification() {
       ========================= */}
 
       {addressData?.remarks && (
-        <div style={styles.remarksCard}>
+        <div style={{ ...styles.remarksCard, ...(isMobile ? styles.mobileRemarksCard : {}) }}>
           <div style={styles.remarksIcon}>ℹ️</div>
 
           <div>
@@ -598,7 +612,7 @@ function AddressVerification() {
           INFORMATION
       ========================= */}
 
-      <div style={styles.infoBox}>
+      <div style={{ ...styles.infoBox, ...(isMobile ? styles.mobileInfoBox : {}) }}>
         <span style={styles.infoIcon}>🔒</span>
 
         <div>
@@ -737,6 +751,7 @@ const styles = {
     margin: 0,
     color: "#7c879a",
     fontSize: "10px",
+    overflowWrap: "anywhere",
   },
 
   accountInfo: {
@@ -750,6 +765,8 @@ const styles = {
     marginTop: "4px",
     color: "#253453",
     fontSize: "12px",
+    overflowWrap: "anywhere",
+    wordBreak: "break-word",
   },
 
   errorMessage: {
@@ -833,6 +850,7 @@ const styles = {
   updatedText: {
     color: "#8b95a7",
     fontSize: "10px",
+    overflowWrap: "anywhere",
   },
 
   formCard: {
@@ -988,6 +1006,7 @@ const styles = {
     color: "#718096",
     fontSize: "11px",
     lineHeight: "1.5",
+    overflowWrap: "anywhere",
   },
 
   infoBox: {
@@ -1017,6 +1036,7 @@ const styles = {
     color: "#778397",
     fontSize: "9px",
     lineHeight: "1.5",
+    overflowWrap: "anywhere",
   },
 
   loadingPage: {
@@ -1065,6 +1085,136 @@ const styles = {
     borderRadius: "50%",
     margin: "20px auto 0",
     animation: "addressSpin 0.8s linear infinite",
+  },
+
+  // =========================
+  // RESPONSIVE OVERRIDES
+  // =========================
+
+  mobilePage: {
+    padding: "12px",
+    overflowX: "hidden",
+  },
+
+  mobileHeader: {
+    minHeight: "auto",
+    maxHeight: "none",
+    padding: "18px 16px",
+    borderRadius: "14px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "14px",
+  },
+
+  mobileTitle: {
+    fontSize: "21px",
+    lineHeight: "1.2",
+    letterSpacing: "-0.3px",
+  },
+
+  mobileSubtitle: {
+    fontSize: "11px",
+    lineHeight: "1.45",
+    marginTop: "5px",
+  },
+
+  mobileDashboardButton: {
+    width: "100%",
+    textAlign: "center",
+    padding: "11px 14px",
+    fontSize: "11px",
+    boxSizing: "border-box",
+  },
+
+  mobileCustomerCard: {
+    margin: "12px 0 14px",
+    padding: "14px",
+    borderRadius: "13px",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: "11px",
+  },
+
+  mobileCustomerInfo: {
+    flex: "1 1 calc(100% - 65px)",
+    minWidth: "0",
+  },
+
+  mobileAccountInfo: {
+    width: "100%",
+    paddingLeft: "0",
+    paddingTop: "11px",
+    borderLeft: "none",
+    borderTop: "1px solid #edf0f5",
+    textAlign: "left",
+  },
+
+  mobileStatusCard: {
+    padding: "13px 14px",
+    borderRadius: "13px",
+    alignItems: "flex-start",
+    gap: "10px",
+  },
+
+  mobileStatusContent: {
+    minWidth: "0",
+  },
+
+  mobileStatusRow: {
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: "7px",
+  },
+
+  mobileFormCard: {
+    padding: "16px 14px",
+    borderRadius: "14px",
+    marginBottom: "14px",
+  },
+
+  mobileCardHeader: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "10px",
+    marginBottom: "17px",
+  },
+
+  mobileLocationIcon: {
+    width: "38px",
+    height: "38px",
+    fontSize: "16px",
+  },
+
+  mobileTwoColumn: {
+    gridTemplateColumns: "1fr",
+    gap: "0",
+  },
+
+  mobileFormFooter: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "11px",
+  },
+
+  mobileFormFooterButton: {
+    width: "100%",
+  },
+
+  mobileSubmitButton: {
+    width: "100%",
+    padding: "12px 16px",
+  },
+
+  mobileRemarksCard: {
+    padding: "14px",
+    gap: "10px",
+    alignItems: "flex-start",
+  },
+
+  mobileInfoBox: {
+    padding: "13px 14px",
+    gap: "9px",
+    marginBottom: "4px",
   },
 };
 

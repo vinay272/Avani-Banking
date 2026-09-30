@@ -4,6 +4,19 @@ import { useNavigate } from "react-router-dom";
 function AccountManagement() {
   const navigate = useNavigate();
 
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" && window.innerWidth <= 700
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 700);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -241,13 +254,13 @@ function AccountManagement() {
   // =========================
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
 
       {/* ================= NAVBAR ================= */}
 
-      <header style={styles.navbar}>
+      <header style={{ ...styles.navbar, ...(isMobile ? responsiveStyles.navbar : {}) }}>
 
-        <div style={styles.brandArea}>
+        <div style={{ ...styles.brandArea, ...(isMobile ? responsiveStyles.brandArea : {}) }}>
 
           <div style={styles.brandIcon}>
             🏦
@@ -266,7 +279,7 @@ function AccountManagement() {
         </div>
 
         <button
-          style={styles.backButton}
+          style={{ ...styles.backButton, ...(isMobile ? responsiveStyles.backButton : {}) }}
           onClick={() => navigate("/dashboard")}
         >
           ← Dashboard
@@ -276,11 +289,11 @@ function AccountManagement() {
 
       {/* ================= MAIN ================= */}
 
-      <main style={styles.container}>
+      <main style={{ ...styles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
 
         {/* ================= PAGE HEADER ================= */}
 
-        <section style={styles.pageHeader}>
+        <section style={{ ...styles.pageHeader, ...(isMobile ? responsiveStyles.pageHeader : {}) }}>
 
           <div>
 
@@ -288,17 +301,17 @@ function AccountManagement() {
               BANKING SERVICES
             </p>
 
-            <h1 style={styles.title}>
+            <h1 style={{ ...styles.title, ...(isMobile ? responsiveStyles.title : {}) }}>
               Account Management
             </h1>
 
-            <p style={styles.subtitle}>
+            <p style={{ ...styles.subtitle, ...(isMobile ? responsiveStyles.subtitle : {}) }}>
               Manage your bank accounts and access account services.
             </p>
 
           </div>
 
-          <div style={styles.accountCount}>
+          <div style={{ ...styles.accountCount, ...(isMobile ? responsiveStyles.accountCount : {}) }}>
             {accounts.length} Account
             {accounts.length !== 1 ? "s" : ""}
           </div>
@@ -315,7 +328,7 @@ function AccountManagement() {
 
         {/* ================= ACCOUNTS ================= */}
 
-        <section style={styles.section}>
+        <section style={{ ...styles.section, ...(isMobile ? responsiveStyles.section : {}) }}>
 
           <div style={styles.sectionHeader}>
 
@@ -357,7 +370,7 @@ function AccountManagement() {
 
             /* ================= ACCOUNT GRID ================= */
 
-            <div style={styles.accountsGrid}>
+            <div style={{ ...styles.accountsGrid, ...(isMobile ? responsiveStyles.accountsGrid : {}) }}>
 
               {accounts.map((account) => {
 
@@ -377,18 +390,18 @@ function AccountManagement() {
 
                   <div
                     key={account.id}
-                    style={styles.accountCard}
+                    style={{ ...styles.accountCard, ...(isMobile ? responsiveStyles.accountCard : {}) }}
                   >
 
                     {/* ================= ACCOUNT TOP ================= */}
 
-                    <div style={styles.accountTop}>
+                    <div style={{ ...styles.accountTop, ...(isMobile ? responsiveStyles.accountTop : {}) }}>
 
                       <div style={styles.accountIcon}>
                         🏦
                       </div>
 
-                      <div style={styles.accountTopText}>
+                      <div style={{ ...styles.accountTopText, ...(isMobile ? responsiveStyles.accountTopText : {}) }}>
 
                         <p style={styles.accountLabel}>
                           ACCOUNT TYPE
@@ -404,6 +417,7 @@ function AccountManagement() {
                         style={{
                           ...styles.statusBadge,
                           ...statusStyle,
+                          ...(isMobile ? responsiveStyles.statusBadge : {}),
                         }}
                       >
                         ● {account.status || "ACTIVE"}
@@ -413,13 +427,13 @@ function AccountManagement() {
 
                     {/* ================= ACCOUNT NUMBER ================= */}
 
-                    <div style={styles.accountNumberBox}>
+                    <div style={{ ...styles.accountNumberBox, ...(isMobile ? responsiveStyles.accountNumberBox : {}) }}>
 
                       <p style={styles.accountLabel}>
                         ACCOUNT NUMBER
                       </p>
 
-                      <p style={styles.accountNumber}>
+                      <p style={{ ...styles.accountNumber, ...(isMobile ? responsiveStyles.accountNumber : {}) }}>
                         {account.accountNumber || "N/A"}
                       </p>
 
@@ -427,7 +441,7 @@ function AccountManagement() {
 
                     {/* ================= BALANCE ================= */}
 
-                    <div style={styles.balanceBox}>
+                    <div style={{ ...styles.balanceBox, ...(isMobile ? responsiveStyles.balanceBox : {}) }}>
 
                       <div>
 
@@ -435,13 +449,13 @@ function AccountManagement() {
                           AVAILABLE BALANCE
                         </p>
 
-                        <h2 style={styles.balance}>
+                        <h2 style={{ ...styles.balance, ...(isMobile ? responsiveStyles.balance : {}) }}>
                           ₹{formatCurrency(account.balance)}
                         </h2>
 
                       </div>
 
-                      <div style={styles.interestBox}>
+                      <div style={{ ...styles.interestBox, ...(isMobile ? responsiveStyles.interestBox : {}) }}>
 
                         <p style={styles.accountLabel}>
                           INTEREST RATE
@@ -457,12 +471,12 @@ function AccountManagement() {
 
                     {/* ================= ACTIONS ================= */}
 
-                    <div style={styles.actions}>
+                    <div style={{ ...styles.actions, ...(isMobile ? responsiveStyles.actions : {}) }}>
 
                       {/* VIEW DETAILS */}
 
                       <button
-                        style={styles.actionButton}
+                        style={{ ...styles.actionButton, ...(isMobile ? responsiveStyles.actionButton : {}) }}
                         onClick={() =>
                           navigate(
                             `/accounts/${account.id}`
@@ -475,7 +489,7 @@ function AccountManagement() {
                       {/* STATEMENT */}
 
                       <button
-                        style={styles.secondaryButton}
+                        style={{ ...styles.secondaryButton, ...(isMobile ? responsiveStyles.secondaryButton : {}) }}
                         onClick={() =>
                           navigate(
                             `/accounts/${account.id}/statement`
@@ -539,12 +553,12 @@ function AccountManagement() {
 
           </div>
 
-          <div style={styles.servicesGrid}>
+          <div style={{ ...styles.servicesGrid, ...(isMobile ? responsiveStyles.servicesGrid : {}) }}>
 
             {/* ================= BALANCE ================= */}
 
             <button
-              style={styles.serviceCard}
+              style={{ ...styles.serviceCard, ...(isMobile ? responsiveStyles.serviceCard : {}) }}
               onClick={() =>
                 navigate("/accounts/balance")
               }
@@ -553,6 +567,7 @@ function AccountManagement() {
               <div
                 style={{
                   ...styles.serviceIcon,
+                  ...(isMobile ? responsiveStyles.serviceIcon : {}),
                   background: "#ecfdf5",
                   color: "#11895b",
                 }}
@@ -560,7 +575,7 @@ function AccountManagement() {
                 ₹
               </div>
 
-              <div style={styles.serviceText}>
+              <div style={{ ...styles.serviceText, ...(isMobile ? responsiveStyles.serviceText : {}) }}>
 
                 <h3 style={styles.serviceTitle}>
                   Balance Inquiry
@@ -590,6 +605,7 @@ function AccountManagement() {
               <div
                 style={{
                   ...styles.serviceIcon,
+                  ...(isMobile ? responsiveStyles.serviceIcon : {}),
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -627,6 +643,7 @@ function AccountManagement() {
               <div
                 style={{
                   ...styles.serviceIcon,
+                  ...(isMobile ? responsiveStyles.serviceIcon : {}),
                   background: "#f5f3ff",
                   color: "#7048c6",
                 }}
@@ -664,6 +681,7 @@ function AccountManagement() {
               <div
                 style={{
                   ...styles.serviceIcon,
+                  ...(isMobile ? responsiveStyles.serviceIcon : {}),
                   background: "#fff8e7",
                   color: "#9a6700",
                 }}
@@ -701,6 +719,7 @@ function AccountManagement() {
               <div
                 style={{
                   ...styles.serviceIcon,
+                  ...(isMobile ? responsiveStyles.serviceIcon : {}),
                   background: "#edf8f3",
                   color: "#11895b",
                 }}
@@ -738,6 +757,7 @@ function AccountManagement() {
               <div
                 style={{
                   ...styles.serviceIcon,
+                  ...(isMobile ? responsiveStyles.serviceIcon : {}),
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -771,7 +791,7 @@ function AccountManagement() {
 
       {/* ================= FOOTER ================= */}
 
-      <footer style={styles.footer}>
+      <footer style={{ ...styles.footer, ...(isMobile ? responsiveStyles.footer : {}) }}>
 
         <div>
           © {new Date().getFullYear()} Avani Bank
@@ -974,7 +994,7 @@ navbar: {
   accountCard: {
     background: "#ffffff",
     border: "1px solid #e8ecf2",
-    borderRadius: "17px",
+    borderRadius: "18px",
     padding: "20px",
     boxShadow:
       "0 6px 22px rgba(24,43,83,0.04)",
@@ -1313,6 +1333,169 @@ navbar: {
     borderRadius: "50%",
     margin: "20px auto 0",
     animation: "spin 0.8s linear infinite",
+  },
+};
+
+
+/* =====================================================
+   RESPONSIVE STYLE OVERRIDES
+   ===================================================== */
+
+const responsiveStyles = {
+  page: {
+    padding: "12px",
+  },
+
+  navbar: {
+    maxHeight: "none",
+    padding: "16px",
+    borderRadius: "16px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "13px",
+  },
+
+  brandArea: {
+    width: "100%",
+  },
+
+  backButton: {
+    width: "100%",
+    minHeight: "44px",
+  },
+
+  container: {
+    padding: "22px 4px 35px",
+  },
+
+  pageHeader: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "12px",
+    marginBottom: "22px",
+  },
+
+  title: {
+    fontSize: "24px",
+    lineHeight: 1.25,
+  },
+
+  subtitle: {
+    fontSize: "12px",
+    lineHeight: 1.5,
+  },
+
+  accountCount: {
+    alignSelf: "flex-start",
+  },
+
+  section: {
+    marginTop: "22px",
+  },
+
+  accountsGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "13px",
+  },
+
+  accountCard: {
+    padding: "17px",
+    borderRadius: "15px",
+  },
+
+  accountTop: {
+    alignItems: "flex-start",
+    flexWrap: "wrap",
+  },
+
+  accountTopText: {
+    minWidth: 0,
+    flex: "1 1 130px",
+  },
+
+  statusBadge: {
+    marginLeft: "auto",
+  },
+
+  accountNumberBox: {
+    marginTop: "16px",
+  },
+
+  accountNumber: {
+    overflowWrap: "anywhere",
+    wordBreak: "break-word",
+    lineHeight: 1.45,
+  },
+
+  balanceBox: {
+    alignItems: "flex-start",
+    flexDirection: "column",
+    gap: "14px",
+  },
+
+  balance: {
+    fontSize: "21px",
+    overflowWrap: "anywhere",
+  },
+
+  interestBox: {
+    width: "100%",
+    textAlign: "left",
+  },
+
+  actions: {
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gap: "8px",
+    marginTop: "15px",
+  },
+
+  actionButton: {
+    width: "100%",
+    minHeight: "43px",
+  },
+
+  secondaryButton: {
+    width: "100%",
+    minHeight: "43px",
+  },
+
+  freezeButton: {
+    width: "100%",
+    minHeight: "43px",
+  },
+
+  unfreezeButton: {
+    width: "100%",
+    minHeight: "43px",
+  },
+
+  servicesGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "10px",
+  },
+
+  serviceCard: {
+    minHeight: "76px",
+    padding: "13px",
+  },
+
+  serviceIcon: {
+    width: "42px",
+    height: "42px",
+    minWidth: "42px",
+  },
+
+  serviceText: {
+    minWidth: 0,
+  },
+
+  footer: {
+    padding: "16px",
+    flexDirection: "column",
+    alignItems: "center",
+    textAlign: "center",
+    lineHeight: 1.5,
   },
 };
 

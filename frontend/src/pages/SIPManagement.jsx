@@ -5,7 +5,6 @@ const API_BASE = "http://localhost:8080";
 function SIPManagement() {
   const [accounts, setAccounts] = useState([]);
   const [sips, setSips] = useState([]);
-
   const [form, setForm] = useState({
     accountId: "",
     monthlyAmount: "",
@@ -20,15 +19,36 @@ function SIPManagement() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 600 : false
+  );
+  const [isTablet, setIsTablet] = useState(
+    typeof window !== "undefined"
+      ? window.innerWidth > 600 && window.innerWidth <= 900
+      : false
+  );
+
   const getToken = () => localStorage.getItem("token");
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat("en-IN", {
+  const formatCurrency = (value) =>
+    new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
       maximumFractionDigits: 2,
     }).format(Number(value || 0));
-  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width <= 600);
+      setIsTablet(width > 600 && width <= 900);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const fetchData = async () => {
     setLoading(true);
@@ -78,7 +98,6 @@ function SIPManagement() {
       const sipData = await sipResponse.json();
 
       setAccounts(Array.isArray(accountData) ? accountData : []);
-
       setSips(Array.isArray(sipData) ? sipData : []);
     } catch (err) {
       console.error("SIP Management Error:", err);
@@ -94,7 +113,7 @@ function SIPManagement() {
 
   const selectedAccount = useMemo(() => {
     return accounts.find(
-      (account) => String(account.id) === String(form.accountId),
+      (account) => String(account.id) === String(form.accountId)
     );
   }, [accounts, form.accountId]);
 
@@ -112,7 +131,6 @@ function SIPManagement() {
     }
 
     const monthlyRate = annualRate / 1200;
-
     let value = 0;
 
     if (monthlyRate === 0) {
@@ -152,9 +170,7 @@ function SIPManagement() {
     setSuccess("");
 
     const monthlyAmount = Number(form.monthlyAmount);
-
     const expectedReturnRate = Number(form.expectedReturnRate);
-
     const tenureMonths = Number(form.tenureMonths);
 
     if (!form.accountId) {
@@ -194,13 +210,9 @@ function SIPManagement() {
       const params = new URLSearchParams();
 
       params.append("accountId", form.accountId);
-
       params.append("monthlyAmount", monthlyAmount);
-
       params.append("expectedReturnRate", expectedReturnRate);
-
       params.append("tenureMonths", tenureMonths);
-
       params.append("startDate", form.startDate);
 
       const response = await fetch(
@@ -211,7 +223,7 @@ function SIPManagement() {
             Authorization: `Bearer ${token}`,
             Accept: "application/json",
           },
-        },
+        }
       );
 
       const data = await response.json();
@@ -237,7 +249,6 @@ function SIPManagement() {
       await fetchData();
     } catch (err) {
       console.error("Create SIP Error:", err);
-
       setError(err.message || "Unable to create SIP.");
     } finally {
       setCreating(false);
@@ -256,13 +267,16 @@ function SIPManagement() {
         throw new Error("Authentication token not found.");
       }
 
-      const response = await fetch(`${API_BASE}/api/sips/${sipId}/${action}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
+      const response = await fetch(
+        `${API_BASE}/api/sips/${sipId}/${action}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      );
 
       const data = await response.json();
 
@@ -281,11 +295,9 @@ function SIPManagement() {
       };
 
       setSuccess(messages[action] || "SIP updated successfully.");
-
       await fetchData();
     } catch (err) {
       console.error("SIP Action Error:", err);
-
       setError(err.message || "Unable to update SIP.");
     } finally {
       setActionId(null);
@@ -294,7 +306,7 @@ function SIPManagement() {
 
   const confirmCancel = (sipId) => {
     const confirmed = window.confirm(
-      "Are you sure you want to cancel this SIP?",
+      "Are you sure you want to cancel this SIP?"
     );
 
     if (!confirmed) {
@@ -342,48 +354,213 @@ function SIPManagement() {
   };
 
   const activeSIPs = sips.filter(
-    (sip) => String(sip.status).toUpperCase() === "ACTIVE",
+    (sip) => String(sip.status).toUpperCase() === "ACTIVE"
   );
 
   const totalInvested = sips.reduce(
     (total, sip) => total + Number(sip.totalInvested || 0),
-    0,
+    0
   );
 
   const totalProjectedValue = sips.reduce(
     (total, sip) => total + Number(sip.projectedValue || 0),
-    0,
+    0
   );
+
+  const responsiveStyles = {
+    page: {
+      ...styles.page,
+      padding: isMobile ? "14px 10px" : isTablet ? "20px 14px" : styles.page.padding,
+    },
+    container: {
+      ...styles.container,
+      maxWidth: isMobile ? "100%" : styles.container.maxWidth,
+    },
+    header: {
+      ...styles.header,
+      flexDirection: isMobile ? "column" : isTablet ? "column" : "row",
+      alignItems: isMobile || isTablet ? "stretch" : "center",
+      gap: isMobile ? "14px" : "18px",
+      padding: isMobile ? "16px" : isTablet ? "18px" : styles.header.padding,
+      borderRadius: isMobile ? "13px" : styles.header.borderRadius,
+    },
+    headerLeft: {
+      ...styles.headerLeft,
+      alignItems: isMobile ? "flex-start" : "center",
+      gap: isMobile ? "10px" : styles.headerLeft.gap,
+    },
+    headerIcon: {
+      ...styles.headerIcon,
+      width: isMobile ? "42px" : styles.headerIcon.width,
+      height: isMobile ? "42px" : styles.headerIcon.height,
+      fontSize: isMobile ? "20px" : styles.headerIcon.fontSize,
+    },
+    title: {
+      ...styles.title,
+      fontSize: isMobile ? "19px" : isTablet ? "21px" : styles.title.fontSize,
+      lineHeight: 1.25,
+    },
+    subtitle: {
+      ...styles.subtitle,
+      fontSize: isMobile ? "10px" : styles.subtitle.fontSize,
+      lineHeight: 1.45,
+    },
+    backButton: {
+      ...styles.backButton,
+      width: isMobile || isTablet ? "100%" : "auto",
+      padding: isMobile ? "11px 13px" : styles.backButton.padding,
+    },
+    errorBox: {
+      ...styles.errorBox,
+      fontSize: isMobile ? "11px" : styles.errorBox.fontSize,
+      lineHeight: 1.45,
+    },
+    successBox: {
+      ...styles.successBox,
+      fontSize: isMobile ? "11px" : styles.successBox.fontSize,
+      lineHeight: 1.45,
+    },
+    loadingCard: {
+      ...styles.loadingCard,
+      margin: isMobile ? "70px 0" : "120px auto",
+      padding: isMobile ? "28px 18px" : styles.loadingCard.padding,
+    },
+    summaryGrid: {
+      ...styles.summaryGrid,
+      gridTemplateColumns: isMobile
+        ? "1fr"
+        : isTablet
+        ? "repeat(2, minmax(0, 1fr))"
+        : styles.summaryGrid.gridTemplateColumns,
+      gap: isMobile ? "10px" : styles.summaryGrid.gap,
+      marginBottom: isMobile ? "24px" : styles.summaryGrid.marginBottom,
+    },
+    summaryCard: {
+      ...styles.summaryCard,
+      padding: isMobile ? "15px" : styles.summaryCard.padding,
+    },
+    summaryValue: {
+      ...styles.summaryValue,
+      fontSize: isMobile ? "20px" : styles.summaryValue.fontSize,
+    },
+    sectionTitle: {
+      ...styles.sectionTitle,
+      fontSize: isMobile ? "16px" : styles.sectionTitle.fontSize,
+    },
+    createCard: {
+      ...styles.createCard,
+      padding: isMobile ? "14px" : isTablet ? "17px" : styles.createCard.padding,
+      marginBottom: isMobile ? "25px" : styles.createCard.marginBottom,
+    },
+    formGrid: {
+      ...styles.formGrid,
+      gridTemplateColumns: isMobile
+        ? "1fr"
+        : isTablet
+        ? "repeat(2, minmax(0, 1fr))"
+        : styles.formGrid.gridTemplateColumns,
+      gap: isMobile ? "12px" : styles.formGrid.gap,
+    },
+    input: {
+      ...styles.input,
+      height: isMobile ? "42px" : styles.input.height,
+      fontSize: isMobile ? "12px" : styles.input.fontSize,
+    },
+    accountInfo: {
+      ...styles.accountInfo,
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "flex-start" : "center",
+    },
+    projectionBox: {
+      ...styles.projectionBox,
+      padding: isMobile ? "13px" : styles.projectionBox.padding,
+    },
+    projectionGrid: {
+      ...styles.projectionGrid,
+      gridTemplateColumns: isMobile
+        ? "1fr"
+        : isTablet
+        ? "repeat(2, minmax(0, 1fr))"
+        : styles.projectionGrid.gridTemplateColumns,
+      gap: isMobile ? "12px" : styles.projectionGrid.gap,
+    },
+    createButton: {
+      ...styles.createButton,
+      height: isMobile ? "44px" : styles.createButton.height,
+      fontSize: isMobile ? "12px" : styles.createButton.fontSize,
+    },
+    listHeader: {
+      ...styles.listHeader,
+      marginBottom: isMobile ? "12px" : styles.listHeader.marginBottom,
+    },
+    sipGrid: {
+      ...styles.sipGrid,
+      gridTemplateColumns: isMobile
+        ? "1fr"
+        : isTablet
+        ? "repeat(2, minmax(0, 1fr))"
+        : styles.sipGrid.gridTemplateColumns,
+      gap: isMobile ? "12px" : styles.sipGrid.gap,
+    },
+    sipCard: {
+      ...styles.sipCard,
+      padding: isMobile ? "14px" : styles.sipCard.padding,
+    },
+    sipCardHeader: {
+      ...styles.sipCardHeader,
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "stretch" : "flex-start",
+    },
+    statusBadge: {
+      ...styles.statusBadge,
+      alignSelf: isMobile ? "flex-start" : "auto",
+    },
+    sipAmount: {
+      ...styles.sipAmount,
+      fontSize: isMobile ? "20px" : styles.sipAmount.fontSize,
+      marginTop: isMobile ? "14px" : styles.sipAmount.marginTop,
+      marginBottom: isMobile ? "14px" : styles.sipAmount.marginBottom,
+    },
+    detailsGrid: {
+      ...styles.detailsGrid,
+      gridTemplateColumns: isMobile ? "1fr" : "repeat(2, minmax(0, 1fr))",
+      gap: isMobile ? "10px" : styles.detailsGrid.gap,
+    },
+    actionRow: {
+      ...styles.actionRow,
+      flexDirection: isMobile ? "column" : "row",
+      gap: isMobile ? "8px" : styles.actionRow.gap,
+    },
+    emptyCard: {
+      ...styles.emptyCard,
+      padding: isMobile ? "32px 15px" : styles.emptyCard.padding,
+    },
+  };
 
   if (loading) {
     return (
-      <div style={styles.page}>
-        <div style={styles.loadingCard}>
+      <div style={responsiveStyles.page}>
+        <div style={responsiveStyles.loadingCard}>
           <div style={styles.loadingIcon}>🔄</div>
-
           <div style={styles.loadingTitle}>Loading SIP Management...</div>
-
-          <div style={styles.loadingText}>Fetching your SIP information.</div>
+          <div style={styles.loadingText}>
+            Fetching your SIP information.
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={styles.page}>
-      <div style={styles.container}>
-        {/* =========================
-    HEADER
-========================= */}
+    <div style={responsiveStyles.page}>
+      <div style={responsiveStyles.container}>
+        <div style={responsiveStyles.header}>
+          <div style={responsiveStyles.headerLeft}>
+            <div style={responsiveStyles.headerIcon}>🔄</div>
 
-        <div style={styles.header}>
-          <div style={styles.headerLeft}>
-            <div style={styles.headerIcon}>🔄</div>
-
-            <div>
-              <div style={styles.title}>SIP Management</div>
-
-              <div style={styles.subtitle}>
+            <div style={{ minWidth: 0 }}>
+              <div style={responsiveStyles.title}>SIP Management</div>
+              <div style={responsiveStyles.subtitle}>
                 Start and manage your systematic investment plans.
               </div>
             </div>
@@ -394,88 +571,67 @@ function SIPManagement() {
             onClick={() => {
               window.location.href = "/investments";
             }}
-            style={styles.backButton}
+            style={responsiveStyles.backButton}
           >
             ← Investment Page
           </button>
         </div>
 
-        {/* =========================
-            ALERTS
-        ========================= */}
+        {error && <div style={responsiveStyles.errorBox}>⚠️ {error}</div>}
+        {success && (
+          <div style={responsiveStyles.successBox}>✅ {success}</div>
+        )}
 
-        {error && <div style={styles.errorBox}>⚠️ {error}</div>}
-
-        {success && <div style={styles.successBox}>✅ {success}</div>}
-
-        {/* =========================
-            SUMMARY
-        ========================= */}
-
-        <div style={styles.summaryGrid}>
-          <div style={styles.summaryCard}>
+        <div style={responsiveStyles.summaryGrid}>
+          <div style={responsiveStyles.summaryCard}>
             <div style={styles.summaryLabel}>Total SIPs</div>
-
-            <div style={styles.summaryValue}>{sips.length}</div>
-
+            <div style={responsiveStyles.summaryValue}>{sips.length}</div>
             <div style={styles.summaryHint}>All SIP plans</div>
           </div>
 
-          <div style={styles.summaryCard}>
+          <div style={responsiveStyles.summaryCard}>
             <div style={styles.summaryLabel}>Active SIPs</div>
-
-            <div style={styles.summaryValue}>{activeSIPs.length}</div>
-
+            <div style={responsiveStyles.summaryValue}>
+              {activeSIPs.length}
+            </div>
             <div style={styles.summaryHint}>Currently running</div>
           </div>
 
-          <div style={styles.summaryCard}>
+          <div style={responsiveStyles.summaryCard}>
             <div style={styles.summaryLabel}>Total Invested</div>
-
-            <div style={styles.summaryValue}>
+            <div style={responsiveStyles.summaryValue}>
               {formatCurrency(totalInvested)}
             </div>
-
             <div style={styles.summaryHint}>Actual SIP installments</div>
           </div>
 
-          <div style={styles.summaryCard}>
+          <div style={responsiveStyles.summaryCard}>
             <div style={styles.summaryLabel}>Projected Value</div>
-
-            <div style={styles.summaryValue}>
+            <div style={responsiveStyles.summaryValue}>
               {formatCurrency(totalProjectedValue)}
             </div>
-
             <div style={styles.summaryHint}>Based on expected returns</div>
           </div>
         </div>
 
-        {/* =========================
-            CREATE SIP
-        ========================= */}
+        <div style={responsiveStyles.sectionTitle}>Start New SIP</div>
 
-        <div style={styles.sectionTitle}>Start New SIP</div>
-
-        <div style={styles.createCard}>
+        <div style={responsiveStyles.createCard}>
           <form onSubmit={handleCreateSIP}>
-            <div style={styles.formGrid}>
-              {/* ACCOUNT */}
-
+            <div style={responsiveStyles.formGrid}>
               <div style={styles.field}>
                 <label style={styles.label}>Debit Account</label>
-
                 <select
                   name="accountId"
                   value={form.accountId}
                   onChange={handleChange}
-                  style={styles.input}
+                  style={responsiveStyles.input}
                 >
                   <option value="">Select Account</option>
-
                   {accounts
                     .filter(
                       (account) =>
-                        String(account.status).toUpperCase() === "ACTIVE",
+                        String(account.status).toUpperCase() === "ACTIVE"
                     )
                     .map((account) => (
                       <option key={account.id} value={account.id}>
@@ -487,11 +643,8 @@ function SIPManagement() {
                 </select>
               </div>
 
-              {/* MONTHLY AMOUNT */}
-
               <div style={styles.field}>
                 <label style={styles.label}>Monthly SIP Amount</label>
-
                 <input
                   type="number"
                   name="monthlyAmount"
@@ -500,15 +653,14 @@ function SIPManagement() {
                   placeholder="e.g. 5000"
                   min="1"
                   step="0.01"
-                  style={styles.input}
+                  style={responsiveStyles.input}
                 />
               </div>
 
-              {/* EXPECTED RETURN */}
-
               <div style={styles.field}>
-                <label style={styles.label}>Expected Annual Return (%)</label>
-
+                <label style={styles.label}>
+                  Expected Annual Return (%)
+                </label>
                 <input
                   type="number"
                   name="expectedReturnRate"
@@ -516,15 +668,12 @@ function SIPManagement() {
                   onChange={handleChange}
                   min="0"
                   step="0.01"
-                  style={styles.input}
+                  style={responsiveStyles.input}
                 />
               </div>
 
-              {/* TENURE */}
-
               <div style={styles.field}>
                 <label style={styles.label}>Tenure (Months)</label>
-
                 <input
                   type="number"
                   name="tenureMonths"
@@ -532,36 +681,30 @@ function SIPManagement() {
                   onChange={handleChange}
                   min="1"
                   step="1"
-                  style={styles.input}
+                  style={responsiveStyles.input}
                 />
               </div>
 
-              {/* START DATE */}
-
               <div style={styles.field}>
                 <label style={styles.label}>Start Date</label>
-
                 <input
                   type="date"
                   name="startDate"
                   value={form.startDate}
                   onChange={handleChange}
                   min={new Date().toISOString().split("T")[0]}
-                  style={styles.input}
+                  style={responsiveStyles.input}
                 />
               </div>
 
-              {/* FREQUENCY */}
-
               <div style={styles.field}>
                 <label style={styles.label}>Frequency</label>
-
                 <input
                   type="text"
                   value="MONTHLY"
                   disabled
                   style={{
-                    ...styles.input,
+                    ...responsiveStyles.input,
                     background: "#f8fafc",
                     color: "#667085",
                   }}
@@ -569,33 +712,26 @@ function SIPManagement() {
               </div>
             </div>
 
-            {/* ACCOUNT INFO */}
-
             {selectedAccount && (
-              <div style={styles.accountInfo}>
+              <div style={responsiveStyles.accountInfo}>
                 <div>
                   <span>Account</span>
-
                   <strong>{selectedAccount.accountNumber}</strong>
                 </div>
 
                 <div>
                   <span>Available Balance</span>
-
                   <strong>{formatCurrency(selectedAccount.balance)}</strong>
                 </div>
               </div>
             )}
 
-            {/* PROJECTION */}
-
-            <div style={styles.projectionBox}>
+            <div style={responsiveStyles.projectionBox}>
               <div style={styles.projectionTitle}>📈 SIP Projection</div>
 
-              <div style={styles.projectionGrid}>
+              <div style={responsiveStyles.projectionGrid}>
                 <div>
                   <span style={styles.projectionLabel}>Total Investment</span>
-
                   <strong style={styles.projectionValue}>
                     {formatCurrency(projectedCalculation.invested)}
                   </strong>
@@ -603,7 +739,6 @@ function SIPManagement() {
 
                 <div>
                   <span style={styles.projectionLabel}>Projected Value</span>
-
                   <strong style={styles.projectionValue}>
                     {formatCurrency(projectedCalculation.value)}
                   </strong>
@@ -611,7 +746,6 @@ function SIPManagement() {
 
                 <div>
                   <span style={styles.projectionLabel}>Projected Profit</span>
-
                   <strong
                     style={{
                       ...styles.projectionValue,
@@ -624,8 +758,8 @@ function SIPManagement() {
               </div>
 
               <div style={styles.projectionNote}>
-                Projection is an estimate based on the selected expected annual
-                return. Actual market-linked returns may vary.
+                Projection is an estimate based on the selected expected
+                annual return. Actual market-linked returns may vary.
               </div>
             </div>
 
@@ -633,7 +767,7 @@ function SIPManagement() {
               type="submit"
               disabled={creating}
               style={{
-                ...styles.createButton,
+                ...responsiveStyles.createButton,
                 opacity: creating ? 0.7 : 1,
               }}
             >
@@ -642,14 +776,9 @@ function SIPManagement() {
           </form>
         </div>
 
-        {/* =========================
-            SIP LIST
-        ========================= */}
-
-        <div style={styles.listHeader}>
+        <div style={responsiveStyles.listHeader}>
           <div>
-            <div style={styles.sectionTitle}>My SIPs</div>
-
+            <div style={responsiveStyles.sectionTitle}>My SIPs</div>
             <div style={styles.sectionSubtitle}>
               View and manage your SIP investments.
             </div>
@@ -657,36 +786,37 @@ function SIPManagement() {
         </div>
 
         {sips.length === 0 ? (
-          <div style={styles.emptyCard}>
+          <div style={responsiveStyles.emptyCard}>
             <div style={styles.emptyIcon}>🔄</div>
-
             <div style={styles.emptyTitle}>No SIPs Found</div>
-
             <div style={styles.emptyText}>
               Start your first SIP using the form above.
             </div>
           </div>
         ) : (
-          <div style={styles.sipGrid}>
+          <div style={responsiveStyles.sipGrid}>
             {sips.map((sip) => {
               const statusStyle = getStatusStyle(sip.status);
-
               const isProcessing = actionId === sip.id;
 
               return (
-                <div key={sip.id} style={styles.sipCard}>
-                  <div style={styles.sipCardHeader}>
-                    <div>
+                <div key={sip.id} style={responsiveStyles.sipCard}>
+                  <div style={responsiveStyles.sipCardHeader}>
+                    <div style={{ minWidth: 0 }}>
                       <div style={styles.sipTitle}>SIP #{sip.id}</div>
-
-                      <div style={styles.sipAccount}>
+                      <div
+                        style={{
+                          ...styles.sipAccount,
+                          overflowWrap: "anywhere",
+                        }}
+                      >
                         Account: {sip.accountNumber || "N/A"}
                       </div>
                     </div>
 
                     <span
                       style={{
-                        ...styles.statusBadge,
+                        ...responsiveStyles.statusBadge,
                         background: statusStyle.background,
                         color: statusStyle.color,
                       }}
@@ -695,16 +825,14 @@ function SIPManagement() {
                     </span>
                   </div>
 
-                  <div style={styles.sipAmount}>
+                  <div style={responsiveStyles.sipAmount}>
                     {formatCurrency(sip.monthlyAmount)}
-
                     <span>/ month</span>
                   </div>
 
-                  <div style={styles.detailsGrid}>
+                  <div style={responsiveStyles.detailsGrid}>
                     <div>
                       <span>Expected Return</span>
-
                       <strong>
                         {Number(sip.expectedReturnRate || 0).toFixed(2)}%
                       </strong>
@@ -712,63 +840,49 @@ function SIPManagement() {
 
                     <div>
                       <span>Tenure</span>
-
                       <strong>{sip.tenureMonths} months</strong>
                     </div>
 
                     <div>
                       <span>Installments Paid</span>
-
                       <strong>{sip.installmentsPaid}</strong>
                     </div>
 
                     <div>
                       <span>Total Invested</span>
-
                       <strong>{formatCurrency(sip.totalInvested)}</strong>
                     </div>
 
                     <div>
                       <span>Projected Value</span>
-
                       <strong>{formatCurrency(sip.projectedValue)}</strong>
                     </div>
 
                     <div>
                       <span>Projected Profit</span>
-
-                      <strong
-                        style={{
-                          color: "#087443",
-                        }}
-                      >
+                      <strong style={{ color: "#087443" }}>
                         {formatCurrency(sip.projectedProfit)}
                       </strong>
                     </div>
 
                     <div>
                       <span>Start Date</span>
-
                       <strong>{sip.startDate || "N/A"}</strong>
                     </div>
 
                     <div>
                       <span>Next Installment</span>
-
                       <strong>{sip.nextInstallmentDate || "N/A"}</strong>
                     </div>
 
                     <div>
                       <span>Maturity Date</span>
-
                       <strong>{sip.maturityDate || "N/A"}</strong>
                     </div>
                   </div>
 
-                  {/* ACTIONS */}
-
                   {String(sip.status).toUpperCase() === "ACTIVE" && (
-                    <div style={styles.actionRow}>
+                    <div style={responsiveStyles.actionRow}>
                       <button
                         type="button"
                         disabled={isProcessing}
@@ -790,7 +904,7 @@ function SIPManagement() {
                   )}
 
                   {String(sip.status).toUpperCase() === "PAUSED" && (
-                    <div style={styles.actionRow}>
+                    <div style={responsiveStyles.actionRow}>
                       <button
                         type="button"
                         disabled={isProcessing}
@@ -837,24 +951,24 @@ const styles = {
   },
 
   header: {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  gap: "20px",
-  marginBottom: "25px",
-  background: "linear-gradient(135deg, #0757b8, #0878e8)",
-  borderRadius: "16px",
-  padding: "20px 22px",
-  boxSizing: "border-box",
-  boxShadow: "0 8px 24px rgba(7, 87, 184, 0.18)",
-},
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "20px",
+    marginBottom: "25px",
+    background: "linear-gradient(135deg, #0757b8, #0878e8)",
+    borderRadius: "16px",
+    padding: "20px 22px",
+    boxSizing: "border-box",
+    boxShadow: "0 8px 24px rgba(7, 87, 184, 0.18)",
+  },
 
   headerLeft: {
-  display: "flex",
-  alignItems: "center",
-  gap: "14px",
-  minWidth: 0,
-},
+    display: "flex",
+    alignItems: "center",
+    gap: "14px",
+    minWidth: 0,
+  },
 
   title: {
     fontSize: "24px",
@@ -869,29 +983,29 @@ const styles = {
   },
 
   headerIcon: {
-  width: "48px",
-  height: "48px",
-  flexShrink: 0,
-  borderRadius: "13px",
-  background: "rgba(255, 255, 255, 0.16)",
-  border: "1px solid rgba(255, 255, 255, 0.28)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontSize: "23px",
-},
+    width: "48px",
+    height: "48px",
+    flexShrink: 0,
+    borderRadius: "13px",
+    background: "rgba(255, 255, 255, 0.16)",
+    border: "1px solid rgba(255, 255, 255, 0.28)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "23px",
+  },
 
   backButton: {
-  flexShrink: 0,
-  border: "1px solid rgba(255, 255, 255, 0.65)",
-  borderRadius: "9px",
-  padding: "10px 15px",
-  background: "rgba(255, 255, 255, 0.08)",
-  color: "#ffffff",
-  fontSize: "11px",
-  fontWeight: "800",
-  cursor: "pointer",
-},   
+    flexShrink: 0,
+    border: "1px solid rgba(255, 255, 255, 0.65)",
+    borderRadius: "9px",
+    padding: "10px 15px",
+    background: "rgba(255, 255, 255, 0.08)",
+    color: "#ffffff",
+    fontSize: "11px",
+    fontWeight: "800",
+    cursor: "pointer",
+  },
 
   errorBox: {
     background: "#fff1f2",
@@ -922,6 +1036,7 @@ const styles = {
     padding: "35px",
     textAlign: "center",
     boxShadow: "0 8px 30px rgba(15, 23, 42, 0.08)",
+    boxSizing: "border-box",
   },
 
   loadingIcon: {
@@ -1009,6 +1124,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     gap: "7px",
+    minWidth: 0,
   },
 
   label: {
@@ -1028,6 +1144,7 @@ const styles = {
     background: "#ffffff",
     outline: "none",
     boxSizing: "border-box",
+    minWidth: 0,
   },
 
   accountInfo: {
@@ -1112,6 +1229,7 @@ const styles = {
     borderRadius: "14px",
     padding: "18px",
     boxShadow: "0 4px 14px rgba(15, 23, 42, 0.04)",
+    minWidth: 0,
   },
 
   sipCardHeader: {
@@ -1139,6 +1257,7 @@ const styles = {
     padding: "5px 8px",
     borderRadius: "20px",
     textTransform: "uppercase",
+    whiteSpace: "nowrap",
   },
 
   sipAmount: {

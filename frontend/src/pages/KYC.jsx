@@ -22,6 +22,16 @@ function KYC() {
 
   const token = localStorage.getItem("token");
 
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 600 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 600);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // =====================================================
   // LOAD CUSTOMER + KYC DATA
   // =====================================================
@@ -407,11 +417,21 @@ function KYC() {
   // =====================================================
 
   return (
-    <div style={styles.page}>
+    <div
+      style={{
+        ...styles.page,
+        ...(isMobile ? styles.mobilePage : {}),
+      }}
+    >
 
       {/* ================= HEADER ================= */}
 
-      <div style={styles.header}>
+      <div
+        style={{
+          ...styles.header,
+          ...(isMobile ? styles.mobileHeader : {}),
+        }}
+      >
 
         <div>
 
@@ -419,7 +439,12 @@ function KYC() {
             AVANI BANK
           </div>
 
-          <h1 style={styles.title}>
+          <h1
+            style={{
+              ...styles.title,
+              ...(isMobile ? styles.mobileTitle : {}),
+            }}
+          >
             KYC Verification
           </h1>
 
@@ -435,7 +460,10 @@ function KYC() {
           onClick={() =>
             navigate("/dashboard")
           }
-          style={styles.dashboardButton}
+          style={{
+            ...styles.dashboardButton,
+            ...(isMobile ? styles.mobileDashboardButton : {}),
+          }}
         >
           ← Dashboard
         </button>
@@ -446,7 +474,10 @@ function KYC() {
 
       {message && (
         <div
-          style={styles.successMessage}
+          style={{
+            ...styles.successMessage,
+            ...(isMobile ? styles.mobileMessage : {}),
+          }}
         >
           <span
             style={styles.messageIcon}
@@ -460,7 +491,10 @@ function KYC() {
 
       {error && (
         <div
-          style={styles.errorMessage}
+          style={{
+            ...styles.errorMessage,
+            ...(isMobile ? styles.mobileMessage : {}),
+          }}
         >
           <span
             style={styles.messageIcon}
@@ -474,7 +508,12 @@ function KYC() {
 
       {/* ================= KYC STATUS ================= */}
 
-      <div style={styles.statusCard}>
+      <div
+        style={{
+          ...styles.statusCard,
+          ...(isMobile ? styles.mobileStatusCard : {}),
+        }}
+      >
 
         <div style={styles.statusIcon}>
           🛡️
@@ -485,7 +524,10 @@ function KYC() {
         >
 
           <div
-            style={styles.statusTopRow}
+            style={{
+              ...styles.statusTopRow,
+              ...(isMobile ? styles.mobileStatusTopRow : {}),
+            }}
           >
 
             <div>
@@ -552,10 +594,18 @@ function KYC() {
 
       {/* ================= CUSTOMER DETAILS ================= */}
 
-      <div style={styles.card}>
+      <div
+        style={{
+          ...styles.card,
+          ...(isMobile ? styles.mobileCard : {}),
+        }}
+      >
 
         <div
-          style={styles.cardHeader}
+          style={{
+            ...styles.cardHeader,
+            ...(isMobile ? styles.mobileCardHeader : {}),
+          }}
         >
 
           <div>
@@ -584,7 +634,10 @@ function KYC() {
         </div>
 
         <div
-          style={styles.customerGrid}
+          style={{
+            ...styles.customerGrid,
+            ...(isMobile ? styles.mobileCustomerGrid : {}),
+          }}
         >
 
           <div style={styles.infoItem}>
@@ -661,10 +714,18 @@ function KYC() {
 
       {/* ================= SUBMIT KYC ================= */}
 
-      <div style={styles.card}>
+      <div
+        style={{
+          ...styles.card,
+          ...(isMobile ? styles.mobileCard : {}),
+        }}
+      >
 
         <div
-          style={styles.cardHeader}
+          style={{
+            ...styles.cardHeader,
+            ...(isMobile ? styles.mobileCardHeader : {}),
+          }}
         >
 
           <div>
@@ -697,7 +758,10 @@ function KYC() {
         >
 
           <div
-            style={styles.formGrid}
+            style={{
+              ...styles.formGrid,
+              ...(isMobile ? styles.mobileFormGrid : {}),
+            }}
           >
 
             {/* DOCUMENT TYPE */}
@@ -863,7 +927,10 @@ function KYC() {
           </div>
 
           <div
-            style={styles.formActions}
+            style={{
+              ...styles.formActions,
+              ...(isMobile ? styles.mobileFormActions : {}),
+            }}
           >
 
             <button
@@ -911,10 +978,18 @@ function KYC() {
 
       {/* ================= DOCUMENT LIST ================= */}
 
-      <div style={styles.card}>
+      <div
+        style={{
+          ...styles.card,
+          ...(isMobile ? styles.mobileCard : {}),
+        }}
+      >
 
         <div
-          style={styles.cardHeader}
+          style={{
+            ...styles.cardHeader,
+            ...(isMobile ? styles.mobileCardHeader : {}),
+          }}
         >
 
           <div>
@@ -1115,7 +1190,10 @@ function KYC() {
       {/* ================= INFORMATION ================= */}
 
       <div
-        style={styles.infoBox}
+        style={{
+          ...styles.infoBox,
+          ...(isMobile ? styles.mobileInfoBox : {}),
+        }}
       >
 
         <div
@@ -1615,6 +1693,7 @@ const styles = {
     margin: "6px 0 4px",
     color: "#6d7a8e",
     fontSize: "12px",
+    overflowWrap: "anywhere",
   },
 
   dateText: {
@@ -1646,6 +1725,7 @@ const styles = {
     margin: "7px 0 0",
     color: "#53647b",
     fontSize: "11px",
+    overflowWrap: "anywhere",
   },
 
   emptyState: {
@@ -1715,6 +1795,115 @@ const styles = {
     color: "#728096",
     fontSize: "11px",
     lineHeight: "1.6",
+    overflowWrap: "anywhere",
+  },
+
+  // =====================================================
+  // RESPONSIVE STYLES
+  // =====================================================
+
+  mobilePage: {
+    padding: "14px 10px",
+  },
+
+  mobileHeader: {
+    maxHeight: "none",
+    padding: "20px 16px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "15px",
+    borderRadius: "15px",
+  },
+
+  mobileTitle: {
+    fontSize: "23px",
+    lineHeight: "1.2",
+  },
+
+  mobileDashboardButton: {
+    width: "100%",
+    minHeight: "40px",
+    padding: "10px 12px",
+  },
+
+  mobileMessage: {
+    fontSize: "12px",
+    padding: "11px 12px",
+    lineHeight: "1.5",
+  },
+
+  mobileStatusCard: {
+    padding: "15px",
+    marginTop: "14px",
+    marginBottom: "14px",
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "12px",
+  },
+
+  mobileStatusTopRow: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: "10px",
+  },
+
+  mobileCard: {
+    padding: "15px",
+    marginBottom: "14px",
+    borderRadius: "14px",
+  },
+
+  mobileCardHeader: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    gap: "10px",
+    marginBottom: "15px",
+  },
+
+  mobileCustomerGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "13px",
+  },
+
+  mobileFormGrid: {
+    gridTemplateColumns: "1fr",
+    gap: "14px",
+  },
+
+  mobileFileUploadBox: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    padding: "13px",
+    gap: "10px",
+  },
+
+  mobileFormActions: {
+    flexDirection: "column-reverse",
+    alignItems: "stretch",
+    gap: "8px",
+    marginTop: "18px",
+  },
+
+  mobileDocumentList: {
+    gap: "9px",
+  },
+
+  mobileDocumentCard: {
+    padding: "12px",
+    gap: "10px",
+  },
+
+  mobileDocumentTitleRow: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    gap: "6px",
+  },
+
+  mobileInfoBox: {
+    padding: "13px",
+    gap: "9px",
+    marginBottom: "4px",
   },
 
   loadingContainer: {
