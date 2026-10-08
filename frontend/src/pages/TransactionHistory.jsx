@@ -4,6 +4,29 @@ import { useNavigate } from "react-router-dom";
 function TransactionHistory() {
   const navigate = useNavigate();
 
+  // =====================================================
+  // DARK MODE
+  // =====================================================
+
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("avani-theme") === "dark";
+  });
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+
+    window.addEventListener("storage", syncTheme);
+
+    // Sync theme whenever Transaction History opens
+    syncTheme();
+
+    return () => {
+      window.removeEventListener("storage", syncTheme);
+    };
+  }, []);
+
   const [sentTransactions, setSentTransactions] = useState([]);
   const [receivedTransactions, setReceivedTransactions] = useState([]);
 
@@ -16,7 +39,7 @@ function TransactionHistory() {
 
   // Responsive breakpoint for mobile/tablet layouts.
   const [isMobile, setIsMobile] = useState(
-    typeof window !== "undefined" ? window.innerWidth <= 600 : false
+    typeof window !== "undefined" ? window.innerWidth <= 600 : false,
   );
 
   useEffect(() => {
@@ -272,6 +295,7 @@ function TransactionHistory() {
       <div
         style={{
           ...styles.transactionRow,
+          ...(darkMode ? styles.darkTransactionRow : {}),
           ...(isMobile ? styles.mobileTransactionRow : {}),
         }}
       >
@@ -292,7 +316,12 @@ function TransactionHistory() {
               ...(isMobile ? styles.mobileTransactionTitleRow : {}),
             }}
           >
-            <strong style={styles.transactionTitle}>
+            <strong
+              style={{
+                ...styles.transactionTitle,
+                ...(darkMode ? styles.darkTransactionTitle : {}),
+              }}
+            >
               {isDebit ? "Money Sent" : "Money Received"}
             </strong>
 
@@ -311,6 +340,7 @@ function TransactionHistory() {
           <div
             style={{
               ...styles.transactionMeta,
+              ...(darkMode ? styles.darkTransactionMeta : {}),
               ...(isMobile ? styles.mobileTransactionMeta : {}),
             }}
           >
@@ -319,13 +349,23 @@ function TransactionHistory() {
             <span>{formatDate(transaction.transactionDate)}</span>
           </div>
 
-          <div style={styles.accountInfo}>
+          <div
+            style={{
+              ...styles.accountInfo,
+              ...(darkMode ? styles.darkAccountInfo : {}),
+            }}
+          >
             {isDebit
               ? `To: ${transaction.receiverAccountNumber}`
               : `From: ${transaction.senderAccountNumber}`}
           </div>
 
-          <div style={styles.transactionType}>
+          <div
+            style={{
+              ...styles.transactionType,
+              ...(darkMode ? styles.darkTransactionType : {}),
+            }}
+          >
             Type: {transaction.transactionType || "TRANSFER"}
           </div>
         </div>
@@ -350,11 +390,27 @@ function TransactionHistory() {
 
   if (loading) {
     return (
-      <div style={styles.page}>
+      <div
+        style={{
+          ...styles.page,
+          ...(darkMode ? styles.darkPage : {}),
+        }}
+      >
         <div style={styles.loading}>
-          <div style={styles.loader}></div>
+          <div
+            style={{
+              ...styles.loader,
+              ...(darkMode ? styles.darkLoader : {}),
+            }}
+          ></div>
 
-          <p>Loading account statement...</p>
+          <p
+            style={{
+              ...(darkMode ? styles.darkLoading : {}),
+            }}
+          >
+            Loading account statement...
+          </p>
         </div>
       </div>
     );
@@ -368,6 +424,7 @@ function TransactionHistory() {
     <div
       style={{
         ...styles.page,
+        ...(darkMode ? styles.darkPage : {}),
         ...(isMobile ? styles.mobilePage : {}),
       }}
     >
@@ -436,9 +493,14 @@ function TransactionHistory() {
             ...(isMobile ? styles.mobileSummaryGrid : {}),
           }}
         >
-          <div style={styles.summaryCard}>
+          <div
+            style={{
+              ...styles.summaryCard,
+              ...(darkMode ? styles.darkSummaryCard : {}),
+            }}
+          >
+            {" "}
             <div style={styles.summaryIcon}>⇄</div>
-
             <div>
               <span style={styles.summaryLabel}>Total Transactions</span>
 
@@ -448,7 +510,12 @@ function TransactionHistory() {
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
+          <div
+            style={{
+              ...styles.summaryCard,
+              ...(darkMode ? styles.darkSummaryCard : {}),
+            }}
+          >
             <div
               style={{
                 ...styles.summaryIcon,
@@ -468,7 +535,12 @@ function TransactionHistory() {
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
+          <div
+            style={{
+              ...styles.summaryCard,
+              ...(darkMode ? styles.darkSummaryCard : {}),
+            }}
+          >
             <div
               style={{
                 ...styles.summaryIcon,
@@ -494,6 +566,7 @@ function TransactionHistory() {
         <div
           style={{
             ...styles.card,
+            ...(darkMode ? styles.darkCard : {}),
             ...(isMobile ? styles.mobileCard : {}),
           }}
         >
@@ -504,15 +577,32 @@ function TransactionHistory() {
             }}
           >
             <div>
-              <h2 style={styles.cardTitle}>All Transactions</h2>
+              <h2
+                style={{
+                  ...styles.cardTitle,
+                  ...(darkMode ? styles.darkCardTitle : {}),
+                }}
+              >
+                All Transactions
+              </h2>
 
-              <p style={styles.cardSubtitle}>Complete transaction statement</p>
+              <p
+                style={{
+                  ...styles.cardSubtitle,
+                  ...(darkMode ? styles.darkCardSubtitle : {}),
+                }}
+              >
+                Complete transaction statement
+              </p>
             </div>
 
             <button
               onClick={() => loadTransactions(true)}
               disabled={refreshing}
-              style={styles.refreshButton}
+              style={{
+                ...styles.refreshButton,
+                ...(darkMode ? styles.darkRefreshButton : {}),
+              }}
             >
               {refreshing ? "Refreshing..." : "↻ Refresh"}
             </button>
@@ -531,13 +621,19 @@ function TransactionHistory() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search transaction, account number..."
-              style={styles.searchInput}
+              style={{
+                ...styles.searchInput,
+                ...(darkMode ? styles.darkSearchInput : {}),
+              }}
             />
 
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              style={styles.filterSelect}
+              style={{
+                ...styles.filterSelect,
+                ...(darkMode ? styles.darkFilterSelect : {}),
+              }}
             >
               <option value="ALL">All Transactions</option>
 
@@ -551,11 +647,30 @@ function TransactionHistory() {
 
           {filteredTransactions.length === 0 ? (
             <div style={styles.empty}>
-              <div style={styles.emptyIcon}>📄</div>
+              <div
+                style={{
+                  ...styles.emptyIcon,
+                  ...(darkMode ? styles.darkEmptyIcon : {}),
+                }}
+              >
+                📄
+              </div>
 
-              <h3 style={styles.emptyTitle}>No Transactions Found</h3>
+              <h3
+                style={{
+                  ...styles.emptyTitle,
+                  ...(darkMode ? styles.darkEmptyTitle : {}),
+                }}
+              >
+                No Transactions Found
+              </h3>
 
-              <p style={styles.emptyText}>
+              <p
+                style={{
+                  ...styles.emptyText,
+                  ...(darkMode ? styles.darkEmptyText : {}),
+                }}
+              >
                 No transactions match your current search or filter.
               </p>
             </div>
@@ -576,15 +691,28 @@ function TransactionHistory() {
         <div
           style={{
             ...styles.infoBox,
+            ...(darkMode ? styles.darkInfoBox : {}),
             ...(isMobile ? styles.mobileInfoBox : {}),
           }}
         >
           <div style={styles.infoIcon}>ℹ️</div>
 
           <div>
-            <strong style={styles.infoTitle}>Account Statement</strong>
+            <strong
+              style={{
+                ...styles.infoTitle,
+                ...(darkMode ? styles.darkInfoTitle : {}),
+              }}
+            >
+              Account Statement
+            </strong>
 
-            <p style={styles.infoText}>
+            <p
+              style={{
+                ...styles.infoText,
+                ...(darkMode ? styles.darkInfoText : {}),
+              }}
+            >
               This statement displays transactions retrieved securely from your
               Avani Bank account.
             </p>
@@ -955,6 +1083,108 @@ const styles = {
     fontSize: "10px",
     lineHeight: "1.6",
     overflowWrap: "anywhere",
+  },
+
+  // =====================================================
+  // DARK MODE STYLES
+  // =====================================================
+
+  darkPage: {
+    background: "#0b1220",
+    color: "#e8eef7",
+  },
+
+  darkSummaryCard: {
+    background: "#111a2b",
+    borderColor: "#26344b",
+    boxShadow: "0 8px 25px rgba(0,0,0,0.20)",
+  },
+
+  darkCard: {
+    background: "#111a2b",
+    borderColor: "#26344b",
+    boxShadow: "0 8px 25px rgba(0,0,0,0.20)",
+  },
+
+  darkCardTitle: {
+    color: "#e8eef7",
+  },
+
+  darkCardSubtitle: {
+    color: "#8795aa",
+  },
+
+  darkRefreshButton: {
+    background: "#172235",
+    color: "#8fb5ff",
+    borderColor: "#34445e",
+  },
+
+  darkSearchInput: {
+    background: "#172235",
+    color: "#e8eef7",
+    borderColor: "#34445e",
+  },
+
+  darkFilterSelect: {
+    background: "#172235",
+    color: "#e8eef7",
+    borderColor: "#34445e",
+  },
+
+  darkTransactionRow: {
+    background: "#172235",
+    borderColor: "#30405a",
+  },
+
+  darkTransactionTitle: {
+    color: "#e8eef7",
+  },
+
+  darkTransactionMeta: {
+    color: "#8795aa",
+  },
+
+  darkAccountInfo: {
+    color: "#b8c4d6",
+  },
+
+  darkTransactionType: {
+    color: "#8795aa",
+  },
+
+  darkEmptyIcon: {
+    background: "#1a2940",
+  },
+
+  darkEmptyTitle: {
+    color: "#e8eef7",
+  },
+
+  darkEmptyText: {
+    color: "#8795aa",
+  },
+
+  darkInfoBox: {
+    background: "#111a2b",
+    borderColor: "#26344b",
+  },
+
+  darkInfoTitle: {
+    color: "#dce5f1",
+  },
+
+  darkInfoText: {
+    color: "#8795aa",
+  },
+
+  darkLoading: {
+    color: "#9aa9bd",
+  },
+
+  darkLoader: {
+    borderColor: "#34445e",
+    borderTopColor: "#5b91ff",
   },
 
   // =========================

@@ -7,6 +7,29 @@ function KYC() {
   const [customer, setCustomer] = useState(null);
   const [documents, setDocuments] = useState([]);
 
+  // =====================================================
+  // DARK MODE
+  // =====================================================
+
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("avani-theme") === "dark";
+  });
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+
+    window.addEventListener("storage", syncTheme);
+
+    // Sync theme whenever KYC page opens
+    syncTheme();
+
+    return () => {
+      window.removeEventListener("storage", syncTheme);
+    };
+  }, []);
+
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
@@ -23,7 +46,7 @@ function KYC() {
   const token = localStorage.getItem("token");
 
   const [isMobile, setIsMobile] = useState(
-    typeof window !== "undefined" ? window.innerWidth <= 600 : false
+    typeof window !== "undefined" ? window.innerWidth <= 600 : false,
   );
 
   useEffect(() => {
@@ -46,9 +69,7 @@ function KYC() {
       setError("");
 
       if (!token) {
-        throw new Error(
-          "Authentication token not found. Please login again."
-        );
+        throw new Error("Authentication token not found. Please login again.");
       }
 
       // GET LOGGED-IN CUSTOMER
@@ -61,21 +82,16 @@ function KYC() {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       if (!customerResponse.ok) {
-        const responseText =
-          await customerResponse.text();
+        const responseText = await customerResponse.text();
 
-        throw new Error(
-          responseText ||
-            "Unable to fetch customer details."
-        );
+        throw new Error(responseText || "Unable to fetch customer details.");
       }
 
-      const customerData =
-        await customerResponse.json();
+      const customerData = await customerResponse.json();
 
       setCustomer(customerData);
 
@@ -89,39 +105,22 @@ function KYC() {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       if (!kycResponse.ok) {
-        const responseText =
-          await kycResponse.text();
+        const responseText = await kycResponse.text();
 
-        throw new Error(
-          responseText ||
-            "Unable to fetch KYC details."
-        );
+        throw new Error(responseText || "Unable to fetch KYC details.");
       }
 
-      const kycData =
-        await kycResponse.json();
+      const kycData = await kycResponse.json();
 
-      setDocuments(
-        Array.isArray(kycData)
-          ? kycData
-          : []
-      );
-
+      setDocuments(Array.isArray(kycData) ? kycData : []);
     } catch (err) {
-      console.error(
-        "KYC loading error:",
-        err
-      );
+      console.error("KYC loading error:", err);
 
-      setError(
-        err.message ||
-          "Unable to load KYC details."
-      );
-
+      setError(err.message || "Unable to load KYC details.");
     } finally {
       setLoading(false);
     }
@@ -158,19 +157,12 @@ function KYC() {
       return;
     }
 
-    const allowedTypes = [
-      "application/pdf",
-      "image/jpeg",
-      "image/png",
-    ];
+    const allowedTypes = ["application/pdf", "image/jpeg", "image/png"];
 
-    const maxSize =
-      5 * 1024 * 1024;
+    const maxSize = 5 * 1024 * 1024;
 
     if (!allowedTypes.includes(file.type)) {
-      setError(
-        "Only PDF, JPG, JPEG and PNG files are allowed."
-      );
+      setError("Only PDF, JPG, JPEG and PNG files are allowed.");
 
       e.target.value = "";
       setSelectedFile(null);
@@ -178,9 +170,7 @@ function KYC() {
     }
 
     if (file.size > maxSize) {
-      setError(
-        "File size must be less than 5 MB."
-      );
+      setError("File size must be less than 5 MB.");
 
       e.target.value = "";
       setSelectedFile(null);
@@ -202,10 +192,7 @@ function KYC() {
 
     setSelectedFile(null);
 
-    const fileInput =
-      document.getElementById(
-        "kyc-file-input"
-      );
+    const fileInput = document.getElementById("kyc-file-input");
 
     if (fileInput) {
       fileInput.value = "";
@@ -226,37 +213,27 @@ function KYC() {
     setError("");
 
     if (!token) {
-      setError(
-        "Session expired. Please login again."
-      );
+      setError("Session expired. Please login again.");
       return;
     }
 
     if (!customer?.id) {
-      setError(
-        "Customer information is not available."
-      );
+      setError("Customer information is not available.");
       return;
     }
 
     if (!formData.documentType) {
-      setError(
-        "Please select a document type."
-      );
+      setError("Please select a document type.");
       return;
     }
 
     if (!formData.documentNumber.trim()) {
-      setError(
-        "Please enter document number."
-      );
+      setError("Please enter document number.");
       return;
     }
 
     if (!selectedFile) {
-      setError(
-        "Please select a KYC document file."
-      );
+      setError("Please select a KYC document file.");
       return;
     }
 
@@ -267,23 +244,13 @@ function KYC() {
       // MULTIPART FORM DATA
       // =================================================
 
-      const formDataToSend =
-        new FormData();
+      const formDataToSend = new FormData();
 
-      formDataToSend.append(
-        "documentType",
-        formData.documentType
-      );
+      formDataToSend.append("documentType", formData.documentType);
 
-      formDataToSend.append(
-        "documentNumber",
-        formData.documentNumber.trim()
-      );
+      formDataToSend.append("documentNumber", formData.documentNumber.trim());
 
-      formDataToSend.append(
-        "file",
-        selectedFile
-      );
+      formDataToSend.append("file", selectedFile);
 
       // =================================================
       // BACKEND API
@@ -295,24 +262,19 @@ function KYC() {
           method: "POST",
 
           headers: {
-            Authorization:
-              `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
 
           body: formDataToSend,
-        }
+        },
       );
 
-      const responseText =
-        await response.text();
+      const responseText = await response.text();
 
       let responseData = null;
 
       try {
-        responseData =
-          responseText
-            ? JSON.parse(responseText)
-            : null;
+        responseData = responseText ? JSON.parse(responseText) : null;
       } catch {
         responseData = null;
       }
@@ -322,7 +284,7 @@ function KYC() {
           responseData?.message ||
             responseData?.error ||
             responseText ||
-            "Unable to submit KYC document."
+            "Unable to submit KYC document.",
         );
       }
 
@@ -330,27 +292,17 @@ function KYC() {
       // SUCCESS
       // =================================================
 
-      setMessage(
-        "KYC document uploaded successfully."
-      );
+      setMessage("KYC document uploaded successfully.");
 
       resetForm();
 
       // Refresh documents
 
       await loadKycData();
-
     } catch (err) {
-      console.error(
-        "KYC submission error:",
-        err
-      );
+      console.error("KYC submission error:", err);
 
-      setError(
-        err.message ||
-          "Unable to upload KYC document."
-      );
-
+      setError(err.message || "Unable to upload KYC document.");
     } finally {
       setSubmitting(false);
     }
@@ -361,15 +313,13 @@ function KYC() {
   // =====================================================
 
   const getStatusStyle = (status) => {
-    const normalized =
-      status?.toUpperCase();
+    const normalized = status?.toUpperCase();
 
     if (normalized === "VERIFIED") {
       return {
         background: "#eaf8ef",
         color: "#18723c",
-        border:
-          "1px solid #c8ecd5",
+        border: "1px solid #c8ecd5",
       };
     }
 
@@ -377,16 +327,14 @@ function KYC() {
       return {
         background: "#fff0f0",
         color: "#b42318",
-        border:
-          "1px solid #ffd1d1",
+        border: "1px solid #ffd1d1",
       };
     }
 
     return {
       background: "#fff8e7",
       color: "#9a6700",
-      border:
-        "1px solid #f2dfaa",
+      border: "1px solid #f2dfaa",
     };
   };
 
@@ -396,17 +344,16 @@ function KYC() {
 
   if (loading) {
     return (
-      <div style={styles.page}>
-        <div
-          style={styles.loadingContainer}
-        >
-          <div
-            style={styles.loader}
-          ></div>
+      <div
+        style={{
+          ...styles.page,
+          ...(darkMode ? styles.darkPage : {}),
+        }}
+      >
+        <div style={styles.loadingContainer}>
+          <div style={styles.loader}></div>
 
-          <p>
-            Loading KYC details...
-          </p>
+          <p>Loading KYC details...</p>
         </div>
       </div>
     );
@@ -420,10 +367,10 @@ function KYC() {
     <div
       style={{
         ...styles.page,
+        ...(darkMode ? styles.darkPage : {}),
         ...(isMobile ? styles.mobilePage : {}),
       }}
     >
-
       {/* ================= HEADER ================= */}
 
       <div
@@ -432,12 +379,8 @@ function KYC() {
           ...(isMobile ? styles.mobileHeader : {}),
         }}
       >
-
         <div>
-
-          <div style={styles.brand}>
-            AVANI BANK
-          </div>
+          <div style={styles.brand}>AVANI BANK</div>
 
           <h1
             style={{
@@ -449,17 +392,13 @@ function KYC() {
           </h1>
 
           <p style={styles.subtitle}>
-            Manage your identity verification
-            documents securely.
+            Manage your identity verification documents securely.
           </p>
-
         </div>
 
         <button
           type="button"
-          onClick={() =>
-            navigate("/dashboard")
-          }
+          onClick={() => navigate("/dashboard")}
           style={{
             ...styles.dashboardButton,
             ...(isMobile ? styles.mobileDashboardButton : {}),
@@ -467,7 +406,6 @@ function KYC() {
         >
           ← Dashboard
         </button>
-
       </div>
 
       {/* ================= MESSAGES ================= */}
@@ -479,11 +417,7 @@ function KYC() {
             ...(isMobile ? styles.mobileMessage : {}),
           }}
         >
-          <span
-            style={styles.messageIcon}
-          >
-            ✓
-          </span>
+          <span style={styles.messageIcon}>✓</span>
 
           {message}
         </div>
@@ -496,11 +430,7 @@ function KYC() {
             ...(isMobile ? styles.mobileMessage : {}),
           }}
         >
-          <span
-            style={styles.messageIcon}
-          >
-            !
-          </span>
+          <span style={styles.messageIcon}>!</span>
 
           {error}
         </div>
@@ -511,85 +441,81 @@ function KYC() {
       <div
         style={{
           ...styles.statusCard,
+          ...(darkMode ? styles.darkStatusCard : {}),
           ...(isMobile ? styles.mobileStatusCard : {}),
         }}
       >
+        <div style={styles.statusIcon}>🛡️</div>
 
-        <div style={styles.statusIcon}>
-          🛡️
-        </div>
-
-        <div
-          style={styles.statusContent}
-        >
-
+        <div style={styles.statusContent}>
           <div
             style={{
               ...styles.statusTopRow,
               ...(isMobile ? styles.mobileStatusTopRow : {}),
             }}
           >
-
             <div>
-
-              <div
-                style={styles.statusLabel}
-              >
-                OVERALL KYC STATUS
-              </div>
+              <div style={styles.statusLabel}>OVERALL KYC STATUS</div>
 
               <div
                 style={{
                   ...styles.statusBadge,
-                  ...getStatusStyle(
-                    customer?.kycStatus
-                  ),
+                  ...getStatusStyle(customer?.kycStatus),
+
+                  ...(darkMode && customer?.kycStatus === "VERIFIED"
+                    ? {
+                        background: "#123323",
+                        color: "#65d995",
+                        border: "1px solid #245c3c",
+                      }
+                    : {}),
+
+                  ...(darkMode && customer?.kycStatus === "REJECTED"
+                    ? {
+                        background: "#351b22",
+                        color: "#ff9da9",
+                        border: "1px solid #63303b",
+                      }
+                    : {}),
+
+                  ...(darkMode &&
+                  (!customer?.kycStatus || customer?.kycStatus === "PENDING")
+                    ? {
+                        background: "#352b17",
+                        color: "#f1d16b",
+                        border: "1px solid #665525",
+                      }
+                    : {}),
                 }}
               >
-                {customer?.kycStatus ||
-                  "PENDING"}
+                {customer?.kycStatus || "PENDING"}
               </div>
-
             </div>
 
-            <div
-              style={styles.statusIndicator}
-            >
-
+            <div style={styles.statusIndicator}>
               <span
                 style={{
                   ...styles.statusDot,
                   background:
-                    customer?.kycStatus ===
-                    "VERIFIED"
+                    customer?.kycStatus === "VERIFIED"
                       ? "#2e9b5d"
-                      : customer?.kycStatus ===
-                        "REJECTED"
-                      ? "#d14343"
-                      : "#d99b20",
+                      : customer?.kycStatus === "REJECTED"
+                        ? "#d14343"
+                        : "#d99b20",
                 }}
               />
-
               KYC Monitoring
-
             </div>
-
           </div>
 
           <p style={styles.statusText}>
-
-            {customer?.kycStatus ===
-            "VERIFIED"
+            {customer?.kycStatus === "VERIFIED"
               ? "Your KYC verification has been successfully completed."
-              : customer?.kycStatus ===
-                "REJECTED"
-              ? "Your KYC verification requires attention."
-              : "Your KYC verification is currently pending."}
-
+              : customer?.kycStatus === "REJECTED"
+                ? "Your KYC verification requires attention."
+                : "Your KYC verification is currently pending."}
           </p>
-
         </div>
-
       </div>
 
       {/* ================= CUSTOMER DETAILS ================= */}
@@ -597,40 +523,37 @@ function KYC() {
       <div
         style={{
           ...styles.card,
+          ...(darkMode ? styles.darkCard : {}),
           ...(isMobile ? styles.mobileCard : {}),
         }}
       >
-
         <div
           style={{
             ...styles.cardHeader,
             ...(isMobile ? styles.mobileCardHeader : {}),
           }}
         >
-
           <div>
-
             <h2
-              style={styles.cardTitle}
+              style={{
+                ...styles.cardTitle,
+                ...(darkMode ? styles.darkCardTitle : {}),
+              }}
             >
               Account Information
             </h2>
 
             <p
-              style={styles.cardSubtitle}
+              style={{
+                ...styles.cardSubtitle,
+                ...(darkMode ? styles.darkCardSubtitle : {}),
+              }}
             >
-              Customer details associated with
-              this KYC profile.
+              Customer details associated with this KYC profile.
             </p>
-
           </div>
 
-          <span
-            style={styles.accountBadge}
-          >
-            CUSTOMER
-          </span>
-
+          <span style={styles.accountBadge}>CUSTOMER</span>
         </div>
 
         <div
@@ -639,77 +562,38 @@ function KYC() {
             ...(isMobile ? styles.mobileCustomerGrid : {}),
           }}
         >
-
           <div style={styles.infoItem}>
+            <span style={styles.infoLabel}>Full Name</span>
 
-            <span
-              style={styles.infoLabel}
-            >
-              Full Name
-            </span>
-
-            <strong
-              style={styles.infoValue}
-            >
-              {customer?.fullName ||
-                "Not available"}
+            <strong style={styles.infoValue}>
+              {customer?.fullName || "Not available"}
             </strong>
-
           </div>
 
           <div style={styles.infoItem}>
+            <span style={styles.infoLabel}>Email</span>
 
-            <span
-              style={styles.infoLabel}
-            >
-              Email
-            </span>
-
-            <strong
-              style={styles.infoValue}
-            >
-              {customer?.email ||
-                "Not available"}
+            <strong style={styles.infoValue}>
+              {customer?.email || "Not available"}
             </strong>
-
           </div>
 
           <div style={styles.infoItem}>
+            <span style={styles.infoLabel}>Account Number</span>
 
-            <span
-              style={styles.infoLabel}
-            >
-              Account Number
-            </span>
-
-            <strong
-              style={styles.infoValue}
-            >
-              {customer?.accountNumber ||
-                "Not available"}
+            <strong style={styles.infoValue}>
+              {customer?.accountNumber || "Not available"}
             </strong>
-
           </div>
 
           <div style={styles.infoItem}>
+            <span style={styles.infoLabel}>Account Type</span>
 
-            <span
-              style={styles.infoLabel}
-            >
-              Account Type
-            </span>
-
-            <strong
-              style={styles.infoValue}
-            >
-              {customer?.accountType ||
-                "Not available"}
+            <strong style={styles.infoValue}>
+              {customer?.accountType || "Not available"}
             </strong>
-
           </div>
-
         </div>
-
       </div>
 
       {/* ================= SUBMIT KYC ================= */}
@@ -717,119 +601,100 @@ function KYC() {
       <div
         style={{
           ...styles.card,
+          ...(darkMode ? styles.darkCard : {}),
           ...(isMobile ? styles.mobileCard : {}),
         }}
       >
-
         <div
           style={{
             ...styles.cardHeader,
             ...(isMobile ? styles.mobileCardHeader : {}),
           }}
         >
-
           <div>
-
             <h2
-              style={styles.cardTitle}
+              style={{
+                ...styles.cardTitle,
+                ...(darkMode ? styles.darkCardTitle : {}),
+              }}
             >
               Submit KYC Document
             </h2>
 
             <p
-              style={styles.cardSubtitle}
+              style={{
+                ...styles.cardSubtitle,
+                ...(darkMode ? styles.darkCardSubtitle : {}),
+              }}
             >
-              Submit your identity document
-              for verification.
+              Submit your identity document for verification.
             </p>
-
           </div>
 
-          <div
-            style={styles.secureBadge}
-          >
-            🔒 Secure
-          </div>
-
+          <div style={styles.secureBadge}>🔒 Secure</div>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-        >
-
+        <form onSubmit={handleSubmit}>
           <div
             style={{
               ...styles.formGrid,
               ...(isMobile ? styles.mobileFormGrid : {}),
             }}
           >
-
             {/* DOCUMENT TYPE */}
 
-            <div
-              style={styles.field}
-            >
-
+            <div style={styles.field}>
               <label
-                style={styles.label}
+                style={{
+                  ...styles.label,
+                  ...(darkMode ? styles.darkLabel : {}),
+                }}
               >
                 Document Type
               </label>
 
               <select
                 name="documentType"
-                value={
-                  formData.documentType
-                }
+                value={formData.documentType}
                 onChange={handleChange}
-                style={styles.input}
+                style={{
+                  ...styles.input,
+                  ...(darkMode ? styles.darkInput : {}),
+                }}
                 required
                 disabled={submitting}
               >
+                <option value="">Select document</option>
 
-                <option value="">
-                  Select document
-                </option>
+                <option value="PAN">PAN Card</option>
 
-                <option value="PAN">
-                  PAN Card
-                </option>
+                <option value="AADHAAR">Aadhaar Card</option>
 
-                <option value="AADHAAR">
-                  Aadhaar Card
-                </option>
+                <option value="PASSPORT">Passport</option>
 
-                <option value="PASSPORT">
-                  Passport
-                </option>
+                <option value="VOTER_ID">Voter ID</option>
 
-                <option value="VOTER_ID">
-                  Voter ID
-                </option>
-
-                <option value="DRIVING_LICENSE">
-                  Driving License
-                </option>
-
+                <option value="DRIVING_LICENSE">Driving License</option>
               </select>
 
               <span
-                style={styles.fieldHint}
+                style={{
+                  ...styles.fieldHint,
+                  ...(darkMode ? styles.darkFieldHint : {}),
+                }}
               >
-                Select the identity document
-                you want to submit.
+                Select the identity document you want to submit.
               </span>
-
             </div>
 
             {/* DOCUMENT NUMBER */}
 
-            <div
-              style={styles.field}
-            >
-
+            <div style={styles.field}>
               <label
-                style={styles.label}
+                style={{
+                  ...styles.label,
+                  ...(darkMode ? styles.darkLabel : {}),
+                }}
               >
                 Document Number
               </label>
@@ -837,93 +702,63 @@ function KYC() {
               <input
                 type="text"
                 name="documentNumber"
-                value={
-                  formData.documentNumber
-                }
+                value={formData.documentNumber}
                 onChange={handleChange}
                 placeholder="Enter document number"
-                style={styles.input}
+                style={{
+                  ...styles.input,
+                  ...(darkMode ? styles.darkInput : {}),
+                }}
                 required
                 disabled={submitting}
                 autoComplete="off"
               />
 
               <span
-                style={styles.fieldHint}
+                style={{
+                  ...styles.fieldHint,
+                  ...(darkMode ? styles.darkFieldHint : {}),
+                }}
               >
-                Enter the number exactly as
-                shown on your document.
+                Enter the number exactly as shown on your document.
               </span>
-
             </div>
 
             {/* FILE UPLOAD */}
 
-            <div
-              style={styles.fileUploadField}
-            >
-
+            <div style={styles.fileUploadField}>
               <label
-                style={styles.label}
+                style={{
+                  ...styles.label,
+                  ...(darkMode ? styles.darkLabel : {}),
+                }}
               >
                 KYC Document File
               </label>
 
-              <div
-                style={
-                  styles.fileUploadBox
-                }
-              >
+              <div style={styles.fileUploadBox}>
+                <div style={styles.fileIcon}>📎</div>
 
-                <div
-                  style={styles.fileIcon}
-                >
-                  📎
-                </div>
-
-                <div
-                  style={styles.fileUploadContent}
-                >
-
+                <div style={styles.fileUploadContent}>
                   <input
                     id="kyc-file-input"
                     type="file"
                     accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
-                    onChange={
-                      handleFileChange
-                    }
+                    onChange={handleFileChange}
                     disabled={submitting}
-                    style={
-                      styles.fileInput
-                    }
+                    style={styles.fileInput}
                   />
 
-                  <p
-                    style={
-                      styles.fileHelpText
-                    }
-                  >
-                    PDF, JPG, JPEG or PNG
-                    • Maximum 5 MB
+                  <p style={styles.fileHelpText}>
+                    PDF, JPG, JPEG or PNG • Maximum 5 MB
                   </p>
 
                   {selectedFile && (
-                    <div
-                      style={
-                        styles.selectedFile
-                      }
-                    >
-                      ✓{" "}
-                      {selectedFile.name}
-                    </div>
+                    <div style={styles.selectedFile}>✓ {selectedFile.name}</div>
                   )}
-
                 </div>
-
               </div>
-
             </div>
-
           </div>
 
           <div
@@ -932,7 +767,6 @@ function KYC() {
               ...(isMobile ? styles.mobileFormActions : {}),
             }}
           >
-
             <button
               type="button"
               onClick={resetForm}
@@ -946,34 +780,17 @@ function KYC() {
               type="submit"
               style={{
                 ...styles.submitButton,
-                opacity: submitting
-                  ? 0.7
-                  : 1,
-                cursor: submitting
-                  ? "not-allowed"
-                  : "pointer",
+                opacity: submitting ? 0.7 : 1,
+                cursor: submitting ? "not-allowed" : "pointer",
               }}
               disabled={submitting}
             >
+              {submitting && <span style={styles.buttonSpinner} />}
 
-              {submitting && (
-                <span
-                  style={
-                    styles.buttonSpinner
-                  }
-                />
-              )}
-
-              {submitting
-                ? "Uploading..."
-                : "Submit Document"}
-
+              {submitting ? "Uploading..." : "Submit Document"}
             </button>
-
           </div>
-
         </form>
-
       </div>
 
       {/* ================= DOCUMENT LIST ================= */}
@@ -981,210 +798,150 @@ function KYC() {
       <div
         style={{
           ...styles.card,
+          ...(darkMode ? styles.darkCard : {}),
           ...(isMobile ? styles.mobileCard : {}),
         }}
       >
-
         <div
           style={{
             ...styles.cardHeader,
             ...(isMobile ? styles.mobileCardHeader : {}),
           }}
         >
-
           <div>
-
             <h2
-              style={styles.cardTitle}
+              style={{
+                ...styles.cardTitle,
+                ...(darkMode ? styles.darkCardTitle : {}),
+              }}
             >
               Submitted Documents
             </h2>
 
             <p
-              style={styles.cardSubtitle}
+              style={{
+                ...styles.cardSubtitle,
+                ...(darkMode ? styles.darkCardSubtitle : {}),
+              }}
             >
-              Track the verification status of
-              your submitted documents.
+              Track the verification status of your submitted documents.
             </p>
-
           </div>
 
-          <span
-            style={styles.documentCount}
-          >
+          <span style={styles.documentCount}>
             {documents.length} Document
-            {documents.length !== 1
-              ? "s"
-              : ""}
+            {documents.length !== 1 ? "s" : ""}
           </span>
-
         </div>
 
         {documents.length === 0 ? (
+          <div style={styles.emptyState}>
+            <div style={styles.emptyIcon}>📄</div>
 
-          <div
-            style={styles.emptyState}
-          >
+            <h3 style={styles.emptyTitle}>No KYC Documents</h3>
 
-            <div
-              style={styles.emptyIcon}
-            >
-              📄
-            </div>
-
-            <h3
-              style={styles.emptyTitle}
-            >
-              No KYC Documents
-            </h3>
-
-            <p
-              style={styles.emptyText}
-            >
-              You haven't submitted any KYC
-              documents yet.
+            <p style={styles.emptyText}>
+              You haven't submitted any KYC documents yet.
             </p>
-
           </div>
-
         ) : (
-
-          <div
-            style={styles.documentList}
-          >
-
-            {documents.map(
-              (document) => (
-
+          <div style={styles.documentList}>
+            {documents.map((document) => (
+              <div
+                key={document.id}
+                style={{
+                  ...styles.documentCard,
+                  ...(darkMode ? styles.darkDocumentCard : {}),
+                }}
+              >
                 <div
-                  key={document.id}
-                  style={
-                    styles.documentCard
-                  }
+                  style={{
+                    ...styles.documentIcon,
+                    ...(darkMode ? styles.darkDocumentIcon : {}),
+                  }}
                 >
-
-                  <div
-                    style={
-                      styles.documentIcon
-                    }
-                  >
-                    📄
-                  </div>
-
-                  <div
-                    style={
-                      styles.documentInfo
-                    }
-                  >
-
-                    <div
-                      style={
-                        styles.documentTitleRow
-                      }
-                    >
-
-                      <h3
-                        style={
-                          styles.documentName
-                        }
-                      >
-                        {
-                          document.documentType
-                        }
-                      </h3>
-
-                      <div
-                        style={{
-                          ...styles.documentStatus,
-                          ...getStatusStyle(
-                            document.verificationStatus
-                          ),
-                        }}
-                      >
-                        {
-                          document.verificationStatus ||
-                          "PENDING"
-                        }
-                      </div>
-
-                    </div>
-
-                    <p
-                      style={
-                        styles.documentNumber
-                      }
-                    >
-                      Document No:{" "}
-                      {
-                        document.documentNumber
-                      }
-                    </p>
-
-                    {document.uploadedAt && (
-                      <p
-                        style={
-                          styles.dateText
-                        }
-                      >
-                        Submitted:{" "}
-                        {new Date(
-                          document.uploadedAt
-                        ).toLocaleString()}
-                      </p>
-                    )}
-
-                    {document.verifiedAt && (
-                      <p
-                        style={
-                          styles.dateText
-                        }
-                      >
-                        Verified:{" "}
-                        {new Date(
-                          document.verifiedAt
-                        ).toLocaleString()}
-                      </p>
-                    )}
-
-                    {document.documentFileName && (
-                      <p
-                        style={
-                          styles.fileText
-                        }
-                      >
-                        📎{" "}
-                        {
-                          document.documentFileName
-                        }
-                      </p>
-                    )}
-
-                    {document.verificationRemarks && (
-                      <div
-                        style={
-                          styles.remarksBox
-                        }
-                      >
-                        <strong>
-                          Remarks:
-                        </strong>{" "}
-                        {
-                          document.verificationRemarks
-                        }
-                      </div>
-                    )}
-
-                  </div>
-
+                  📄
                 </div>
 
-              )
-            )}
+                <div style={styles.documentInfo}>
+                  <div style={styles.documentTitleRow}>
+                    <h3
+                      style={{
+                        ...styles.documentName,
+                        ...(darkMode ? styles.darkDocumentName : {}),
+                      }}
+                    >
+                      {document.documentType}
+                    </h3>
 
+                    <div
+                      style={{
+                        ...styles.documentStatus,
+                        ...getStatusStyle(document.verificationStatus),
+                      }}
+                    >
+                      {document.verificationStatus || "PENDING"}
+                    </div>
+                  </div>
+
+                  <p
+                    style={{
+                      ...styles.documentNumber,
+                      ...(darkMode ? styles.darkDocumentNumber : {}),
+                    }}
+                  >
+                    Document No: {document.documentNumber}
+                  </p>
+
+                  {document.uploadedAt && (
+                    <p
+                      style={{
+                        ...styles.dateText,
+                        ...(darkMode ? styles.darkDateText : {}),
+                      }}
+                    >
+                      Submitted:{" "}
+                      {new Date(document.uploadedAt).toLocaleString()}
+                    </p>
+                  )}
+
+                  {document.verifiedAt && (
+                    <p
+                      style={{
+                        ...styles.dateText,
+                        ...(darkMode ? styles.darkDateText : {}),
+                      }}
+                    >
+                      Verified: {new Date(document.verifiedAt).toLocaleString()}
+                    </p>
+                  )}
+
+                  {document.documentFileName && (
+                    <p
+                      style={{
+                        ...styles.fileText,
+                        ...(darkMode ? styles.darkFileText : {}),
+                      }}
+                    >
+                      📎 {document.documentFileName}
+                    </p>
+                  )}
+
+                  {document.verificationRemarks && (
+                    <div
+                      style={{
+                        ...styles.remarksBox,
+                        ...(darkMode ? styles.darkRemarksBox : {}),
+                      }}
+                    >
+                      <strong>Remarks:</strong> {document.verificationRemarks}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-
         )}
-
       </div>
 
       {/* ================= INFORMATION ================= */}
@@ -1192,37 +949,41 @@ function KYC() {
       <div
         style={{
           ...styles.infoBox,
+          ...(darkMode ? styles.darkInfoBox : {}),
           ...(isMobile ? styles.mobileInfoBox : {}),
         }}
       >
-
         <div
-          style={styles.infoBoxIcon}
+          style={{
+            ...styles.infoBoxIcon,
+            ...(darkMode ? styles.darkInfoBoxIcon : {}),
+          }}
         >
           i
         </div>
 
         <div>
-
           <strong
-            style={styles.infoBoxTitle}
+            style={{
+              ...styles.infoBoxTitle,
+              ...(darkMode ? styles.darkInfoBoxTitle : {}),
+            }}
           >
             KYC Verification
           </strong>
 
           <p
-            style={styles.infoBoxText}
+            style={{
+              ...styles.infoBoxText,
+              ...(darkMode ? styles.darkInfoBoxText : {}),
+            }}
           >
-            Your submitted documents are reviewed
-            by the bank verification system. Once
-            verified, your KYC status will be updated
+            Your submitted documents are reviewed by the bank verification
+            system. Once verified, your KYC status will be updated
             automatically.
           </p>
-
         </div>
-
       </div>
-
     </div>
   );
 }
@@ -1232,11 +993,9 @@ function KYC() {
 // =====================================================
 
 const styles = {
-
   page: {
     minHeight: "100vh",
-    background:
-      "linear-gradient(135deg, #f4f7fb 0%, #eef3f9 100%)",
+    background: "linear-gradient(135deg, #f4f7fb 0%, #eef3f9 100%)",
     padding: "32px",
     boxSizing: "border-box",
     fontFamily:
@@ -1244,10 +1003,43 @@ const styles = {
     color: "#172033",
   },
 
+  // =====================================================
+  // DARK MODE
+  // =====================================================
+
+  darkPage: {
+    background: "linear-gradient(135deg, #0b1220 0%, #0e1728 100%)",
+    color: "#e8eef7",
+  },
+
+  darkStatusCard: {
+    background: "#111a2b",
+    borderColor: "#26344b",
+  },
+
+  darkInfoBox: {
+    background: "#172235",
+    border: "1px solid #30405a",
+  },
+
+  darkInfoBoxIcon: {
+    background: "#1d2c45",
+    color: "#9ebeff",
+  },
+
+  darkInfoBoxTitle: {
+    color: "#dce5f1",
+  },
+
+  darkInfoBoxText: {
+    color: "#8795aa",
+  },
+
   header: {
     maxHeight: "100px",
-    borderRadius:"18px",
-    background:"linear-gradient(135deg, #102354 0%, #173b8c 58%, #2457c6 100%)",
+    borderRadius: "18px",
+    background:
+      "linear-gradient(135deg, #102354 0%, #173b8c 58%, #2457c6 100%)",
     color: "#ffffff",
     padding: "28px 6%",
     display: "flex",
@@ -1288,8 +1080,7 @@ const styles = {
     fontSize: "13px",
     fontWeight: "700",
     cursor: "pointer",
-    boxShadow:
-      "0 4px 12px rgba(20, 35, 60, 0.06)",
+    boxShadow: "0 4px 12px rgba(20, 35, 60, 0.06)",
     whiteSpace: "nowrap",
   },
 
@@ -1300,8 +1091,7 @@ const styles = {
     borderRadius: "10px",
     background: "#eaf8ef",
     color: "#19713b",
-    border:
-      "1px solid #c9ecd6",
+    border: "1px solid #c9ecd6",
     fontSize: "13px",
     fontWeight: "600",
     display: "flex",
@@ -1316,8 +1106,7 @@ const styles = {
     borderRadius: "10px",
     background: "#fff0f0",
     color: "#b42318",
-    border:
-      "1px solid #ffd2d2",
+    border: "1px solid #ffd2d2",
     fontSize: "13px",
     fontWeight: "600",
     display: "flex",
@@ -1342,15 +1131,13 @@ const styles = {
     padding: "22px",
     borderRadius: "16px",
     background: "#ffffff",
-    border:
-      "1px solid #e4e9f0",
-    boxShadow:
-      "0 8px 25px rgba(30, 45, 70, 0.06)",
+    border: "1px solid #e4e9f0",
+    boxShadow: "0 8px 25px rgba(30, 45, 70, 0.06)",
     display: "flex",
     alignItems: "center",
     gap: "17px",
     boxSizing: "border-box",
-    marginTop: "18px",  
+    marginTop: "18px",
   },
 
   statusIcon: {
@@ -1421,11 +1208,9 @@ const styles = {
     margin: "0 auto 20px",
     padding: "25px",
     background: "#ffffff",
-    border:
-      "1px solid #e4e9f0",
+    border: "1px solid #e4e9f0",
     borderRadius: "16px",
-    boxShadow:
-      "0 8px 25px rgba(30, 45, 70, 0.06)",
+    boxShadow: "0 8px 25px rgba(30, 45, 70, 0.06)",
     boxSizing: "border-box",
   },
 
@@ -1470,8 +1255,7 @@ const styles = {
 
   customerGrid: {
     display: "grid",
-    gridTemplateColumns:
-      "repeat(4, minmax(0, 1fr))",
+    gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
     gap: "20px",
   },
 
@@ -1495,8 +1279,7 @@ const styles = {
 
   formGrid: {
     display: "grid",
-    gridTemplateColumns:
-      "repeat(2, minmax(0, 1fr))",
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
     gap: "18px",
   },
 
@@ -1522,8 +1305,7 @@ const styles = {
   input: {
     width: "100%",
     boxSizing: "border-box",
-    border:
-      "1px solid #d9e0ea",
+    border: "1px solid #d9e0ea",
     borderRadius: "9px",
     padding: "11px 12px",
     fontSize: "13px",
@@ -1540,8 +1322,7 @@ const styles = {
   fileUploadBox: {
     width: "100%",
     boxSizing: "border-box",
-    border:
-      "1px dashed #cbd5e1",
+    border: "1px dashed #cbd5e1",
     borderRadius: "11px",
     padding: "15px",
     background: "#fbfcfe",
@@ -1595,8 +1376,7 @@ const styles = {
   },
 
   cancelButton: {
-    border:
-      "1px solid #d7dee8",
+    border: "1px solid #d7dee8",
     background: "#ffffff",
     color: "#4c5a70",
     borderRadius: "9px",
@@ -1623,14 +1403,11 @@ const styles = {
   buttonSpinner: {
     width: "12px",
     height: "12px",
-    border:
-      "2px solid rgba(255,255,255,0.4)",
-    borderTop:
-      "2px solid #ffffff",
+    border: "2px solid rgba(255,255,255,0.4)",
+    borderTop: "2px solid #ffffff",
     borderRadius: "50%",
     marginRight: "8px",
-    animation:
-      "spin 1s linear infinite",
+    animation: "spin 1s linear infinite",
   },
 
   documentCount: {
@@ -1647,8 +1424,7 @@ const styles = {
   },
 
   documentCard: {
-    border:
-      "1px solid #e6ebf2",
+    border: "1px solid #e6ebf2",
     borderRadius: "13px",
     padding: "17px",
     display: "flex",
@@ -1765,8 +1541,7 @@ const styles = {
     gap: "12px",
     alignItems: "flex-start",
     background: "#f5f8fc",
-    border:
-      "1px solid #e1e8f1",
+    border: "1px solid #e1e8f1",
     borderRadius: "12px",
     boxSizing: "border-box",
   },
@@ -1919,14 +1694,164 @@ const styles = {
   loader: {
     width: "28px",
     height: "28px",
-    border:
-      "3px solid #dce4ef",
-    borderTop:
-      "3px solid #172b4d",
+    border: "3px solid #dce4ef",
+    borderTop: "3px solid #172b4d",
     borderRadius: "50%",
     marginBottom: "12px",
-    animation:
-      "spin 1s linear infinite",
+    animation: "spin 1s linear infinite",
+  },
+
+  // =====================================================
+  // DARK MODE STYLE VARIANTS
+  // =====================================================
+
+  darkStatusCard: {
+    background: "#111a2b",
+    border: "1px solid #26344b",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
+  },
+
+  darkCard: {
+    background: "#111a2b",
+    border: "1px solid #26344b",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
+  },
+
+  darkCardTitle: {
+    color: "#edf3ff",
+  },
+
+  darkCardSubtitle: {
+    color: "#8795aa",
+  },
+
+  darkAccountBadge: {
+    background: "#172235",
+    color: "#9ebeff",
+  },
+
+  darkSecureBadge: {
+    background: "#123323",
+    color: "#65d995",
+  },
+
+  darkInfoLabel: {
+    color: "#8795aa",
+  },
+
+  darkInfoValue: {
+    color: "#dce5f1",
+  },
+
+  darkInput: {
+    background: "#172235",
+    border: "1px solid #34445e",
+    color: "#e8eef7",
+  },
+
+  darkLabel: {
+    color: "#b8c4d6",
+  },
+
+  darkFieldHint: {
+    color: "#71809a",
+  },
+
+  darkFileUploadBox: {
+    background: "#172235",
+    border: "1px dashed #34445e",
+  },
+
+  darkFileIcon: {
+    background: "#1d2c45",
+  },
+
+  darkFileInput: {
+    color: "#b9c8dd",
+  },
+
+  darkFileHelpText: {
+    color: "#71809a",
+  },
+
+  darkCancelButton: {
+    background: "#1a2940",
+    border: "1px solid #34445e",
+    color: "#b9c8dd",
+  },
+
+  darkDocumentCount: {
+    color: "#9aa9bd",
+  },
+
+  darkDocumentCard: {
+    background: "#172235",
+    border: "1px solid #30405a",
+  },
+
+  darkDocumentIcon: {
+    background: "#1d2c45",
+    color: "#a9c5ff",
+  },
+
+  darkDocumentName: {
+    color: "#edf3ff",
+  },
+
+  darkDocumentNumber: {
+    color: "#8795aa",
+  },
+
+  darkDateText: {
+    color: "#71809a",
+  },
+
+  darkFileText: {
+    color: "#9aa9bd",
+  },
+
+  darkRemarksBox: {
+    background: "#1a2940",
+    color: "#aebbd0",
+  },
+
+  darkEmptyIcon: {
+    background: "#192944",
+  },
+
+  darkEmptyTitle: {
+    color: "#edf3ff",
+  },
+
+  darkEmptyText: {
+    color: "#8795aa",
+  },
+
+  darkInfoBox: {
+    background: "#172235",
+    border: "1px solid #30405a",
+  },
+
+  darkInfoBoxIcon: {
+    background: "#1d2c45",
+    color: "#9ebeff",
+  },
+
+  darkInfoBoxTitle: {
+    color: "#dce5f1",
+  },
+
+  darkInfoBoxText: {
+    color: "#8795aa",
+  },
+
+  darkLoadingContainer: {
+    color: "#9aa9bd",
+  },
+
+  darkLoader: {
+    border: "3px solid #29384e",
+    borderTop: "3px solid #5b91ff",
   },
 };
 

@@ -32,6 +32,27 @@ function JointAccount() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  // =====================================================
+// DARK MODE
+// =====================================================
+
+const [darkMode, setDarkMode] = useState(() => {
+  return localStorage.getItem("avani-theme") === "dark";
+});
+
+useEffect(() => {
+  const syncTheme = () => {
+    setDarkMode(localStorage.getItem("avani-theme") === "dark");
+  };
+
+  window.addEventListener("storage", syncTheme);
+  syncTheme();
+
+  return () => {
+    window.removeEventListener("storage", syncTheme);
+  };
+}, []);
+
   const token = localStorage.getItem("token");
 
   // =========================
@@ -331,28 +352,53 @@ function JointAccount() {
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.loadingCard}>
+      <div style={{ 
+      ...styles.loadingPage, 
+      ...(darkMode ? styles.darkLoadingPage : {}) }}>
+        <div
+  style={{
+    ...styles.loadingCard,
+    ...(darkMode ? styles.darkLoadingCard : {}),
+  }}
+>
           <div style={styles.loadingIcon}>
             👥
           </div>
 
-          <h2 style={styles.loadingTitle}>
+          <h2
+  style={{
+    ...styles.loadingTitle,
+    ...(darkMode ? styles.darkLoadingTitle : {}),
+  }}
+>
             Loading Joint Accounts
           </h2>
 
-          <p style={styles.loadingText}>
+          <p
+  style={{
+    ...styles.loadingText,
+    ...(darkMode ? styles.darkLoadingText : {}),
+  }}
+>
             Please wait...
           </p>
 
-          <div style={styles.loader}></div>
+          <div
+  style={{
+    ...styles.loader,
+    ...(darkMode ? styles.darkLoader : {}),
+  }}
+></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.mobilePage : {}) }}>
+    <div style={{ 
+    ...styles.page, 
+    ...(darkMode ? styles.darkPage : {}),
+    ...(isMobile ? responsiveStyles.mobilePage : {}) }}>
 
       {/* =========================
           HEADER
@@ -386,33 +432,58 @@ function JointAccount() {
           CUSTOMER CARD
       ========================= */}
 
-      <div style={{ ...styles.customerCard, ...(isMobile ? responsiveStyles.mobileCustomerCard : {}) }}>
-        <div style={styles.customerAvatar}>
+<div
+  style={{
+    ...styles.customerCard,
+    ...(darkMode ? styles.darkCustomerCard : {}),
+    ...(isMobile ? responsiveStyles.mobileCustomerCard : {}),
+  }}
+>        <div style={styles.customerAvatar}>
           {customer?.fullName
             ?.charAt(0)
             ?.toUpperCase() || "C"}
         </div>
 
         <div style={{ ...styles.customerInfo, ...(isMobile ? responsiveStyles.mobileCustomerInfo : {}) }}>
-          <p style={styles.customerLabel}>
+          <p style={{
+  ...styles.customerLabel,
+  ...(darkMode ? styles.darkCustomerLabel : {}),
+}}>
             PRIMARY CUSTOMER
           </p>
 
-          <h2 style={styles.customerName}>
+          <h2 style={{
+  ...styles.customerName,
+  ...(darkMode ? styles.darkCustomerName : {}),
+}}>
             {customer?.fullName || "Customer"}
           </h2>
 
-          <p style={{ ...styles.customerEmail, overflowWrap: "anywhere" }}>
+          <p style={{
+  ...styles.customerEmail,
+  ...(darkMode ? styles.darkCustomerEmail : {}),
+  overflowWrap: "anywhere",
+}}>
             {customer?.email || "Email unavailable"}
           </p>
         </div>
 
-        <div style={{ ...styles.accountInfo, ...(isMobile ? responsiveStyles.mobileAccountInfo : {}) }}>
-          <p style={styles.customerLabel}>
+        <div style={{ 
+          ...styles.accountInfo, 
+          ...(darkMode ? styles.darkAccountInfo : {}),
+          ...(isMobile ? responsiveStyles.mobileAccountInfo : {}) }}>
+          <p style={{
+  ...styles.customerLabel,
+  ...(darkMode ? styles.darkCustomerLabel : {}),
+}}>
             CUSTOMER ID
           </p>
 
-          <strong style={{ ...styles.accountNumber, overflowWrap: "anywhere" }}>
+          <strong style={{
+  ...styles.accountNumber,
+  ...(darkMode ? styles.darkAccountNumber : {}),
+  overflowWrap: "anywhere",
+}}>
             {customer?.id || "N/A"}
           </strong>
         </div>
@@ -423,7 +494,7 @@ function JointAccount() {
       ========================= */}
 
       {error && (
-        <div style={{ ...styles.errorMessage, overflowWrap: "anywhere" }}>
+        <div style={{ ...styles.errorMessage,...(darkMode ? styles.darkErrorMessage : {}), overflowWrap: "anywhere" }}>
           ⚠️ {error}
         </div>
       )}
@@ -433,7 +504,7 @@ function JointAccount() {
       ========================= */}
 
       {message && (
-        <div style={{ ...styles.successMessage, overflowWrap: "anywhere" }}>
+        <div style={{ ...styles.successMessage, ...(darkMode ? styles.darkSuccessMessage : {}), overflowWrap: "anywhere" }}>
           ✓ {message}
         </div>
       )}
@@ -442,25 +513,40 @@ function JointAccount() {
           CREATE JOINT ACCOUNT
       ========================= */}
 
-      <div style={{ ...styles.formCard, ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
+      <div style={{ 
+            ...styles.formCard,
+            ...(darkMode ? styles.darkFormCard : {}),
+            ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
 
         <div style={styles.cardHeader}>
           <div>
-            <p style={styles.cardEyebrow}>
+            <p style={{
+  ...styles.cardEyebrow,
+  ...(darkMode ? styles.darkCardEyebrow : {}),
+}}>
               JOINT ACCOUNT
             </p>
 
-            <h2 style={styles.cardTitle}>
+            <h2 style={{
+  ...styles.cardTitle,
+  ...(darkMode ? styles.darkCardTitle : {}),
+}}>
               Add Joint Account
             </h2>
 
-            <p style={styles.cardDescription}>
+            <p style={{
+  ...styles.cardDescription,
+  ...(darkMode ? styles.darkCardDescription : {}),
+}}>
               Enter the details of the customer who
               will be associated with this joint account.
             </p>
           </div>
 
-          <div style={styles.cardIcon}>
+          <div style={{
+  ...styles.cardIcon,
+  ...(darkMode ? styles.darkCardIcon : {}),
+}}>
             👥
           </div>
         </div>
@@ -472,7 +558,10 @@ function JointAccount() {
             {/* JOINT CUSTOMER ID */}
 
             <div style={styles.fieldGroup}>
-              <label style={styles.label}>
+              <label style={{
+  ...styles.label,
+  ...(darkMode ? styles.darkLabel : {}),
+}}>
                 Joint Customer ID
               </label>
 
@@ -485,7 +574,10 @@ function JointAccount() {
                   )
                 }
                 placeholder="Enter customer ID"
-                style={styles.input}
+                style={{
+  ...styles.input,
+  ...(darkMode ? styles.darkInput : {}),
+}}
                 disabled={saving}
               />
             </div>
@@ -493,7 +585,10 @@ function JointAccount() {
             {/* ACCOUNT NUMBER */}
 
             <div style={styles.fieldGroup}>
-              <label style={styles.label}>
+              <label style={{
+  ...styles.label,
+  ...(darkMode ? styles.darkLabel : {}),
+}}>
                 Account Number
               </label>
 
@@ -506,7 +601,10 @@ function JointAccount() {
                   )
                 }
                 placeholder="Enter account number"
-                style={styles.input}
+                style={{
+  ...styles.input,
+  ...(darkMode ? styles.darkInput : {}),
+}}
                 disabled={saving}
               />
             </div>
@@ -516,7 +614,10 @@ function JointAccount() {
           {/* OWNERSHIP TYPE */}
 
           <div style={styles.fieldGroup}>
-            <label style={styles.label}>
+            <label style={{
+  ...styles.label,
+  ...(darkMode ? styles.darkLabel : {}),
+}}>
               Ownership Type
             </label>
 
@@ -527,7 +628,10 @@ function JointAccount() {
                   event.target.value
                 )
               }
-              style={styles.input}
+              style={{
+  ...styles.input,
+  ...(darkMode ? styles.darkInput : {}),
+}}
               disabled={saving}
             >
               <option value="JOINT">
@@ -544,9 +648,15 @@ function JointAccount() {
             </select>
           </div>
 
-          <div style={{ ...styles.formFooter, ...(isMobile ? responsiveStyles.mobileFormFooter : {}) }}>
+          <div style={{ 
+            ...styles.formFooter, 
+            ...(darkMode ? styles.darkFormFooter : {}),
+            ...(isMobile ? responsiveStyles.mobileFormFooter : {}) }}>
 
-            <p style={styles.footerNote}>
+            <p style={{
+  ...styles.footerNote,
+  ...(darkMode ? styles.darkFooterNote : {}),
+}}>
               The joint customer must be a valid
               registered customer.
             </p>
@@ -577,35 +687,59 @@ function JointAccount() {
           EXISTING ACCOUNTS
       ========================= */}
 
-      <div style={{ ...styles.accountsCard, ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
+      <div style={{ 
+        ...styles.accountsCard, 
+        ...(darkMode ? styles.darkAccountsCard : {}),
+        ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
 
         <div style={styles.cardHeader}>
           <div>
-            <p style={styles.cardEyebrow}>
+            <p style={{
+  ...styles.cardEyebrow,
+  ...(darkMode ? styles.darkCardEyebrow : {}),
+}}>
               YOUR JOINT ACCOUNTS
             </p>
 
-            <h2 style={styles.cardTitle}>
+            <h2 style={{
+  ...styles.cardTitle,
+  ...(darkMode ? styles.darkCardTitle : {}),
+}}>
               Account List
             </h2>
           </div>
 
-          <span style={styles.countBadge}>
+          <span style={{
+  ...styles.countBadge,
+  ...(darkMode ? styles.darkCountBadge : {}),
+}}>
             {accounts.length}
           </span>
         </div>
 
         {accounts.length === 0 ? (
-          <div style={{ ...styles.emptyState, ...(isMobile ? responsiveStyles.mobileEmptyState : {}) }}>
-            <div style={styles.emptyIcon}>
+          <div style={{ 
+            ...styles.emptyState, 
+            ...(darkMode ? styles.darkEmptyState : {}),
+            ...(isMobile ? responsiveStyles.mobileEmptyState : {}) }}>
+            <div style={{
+  ...styles.emptyIcon,
+  ...(darkMode ? styles.darkEmptyIcon : {}),
+}}>
               👥
             </div>
 
-            <h3 style={styles.emptyTitle}>
+            <h3 style={{
+  ...styles.emptyTitle,
+  ...(darkMode ? styles.darkEmptyTitle : {}),
+}}>
               No Joint Accounts
             </h3>
 
-            <p style={styles.emptyText}>
+            <p style={{
+  ...styles.emptyText,
+  ...(darkMode ? styles.darkEmptyText : {}),
+}}>
               You currently do not have any joint
               accounts as the primary customer.
             </p>
@@ -617,24 +751,39 @@ function JointAccount() {
 
               <div
                 key={account.id}
-                style={{ ...styles.accountItem, ...(isMobile ? responsiveStyles.mobileAccountItem : {}) }}
+                style={{ 
+                  ...styles.accountItem, 
+                  ...(darkMode ? styles.darkAccountItem : {}),
+                  ...(isMobile ? responsiveStyles.mobileAccountItem : {}) }}
               >
 
-                <div style={styles.accountIcon}>
+                <div style={{
+  ...styles.accountIcon,
+  ...(darkMode ? styles.darkAccountIcon : {}),
+}}>
                   👥
                 </div>
 
                 <div style={{ ...styles.accountDetails, ...(isMobile ? responsiveStyles.mobileAccountDetails : {}) }}>
 
-                  <p style={styles.accountLabel}>
+                  <p style={{
+  ...styles.accountLabel,
+  ...(darkMode ? styles.darkAccountLabel : {}),
+}}>
                     ACCOUNT NUMBER
                   </p>
 
-                  <h3 style={{ ...styles.accountTitle, overflowWrap: "anywhere" }}>
+                  <h3 style={{ 
+                    ...styles.accountTitle, 
+                    ...(darkMode ? styles.darkAccountTitle : {}),
+                    overflowWrap: "anywhere" }}>
                     {account.accountNumber}
                   </h3>
 
-                  <p style={{ ...styles.jointHolder, overflowWrap: "anywhere" }}>
+                  <p style={{ 
+                    ...styles.jointHolder,
+                    ...(darkMode ? styles.darkJointHolder : {}),
+                    overflowWrap: "anywhere" }}>
                     Joint Holder ID:{" "}
                     {account.jointCustomer?.id ||
                       "N/A"}
@@ -642,7 +791,10 @@ function JointAccount() {
 
                 </div>
 
-                <div style={{ ...styles.accountMeta, ...(isMobile ? responsiveStyles.mobileAccountMeta : {}) }}>
+                <div style={{ 
+                  ...styles.accountMeta, 
+                  ...(darkMode ? styles.darkAccountMeta : {}),
+                  ...(isMobile ? responsiveStyles.mobileAccountMeta : {}) }}>
 
                   <span
                     style={{
@@ -655,7 +807,10 @@ function JointAccount() {
                     {account.status}
                   </span>
 
-                  <span style={{ ...styles.ownershipText, overflowWrap: "anywhere" }}>
+                  <span style={{ 
+                    ...styles.ownershipText, 
+                    ...(darkMode ? styles.darkOwnershipText : {}),
+                    overflowWrap: "anywhere" }}>
                     {account.ownershipType}
                   </span>
 
@@ -673,7 +828,10 @@ function JointAccount() {
                           : "ACTIVE"
                       )
                     }
-                    style={{ ...styles.statusButton, ...(isMobile ? responsiveStyles.mobileStatusButton : {}) }}
+                    style={{ 
+                      ...styles.statusButton, 
+                      ...(darkMode ? styles.darkStatusButton : {}),
+                      ...(isMobile ? responsiveStyles.mobileStatusButton : {}) }}
                   >
                     {updatingId === account.id
                       ? "Updating..."
@@ -698,17 +856,29 @@ function JointAccount() {
           INFORMATION
       ========================= */}
 
-      <div style={{ ...styles.infoBox, ...(isMobile ? responsiveStyles.mobileInfoBox : {}) }}>
-        <span style={styles.infoIcon}>
+      <div style={{ 
+        ...styles.infoBox, 
+        ...(darkMode ? styles.darkInfoBox : {}),
+        ...(isMobile ? responsiveStyles.mobileInfoBox : {}) }}>
+        <span style={{
+  ...styles.infoIcon,
+  ...(darkMode ? styles.darkInfoIcon : {}),
+}}>
           🔒
         </span>
 
         <div>
-          <strong style={styles.infoTitle}>
+          <strong style={{
+  ...styles.infoTitle,
+  ...(darkMode ? styles.darkInfoTitle : {}),
+}}>
             Joint Account Information
           </strong>
 
-          <p style={{ ...styles.infoText, overflowWrap: "anywhere" }}>
+          <p style={{ 
+            ...styles.infoText, 
+            ...(darkMode ? styles.darkInfoText : {}),
+            overflowWrap: "anywhere" }}>
             Joint account details are linked to the
             registered customer accounts. Account
             status changes are managed through the
@@ -737,6 +907,207 @@ const styles = {
       "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     color: "#172033",
   },
+
+  // =====================================================
+// DARK MODE
+// =====================================================
+
+darkPage: {
+  background:
+    "linear-gradient(135deg, #0b1220 0%, #0e1728 100%)",
+  color: "#e8eef7",
+},
+
+// CUSTOMER
+darkCustomerCard: {
+  background: "#111a2b",
+  border: "1px solid #26344b",
+  boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
+},
+
+darkCustomerLabel: {
+  color: "#8795aa",
+},
+
+darkCustomerName: {
+  color: "#edf3ff",
+},
+
+darkCustomerEmail: {
+  color: "#8795aa",
+},
+
+darkAccountNumber: {
+  color: "#b9c8dd",
+},
+
+darkAccountInfo: {
+  borderLeft: "1px solid #30405a",
+},
+
+// ERROR
+darkErrorMessage: {
+  background: "#351b22",
+  border: "1px solid #63303b",
+  color: "#ff9da9",
+},
+
+// SUCCESS
+darkSuccessMessage: {
+  background: "#123323",
+  border: "1px solid #245c3c",
+  color: "#65d995",
+},
+
+// FORM
+darkFormCard: {
+  background: "#111a2b",
+  border: "1px solid #26344b",
+  boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
+},
+
+darkAccountsCard: {
+  background: "#111a2b",
+  border: "1px solid #26344b",
+  boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
+},
+
+darkCardEyebrow: {
+  color: "#7fa7f5",
+},
+
+darkCardTitle: {
+  color: "#edf3ff",
+},
+
+darkCardDescription: {
+  color: "#8795aa",
+},
+
+darkCardIcon: {
+  background: "#192944",
+},
+
+darkLabel: {
+  color: "#b8c4d6",
+},
+
+darkInput: {
+  background: "#172235",
+  border: "1px solid #34445e",
+  color: "#e8eef7",
+  colorScheme: "dark",
+},
+
+darkFormFooter: {
+  borderTop: "1px solid #30405a",
+},
+
+darkFooterNote: {
+  color: "#71809a",
+},
+
+// COUNT
+darkCountBadge: {
+  background: "#172f63",
+  color: "#9ebeff",
+},
+
+// ACCOUNT LIST
+darkAccountItem: {
+  background: "#172235",
+  border: "1px solid #30405a",
+},
+
+darkAccountIcon: {
+  background: "#1d2c45",
+},
+
+darkAccountLabel: {
+  color: "#8795aa",
+},
+
+darkAccountTitle: {
+  color: "#dce5f1",
+},
+
+darkJointHolder: {
+  color: "#8795aa",
+},
+
+darkOwnershipText: {
+  color: "#9aa9bd",
+},
+
+darkAccountMeta: {
+  borderTop: "1px solid #30405a",
+},
+
+darkStatusButton: {
+  background: "#1a2940",
+  border: "1px solid #34445e",
+  color: "#b9c8dd",
+},
+
+// EMPTY
+darkEmptyState: {
+  background: "#172235",
+  border: "1px dashed #34445e",
+},
+
+darkEmptyIcon: {
+  background: "#1d2c45",
+},
+
+darkEmptyTitle: {
+  color: "#dce5f1",
+},
+
+darkEmptyText: {
+  color: "#8795aa",
+},
+
+// INFORMATION
+darkInfoBox: {
+  background: "#172235",
+  border: "1px solid #30405a",
+},
+
+darkInfoIcon: {
+  color: "#9ebeff",
+},
+
+darkInfoTitle: {
+  color: "#dce5f1",
+},
+
+darkInfoText: {
+  color: "#8795aa",
+},
+
+// LOADING
+darkLoadingPage: {
+  background:
+    "linear-gradient(135deg, #0b1220, #0e1728)",
+},
+
+darkLoadingCard: {
+  background: "#111a2b",
+  boxShadow: "0 20px 50px rgba(0,0,0,0.40)",
+},
+
+darkLoadingTitle: {
+  color: "#edf3ff",
+},
+
+darkLoadingText: {
+  color: "#8795aa",
+},
+
+darkLoader: {
+  border: "3px solid #29384e",
+  borderTop: "3px solid #5b91ff",
+},
 
   header: {
     maxHeight: "100px",

@@ -19,6 +19,29 @@ function AddressVerification() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  // =====================================================
+// DARK MODE
+// =====================================================
+
+const [darkMode, setDarkMode] = useState(() => {
+  return localStorage.getItem("avani-theme") === "dark";
+});
+
+useEffect(() => {
+  const syncTheme = () => {
+    setDarkMode(localStorage.getItem("avani-theme") === "dark");
+  };
+
+  window.addEventListener("storage", syncTheme);
+
+  // Sync theme whenever page opens
+  syncTheme();
+
+  return () => {
+    window.removeEventListener("storage", syncTheme);
+  };
+}, []);
+
   // Responsive viewport state
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" && window.innerWidth <= 600
@@ -309,19 +332,44 @@ function AddressVerification() {
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.loadingCard}>
+      <div
+  style={{
+    ...styles.loadingPage,
+    ...(darkMode ? styles.darkLoadingPage : {}),
+  }}
+>
+        <div
+  style={{
+    ...styles.loadingCard,
+    ...(darkMode ? styles.darkLoadingCard : {}),
+  }}
+>
           <div style={styles.loadingIcon}>📍</div>
 
-          <h2 style={styles.loadingTitle}>
+          <h2
+  style={{
+    ...styles.loadingTitle,
+    ...(darkMode ? styles.darkLoadingTitle : {}),
+  }}
+>
             Loading Address Verification
           </h2>
 
-          <p style={styles.loadingText}>
+          <p
+  style={{
+    ...styles.loadingText,
+    ...(darkMode ? styles.darkLoadingText : {}),
+  }}
+>
             Please wait while we fetch your address details...
           </p>
 
-          <div style={styles.loader}></div>
+          <div
+  style={{
+    ...styles.loader,
+    ...(darkMode ? styles.darkLoader : {}),
+  }}
+></div>
         </div>
       </div>
     );
@@ -332,8 +380,13 @@ function AddressVerification() {
   // =========================
 
   return (
-    <div style={{ ...styles.page, ...(isMobile ? styles.mobilePage : {}) }}>
-      {/* =========================
+<div
+  style={{
+    ...styles.page,
+    ...(darkMode ? styles.darkPage : {}),
+    ...(isMobile ? styles.mobilePage : {}),
+  }}
+>      {/* =========================
           HEADER
       ========================= */}
 
@@ -363,31 +416,66 @@ function AddressVerification() {
           CUSTOMER CARD
       ========================= */}
 
-      <div style={{ ...styles.customerCard, ...(isMobile ? styles.mobileCustomerCard : {}) }}>
-        <div style={styles.customerAvatar}>
+<div
+  style={{
+    ...styles.customerCard,
+    ...(darkMode ? styles.darkCustomerCard : {}),
+    ...(isMobile ? styles.mobileCustomerCard : {}),
+  }}
+>        <div style={styles.customerAvatar}>
           {customer?.fullName
             ?.charAt(0)
             ?.toUpperCase() || "C"}
         </div>
 
         <div style={{ ...styles.customerInfo, ...(isMobile ? styles.mobileCustomerInfo : {}) }}>
-          <p style={styles.customerLabel}>CUSTOMER</p>
+          <p
+  style={{
+    ...styles.customerLabel,
+    ...(darkMode ? styles.darkCustomerLabel : {}),
+  }}
+>CUSTOMER</p>
 
-          <h2 style={styles.customerName}>
+          <h2
+  style={{
+    ...styles.customerName,
+    ...(darkMode ? styles.darkCustomerName : {}),
+  }}
+>
             {customer?.fullName || "Customer"}
           </h2>
 
-          <p style={styles.customerEmail}>
+          <p
+  style={{
+    ...styles.customerEmail,
+    ...(darkMode ? styles.darkCustomerEmail : {}),
+  }}
+>
             {customer?.email || "Email unavailable"}
           </p>
         </div>
 
-        <div style={{ ...styles.accountInfo, ...(isMobile ? styles.mobileAccountInfo : {}) }}>
-          <p style={styles.customerLabel}>
+<div
+  style={{
+    ...styles.accountInfo,
+    ...(darkMode ? styles.darkAccountInfo : {}),
+    ...(isMobile ? styles.mobileAccountInfo : {}),
+  }}
+>          <p
+  style={{
+    ...styles.customerLabel,
+    ...(darkMode ? styles.darkCustomerLabel : {}),
+  }}
+>
             ACCOUNT NUMBER
           </p>
 
-          <strong style={styles.accountNumber}>
+          <strong
+  style={{
+    ...styles.accountNumber,
+    ...(darkMode ? styles.darkAccountNumber : {}),
+  }}
+>
             {customer?.accountNumber || "N/A"}
           </strong>
         </div>
@@ -398,13 +486,23 @@ function AddressVerification() {
       ========================= */}
 
       {error && (
-        <div style={styles.errorMessage}>
+        <div
+  style={{
+    ...styles.errorMessage,
+    ...(darkMode ? styles.darkErrorMessage : {}),
+  }}
+>
           ⚠️ {error}
         </div>
       )}
 
       {message && (
-        <div style={styles.successMessage}>
+        <div
+  style={{
+    ...styles.successMessage,
+    ...(darkMode ? styles.darkSuccessMessage : {}),
+  }}
+>
           ✓ {message}
         </div>
       )}
@@ -414,11 +512,28 @@ function AddressVerification() {
       ========================= */}
 
       {addressData && (
-        <div style={{ ...styles.statusCard, ...(isMobile ? styles.mobileStatusCard : {}) }}>
-          <div style={styles.statusIcon}>✓</div>
+<div
+  style={{
+    ...styles.statusCard,
+    ...(darkMode ? styles.darkStatusCard : {}),
+    ...(isMobile ? styles.mobileStatusCard : {}),
+  }}
+>          <div
+  style={{
+    ...styles.statusIcon,
+    ...(darkMode ? styles.darkStatusIcon : {}),
+  }}
+>
+  ✓
+</div>
 
           <div style={{ ...styles.statusContent, ...(isMobile ? styles.mobileStatusContent : {}) }}>
-            <p style={styles.statusLabel}>
+            <p
+  style={{
+    ...styles.statusLabel,
+    ...(darkMode ? styles.darkStatusLabel : {}),
+  }}
+>
               VERIFICATION STATUS
             </p>
 
@@ -433,7 +548,12 @@ function AddressVerification() {
               </span>
 
               {addressData.updatedAt && (
-                <span style={styles.updatedText}>
+                <span
+  style={{
+    ...styles.updatedText,
+    ...(darkMode ? styles.darkUpdatedText : {}),
+  }}
+>
                   Last updated{" "}
                   {new Date(
                     addressData.updatedAt
@@ -449,31 +569,60 @@ function AddressVerification() {
           ADDRESS FORM
       ========================= */}
 
-      <div style={{ ...styles.formCard, ...(isMobile ? styles.mobileFormCard : {}) }}>
-        <div style={{ ...styles.cardHeader, ...(isMobile ? styles.mobileCardHeader : {}) }}>
+<div
+  style={{
+    ...styles.formCard,
+    ...(darkMode ? styles.darkFormCard : {}),
+    ...(isMobile ? styles.mobileFormCard : {}),
+  }}
+>        <div style={{ ...styles.cardHeader, ...(isMobile ? styles.mobileCardHeader : {}) }}>
           <div>
-            <p style={styles.cardEyebrow}>
+            <p
+  style={{
+    ...styles.cardEyebrow,
+    ...(darkMode ? styles.darkCardEyebrow : {}),
+  }}
+>
               ADDRESS DETAILS
             </p>
 
-            <h2 style={styles.cardTitle}>
+            <h2
+  style={{
+    ...styles.cardTitle,
+    ...(darkMode ? styles.darkCardTitle : {}),
+  }}
+>
               Registered Address
             </h2>
 
-            <p style={styles.cardDescription}>
+            <p
+  style={{
+    ...styles.cardDescription,
+    ...(darkMode ? styles.darkCardDescription : {}),
+  }}
+>
               Enter the address associated with your bank
               account.
             </p>
           </div>
 
-          <div style={{ ...styles.locationIcon, ...(isMobile ? styles.mobileLocationIcon : {}) }}>📍</div>
+          <div
+  style={{
+    ...styles.locationIcon,
+    ...(darkMode ? styles.darkLocationIcon : {}),
+    ...(isMobile ? styles.mobileLocationIcon : {}),
+  }}
+>📍</div>
         </div>
 
         <form onSubmit={handleSubmit}>
           {/* ADDRESS */}
 
           <div style={styles.fieldGroup}>
-            <label style={styles.label}>
+            <label style={{
+  ...styles.label,
+  ...(darkMode ? styles.darkLabel : {}),
+}}>
               Complete Address
             </label>
 
@@ -484,9 +633,10 @@ function AddressVerification() {
               placeholder="Enter your complete address"
               rows="3"
               style={{
-                ...styles.input,
-                ...styles.textarea,
-              }}
+  ...styles.input,
+  ...(darkMode ? styles.darkInput : {}),
+  ...styles.textarea,
+}}
               disabled={saving}
             />
           </div>
@@ -495,7 +645,10 @@ function AddressVerification() {
 
           <div style={{ ...styles.twoColumn, ...(isMobile ? styles.mobileTwoColumn : {}) }}>
             <div style={styles.fieldGroup}>
-              <label style={styles.label}>
+              <label style={{
+  ...styles.label,
+  ...(darkMode ? styles.darkLabel : {}),
+}}>
                 City
               </label>
 
@@ -505,13 +658,19 @@ function AddressVerification() {
                 value={form.city}
                 onChange={handleChange}
                 placeholder="Enter city"
-                style={styles.input}
+                style={{
+  ...styles.input,
+  ...(darkMode ? styles.darkInput : {}),
+}}
                 disabled={saving}
               />
             </div>
 
             <div style={styles.fieldGroup}>
-              <label style={styles.label}>
+              <label style={{
+  ...styles.label,
+  ...(darkMode ? styles.darkLabel : {}),
+}}>
                 State
               </label>
 
@@ -521,7 +680,10 @@ function AddressVerification() {
                 value={form.state}
                 onChange={handleChange}
                 placeholder="Enter state"
-                style={styles.input}
+                style={{
+  ...styles.input,
+  ...(darkMode ? styles.darkInput : {}),
+}}
                 disabled={saving}
               />
             </div>
@@ -530,7 +692,10 @@ function AddressVerification() {
           {/* PINCODE */}
 
           <div style={styles.fieldGroup}>
-            <label style={styles.label}>
+            <label style={{
+  ...styles.label,
+  ...(darkMode ? styles.darkLabel : {}),
+}}>
               Pincode
             </label>
 
@@ -554,15 +719,28 @@ function AddressVerification() {
               }}
               placeholder="Enter 6-digit pincode"
               maxLength="6"
-              style={styles.input}
+              style={{
+  ...styles.input,
+  ...(darkMode ? styles.darkInput : {}),
+}}
               disabled={saving}
             />
           </div>
 
           {/* SUBMIT */}
 
-          <div style={{ ...styles.formFooter, ...(isMobile ? styles.mobileFormFooter : {}) }}>
-            <p style={styles.footerNote}>
+<div
+  style={{
+    ...styles.formFooter,
+    ...(darkMode ? styles.darkFormFooter : {}),
+    ...(isMobile ? styles.mobileFormFooter : {}),
+  }}
+>            <p
+  style={{
+    ...styles.footerNote,
+    ...(darkMode ? styles.darkFooterNote : {}),
+  }}
+>
               Your address will be submitted for bank
               verification.
             </p>
@@ -593,15 +771,35 @@ function AddressVerification() {
       ========================= */}
 
       {addressData?.remarks && (
-        <div style={{ ...styles.remarksCard, ...(isMobile ? styles.mobileRemarksCard : {}) }}>
-          <div style={styles.remarksIcon}>ℹ️</div>
+<div
+  style={{
+    ...styles.remarksCard,
+    ...(darkMode ? styles.darkRemarksCard : {}),
+    ...(isMobile ? styles.mobileRemarksCard : {}),
+  }}
+>          <div
+  style={{
+    ...styles.remarksIcon,
+    ...(darkMode ? styles.darkRemarksIcon : {}),
+  }}
+>ℹ️</div>
 
           <div>
-            <h3 style={styles.remarksTitle}>
+            <h3
+  style={{
+    ...styles.remarksTitle,
+    ...(darkMode ? styles.darkRemarksTitle : {}),
+  }}
+>
               Verification Remarks
             </h3>
 
-            <p style={styles.remarksText}>
+            <p
+  style={{
+    ...styles.remarksText,
+    ...(darkMode ? styles.darkRemarksText : {}),
+  }}
+>
               {addressData.remarks}
             </p>
           </div>
@@ -612,15 +810,36 @@ function AddressVerification() {
           INFORMATION
       ========================= */}
 
-      <div style={{ ...styles.infoBox, ...(isMobile ? styles.mobileInfoBox : {}) }}>
-        <span style={styles.infoIcon}>🔒</span>
+      <div
+  style={{
+    ...styles.infoBox,
+    ...(darkMode ? styles.darkInfoBox : {}),
+    ...(isMobile ? styles.mobileInfoBox : {}),
+  }}
+>
+        <span
+  style={{
+    ...styles.infoIcon,
+    ...(darkMode ? styles.darkInfoIcon : {}),
+  }}
+>🔒</span>
 
         <div>
-          <strong style={styles.infoTitle}>
+          <strong
+  style={{
+    ...styles.infoTitle,
+    ...(darkMode ? styles.darkInfoTitle : {}),
+  }}
+>
             Address Verification
           </strong>
 
-          <p style={styles.infoText}>
+          <p
+  style={{
+    ...styles.infoText,
+    ...(darkMode ? styles.darkInfoText : {}),
+  }}
+>
             Please ensure that the address details
             provided are accurate. Verified address
             information may be used for banking and
@@ -647,6 +866,179 @@ const styles = {
       "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     color: "#172033",
   },
+
+  // =====================================================
+// DARK MODE
+// =====================================================
+
+darkPage: {
+  background:
+    "linear-gradient(135deg, #0b1220 0%, #0e1728 100%)",
+  color: "#e8eef7",
+},
+
+// CUSTOMER
+darkCustomerCard: {
+  background: "#111a2b",
+  border: "1px solid #26344b",
+  boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
+},
+
+darkCustomerLabel: {
+  color: "#8795aa",
+},
+
+darkCustomerName: {
+  color: "#edf3ff",
+},
+
+darkCustomerEmail: {
+  color: "#8795aa",
+},
+
+darkAccountNumber: {
+  color: "#b9c8dd",
+},
+
+darkAccountInfo: {
+  borderLeft: "1px solid #30405a",
+  borderTop: "1px solid #30405a",
+},
+
+// ERROR / SUCCESS
+darkErrorMessage: {
+  background: "#351b22",
+  border: "1px solid #63303b",
+  color: "#ff9da9",
+},
+
+darkSuccessMessage: {
+  background: "#123323",
+  border: "1px solid #245c3c",
+  color: "#65d995",
+},
+
+// STATUS
+darkStatusCard: {
+  background: "#111a2b",
+  border: "1px solid #26344b",
+  boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
+},
+
+darkStatusIcon: {
+  background: "#172f63",
+  color: "#9ebeff",
+},
+
+darkStatusLabel: {
+  color: "#8795aa",
+},
+
+darkUpdatedText: {
+  color: "#71809a",
+},
+
+// FORM CARD
+darkFormCard: {
+  background: "#111a2b",
+  border: "1px solid #26344b",
+  boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
+},
+
+darkCardEyebrow: {
+  color: "#7fa7f5",
+},
+
+darkCardTitle: {
+  color: "#edf3ff",
+},
+
+darkCardDescription: {
+  color: "#8795aa",
+},
+
+darkLocationIcon: {
+  background: "#192944",
+},
+
+// FORM
+darkLabel: {
+  color: "#b8c4d6",
+},
+
+darkInput: {
+  background: "#172235",
+  border: "1px solid #34445e",
+  color: "#e8eef7",
+},
+
+darkFormFooter: {
+  borderTop: "1px solid #30405a",
+},
+
+darkFooterNote: {
+  color: "#71809a",
+},
+
+// REMARKS
+darkRemarksCard: {
+  background: "#172235",
+  border: "1px solid #30405a",
+},
+
+darkRemarksIcon: {
+  background: "#1d2c45",
+},
+
+darkRemarksTitle: {
+  color: "#dce5f1",
+},
+
+darkRemarksText: {
+  color: "#8795aa",
+},
+
+// INFORMATION
+darkInfoBox: {
+  background: "#172235",
+  border: "1px solid #30405a",
+},
+
+darkInfoIcon: {
+  color: "#9ebeff",
+},
+
+darkInfoTitle: {
+  color: "#dce5f1",
+},
+
+darkInfoText: {
+  color: "#8795aa",
+},
+
+// LOADING
+darkLoadingPage: {
+  background:
+    "linear-gradient(135deg, #0b1220, #0e1728)",
+},
+
+darkLoadingCard: {
+  background: "#111a2b",
+  boxShadow: "0 20px 50px rgba(0,0,0,0.40)",
+},
+
+darkLoadingTitle: {
+  color: "#edf3ff",
+},
+
+darkLoadingText: {
+  color: "#8795aa",
+},
+
+darkLoader: {
+  border: "3px solid #29384e",
+  borderTop: "3px solid #5b91ff",
+},
 
   header: {
     maxHeight: "100px",

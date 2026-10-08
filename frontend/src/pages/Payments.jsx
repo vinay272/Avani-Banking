@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // =====================================================
@@ -20,6 +20,30 @@ const paymentOptions = [
 
 function Payments() {
   const navigate = useNavigate();
+
+  // =====================================================
+  // DARK MODE
+  // =====================================================
+
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("avani-theme") === "dark";
+  });
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+
+    // Theme changes from another page/tab
+    window.addEventListener("storage", syncTheme);
+
+    // Check current theme whenever Payments is opened
+    syncTheme();
+
+    return () => {
+      window.removeEventListener("storage", syncTheme);
+    };
+  }, []);
 
   // =====================================================
   // PAYMENT SELECTION
@@ -3794,13 +3818,295 @@ function Payments() {
     }
 }
 
+/* =========================================
+   DARK MODE
+========================================= */
+
+.payments-dark-mode {
+    background: #0b1220 !important;
+    color: #e8eef7 !important;
+}
+
+/* Main Card */
+
+.payments-dark-mode .payments-card {
+    background: #111a2b !important;
+    border-color: #26344b !important;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.22) !important;
+}
+
+/* Payment Options */
+
+.payments-dark-mode .payment-options-wrapper {
+    background: #111a2b !important;
+    border-bottom-color: #26344b !important;
+}
+
+.payments-dark-mode .payment-option {
+    background: #172235 !important;
+    border-color: #30405a !important;
+    color: #aebbd0 !important;
+}
+
+.payments-dark-mode .payment-option:hover {
+    background: #1d2c45 !important;
+    border-color: #4f8df7 !important;
+    color: #7eabff !important;
+}
+
+.payments-dark-mode .payment-option.active {
+    color: #ffffff !important;
+    background: linear-gradient(
+        135deg,
+        #173b8c,
+        #2563eb
+    ) !important;
+    border-color: transparent !important;
+}
+
+/* Content */
+
+.payments-dark-mode .payment-content {
+    background: #111a2b !important;
+}
+
+.payments-dark-mode .payment-content-title {
+    color: #e8eef7 !important;
+}
+
+.payments-dark-mode .payment-content-description {
+    color: #8997ac !important;
+}
+
+/* Form Cards */
+
+.payments-dark-mode .form-card,
+.payments-dark-mode .info-card,
+.payments-dark-mode .qr-form-card,
+.payments-dark-mode .qr-preview-card,
+.payments-dark-mode .bill-form-card,
+.payments-dark-mode .bill-info-card,
+.payments-dark-mode .payment-form,
+.payments-dark-mode .autopay-card,
+.payments-dark-mode .scheduled-payment-card,
+.payments-dark-mode .receipt-card,
+.payments-dark-mode .receipt-preview-card {
+    background: #111a2b !important;
+    border-color: #26344b !important;
+    box-shadow: 0 7px 24px rgba(0,0,0,0.16) !important;
+}
+
+/* Labels */
+
+.payments-dark-mode label {
+    color: #b8c4d6 !important;
+}
+
+/* Inputs */
+
+.payments-dark-mode input,
+.payments-dark-mode select,
+.payments-dark-mode textarea {
+    background: #172235 !important;
+    color: #e8eef7 !important;
+    border-color: #34445e !important;
+}
+
+.payments-dark-mode input::placeholder,
+.payments-dark-mode textarea::placeholder {
+    color: #71809a !important;
+}
+
+.payments-dark-mode input:focus,
+.payments-dark-mode select:focus,
+.payments-dark-mode textarea:focus {
+    border-color: #4f8df7 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(79,141,247,0.14) !important;
+}
+
+/* Select option */
+
+.payments-dark-mode select option {
+    background: #172235 !important;
+    color: #e8eef7 !important;
+}
+
+/* UPI Tabs */
+
+.payments-dark-mode .transfer-mode-tabs {
+    border-bottom-color: #26344b !important;
+}
+
+.payments-dark-mode .transfer-mode-button {
+    color: #8795aa !important;
+}
+
+.payments-dark-mode .transfer-mode-button.active {
+    color: #6fa0ff !important;
+}
+
+/* Headings inside Cards */
+
+.payments-dark-mode h2,
+.payments-dark-mode h3,
+.payments-dark-mode h4 {
+    color: #e8eef7;
+}
+
+.payments-dark-mode p {
+    color: inherit;
+}
+
+/* Info Text */
+
+.payments-dark-mode .info-text,
+.payments-dark-mode .form-description,
+.payments-dark-mode .helper-text {
+    color: #8795aa !important;
+}
+
+/* Secure Badge */
+
+.payments-dark-mode .secure-badge {
+    background: #123323 !important;
+    color: #65d995 !important;
+}
+
+/* Buttons */
+
+.payments-dark-mode button {
+    color: inherit;
+}
+
+.payments-dark-mode .dashboard-button {
+    background: #ffffff !important;
+    color: #173b8c !important;
+}
+
+.payments-dark-mode .dashboard-button:hover {
+    background: #edf3ff !important;
+}
+
+/* Secondary Buttons */
+
+.payments-dark-mode .secondary-button {
+    background: #1a2940 !important;
+    color: #b9c8dd !important;
+    border-color: #34445e !important;
+}
+
+/* Transaction / Receipt Areas */
+
+.payments-dark-mode .receipt-header,
+.payments-dark-mode .receipt-detail-row,
+.payments-dark-mode .transaction-row {
+    border-color: #26344b !important;
+}
+
+.payments-dark-mode .receipt-detail-row span {
+    color: #8795aa !important;
+}
+
+.payments-dark-mode .receipt-detail-row strong {
+    color: #dce5f1 !important;
+}
+
+/* Success */
+
+.payments-dark-mode .success-message,
+.payments-dark-mode .success-box {
+    background: #123323 !important;
+    border-color: #245c3c !important;
+    color: #72dda0 !important;
+}
+
+/* Error */
+
+.payments-dark-mode .error-message,
+.payments-dark-mode .error-box {
+    background: #351b22 !important;
+    border-color: #63303b !important;
+    color: #ff9da9 !important;
+}
+
+/* Warning */
+
+.payments-dark-mode .warning-message,
+.payments-dark-mode .warning-box {
+    background: #332b17 !important;
+    border-color: #665525 !important;
+    color: #f2d477 !important;
+}
+
+/* Empty / Coming Soon */
+
+.payments-dark-mode .coming-soon {
+    background: #111a2b !important;
+    border-color: #26344b !important;
+}
+
+.payments-dark-mode .coming-soon h3 {
+    color: #dce5f1 !important;
+}
+
+.payments-dark-mode .coming-soon p {
+    color: #8795aa !important;
+}
+
+/* Auto Pay */
+
+.payments-dark-mode .autopay-card-header {
+    border-bottom-color: #26344b !important;
+}
+
+.payments-dark-mode .autopay-card-header h3 {
+    color: #e8eef7 !important;
+}
+
+.payments-dark-mode .autopay-card-header span {
+    color: #8795aa !important;
+}
+
+.payments-dark-mode .autopay-details {
+    color: #b8c4d6 !important;
+}
+
+/* Footer */
+
+.payments-dark-mode .payments-footer {
+    color: #71809a !important;
+}
+
+/* QR */
+
+.payments-dark-mode .qr-preview-card img {
+    background: #ffffff !important;
+    border-radius: 10px;
+}
+
+/* Scrollbar */
+
+.payments-dark-mode .payment-options::-webkit-scrollbar {
+    height: 6px;
+}
+
+.payments-dark-mode .payment-options::-webkit-scrollbar-track {
+    background: #172235;
+}
+
+.payments-dark-mode .payment-options::-webkit-scrollbar-thumb {
+    background: #34445e;
+    border-radius: 10px;
+}
+
             `}</style>
 
       {/* =====================================================
                 PAGE
             ===================================================== */}
 
-      <div className="payments-page">
+      <div className={`payments-page ${darkMode ? "payments-dark-mode" : ""}`}>
         <div className="payments-container">
           {/* =================================================
                         HEADER

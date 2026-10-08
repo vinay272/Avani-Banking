@@ -10,6 +10,29 @@ function CustomerRiskProfile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+    // =====================================================
+  // DARK MODE
+  // =====================================================
+
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("avani-theme") === "dark";
+  });
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+
+    window.addEventListener("storage", syncTheme);
+
+    // Sync theme whenever page opens
+    syncTheme();
+
+    return () => {
+      window.removeEventListener("storage", syncTheme);
+    };
+  }, []);
+
   // Responsive viewport state
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" && window.innerWidth <= 600
@@ -189,21 +212,46 @@ function CustomerRiskProfile() {
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.loadingCard}>
+      <div
+  style={{
+    ...styles.loadingPage,
+    ...(darkMode ? styles.darkLoadingPage : {}),
+  }}
+>
+        <div
+  style={{
+    ...styles.loadingCard,
+    ...(darkMode ? styles.darkLoadingCard : {}),
+  }}
+>
           <div style={styles.loadingIcon}>
             🛡️
           </div>
 
-          <h2 style={styles.loadingTitle}>
+          <h2 
+  style={{
+    ...styles.loadingTitle,
+    ...(darkMode ? styles.darkLoadingTitle : {}),
+  }}
+>
             Loading Risk Profile
           </h2>
 
-          <p style={styles.loadingText}>
+          <p
+  style={{
+    ...styles.loadingText,
+    ...(darkMode ? styles.darkLoadingText : {}),
+  }}
+>
             Please wait while we fetch your risk profile...
           </p>
 
-          <div style={styles.loader}></div>
+          <div
+  style={{
+    ...styles.loader,
+    ...(darkMode ? styles.darkLoader : {}),
+  }}
+></div>
         </div>
       </div>
     );
@@ -214,8 +262,13 @@ function CustomerRiskProfile() {
   // =========================
 
   return (
-    <div style={{ ...styles.page, ...(isMobile ? styles.mobilePage : {}) }}>
-
+   <div
+  style={{
+    ...styles.page,
+    ...(darkMode ? styles.darkPage : {}),
+    ...(isMobile ? styles.mobilePage : {}),
+  }}
+>
       {/* =========================
           HEADER
       ========================= */}
@@ -251,7 +304,12 @@ function CustomerRiskProfile() {
       ========================= */}
 
       {error && (
-        <div style={styles.errorMessage}>
+        <div
+  style={{
+    ...styles.errorMessage,
+    ...(darkMode ? styles.darkErrorMessage : {}),
+  }}
+>
           ⚠️ {error}
         </div>
       )}
@@ -260,8 +318,13 @@ function CustomerRiskProfile() {
           CUSTOMER INFORMATION
       ========================= */}
 
-      <div style={{ ...styles.customerCard, ...(isMobile ? styles.mobileCustomerCard : {}) }}>
-
+<div
+  style={{
+    ...styles.customerCard,
+    ...(darkMode ? styles.darkCustomerCard : {}),
+    ...(isMobile ? styles.mobileCustomerCard : {}),
+  }}
+>
         <div style={styles.customerAvatar}>
           {customer?.fullName
             ?.charAt(0)
@@ -270,15 +333,30 @@ function CustomerRiskProfile() {
 
         <div style={{ ...styles.customerInfo, ...(isMobile ? styles.mobileCustomerInfo : {}) }}>
 
-          <p style={styles.customerLabel}>
+          <p
+  style={{
+    ...styles.customerLabel,
+    ...(darkMode ? styles.darkCustomerLabel : {}),
+  }}
+>
             CUSTOMER
           </p>
 
-          <h2 style={styles.customerName}>
+          <h2
+  style={{
+    ...styles.customerName,
+    ...(darkMode ? styles.darkCustomerName : {}),
+  }}
+>
             {customer?.fullName || "Customer"}
           </h2>
 
-          <p style={styles.customerEmail}>
+          <p
+  style={{
+    ...styles.customerEmail,
+    ...(darkMode ? styles.darkCustomerEmail : {}),
+  }}
+>
             {customer?.email || "Email unavailable"}
           </p>
 
@@ -286,11 +364,21 @@ function CustomerRiskProfile() {
 
         <div style={{ ...styles.accountInfo, ...(isMobile ? styles.mobileAccountInfo : {}) }}>
 
-          <p style={styles.customerLabel}>
+          <p
+  style={{
+    ...styles.customerLabel,
+    ...(darkMode ? styles.darkCustomerLabel : {}),
+  }}
+>
             ACCOUNT NUMBER
           </p>
 
-          <strong style={styles.accountNumber}>
+          <strong
+  style={{
+    ...styles.accountNumber,
+    ...(darkMode ? styles.darkAccountNumber : {}),
+  }}
+>
             {customer?.accountNumber || "N/A"}
           </strong>
 
@@ -336,17 +424,33 @@ function CustomerRiskProfile() {
               MAIN RISK CARD
           ========================= */}
 
-          <div style={{ ...styles.mainCard, ...(isMobile ? styles.mobileCard : {}) }}>
+          <div
+  style={{
+    ...styles.mainCard,
+    ...(darkMode ? styles.darkMainCard : {}),
+    ...(isMobile ? styles.mobileCard : {}),
+  }}
+>
 
             <div style={{ ...styles.cardHeader, ...(isMobile ? styles.mobileCardHeader : {}) }}>
 
               <div>
 
-                <p style={styles.cardEyebrow}>
+                <p
+  style={{
+    ...styles.cardEyebrow,
+    ...(darkMode ? styles.darkCardEyebrow : {}),
+  }}
+>
                   CURRENT ASSESSMENT
                 </p>
 
-                <h2 style={styles.cardTitle}>
+                <h2
+  style={{
+    ...styles.cardTitle,
+    ...(darkMode ? styles.darkCardTitle : {}),
+  }}
+>
                   Risk Assessment
                 </h2>
 
@@ -372,13 +476,29 @@ function CustomerRiskProfile() {
 
               <div style={{ ...styles.scoreSection, ...(isMobile ? styles.mobileScoreSection : {}) }}>
 
-                <div style={{ ...styles.scoreCircle, ...(isMobile ? styles.mobileScoreCircle : {}) }}>
+                <div
+  style={{
+    ...styles.scoreCircle,
+    ...(darkMode ? styles.darkScoreCircle : {}),
+    ...(isMobile ? styles.mobileScoreCircle : {}),
+  }}
+>
 
-                  <div style={styles.scoreNumber}>
+                  <div
+  style={{
+    ...styles.scoreNumber,
+    ...(darkMode ? styles.darkScoreNumber : {}),
+  }}
+>
                     {riskScore}
                   </div>
 
-                  <div style={styles.scoreText}>
+                  <div
+  style={{
+    ...styles.scoreText,
+    ...(darkMode ? styles.darkScoreText : {}),
+  }}
+>
                     / 100
                   </div>
 
@@ -386,16 +506,31 @@ function CustomerRiskProfile() {
 
                 <div>
 
-                  <p style={styles.scoreLabel}>
+                  <p
+  style={{
+    ...styles.scoreLabel,
+    ...(darkMode ? styles.darkScoreLabel : {}),
+  }}
+>
                     RISK SCORE
                   </p>
 
-                  <h3 style={styles.scoreTitle}>
+                  <h3
+  style={{
+    ...styles.scoreTitle,
+    ...(darkMode ? styles.darkScoreTitle : {}),
+  }}
+>
                     {riskProfile.riskLevel ||
                       "Not Available"} Risk
                   </h3>
 
-                  <p style={styles.scoreDescription}>
+                  <p
+  style={{
+    ...styles.scoreDescription,
+    ...(darkMode ? styles.darkScoreDescription : {}),
+  }}
+>
                     Your current risk assessment
                     score is {riskScore} out of 100.
                   </p>
@@ -406,8 +541,13 @@ function CustomerRiskProfile() {
 
               {/* SCORE BAR */}
 
-              <div style={{ ...styles.scoreBarSection, ...(isMobile ? styles.mobileScoreBarSection : {}) }}>
-
+<div
+  style={{
+    ...styles.scoreBarSection,
+    ...(darkMode ? styles.darkScoreBarSection : {}),
+    ...(isMobile ? styles.mobileScoreBarSection : {}),
+  }}
+>
                 <div style={styles.scoreBarHeader}>
 
                   <span>
@@ -420,7 +560,12 @@ function CustomerRiskProfile() {
 
                 </div>
 
-                <div style={styles.scoreBar}>
+                <div
+  style={{
+    ...styles.scoreBar,
+    ...(darkMode ? styles.darkScoreBar : {}),
+  }}
+>
                   <div
                     style={{
                       ...styles.scoreBarFill,
@@ -447,17 +592,32 @@ function CustomerRiskProfile() {
               PROFILE DETAILS
           ========================= */}
 
-          <div style={{ ...styles.detailsCard, ...(isMobile ? styles.mobileCard : {}) }}>
-
+<div
+  style={{
+    ...styles.detailsCard,
+    ...(darkMode ? styles.darkDetailsCard : {}),
+    ...(isMobile ? styles.mobileCard : {}),
+  }}
+>
             <div style={styles.cardHeader}>
 
               <div>
 
-                <p style={styles.cardEyebrow}>
+                <p
+  style={{
+    ...styles.cardEyebrow,
+    ...(darkMode ? styles.darkCardEyebrow : {}),
+  }}
+>
                   PROFILE DETAILS
                 </p>
 
-                <h2 style={styles.cardTitle}>
+                <h2
+  style={{
+    ...styles.cardTitle,
+    ...(darkMode ? styles.darkCardTitle : {}),
+  }}
+>
                   Risk Information
                 </h2>
 
@@ -467,9 +627,19 @@ function CustomerRiskProfile() {
 
             <div style={{ ...styles.detailsGrid, ...(isMobile ? styles.mobileDetailsGrid : {}) }}>
 
-              <div style={styles.detailItem}>
+              <div
+  style={{
+    ...styles.detailItem,
+    ...(darkMode ? styles.darkDetailItem : {}),
+  }}
+>
 
-                <span style={styles.detailLabel}>
+                <span
+  style={{
+    ...styles.detailLabel,
+    ...(darkMode ? styles.darkDetailLabel : {}),
+  }}
+>
                   Risk Level
                 </span>
 
@@ -486,25 +656,55 @@ function CustomerRiskProfile() {
 
               </div>
 
-              <div style={styles.detailItem}>
+              <div
+  style={{
+    ...styles.detailItem,
+    ...(darkMode ? styles.darkDetailItem : {}),
+  }}
+>
 
-                <span style={styles.detailLabel}>
+                <span
+  style={{
+    ...styles.detailLabel,
+    ...(darkMode ? styles.darkDetailLabel : {}),
+  }}
+>
                   Risk Score
                 </span>
 
-                <strong style={styles.detailValue}>
+                <strong
+  style={{
+    ...styles.detailValue,
+    ...(darkMode ? styles.darkDetailValue : {}),
+  }}
+>
                   {riskScore} / 100
                 </strong>
 
               </div>
 
-              <div style={styles.detailItem}>
+              <div
+  style={{
+    ...styles.detailItem,
+    ...(darkMode ? styles.darkDetailItem : {}),
+  }}
+>
 
-                <span style={styles.detailLabel}>
+                <span
+  style={{
+    ...styles.detailLabel,
+    ...(darkMode ? styles.darkDetailLabel : {}),
+  }}
+>
                   Created
                 </span>
 
-                <strong style={styles.detailValue}>
+                <strong
+  style={{
+    ...styles.detailValue,
+    ...(darkMode ? styles.darkDetailValue : {}),
+  }}
+>
                   {riskProfile.createdAt
                     ? new Date(
                         riskProfile.createdAt
@@ -514,13 +714,28 @@ function CustomerRiskProfile() {
 
               </div>
 
-              <div style={styles.detailItem}>
+              <div
+  style={{
+    ...styles.detailItem,
+    ...(darkMode ? styles.darkDetailItem : {}),
+  }}
+>
 
-                <span style={styles.detailLabel}>
+                <span
+  style={{
+    ...styles.detailLabel,
+    ...(darkMode ? styles.darkDetailLabel : {}),
+  }}
+>
                   Last Updated
                 </span>
 
-                <strong style={styles.detailValue}>
+                <strong
+  style={{
+    ...styles.detailValue,
+    ...(darkMode ? styles.darkDetailValue : {}),
+  }}
+>
                   {riskProfile.updatedAt
                     ? new Date(
                         riskProfile.updatedAt
@@ -538,19 +753,39 @@ function CustomerRiskProfile() {
               REMARKS
           ========================= */}
 
-          <div style={{ ...styles.remarksCard, ...(isMobile ? styles.mobileRemarksCard : {}) }}>
-
-            <div style={styles.remarksIcon}>
+<div
+  style={{
+    ...styles.remarksCard,
+    ...(darkMode ? styles.darkRemarksCard : {}),
+    ...(isMobile ? styles.mobileRemarksCard : {}),
+  }}
+>
+            <div
+  style={{
+    ...styles.remarksIcon,
+    ...(darkMode ? styles.darkRemarksIcon : {}),
+  }}
+>
               ℹ️
             </div>
 
             <div>
 
-              <h3 style={styles.remarksTitle}>
+              <h3
+  style={{
+    ...styles.remarksTitle,
+    ...(darkMode ? styles.darkRemarksTitle : {}),
+  }}
+>
                 Assessment Remarks
               </h3>
 
-              <p style={styles.remarksText}>
+              <p
+  style={{
+    ...styles.remarksText,
+    ...(darkMode ? styles.darkRemarksText : {}),
+  }}
+>
                 {riskProfile.remarks ||
                   "No remarks have been added to this risk profile."}
               </p>
@@ -566,19 +801,39 @@ function CustomerRiskProfile() {
           INFORMATION
       ========================= */}
 
-      <div style={{ ...styles.infoBox, ...(isMobile ? styles.mobileInfoBox : {}) }}>
-
-        <span style={styles.infoIcon}>
+<div
+  style={{
+    ...styles.infoBox,
+    ...(darkMode ? styles.darkInfoBox : {}),
+    ...(isMobile ? styles.mobileInfoBox : {}),
+  }}
+>
+        <span
+  style={{
+    ...styles.infoIcon,
+    ...(darkMode ? styles.darkInfoIcon : {}),
+  }}
+>
           🔒
         </span>
 
         <div>
 
-          <strong style={styles.infoTitle}>
+          <strong
+  style={{
+    ...styles.infoTitle,
+    ...(darkMode ? styles.darkInfoTitle : {}),
+  }}
+>
             Risk Profile Information
           </strong>
 
-          <p style={styles.infoText}>
+          <p
+  style={{
+    ...styles.infoText,
+    ...(darkMode ? styles.darkInfoText : {}),
+  }}
+>
             This page displays the risk profile
             currently associated with your customer
             account. Risk information is maintained
@@ -609,6 +864,185 @@ const styles = {
       "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     color: "#172033",
   },
+
+    // =====================================================
+  // DARK MODE
+  // =====================================================
+
+  darkPage: {
+    background:
+      "linear-gradient(135deg, #0b1220 0%, #0e1728 100%)",
+    color: "#e8eef7",
+  },
+
+  darkDashboardButton: {
+    background: "#172235",
+    border: "1px solid #34445e",
+    color: "#dce5f1",
+    boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
+  },
+
+  darkErrorMessage: {
+    background: "#351b22",
+    border: "1px solid #63303b",
+    color: "#ff9da9",
+  },
+
+  // CUSTOMER
+  darkCustomerCard: {
+    background: "#111a2b",
+    border: "1px solid #26344b",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
+  },
+
+  darkCustomerLabel: {
+    color: "#8795aa",
+  },
+
+  darkCustomerName: {
+    color: "#edf3ff",
+  },
+
+  darkCustomerEmail: {
+    color: "#8795aa",
+  },
+
+  darkAccountNumber: {
+    color: "#b9c8dd",
+  },
+
+  // MAIN RISK CARD
+  darkMainCard: {
+    background: "#111a2b",
+    border: "1px solid #26344b",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
+  },
+
+  darkCardEyebrow: {
+    color: "#7fa7f5",
+  },
+
+  darkCardTitle: {
+    color: "#edf3ff",
+  },
+
+  // SCORE
+  darkScoreCircle: {
+    background:
+      "linear-gradient(135deg, #172f63, #1b2942)",
+    border: "8px solid #294579",
+  },
+
+  darkScoreNumber: {
+    color: "#9ebeff",
+  },
+
+  darkScoreText: {
+    color: "#8795aa",
+  },
+
+  darkScoreLabel: {
+    color: "#8795aa",
+  },
+
+  darkScoreTitle: {
+    color: "#dce5f1",
+  },
+
+  darkScoreDescription: {
+    color: "#8795aa",
+  },
+
+  // SCORE BAR
+  darkScoreBarSection: {
+    background: "#172235",
+    border: "1px solid #30405a",
+  },
+
+  darkScoreBar: {
+    background: "#29384e",
+  },
+
+  // DETAILS
+  darkDetailsCard: {
+    background: "#111a2b",
+    border: "1px solid #26344b",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
+  },
+
+  darkDetailItem: {
+    background: "#172235",
+    border: "1px solid #30405a",
+  },
+
+  darkDetailLabel: {
+    color: "#8795aa",
+  },
+
+  darkDetailValue: {
+    color: "#dce5f1",
+  },
+
+  // REMARKS
+  darkRemarksCard: {
+    background: "#172235",
+    border: "1px solid #30405a",
+  },
+
+  darkRemarksIcon: {
+    background: "#1d2c45",
+  },
+
+  darkRemarksTitle: {
+    color: "#dce5f1",
+  },
+
+  darkRemarksText: {
+    color: "#8795aa",
+  },
+
+  // INFORMATION
+  darkInfoBox: {
+    background: "#172235",
+    border: "1px solid #30405a",
+  },
+
+  darkInfoIcon: {
+    color: "#9ebeff",
+  },
+
+  darkInfoTitle: {
+    color: "#dce5f1",
+  },
+
+  darkInfoText: {
+    color: "#8795aa",
+  },
+
+  // LOADING
+  darkLoadingPage: {
+    background:
+      "linear-gradient(135deg, #0b1220, #0e1728)",
+  },
+
+  darkLoadingCard: {
+    background: "#111a2b",
+    boxShadow: "0 20px 50px rgba(0,0,0,0.40)",
+  },
+
+  darkLoadingTitle: {
+    color: "#edf3ff",
+  },
+
+  darkLoadingText: {
+    color: "#8795aa",
+  },
+
+  darkLoader: {
+    border: "3px solid #29384e",
+    borderTop: "3px solid #5b91ff",
+  },
+
 header: {
     maxHeight: "100px",
     borderRadius:"18px",

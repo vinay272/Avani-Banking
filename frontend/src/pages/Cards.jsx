@@ -46,6 +46,29 @@ function Cards() {
     cardNetwork: "VISA",
   });
 
+    // =====================================================
+  // DARK MODE
+  // =====================================================
+
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("avani-theme") === "dark";
+  });
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+
+    window.addEventListener("storage", syncTheme);
+
+    // Sync theme whenever Cards page opens
+    syncTheme();
+
+    return () => {
+      window.removeEventListener("storage", syncTheme);
+    };
+  }, []);
+
   const [issuing, setIssuing] = useState(false);
 
   const loadCards = async () => {
@@ -867,7 +890,7 @@ const handleViewStatement = async (cardId) => {
       <>
         <style>{cardsStyles}</style>
 
-        <div className="cards-page">
+        <div className={`cards-page ${darkMode ? "cards-dark-mode" : ""}`}>
           <div className="cards-loading">
             <div className="loading-spinner"></div>
             <p>Loading your cards...</p>
@@ -881,7 +904,7 @@ const handleViewStatement = async (cardId) => {
     <>
       <style>{cardsStyles}</style>
 
-      <div className="cards-page">
+      <div className={`cards-page ${darkMode ? "cards-dark-mode" : ""}`}>
         {/* =====================================================
             HEADER
         ===================================================== */}
@@ -924,7 +947,7 @@ const handleViewStatement = async (cardId) => {
                 window.location.href = "/dashboard";
               }}
             >
-              <span className="dashboard-icon">⌂</span>
+              <span className="dashboard-icon">←</span>
               Dashboard
             </button>
 
@@ -8905,6 +8928,552 @@ const cardsStyles = `
   }
 }
 
+/* =====================================================
+   AVANI BANK — DARK MODE
+   UI ONLY — EXISTING CARD LOGIC UNCHANGED
+===================================================== */
+
+.cards-dark-mode {
+  background:
+    linear-gradient(
+      180deg,
+      #0b1220 0%,
+      #0e1728 100%
+    ) !important;
+
+  color: #e8eef7 !important;
+}
+
+
+/* =====================================================
+   PAGE HEADER
+   Keep existing blue gradient
+===================================================== */
+
+.cards-dark-mode .cards-page-header {
+  box-shadow:
+    0 14px 35px rgba(0, 0, 0, 0.28) !important;
+}
+
+
+/* =====================================================
+   PAGE INTRO
+===================================================== */
+
+.cards-dark-mode .cards-section-heading h2 {
+  color: #edf3ff !important;
+}
+
+.cards-dark-mode .cards-section-heading p {
+  color: #8795aa !important;
+}
+
+.cards-dark-mode .card-count {
+  background: #172235 !important;
+  border-color: #30405a !important;
+  color: #9ebeff !important;
+}
+
+
+/* =====================================================
+   CARD ITEM
+===================================================== */
+
+.cards-dark-mode .card-item {
+  background: #111a2b !important;
+  border-color: #26344b !important;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.24) !important;
+}
+
+
+/* =====================================================
+   CARD INFORMATION
+===================================================== */
+
+.cards-dark-mode .card-info {
+  background: #111a2b !important;
+}
+
+.cards-dark-mode .card-info-header h3 {
+  color: #edf3ff !important;
+}
+
+.cards-dark-mode .card-subtitle {
+  color: #8795aa !important;
+}
+
+.cards-dark-mode .card-id {
+  color: #71809a !important;
+}
+
+
+/* =====================================================
+   DETAIL BOXES
+===================================================== */
+
+.cards-dark-mode .detail-box {
+  background: #172235 !important;
+  border-color: #30405a !important;
+}
+
+.cards-dark-mode .detail-content span {
+  color: #8795aa !important;
+}
+
+.cards-dark-mode .detail-content strong {
+  color: #dce5f1 !important;
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.cards-dark-mode .card-status.active {
+  background: #123323 !important;
+  color: #65d995 !important;
+}
+
+.cards-dark-mode .card-status.issued {
+  background: #352b17 !important;
+  color: #f1d16b !important;
+}
+
+.cards-dark-mode .card-status.blocked {
+  background: #351b22 !important;
+  color: #ff9da9 !important;
+}
+
+.cards-dark-mode .card-status.replaced {
+  background: #273142 !important;
+  color: #aebbd0 !important;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.cards-dark-mode .no-cards {
+  background: #111a2b !important;
+  border-color: #26344b !important;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.22) !important;
+}
+
+.cards-dark-mode .empty-card-icon {
+  background: #192944 !important;
+}
+
+.cards-dark-mode .no-cards h3 {
+  color: #edf3ff !important;
+}
+
+.cards-dark-mode .no-cards p {
+  color: #8795aa !important;
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.cards-dark-mode .cards-error {
+  background: #351b22 !important;
+  border-color: #63303b !important;
+  color: #ffb0ba !important;
+}
+
+.cards-dark-mode .cards-error strong {
+  color: #ffd3d8 !important;
+}
+
+.cards-dark-mode .cards-error p {
+  color: #ff9da9 !important;
+}
+
+.cards-dark-mode .error-icon {
+  background: #4a222b !important;
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.cards-dark-mode .cards-loading {
+  color: #9aa9bd !important;
+}
+
+.cards-dark-mode .loading-spinner {
+  border-color: #29384e !important;
+  border-top-color: #5b91ff !important;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.cards-dark-mode .cards-footer {
+  color: #71809a !important;
+}
+
+
+/* =====================================================
+   NORMAL CARD ACTION BUTTONS
+===================================================== */
+
+.cards-dark-mode .view-card-btn {
+  background: #172f63 !important;
+  border-color: #2f5aa8 !important;
+  color: #a9c5ff !important;
+}
+
+.cards-dark-mode .view-card-btn:hover {
+  background: #1d3d7d !important;
+  border-color: #4f7ed2 !important;
+}
+
+.cards-dark-mode .activate-card-btn {
+  background: #123323 !important;
+  border-color: #245c3c !important;
+  color: #65d995 !important;
+}
+
+.cards-dark-mode .set-pin-card-btn {
+  background: #172f63 !important;
+  border-color: #315da5 !important;
+  color: #a9c5ff !important;
+}
+
+.cards-dark-mode .card-action-btn {
+  background: #1a2940 !important;
+  border-color: #34445e !important;
+  color: #b9c8dd !important;
+}
+
+.cards-dark-mode .manage-limits-btn {
+  background: #172f63 !important;
+  border-color: #315da5 !important;
+  color: #a9c5ff !important;
+}
+
+.cards-dark-mode .rewards-btn {
+  background: #332b17 !important;
+  border-color: #665525 !important;
+  color: #f2d477 !important;
+}
+
+.cards-dark-mode .international-usage-btn {
+  background: #182b3d !important;
+  border-color: #2d5877 !important;
+  color: #8fc9ef !important;
+}
+
+.cards-dark-mode .statement-btn {
+  background: #1a2940 !important;
+  border-color: #34445e !important;
+  color: #b9c8dd !important;
+}
+
+.cards-dark-mode .block-card-btn {
+  background: #351b22 !important;
+  border-color: #63303b !important;
+  color: #ff9da9 !important;
+}
+
+.cards-dark-mode .replace-card-btn {
+  background: #1a2940 !important;
+  border-color: #34445e !important;
+  color: #b9c8dd !important;
+}
+
+
+/* =====================================================
+   ISSUE CARD MODAL
+===================================================== */
+
+.cards-dark-mode .modal,
+.cards-dark-mode .modal-content,
+.cards-dark-mode .pin-modal,
+.cards-dark-mode .limits-modal,
+.cards-dark-mode .international-modal,
+.cards-dark-mode .rewards-modal {
+  background: #111a2b !important;
+  color: #e8eef7 !important;
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.45) !important;
+}
+
+
+/* Modal headers stay blue */
+.cards-dark-mode .modal-header,
+.cards-dark-mode .pin-modal-header,
+.cards-dark-mode .limits-modal-header,
+.cards-dark-mode .international-modal-header,
+.cards-dark-mode .rewards-modal-header {
+  color: #ffffff !important;
+}
+
+
+/* Modal text */
+
+.cards-dark-mode .modal-content h2,
+.cards-dark-mode .details-grid strong,
+.cards-dark-mode .limits-modal-body,
+.cards-dark-mode .international-modal-body,
+.cards-dark-mode .rewards-modal-body {
+  color: #e8eef7 !important;
+}
+
+.cards-dark-mode .modal-content p,
+.cards-dark-mode .modal-subtitle {
+  color: #a0aec0 !important;
+}
+
+
+/* =====================================================
+   ISSUE CARD FORM
+===================================================== */
+
+.cards-dark-mode .issue-form-group label,
+.cards-dark-mode .limit-form-group label,
+.cards-dark-mode .rewards-form-group label {
+  color: #b8c4d6 !important;
+}
+
+.cards-dark-mode .issue-form-group select,
+.cards-dark-mode .limit-input-wrapper input,
+.cards-dark-mode .rewards-input-wrapper input,
+.cards-dark-mode .pin-form-group input,
+.cards-dark-mode .modal-content input {
+  background: #172235 !important;
+  border-color: #34445e !important;
+  color: #e8eef7 !important;
+}
+
+.cards-dark-mode .issue-form-group select:focus,
+.cards-dark-mode .limit-input-wrapper input:focus,
+.cards-dark-mode .rewards-input-wrapper input:focus,
+.cards-dark-mode .pin-form-group input:focus,
+.cards-dark-mode .modal-content input:focus {
+  border-color: #4f8df7 !important;
+  box-shadow:
+    0 0 0 3px rgba(79, 141, 247, 0.14) !important;
+}
+
+.cards-dark-mode select option {
+  background: #172235 !important;
+  color: #e8eef7 !important;
+}
+
+.cards-dark-mode input::placeholder {
+  color: #71809a !important;
+}
+
+
+/* =====================================================
+   ISSUE OPTIONS
+===================================================== */
+
+.cards-dark-mode .issue-option {
+  background: #172235 !important;
+  border-color: #34445e !important;
+  color: #e8eef7 !important;
+}
+
+.cards-dark-mode .issue-option:hover {
+  background: #1d2c45 !important;
+  border-color: #4f8df7 !important;
+}
+
+.cards-dark-mode .issue-option.selected {
+  background: #172f63 !important;
+  border-color: #4f8df7 !important;
+}
+
+.cards-dark-mode .issue-option strong {
+  color: #e8eef7 !important;
+}
+
+.cards-dark-mode .issue-option small {
+  color: #8795aa !important;
+}
+
+
+/* =====================================================
+   PIN SECURITY NOTE
+===================================================== */
+
+.cards-dark-mode .pin-security-note {
+  background: #172235 !important;
+  border-color: #30405a !important;
+  color: #9eacc0 !important;
+}
+
+
+/* =====================================================
+   LIMITS MODAL
+===================================================== */
+
+.cards-dark-mode .limits-modal-body {
+  background: #111a2b !important;
+}
+
+.cards-dark-mode .limits-info-note {
+  background: #172235 !important;
+  border-color: #30405a !important;
+  color: #aebbd0 !important;
+}
+
+.cards-dark-mode .limit-form-group small {
+  color: #71809a !important;
+}
+
+.cards-dark-mode .currency-symbol {
+  color: #9ebeff !important;
+}
+
+
+/* =====================================================
+   INTERNATIONAL MODAL
+===================================================== */
+
+.cards-dark-mode .international-status-card,
+.cards-dark-mode .international-toggle-section,
+.cards-dark-mode .international-security-note {
+  background: #172235 !important;
+  border-color: #30405a !important;
+}
+
+.cards-dark-mode .international-status-content span,
+.cards-dark-mode .international-toggle-text p,
+.cards-dark-mode .international-security-note p {
+  color: #8795aa !important;
+}
+
+.cards-dark-mode .international-status-content strong,
+.cards-dark-mode .international-toggle-text strong,
+.cards-dark-mode .international-security-note strong {
+  color: #e8eef7 !important;
+}
+
+
+/* =====================================================
+   REWARDS MODAL
+===================================================== */
+
+.cards-dark-mode .rewards-balance-card,
+.cards-dark-mode .rewards-info-note {
+  background: #172235 !important;
+  border-color: #30405a !important;
+}
+
+.cards-dark-mode .rewards-balance-content span,
+.cards-dark-mode .rewards-balance-content small,
+.cards-dark-mode .rewards-form-group small {
+  color: #8795aa !important;
+}
+
+.cards-dark-mode .rewards-balance-content strong {
+  color: #f2d477 !important;
+}
+
+
+/* =====================================================
+   CARD DETAILS MODAL
+===================================================== */
+
+.cards-dark-mode .details-grid {
+  background: #111a2b !important;
+}
+
+.cards-dark-mode .detail-item {
+  background: #172235 !important;
+  border-color: #30405a !important;
+}
+
+.cards-dark-mode .detail-item span {
+  color: #8795aa !important;
+}
+
+.cards-dark-mode .detail-item strong {
+  color: #dce5f1 !important;
+}
+
+
+/* =====================================================
+   MODAL FOOTERS
+===================================================== */
+
+.cards-dark-mode .modal-footer,
+.cards-dark-mode .limits-modal-footer,
+.cards-dark-mode .international-modal-footer,
+.cards-dark-mode .rewards-modal-footer,
+.cards-dark-mode .pin-form-footer {
+  border-color: #26344b !important;
+}
+
+
+/* =====================================================
+   CLOSE BUTTONS
+===================================================== */
+
+.cards-dark-mode .close-button,
+.cards-dark-mode .pin-close-button,
+.cards-dark-mode .limits-close-button,
+.cards-dark-mode .international-close-button,
+.cards-dark-mode .rewards-close-button {
+  color: #dce5f1 !important;
+}
+
+.cards-dark-mode .close-button:hover,
+.cards-dark-mode .pin-close-button:hover,
+.cards-dark-mode .limits-close-button:hover,
+.cards-dark-mode .international-close-button:hover,
+.cards-dark-mode .rewards-close-button:hover {
+  background: rgba(255,255,255,0.10) !important;
+}
+
+
+/* =====================================================
+   MODAL ACTION BUTTONS
+===================================================== */
+
+.cards-dark-mode .modal-actions button,
+.cards-dark-mode .limits-cancel-button,
+.cards-dark-mode .international-cancel-button,
+.cards-dark-mode .rewards-cancel-button,
+.cards-dark-mode .pin-cancel-btn {
+  background: #1a2940 !important;
+  border-color: #34445e !important;
+  color: #b9c8dd !important;
+}
+
+
+/* =====================================================
+   SCROLLBAR
+===================================================== */
+
+.cards-dark-mode ::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.cards-dark-mode ::-webkit-scrollbar-track {
+  background: #111a2b;
+}
+
+.cards-dark-mode ::-webkit-scrollbar-thumb {
+  background: #34445e;
+  border-radius: 10px;
+}
+
+.cards-dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #4b5f7e;
+}
 `;
 
 export default Cards;
