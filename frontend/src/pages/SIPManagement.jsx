@@ -3,6 +3,18 @@ import React, { useEffect, useMemo, useState } from "react";
 const API_BASE = "http://localhost:8080";
 
 function SIPManagement() {
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
   const [accounts, setAccounts] = useState([]);
   const [sips, setSips] = useState([]);
   const [form, setForm] = useState({
@@ -537,13 +549,62 @@ function SIPManagement() {
     },
   };
 
+  const darkOverrides = darkMode ? {
+    page: { background: "#0b1220", color: "#e5e7eb" },
+    loadingCard: { background: "#111c2e", border: "1px solid #26364d" },
+    loadingTitle: { color: "#f3f4f6" },
+    loadingText: { color: "#aab6c8" },
+    summaryCard: { background: "#111c2e", border: "1px solid #26364d", boxShadow: "0 4px 14px rgba(0,0,0,0.18)" },
+    summaryLabel: { color: "#aab6c8" },
+    summaryValue: { color: "#f3f4f6" },
+    summaryHint: { color: "#9caac0" },
+    sectionTitle: { color: "#f3f4f6" },
+    sectionSubtitle: { color: "#aab6c8" },
+    createCard: { background: "#111c2e", border: "1px solid #26364d", boxShadow: "0 4px 14px rgba(0,0,0,0.18)" },
+    field: { color: "#e5e7eb" },
+    label: { color: "#d1d9e6" },
+    input: { background: "#0b1424", color: "#e5e7eb", border: "1px solid #3a4a61", colorScheme: "dark" },
+    accountInfo: { background: "#172438", border: "1px solid #2b3b52", color: "#e5e7eb" },
+    projectionBox: { background: "#172438", border: "1px solid #2b3b52" },
+    projectionTitle: { color: "#f3f4f6" },
+    projectionLabel: { color: "#b8c4d6" },
+    projectionValue: { color: "#f3f4f6" },
+    projectionNote: { color: "#aab6c8" },
+    listHeader: { color: "#e5e7eb" },
+    sipCard: { background: "#111c2e", border: "1px solid #26364d", boxShadow: "0 4px 14px rgba(0,0,0,0.18)" },
+    sipTitle: { color: "#f3f4f6" },
+    sipAccount: { color: "#aab6c8" },
+    sipAmount: { color: "#f3f4f6" },
+    detailsGrid: { borderTop: "1px solid #2b3b52", color: "#d1d9e6" },
+    actionRow: { borderTop: "1px solid #2b3b52" },
+    emptyCard: { background: "#111c2e", border: "1px solid #26364d" },
+    emptyTitle: { color: "#f3f4f6" },
+    emptyText: { color: "#aab6c8" },
+    errorBox: { background: "#351b25", border: "1px solid #743244", color: "#fecdd3" },
+    successBox: { background: "#12352a", border: "1px solid #24634c", color: "#a7f3d0" },
+  } : {};
+
+  const themedStyles = {
+    ...styles,
+    ...responsiveStyles,
+    ...Object.fromEntries(
+      Object.entries(darkOverrides).map(([key, value]) => [
+        key,
+        { ...(styles[key] || {}), ...(responsiveStyles[key] || {}), ...value }
+      ])
+    ),
+    // Keep the blue gradient header and its back button unchanged.
+    header: responsiveStyles.header,
+    backButton: responsiveStyles.backButton,
+  };
+
   if (loading) {
     return (
-      <div style={responsiveStyles.page}>
-        <div style={responsiveStyles.loadingCard}>
-          <div style={styles.loadingIcon}>🔄</div>
-          <div style={styles.loadingTitle}>Loading SIP Management...</div>
-          <div style={styles.loadingText}>
+      <div style={themedStyles.page}>
+        <div style={themedStyles.loadingCard}>
+          <div style={themedStyles.loadingIcon}>🔄</div>
+          <div style={themedStyles.loadingTitle}>Loading SIP Management...</div>
+          <div style={themedStyles.loadingText}>
             Fetching your SIP information.
           </div>
         </div>
@@ -552,15 +613,15 @@ function SIPManagement() {
   }
 
   return (
-    <div style={responsiveStyles.page}>
-      <div style={responsiveStyles.container}>
-        <div style={responsiveStyles.header}>
-          <div style={responsiveStyles.headerLeft}>
-            <div style={responsiveStyles.headerIcon}>🔄</div>
+    <div style={themedStyles.page}>
+      <div style={themedStyles.container}>
+        <div style={themedStyles.header}>
+          <div style={themedStyles.headerLeft}>
+            <div style={themedStyles.headerIcon}>🔄</div>
 
             <div style={{ minWidth: 0 }}>
-              <div style={responsiveStyles.title}>SIP Management</div>
-              <div style={responsiveStyles.subtitle}>
+              <div style={themedStyles.title}>SIP Management</div>
+              <div style={themedStyles.subtitle}>
                 Start and manage your systematic investment plans.
               </div>
             </div>
@@ -571,61 +632,61 @@ function SIPManagement() {
             onClick={() => {
               window.location.href = "/investments";
             }}
-            style={responsiveStyles.backButton}
+            style={themedStyles.backButton}
           >
             ← Investment Page
           </button>
         </div>
 
-        {error && <div style={responsiveStyles.errorBox}>⚠️ {error}</div>}
+        {error && <div style={themedStyles.errorBox}>⚠️ {error}</div>}
         {success && (
-          <div style={responsiveStyles.successBox}>✅ {success}</div>
+          <div style={themedStyles.successBox}>✅ {success}</div>
         )}
 
-        <div style={responsiveStyles.summaryGrid}>
-          <div style={responsiveStyles.summaryCard}>
-            <div style={styles.summaryLabel}>Total SIPs</div>
-            <div style={responsiveStyles.summaryValue}>{sips.length}</div>
-            <div style={styles.summaryHint}>All SIP plans</div>
+        <div style={themedStyles.summaryGrid}>
+          <div style={themedStyles.summaryCard}>
+            <div style={themedStyles.summaryLabel}>Total SIPs</div>
+            <div style={themedStyles.summaryValue}>{sips.length}</div>
+            <div style={themedStyles.summaryHint}>All SIP plans</div>
           </div>
 
-          <div style={responsiveStyles.summaryCard}>
-            <div style={styles.summaryLabel}>Active SIPs</div>
-            <div style={responsiveStyles.summaryValue}>
+          <div style={themedStyles.summaryCard}>
+            <div style={themedStyles.summaryLabel}>Active SIPs</div>
+            <div style={themedStyles.summaryValue}>
               {activeSIPs.length}
             </div>
-            <div style={styles.summaryHint}>Currently running</div>
+            <div style={themedStyles.summaryHint}>Currently running</div>
           </div>
 
-          <div style={responsiveStyles.summaryCard}>
-            <div style={styles.summaryLabel}>Total Invested</div>
-            <div style={responsiveStyles.summaryValue}>
+          <div style={themedStyles.summaryCard}>
+            <div style={themedStyles.summaryLabel}>Total Invested</div>
+            <div style={themedStyles.summaryValue}>
               {formatCurrency(totalInvested)}
             </div>
-            <div style={styles.summaryHint}>Actual SIP installments</div>
+            <div style={themedStyles.summaryHint}>Actual SIP installments</div>
           </div>
 
-          <div style={responsiveStyles.summaryCard}>
-            <div style={styles.summaryLabel}>Projected Value</div>
-            <div style={responsiveStyles.summaryValue}>
+          <div style={themedStyles.summaryCard}>
+            <div style={themedStyles.summaryLabel}>Projected Value</div>
+            <div style={themedStyles.summaryValue}>
               {formatCurrency(totalProjectedValue)}
             </div>
-            <div style={styles.summaryHint}>Based on expected returns</div>
+            <div style={themedStyles.summaryHint}>Based on expected returns</div>
           </div>
         </div>
 
-        <div style={responsiveStyles.sectionTitle}>Start New SIP</div>
+        <div style={themedStyles.sectionTitle}>Start New SIP</div>
 
-        <div style={responsiveStyles.createCard}>
+        <div style={themedStyles.createCard}>
           <form onSubmit={handleCreateSIP}>
-            <div style={responsiveStyles.formGrid}>
-              <div style={styles.field}>
-                <label style={styles.label}>Debit Account</label>
+            <div style={themedStyles.formGrid}>
+              <div style={themedStyles.field}>
+                <label style={themedStyles.label}>Debit Account</label>
                 <select
                   name="accountId"
                   value={form.accountId}
                   onChange={handleChange}
-                  style={responsiveStyles.input}
+                  style={themedStyles.input}
                 >
                   <option value="">Select Account</option>
                   {accounts
@@ -643,8 +704,8 @@ function SIPManagement() {
                 </select>
               </div>
 
-              <div style={styles.field}>
-                <label style={styles.label}>Monthly SIP Amount</label>
+              <div style={themedStyles.field}>
+                <label style={themedStyles.label}>Monthly SIP Amount</label>
                 <input
                   type="number"
                   name="monthlyAmount"
@@ -653,12 +714,12 @@ function SIPManagement() {
                   placeholder="e.g. 5000"
                   min="1"
                   step="0.01"
-                  style={responsiveStyles.input}
+                  style={themedStyles.input}
                 />
               </div>
 
-              <div style={styles.field}>
-                <label style={styles.label}>
+              <div style={themedStyles.field}>
+                <label style={themedStyles.label}>
                   Expected Annual Return (%)
                 </label>
                 <input
@@ -668,12 +729,12 @@ function SIPManagement() {
                   onChange={handleChange}
                   min="0"
                   step="0.01"
-                  style={responsiveStyles.input}
+                  style={themedStyles.input}
                 />
               </div>
 
-              <div style={styles.field}>
-                <label style={styles.label}>Tenure (Months)</label>
+              <div style={themedStyles.field}>
+                <label style={themedStyles.label}>Tenure (Months)</label>
                 <input
                   type="number"
                   name="tenureMonths"
@@ -681,30 +742,30 @@ function SIPManagement() {
                   onChange={handleChange}
                   min="1"
                   step="1"
-                  style={responsiveStyles.input}
+                  style={themedStyles.input}
                 />
               </div>
 
-              <div style={styles.field}>
-                <label style={styles.label}>Start Date</label>
+              <div style={themedStyles.field}>
+                <label style={themedStyles.label}>Start Date</label>
                 <input
                   type="date"
                   name="startDate"
                   value={form.startDate}
                   onChange={handleChange}
                   min={new Date().toISOString().split("T")[0]}
-                  style={responsiveStyles.input}
+                  style={themedStyles.input}
                 />
               </div>
 
-              <div style={styles.field}>
-                <label style={styles.label}>Frequency</label>
+              <div style={themedStyles.field}>
+                <label style={themedStyles.label}>Frequency</label>
                 <input
                   type="text"
                   value="MONTHLY"
                   disabled
                   style={{
-                    ...responsiveStyles.input,
+                    ...themedStyles.input,
                     background: "#f8fafc",
                     color: "#667085",
                   }}
@@ -713,7 +774,7 @@ function SIPManagement() {
             </div>
 
             {selectedAccount && (
-              <div style={responsiveStyles.accountInfo}>
+              <div style={themedStyles.accountInfo}>
                 <div>
                   <span>Account</span>
                   <strong>{selectedAccount.accountNumber}</strong>
@@ -726,29 +787,29 @@ function SIPManagement() {
               </div>
             )}
 
-            <div style={responsiveStyles.projectionBox}>
-              <div style={styles.projectionTitle}>📈 SIP Projection</div>
+            <div style={themedStyles.projectionBox}>
+              <div style={themedStyles.projectionTitle}>📈 SIP Projection</div>
 
-              <div style={responsiveStyles.projectionGrid}>
+              <div style={themedStyles.projectionGrid}>
                 <div>
-                  <span style={styles.projectionLabel}>Total Investment</span>
-                  <strong style={styles.projectionValue}>
+                  <span style={themedStyles.projectionLabel}>Total Investment</span>
+                  <strong style={themedStyles.projectionValue}>
                     {formatCurrency(projectedCalculation.invested)}
                   </strong>
                 </div>
 
                 <div>
-                  <span style={styles.projectionLabel}>Projected Value</span>
-                  <strong style={styles.projectionValue}>
+                  <span style={themedStyles.projectionLabel}>Projected Value</span>
+                  <strong style={themedStyles.projectionValue}>
                     {formatCurrency(projectedCalculation.value)}
                   </strong>
                 </div>
 
                 <div>
-                  <span style={styles.projectionLabel}>Projected Profit</span>
+                  <span style={themedStyles.projectionLabel}>Projected Profit</span>
                   <strong
                     style={{
-                      ...styles.projectionValue,
+                      ...themedStyles.projectionValue,
                       color: "#087443",
                     }}
                   >
@@ -757,7 +818,7 @@ function SIPManagement() {
                 </div>
               </div>
 
-              <div style={styles.projectionNote}>
+              <div style={themedStyles.projectionNote}>
                 Projection is an estimate based on the selected expected
                 annual return. Actual market-linked returns may vary.
               </div>
@@ -767,7 +828,7 @@ function SIPManagement() {
               type="submit"
               disabled={creating}
               style={{
-                ...responsiveStyles.createButton,
+                ...themedStyles.createButton,
                 opacity: creating ? 0.7 : 1,
               }}
             >
@@ -776,37 +837,37 @@ function SIPManagement() {
           </form>
         </div>
 
-        <div style={responsiveStyles.listHeader}>
+        <div style={themedStyles.listHeader}>
           <div>
-            <div style={responsiveStyles.sectionTitle}>My SIPs</div>
-            <div style={styles.sectionSubtitle}>
+            <div style={themedStyles.sectionTitle}>My SIPs</div>
+            <div style={themedStyles.sectionSubtitle}>
               View and manage your SIP investments.
             </div>
           </div>
         </div>
 
         {sips.length === 0 ? (
-          <div style={responsiveStyles.emptyCard}>
-            <div style={styles.emptyIcon}>🔄</div>
-            <div style={styles.emptyTitle}>No SIPs Found</div>
-            <div style={styles.emptyText}>
+          <div style={themedStyles.emptyCard}>
+            <div style={themedStyles.emptyIcon}>🔄</div>
+            <div style={themedStyles.emptyTitle}>No SIPs Found</div>
+            <div style={themedStyles.emptyText}>
               Start your first SIP using the form above.
             </div>
           </div>
         ) : (
-          <div style={responsiveStyles.sipGrid}>
+          <div style={themedStyles.sipGrid}>
             {sips.map((sip) => {
               const statusStyle = getStatusStyle(sip.status);
               const isProcessing = actionId === sip.id;
 
               return (
-                <div key={sip.id} style={responsiveStyles.sipCard}>
-                  <div style={responsiveStyles.sipCardHeader}>
+                <div key={sip.id} style={themedStyles.sipCard}>
+                  <div style={themedStyles.sipCardHeader}>
                     <div style={{ minWidth: 0 }}>
-                      <div style={styles.sipTitle}>SIP #{sip.id}</div>
+                      <div style={themedStyles.sipTitle}>SIP #{sip.id}</div>
                       <div
                         style={{
-                          ...styles.sipAccount,
+                          ...themedStyles.sipAccount,
                           overflowWrap: "anywhere",
                         }}
                       >
@@ -816,7 +877,7 @@ function SIPManagement() {
 
                     <span
                       style={{
-                        ...responsiveStyles.statusBadge,
+                        ...themedStyles.statusBadge,
                         background: statusStyle.background,
                         color: statusStyle.color,
                       }}
@@ -825,12 +886,12 @@ function SIPManagement() {
                     </span>
                   </div>
 
-                  <div style={responsiveStyles.sipAmount}>
+                  <div style={themedStyles.sipAmount}>
                     {formatCurrency(sip.monthlyAmount)}
                     <span>/ month</span>
                   </div>
 
-                  <div style={responsiveStyles.detailsGrid}>
+                  <div style={themedStyles.detailsGrid}>
                     <div>
                       <span>Expected Return</span>
                       <strong>
@@ -882,12 +943,12 @@ function SIPManagement() {
                   </div>
 
                   {String(sip.status).toUpperCase() === "ACTIVE" && (
-                    <div style={responsiveStyles.actionRow}>
+                    <div style={themedStyles.actionRow}>
                       <button
                         type="button"
                         disabled={isProcessing}
                         onClick={() => handleSIPAction(sip.id, "pause")}
-                        style={styles.pauseButton}
+                        style={themedStyles.pauseButton}
                       >
                         {isProcessing ? "Processing..." : "⏸ Pause"}
                       </button>
@@ -896,7 +957,7 @@ function SIPManagement() {
                         type="button"
                         disabled={isProcessing}
                         onClick={() => confirmCancel(sip.id)}
-                        style={styles.cancelButton}
+                        style={themedStyles.cancelButton}
                       >
                         ❌ Cancel
                       </button>
@@ -904,12 +965,12 @@ function SIPManagement() {
                   )}
 
                   {String(sip.status).toUpperCase() === "PAUSED" && (
-                    <div style={responsiveStyles.actionRow}>
+                    <div style={themedStyles.actionRow}>
                       <button
                         type="button"
                         disabled={isProcessing}
                         onClick={() => handleSIPAction(sip.id, "resume")}
-                        style={styles.resumeButton}
+                        style={themedStyles.resumeButton}
                       >
                         {isProcessing ? "Processing..." : "▶ Resume"}
                       </button>
@@ -918,7 +979,7 @@ function SIPManagement() {
                         type="button"
                         disabled={isProcessing}
                         onClick={() => confirmCancel(sip.id)}
-                        style={styles.cancelButton}
+                        style={themedStyles.cancelButton}
                       >
                         ❌ Cancel
                       </button>

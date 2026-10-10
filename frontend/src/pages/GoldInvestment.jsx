@@ -53,6 +53,21 @@ export default function GoldInvestment() {
   const [showSellModal, setShowSellModal] = useState(false);
   const [selectedInvestment, setSelectedInvestment] = useState(null);
 
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" ? window.innerWidth <= 767 : false
   );
@@ -658,7 +673,86 @@ export default function GoldInvestment() {
         lineHeight: 1.5,
       },
     };
+
   }, [isMobile, isTablet]);
+
+  // Theme overrides are layered over responsive styles so layout remains unchanged.
+  const themedStyles = useMemo(() => {
+    if (!darkMode) return responsiveStyles;
+
+    const dark = {
+      page: { background: "#0b1220", color: "#e5e7eb" },
+      successAlert: { background: "#123323", borderColor: "#246b45", color: "#b8f3ce" },
+      errorAlert: { background: "#3b1c24", borderColor: "#7f303b", color: "#fecaca" },
+      summaryCard: { background: "#151f30", borderColor: "#29364a", boxShadow: "0 4px 14px rgba(0,0,0,0.16)" },
+      summaryLabel: { color: "#a5b4c8" },
+      summaryValue: { color: "#f1f5f9" },
+      card: { background: "#151f30", borderColor: "#29364a", boxShadow: "0 5px 18px rgba(0,0,0,0.16)" },
+      cardTitle: { color: "#f1f5f9" },
+      cardSubtitle: { color: "#a5b4c8" },
+      label: { color: "#d2dbea" },
+      input: { background: "#0f1726", color: "#e5e7eb", borderColor: "#3a4960", colorScheme: "dark" },
+      purityButton: { background: "#111c2c", borderColor: "#36445a", color: "#dbe5f2" },
+      purityButtonActive: { background: "#1d3155", borderColor: "#4b83ee", color: "#bfdbfe" },
+      amountWrapper: { background: "#0f1726", borderColor: "#3a4960" },
+      amountInput: { color: "#e5e7eb", background: "transparent", colorScheme: "dark" },
+      helperText: { color: "#9eacc0" },
+      calculationBox: { background: "#18243a", borderColor: "#334766" },
+      calculationLabel: { color: "#a9bad1" },
+      calculationValue: { color: "#e5edf8" },
+      warningText: { color: "#fbbf24" },
+      priceRow: { background: "#111c2c", borderColor: "#2e3b50" },
+      pricePurity: { color: "#f1f5f9" },
+      priceType: { color: "#a5b4c8" },
+      priceAmount: { color: "#e5edf8" },
+      priceUnit: { color: "#a5b4c8" },
+      infoBox: { background: "#1a2638", color: "#bdc9da" },
+      section: { background: "#151f30", borderColor: "#29364a", boxShadow: "0 5px 18px rgba(0,0,0,0.16)" },
+      sectionTitle: { color: "#f1f5f9" },
+      sectionSubtitle: { color: "#a5b4c8" },
+      investmentCard: { background: "#111c2c", borderColor: "#2e3b50" },
+      investmentTitle: { color: "#f1f5f9" },
+      investmentId: { color: "#9eacc0" },
+      detailLabel: { color: "#9eacc0" },
+      detailValue: { color: "#e5edf8" },
+      valueBox: { background: "#1a2638" },
+      valueLabel: { color: "#a5b4c8" },
+      currentValue: { color: "#e5edf8" },
+      purchaseDate: { color: "#a5b4c8" },
+      emptyCard: { borderColor: "#3a4960", color: "#cbd5e1" },
+      emptyTitle: { color: "#f1f5f9" },
+      emptyText: { color: "#a5b4c8" },
+      emptyHistory: { borderColor: "#3a4960", color: "#a5b4c8" },
+      table: { background: "#111c2c" },
+      th: { background: "#1a2638", color: "#bdc9da", borderBottomColor: "#344258" },
+      td: { color: "#d5deeb", borderBottomColor: "#2b394e" },
+      modal: { background: "#151f30", color: "#e5e7eb", border: "1px solid #334155" },
+      modalTitle: { color: "#f1f5f9" },
+      modalText: { color: "#bdc9da" },
+      modalDetails: { background: "#1a2638" },
+      modalDetailsRow: { color: "#e5edf8" },
+      loadingCard: { background: "#151f30", color: "#e5e7eb", boxShadow: "0 10px 35px rgba(0,0,0,0.2)" },
+      loadingTitle: { color: "#f1f5f9" },
+      loadingText: { color: "#a5b4c8" },
+    };
+
+    return {
+      ...Object.fromEntries(
+        Object.entries(responsiveStyles).map(([key, value]) => [
+          key,
+          { ...value, ...(dark[key] || {}) },
+        ])
+      ),
+      purityButtonActive: {
+        ...styles.purityButtonActive,
+        ...(dark.purityButtonActive || {}),
+      },
+      modalDetailsRow: {
+        ...styles.modalDetailsRow,
+        ...(dark.modalDetailsRow || {}),
+      },
+    };
+  }, [responsiveStyles, darkMode]);
 
   const selectedGoldPrice = useMemo(() => {
     return (
@@ -1004,13 +1098,13 @@ export default function GoldInvestment() {
 
   if (loading) {
     return (
-      <div style={responsiveStyles.page}>
-        <div style={responsiveStyles.loadingCard}>
-          <div style={responsiveStyles.loadingIcon}>🪙</div>
-          <h2 style={responsiveStyles.loadingTitle}>
+      <div style={themedStyles.page}>
+        <div style={themedStyles.loadingCard}>
+          <div style={themedStyles.loadingIcon}>🪙</div>
+          <h2 style={themedStyles.loadingTitle}>
             Loading Gold Investments...
           </h2>
-          <p style={responsiveStyles.loadingText}>
+          <p style={themedStyles.loadingText}>
             Please wait while we load your portfolio.
           </p>
         </div>
@@ -1019,17 +1113,17 @@ export default function GoldInvestment() {
   }
 
   return (
-    <div style={responsiveStyles.page}>
-      <div style={responsiveStyles.header}>
-        <div style={responsiveStyles.headerLeft}>
-          <div style={responsiveStyles.headerIcon}>🪙</div>
+    <div style={themedStyles.page}>
+      <div style={themedStyles.header}>
+        <div style={themedStyles.headerLeft}>
+          <div style={themedStyles.headerIcon}>🪙</div>
 
           <div style={{ minWidth: 0 }}>
-            <h1 style={responsiveStyles.headerTitle}>
+            <h1 style={themedStyles.headerTitle}>
               Gold Investment
             </h1>
 
-            <p style={responsiveStyles.headerSubtitle}>
+            <p style={themedStyles.headerSubtitle}>
               Invest, track and manage your digital gold
             </p>
           </div>
@@ -1037,7 +1131,7 @@ export default function GoldInvestment() {
 
         <button
           type="button"
-          style={responsiveStyles.backButton}
+          style={themedStyles.backButton}
           onClick={() => (window.location.href = "/investments")}
         >
           ← Back to Investment Page
@@ -1045,24 +1139,24 @@ export default function GoldInvestment() {
       </div>
 
       {message && (
-        <div style={responsiveStyles.successAlert}>
+        <div style={themedStyles.successAlert}>
           <span>✓</span>
           <span>{message}</span>
         </div>
       )}
 
       {error && (
-        <div style={responsiveStyles.errorAlert}>
+        <div style={themedStyles.errorAlert}>
           <span>!</span>
           <span>{error}</span>
         </div>
       )}
 
-      <div style={responsiveStyles.summaryGrid}>
-        <div style={responsiveStyles.summaryCard}>
+      <div style={themedStyles.summaryGrid}>
+        <div style={themedStyles.summaryCard}>
           <div
             style={{
-              ...responsiveStyles.summaryIcon,
+              ...themedStyles.summaryIcon,
               background: "#eef4ff",
               color: "#2457c6",
             }}
@@ -1071,17 +1165,17 @@ export default function GoldInvestment() {
           </div>
 
           <div style={{ minWidth: 0 }}>
-            <p style={responsiveStyles.summaryLabel}>Gold Holdings</p>
-            <h2 style={responsiveStyles.summaryValue}>
+            <p style={themedStyles.summaryLabel}>Gold Holdings</p>
+            <h2 style={themedStyles.summaryValue}>
               {formatNumber(totalGoldGrams)} g
             </h2>
           </div>
         </div>
 
-        <div style={responsiveStyles.summaryCard}>
+        <div style={themedStyles.summaryCard}>
           <div
             style={{
-              ...responsiveStyles.summaryIcon,
+              ...themedStyles.summaryIcon,
               background: "#eef8f1",
               color: "#198754",
             }}
@@ -1090,17 +1184,17 @@ export default function GoldInvestment() {
           </div>
 
           <div style={{ minWidth: 0 }}>
-            <p style={responsiveStyles.summaryLabel}>Total Invested</p>
-            <h2 style={responsiveStyles.summaryValue}>
+            <p style={themedStyles.summaryLabel}>Total Invested</p>
+            <h2 style={themedStyles.summaryValue}>
               {formatCurrency(totalInvested)}
             </h2>
           </div>
         </div>
 
-        <div style={responsiveStyles.summaryCard}>
+        <div style={themedStyles.summaryCard}>
           <div
             style={{
-              ...responsiveStyles.summaryIcon,
+              ...themedStyles.summaryIcon,
               background: "#fff7e8",
               color: "#d98b00",
             }}
@@ -1109,17 +1203,17 @@ export default function GoldInvestment() {
           </div>
 
           <div style={{ minWidth: 0 }}>
-            <p style={responsiveStyles.summaryLabel}>Current Value</p>
-            <h2 style={responsiveStyles.summaryValue}>
+            <p style={themedStyles.summaryLabel}>Current Value</p>
+            <h2 style={themedStyles.summaryValue}>
               {formatCurrency(totalCurrentValue)}
             </h2>
           </div>
         </div>
 
-        <div style={responsiveStyles.summaryCard}>
+        <div style={themedStyles.summaryCard}>
           <div
             style={{
-              ...responsiveStyles.summaryIcon,
+              ...themedStyles.summaryIcon,
               background: profitLossPositive ? "#eef8f1" : "#fff0f0",
               color: profitLossPositive ? "#198754" : "#dc3545",
             }}
@@ -1128,10 +1222,10 @@ export default function GoldInvestment() {
           </div>
 
           <div style={{ minWidth: 0 }}>
-            <p style={responsiveStyles.summaryLabel}>Overall P/L</p>
+            <p style={themedStyles.summaryLabel}>Overall P/L</p>
             <h2
               style={{
-                ...responsiveStyles.summaryValue,
+                ...themedStyles.summaryValue,
                 color: profitLossPositive ? "#198754" : "#dc3545",
               }}
             >
@@ -1142,32 +1236,32 @@ export default function GoldInvestment() {
         </div>
       </div>
 
-      <div style={responsiveStyles.mainGrid}>
-        <div style={responsiveStyles.card}>
-          <div style={responsiveStyles.cardHeader}>
+      <div style={themedStyles.mainGrid}>
+        <div style={themedStyles.card}>
+          <div style={themedStyles.cardHeader}>
             <div style={{ minWidth: 0 }}>
-              <h2 style={responsiveStyles.cardTitle}>
+              <h2 style={themedStyles.cardTitle}>
                 Buy Digital Gold
               </h2>
 
-              <p style={responsiveStyles.cardSubtitle}>
+              <p style={themedStyles.cardSubtitle}>
                 Start your gold investment journey
               </p>
             </div>
 
-            <div style={responsiveStyles.goldBadge}>🪙</div>
+            <div style={themedStyles.goldBadge}>🪙</div>
           </div>
 
-          <form onSubmit={handlePurchase} style={responsiveStyles.form}>
-            <div style={responsiveStyles.formGroup}>
-              <label style={responsiveStyles.label}>Debit Account</label>
+          <form onSubmit={handlePurchase} style={themedStyles.form}>
+            <div style={themedStyles.formGroup}>
+              <label style={themedStyles.label}>Debit Account</label>
 
               <select
                 value={selectedAccount}
                 onChange={(event) =>
                   setSelectedAccount(event.target.value)
                 }
-                style={responsiveStyles.input}
+                style={themedStyles.input}
                 required
               >
                 <option value="">Select Account</option>
@@ -1181,25 +1275,25 @@ export default function GoldInvestment() {
               </select>
             </div>
 
-            <div style={responsiveStyles.formGroup}>
-              <label style={responsiveStyles.label}>Gold Type</label>
+            <div style={themedStyles.formGroup}>
+              <label style={themedStyles.label}>Gold Type</label>
 
               <input
                 type="text"
                 value="Digital Gold"
                 readOnly
                 style={{
-                  ...responsiveStyles.input,
+                  ...themedStyles.input,
                   background: "#f7f9fc",
                   color: "#495057",
                 }}
               />
             </div>
 
-            <div style={responsiveStyles.formGroup}>
-              <label style={responsiveStyles.label}>Gold Purity</label>
+            <div style={themedStyles.formGroup}>
+              <label style={themedStyles.label}>Gold Purity</label>
 
-              <div style={responsiveStyles.purityGrid}>
+              <div style={themedStyles.purityGrid}>
                 {goldPrices.map((price) => {
                   const purity = String(
                     price.purity || ""
@@ -1213,9 +1307,9 @@ export default function GoldInvestment() {
                       key={purity}
                       onClick={() => setSelectedPurity(purity)}
                       style={{
-                        ...responsiveStyles.purityButton,
+                        ...themedStyles.purityButton,
                         ...(selected
-                          ? styles.purityButtonActive
+                          ? themedStyles.purityButtonActive
                           : {}),
                       }}
                     >
@@ -1230,13 +1324,13 @@ export default function GoldInvestment() {
               </div>
             </div>
 
-            <div style={responsiveStyles.formGroup}>
-              <label style={responsiveStyles.label}>
+            <div style={themedStyles.formGroup}>
+              <label style={themedStyles.label}>
                 Investment Amount
               </label>
 
-              <div style={responsiveStyles.amountWrapper}>
-                <span style={responsiveStyles.amountPrefix}>₹</span>
+              <div style={themedStyles.amountWrapper}>
+                <span style={themedStyles.amountPrefix}>₹</span>
 
                 <input
                   type="number"
@@ -1247,12 +1341,12 @@ export default function GoldInvestment() {
                     setInvestmentAmount(event.target.value)
                   }
                   placeholder="Enter amount"
-                  style={responsiveStyles.amountInput}
+                  style={themedStyles.amountInput}
                   required
                 />
               </div>
 
-              <p style={responsiveStyles.helperText}>
+              <p style={themedStyles.helperText}>
                 Minimum investment:{" "}
                 {formatCurrency(
                   selectedGoldPrice?.minimumInvestment
@@ -1260,26 +1354,26 @@ export default function GoldInvestment() {
               </p>
             </div>
 
-            <div style={responsiveStyles.calculationBox}>
+            <div style={themedStyles.calculationBox}>
               <div>
-                <span style={responsiveStyles.calculationLabel}>
+                <span style={themedStyles.calculationLabel}>
                   Gold Price
                 </span>
 
-                <strong style={responsiveStyles.calculationValue}>
+                <strong style={themedStyles.calculationValue}>
                   {formatCurrency(selectedGoldPrice?.pricePerGram)}
                   / gram
                 </strong>
               </div>
 
-              <div style={responsiveStyles.calculationDivider} />
+              <div style={themedStyles.calculationDivider} />
 
               <div>
-                <span style={responsiveStyles.calculationLabel}>
+                <span style={themedStyles.calculationLabel}>
                   You Receive
                 </span>
 
-                <strong style={responsiveStyles.calculationGold}>
+                <strong style={themedStyles.calculationGold}>
                   {formatNumber(calculatedGrams)} grams
                 </strong>
               </div>
@@ -1289,7 +1383,7 @@ export default function GoldInvestment() {
               type="submit"
               disabled={purchasing || accounts.length === 0}
               style={{
-                ...responsiveStyles.primaryButton,
+                ...themedStyles.primaryButton,
                 opacity:
                   purchasing || accounts.length === 0 ? 0.65 : 1,
               }}
@@ -1298,48 +1392,48 @@ export default function GoldInvestment() {
             </button>
 
             {accounts.length === 0 && (
-              <p style={responsiveStyles.warningText}>
+              <p style={themedStyles.warningText}>
                 No active account available for investment.
               </p>
             )}
           </form>
         </div>
 
-        <div style={responsiveStyles.card}>
-          <div style={responsiveStyles.cardHeader}>
+        <div style={themedStyles.card}>
+          <div style={themedStyles.cardHeader}>
             <div style={{ minWidth: 0 }}>
-              <h2 style={responsiveStyles.cardTitle}>Gold Price</h2>
+              <h2 style={themedStyles.cardTitle}>Gold Price</h2>
 
-              <p style={responsiveStyles.cardSubtitle}>
+              <p style={themedStyles.cardSubtitle}>
                 Current Avani Bank catalogue price
               </p>
             </div>
 
-            <div style={responsiveStyles.priceIcon}>₹</div>
+            <div style={themedStyles.priceIcon}>₹</div>
           </div>
 
-          <div style={responsiveStyles.priceList}>
+          <div style={themedStyles.priceList}>
             {goldPrices.map((price) => (
               <div
                 key={`${price.goldType}-${price.purity}`}
-                style={responsiveStyles.priceRow}
+                style={themedStyles.priceRow}
               >
                 <div style={{ minWidth: 0 }}>
-                  <strong style={responsiveStyles.pricePurity}>
+                  <strong style={themedStyles.pricePurity}>
                     {price.purity}
                   </strong>
 
-                  <span style={responsiveStyles.priceType}>
+                  <span style={themedStyles.priceType}>
                     Digital Gold
                   </span>
                 </div>
 
-                <div style={responsiveStyles.priceRight}>
-                  <strong style={responsiveStyles.priceAmount}>
+                <div style={themedStyles.priceRight}>
+                  <strong style={themedStyles.priceAmount}>
                     {formatCurrency(price.pricePerGram)}
                   </strong>
 
-                  <span style={responsiveStyles.priceUnit}>
+                  <span style={themedStyles.priceUnit}>
                     per gram
                   </span>
                 </div>
@@ -1347,8 +1441,8 @@ export default function GoldInvestment() {
             ))}
           </div>
 
-          <div style={responsiveStyles.infoBox}>
-            <span style={responsiveStyles.infoIcon}>ℹ</span>
+          <div style={themedStyles.infoBox}>
+            <span style={themedStyles.infoIcon}>ℹ</span>
 
             <span>
               Gold value is calculated according to the current catalogue
@@ -1358,37 +1452,37 @@ export default function GoldInvestment() {
         </div>
       </div>
 
-      <div style={responsiveStyles.section}>
-        <div style={responsiveStyles.sectionHeader}>
+      <div style={themedStyles.section}>
+        <div style={themedStyles.sectionHeader}>
           <div style={{ minWidth: 0 }}>
-            <h2 style={responsiveStyles.sectionTitle}>
+            <h2 style={themedStyles.sectionTitle}>
               Active Gold Investments
             </h2>
 
-            <p style={responsiveStyles.sectionSubtitle}>
+            <p style={themedStyles.sectionSubtitle}>
               Track your current gold holdings
             </p>
           </div>
 
-          <span style={responsiveStyles.countBadge}>
+          <span style={themedStyles.countBadge}>
             {activeInvestments.length} Active
           </span>
         </div>
 
         {activeInvestments.length === 0 ? (
-          <div style={responsiveStyles.emptyCard}>
-            <div style={responsiveStyles.emptyIcon}>🪙</div>
+          <div style={themedStyles.emptyCard}>
+            <div style={themedStyles.emptyIcon}>🪙</div>
 
-            <h3 style={responsiveStyles.emptyTitle}>
+            <h3 style={themedStyles.emptyTitle}>
               No Active Gold Investments
             </h3>
 
-            <p style={responsiveStyles.emptyText}>
+            <p style={themedStyles.emptyText}>
               Your purchased gold investments will appear here.
             </p>
           </div>
         ) : (
-          <div style={responsiveStyles.investmentGrid}>
+          <div style={themedStyles.investmentGrid}>
             {activeInvestments.map((investment) => {
               const profit =
                 Number(investment.profitLoss || 0) >= 0;
@@ -1396,71 +1490,71 @@ export default function GoldInvestment() {
               return (
                 <div
                   key={investment.id}
-                  style={responsiveStyles.investmentCard}
+                  style={themedStyles.investmentCard}
                 >
-                  <div style={responsiveStyles.investmentTop}>
+                  <div style={themedStyles.investmentTop}>
                     <div>
-                      <div style={responsiveStyles.goldTitleRow}>
-                        <span style={responsiveStyles.goldMiniIcon}>
+                      <div style={themedStyles.goldTitleRow}>
+                        <span style={themedStyles.goldMiniIcon}>
                           🪙
                         </span>
 
                         <div style={{ minWidth: 0 }}>
-                          <h3 style={responsiveStyles.investmentTitle}>
+                          <h3 style={themedStyles.investmentTitle}>
                             Digital Gold
                           </h3>
 
-                          <span style={responsiveStyles.investmentId}>
+                          <span style={themedStyles.investmentId}>
                             Investment #{investment.id}
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <span style={responsiveStyles.activeBadge}>
+                    <span style={themedStyles.activeBadge}>
                       ACTIVE
                     </span>
                   </div>
 
-                  <div style={responsiveStyles.investmentDetails}>
-                    <div style={responsiveStyles.detailItem}>
-                      <span style={responsiveStyles.detailLabel}>
+                  <div style={themedStyles.investmentDetails}>
+                    <div style={themedStyles.detailItem}>
+                      <span style={themedStyles.detailLabel}>
                         Purity
                       </span>
 
-                      <strong style={responsiveStyles.detailValue}>
+                      <strong style={themedStyles.detailValue}>
                         {investment.purity}
                       </strong>
                     </div>
 
-                    <div style={responsiveStyles.detailItem}>
-                      <span style={responsiveStyles.detailLabel}>
+                    <div style={themedStyles.detailItem}>
+                      <span style={themedStyles.detailLabel}>
                         Quantity
                       </span>
 
-                      <strong style={responsiveStyles.detailValue}>
+                      <strong style={themedStyles.detailValue}>
                         {formatNumber(investment.quantityGrams)} g
                       </strong>
                     </div>
 
-                    <div style={responsiveStyles.detailItem}>
-                      <span style={responsiveStyles.detailLabel}>
+                    <div style={themedStyles.detailItem}>
+                      <span style={themedStyles.detailLabel}>
                         Buy Price
                       </span>
 
-                      <strong style={responsiveStyles.detailValue}>
+                      <strong style={themedStyles.detailValue}>
                         {formatCurrency(
                           investment.purchasePricePerGram
                         )}
                       </strong>
                     </div>
 
-                    <div style={responsiveStyles.detailItem}>
-                      <span style={responsiveStyles.detailLabel}>
+                    <div style={themedStyles.detailItem}>
+                      <span style={themedStyles.detailLabel}>
                         Current Price
                       </span>
 
-                      <strong style={responsiveStyles.detailValue}>
+                      <strong style={themedStyles.detailValue}>
                         {formatCurrency(
                           investment.currentPricePerGram
                         )}
@@ -1468,35 +1562,35 @@ export default function GoldInvestment() {
                     </div>
                   </div>
 
-                  <div style={responsiveStyles.valueBox}>
+                  <div style={themedStyles.valueBox}>
                     <div>
-                      <span style={responsiveStyles.valueLabel}>
+                      <span style={themedStyles.valueLabel}>
                         Invested
                       </span>
 
-                      <strong style={responsiveStyles.valueAmount}>
+                      <strong style={themedStyles.valueAmount}>
                         {formatCurrency(investment.investmentAmount)}
                       </strong>
                     </div>
 
                     <div>
-                      <span style={responsiveStyles.valueLabel}>
+                      <span style={themedStyles.valueLabel}>
                         Current Value
                       </span>
 
-                      <strong style={responsiveStyles.currentValue}>
+                      <strong style={themedStyles.currentValue}>
                         {formatCurrency(investment.currentValue)}
                       </strong>
                     </div>
 
                     <div>
-                      <span style={responsiveStyles.valueLabel}>
+                      <span style={themedStyles.valueLabel}>
                         Profit / Loss
                       </span>
 
                       <strong
                         style={{
-                          ...responsiveStyles.currentValue,
+                          ...themedStyles.currentValue,
                           color: profit ? "#198754" : "#dc3545",
                         }}
                       >
@@ -1506,14 +1600,14 @@ export default function GoldInvestment() {
                     </div>
                   </div>
 
-                  <div style={responsiveStyles.investmentFooter}>
-                    <span style={responsiveStyles.purchaseDate}>
+                  <div style={themedStyles.investmentFooter}>
+                    <span style={themedStyles.purchaseDate}>
                       Purchased: {investment.purchaseDate || "—"}
                     </span>
 
                     <button
                       type="button"
-                      style={responsiveStyles.sellButton}
+                      style={themedStyles.sellButton}
                       onClick={() => openSellModal(investment)}
                     >
                       Sell Gold
@@ -1526,35 +1620,35 @@ export default function GoldInvestment() {
         )}
       </div>
 
-      <div style={responsiveStyles.section}>
-        <div style={responsiveStyles.sectionHeader}>
+      <div style={themedStyles.section}>
+        <div style={themedStyles.sectionHeader}>
           <div style={{ minWidth: 0 }}>
-            <h2 style={responsiveStyles.sectionTitle}>
+            <h2 style={themedStyles.sectionTitle}>
               Gold Investment History
             </h2>
 
-            <p style={responsiveStyles.sectionSubtitle}>
+            <p style={themedStyles.sectionSubtitle}>
               Previously completed gold investments
             </p>
           </div>
         </div>
 
         {soldInvestments.length === 0 ? (
-          <div style={responsiveStyles.emptyHistory}>
+          <div style={themedStyles.emptyHistory}>
             No sold gold investments yet.
           </div>
         ) : (
-          <div style={responsiveStyles.tableWrapper}>
-            <table style={responsiveStyles.table}>
+          <div style={themedStyles.tableWrapper}>
+            <table style={themedStyles.table}>
               <thead>
                 <tr>
-                  <th style={responsiveStyles.th}>Investment</th>
-                  <th style={responsiveStyles.th}>Purity</th>
-                  <th style={responsiveStyles.th}>Quantity</th>
-                  <th style={responsiveStyles.th}>Invested</th>
-                  <th style={responsiveStyles.th}>Sale Value</th>
-                  <th style={responsiveStyles.th}>Profit / Loss</th>
-                  <th style={responsiveStyles.th}>Status</th>
+                  <th style={themedStyles.th}>Investment</th>
+                  <th style={themedStyles.th}>Purity</th>
+                  <th style={themedStyles.th}>Quantity</th>
+                  <th style={themedStyles.th}>Invested</th>
+                  <th style={themedStyles.th}>Sale Value</th>
+                  <th style={themedStyles.th}>Profit / Loss</th>
+                  <th style={themedStyles.th}>Status</th>
                 </tr>
               </thead>
 
@@ -1565,29 +1659,29 @@ export default function GoldInvestment() {
 
                   return (
                     <tr key={investment.id}>
-                      <td style={responsiveStyles.td}>
+                      <td style={themedStyles.td}>
                         <strong>Gold #{investment.id}</strong>
                       </td>
 
-                      <td style={responsiveStyles.td}>
+                      <td style={themedStyles.td}>
                         {investment.purity}
                       </td>
 
-                      <td style={responsiveStyles.td}>
+                      <td style={themedStyles.td}>
                         {formatNumber(investment.quantityGrams)} g
                       </td>
 
-                      <td style={responsiveStyles.td}>
+                      <td style={themedStyles.td}>
                         {formatCurrency(investment.investmentAmount)}
                       </td>
 
-                      <td style={responsiveStyles.td}>
+                      <td style={themedStyles.td}>
                         {formatCurrency(investment.currentValue)}
                       </td>
 
                       <td
                         style={{
-                          ...responsiveStyles.td,
+                          ...themedStyles.td,
                           color: profit ? "#198754" : "#dc3545",
                           fontWeight: 700,
                         }}
@@ -1596,8 +1690,8 @@ export default function GoldInvestment() {
                         {formatCurrency(investment.profitLoss)}
                       </td>
 
-                      <td style={responsiveStyles.td}>
-                        <span style={responsiveStyles.soldBadge}>
+                      <td style={themedStyles.td}>
+                        <span style={themedStyles.soldBadge}>
                           SOLD
                         </span>
                       </td>
@@ -1611,18 +1705,18 @@ export default function GoldInvestment() {
       </div>
 
       {showSellModal && selectedInvestment && (
-        <div style={responsiveStyles.modalOverlay}>
-          <div style={responsiveStyles.modal}>
-            <div style={responsiveStyles.modalIcon}>🪙</div>
+        <div style={themedStyles.modalOverlay}>
+          <div style={themedStyles.modal}>
+            <div style={themedStyles.modalIcon}>🪙</div>
 
-            <h2 style={responsiveStyles.modalTitle}>Sell Gold?</h2>
+            <h2 style={themedStyles.modalTitle}>Sell Gold?</h2>
 
-            <p style={responsiveStyles.modalText}>
+            <p style={themedStyles.modalText}>
               Are you sure you want to sell this gold investment?
             </p>
 
-            <div style={responsiveStyles.modalDetails}>
-              <div style={styles.modalDetailsRow}>
+            <div style={themedStyles.modalDetails}>
+              <div style={themedStyles.modalDetailsRow}>
                 <span>Gold Quantity</span>
 
                 <strong>
@@ -1633,7 +1727,7 @@ export default function GoldInvestment() {
                 </strong>
               </div>
 
-              <div style={styles.modalDetailsRow}>
+              <div style={themedStyles.modalDetailsRow}>
                 <span>Current Value</span>
 
                 <strong>
@@ -1643,7 +1737,7 @@ export default function GoldInvestment() {
                 </strong>
               </div>
 
-              <div style={styles.modalDetailsRow}>
+              <div style={themedStyles.modalDetailsRow}>
                 <span>Current P/L</span>
 
                 <strong
@@ -1668,12 +1762,12 @@ export default function GoldInvestment() {
               </div>
             </div>
 
-            <div style={responsiveStyles.modalActions}>
+            <div style={themedStyles.modalActions}>
               <button
                 type="button"
                 onClick={closeSellModal}
                 disabled={sellingId !== null}
-                style={responsiveStyles.cancelButton}
+                style={themedStyles.cancelButton}
               >
                 Cancel
               </button>
@@ -1683,7 +1777,7 @@ export default function GoldInvestment() {
                 onClick={handleSell}
                 disabled={sellingId !== null}
                 style={{
-                  ...responsiveStyles.confirmSellButton,
+                  ...themedStyles.confirmSellButton,
                   opacity: sellingId !== null ? 0.65 : 1,
                 }}
               >

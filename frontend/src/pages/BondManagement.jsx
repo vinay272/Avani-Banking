@@ -27,6 +27,22 @@ export default function BondManagement() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  // Sync with the dashboard's shared Avani theme.
+  const [darkMode, setDarkMode] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    syncTheme();
+    window.addEventListener("storage", syncTheme);
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
   const [sellBondData, setSellBondData] = useState(null);
 
   // =====================================================
@@ -743,12 +759,75 @@ export default function BondManagement() {
     },
   };
 
+  // Dark-mode colors layered over responsive styles. Keep the header and back button unchanged.
+  const darkOverrides = darkMode ? {
+    page: { background: "#0b1220", color: "#e5e7eb" },
+    container: { color: "#e5e7eb" },
+    successMessage: { background: "#102c20", color: "#86efac", border: "1px solid #236342" },
+    errorMessage: { background: "#351719", color: "#fca5a5", border: "1px solid #7f3038" },
+    summaryCard: { background: "#151f30", border: "1px solid #29364a", boxShadow: "0 5px 18px rgba(0,0,0,0.18)" },
+    summaryIcon: { background: "#1d3150" },
+    summaryLabel: { color: "#a7b4c8" },
+    summaryValue: { color: "#f3f6fb" },
+    card: { background: "#151f30", border: "1px solid #29364a", boxShadow: "0 5px 18px rgba(0,0,0,0.18)" },
+    sectionTitle: { color: "#f3f6fb" },
+    sectionSubtitle: { color: "#a7b4c8" },
+    sectionIcon: { background: "#1d3150" },
+    label: { color: "#d1d9e6" },
+    input: { background: "#0f1726", color: "#e5e7eb", border: "1px solid #3a4960", colorScheme: "dark" },
+    amountWrapper: { background: "#0f1726", border: "1px solid #3a4960" },
+    amountInput: { background: "#0f1726", color: "#e5e7eb", colorScheme: "dark" },
+    planDetails: { background: "linear-gradient(145deg, #17263d, #142238)", border: "1px solid #2b4668" },
+    planName: { color: "#dbeafe" },
+    planType: { background: "#203a5d", color: "#93c5fd" },
+    detailLabel: { color: "#a7b4c8" },
+    description: { color: "#b3bfd1" },
+    calculationBox: { background: "#101a2a", border: "1px solid #29364a" },
+    calcRow: { color: "#dbe3ef" },
+    calcDivider: { borderTop: "1px dashed #3a4960" },
+    infoCard: { background: "linear-gradient(150deg, #123d78, #102b59)", color: "#f8fafc" },
+    activeBadge: { background: "#15382c", color: "#86efac" },
+    bondCard: { background: "#101a2a", border: "1px solid #29364a" },
+    bondName: { color: "#f3f6fb" },
+    bondType: { color: "#a7b4c8" },
+    bondDetails: { color: "#dbe3ef" },
+    bondDetailsSpan: { color: "#a7b4c8" },
+    bondDetailsStrong: { color: "#f3f6fb" },
+    bondAmount: { color: "#7db7ff" },
+    statusBadge: { background: "#15382c", color: "#86efac" },
+    emptyState: { background: "#101a2a", border: "1px dashed #3a4960", color: "#dbe3ef" },
+    historyTableWrapper: { background: "#151f30" },
+    table: { background: "#151f30", color: "#dbe3ef" },
+    th: { background: "#1c293d", color: "#dbe3ef", borderBottom: "1px solid #35445a" },
+    td: { color: "#dbe3ef", borderBottom: "1px solid #29364a" },
+    loading: { color: "#b3bfd1" },
+    modalOverlay: { background: "rgba(2, 6, 15, 0.78)" },
+    modal: { background: "#151f30", color: "#e5e7eb", border: "1px solid #35445a" },
+    modalTitle: { color: "#f3f6fb" },
+    modalText: { color: "#c3cede" },
+    modalDetails: { background: "#101a2a", border: "1px solid #29364a" },
+    modalDetailsSpan: { color: "#a7b4c8" },
+    modalDetailsStrong: { color: "#f3f6fb" },
+    warningBox: { background: "#332818", color: "#fcd9a1", border: "1px solid #72572d" },
+    cancelButton: { background: "#1d293b", color: "#e5e7eb", border: "1px solid #3a4960" },
+  } : {};
+
+  const themedStyles = {
+    ...responsiveStyles,
+    ...Object.fromEntries(
+      Object.entries(darkOverrides).map(([key, value]) => [
+        key,
+        { ...(responsiveStyles[key] || {}), ...value },
+      ])
+    ),
+  };
+
   // =====================================================
   // UI
   // =====================================================
 
   return (
-    <div style={responsiveStyles.page}>
+    <div style={themedStyles.page}>
 
       {/* =================================================
           HEADER
@@ -756,18 +835,18 @@ export default function BondManagement() {
 
       <div style={responsiveStyles.header}>
 
-        <div style={responsiveStyles.headerLeft}>
+        <div style={themedStyles.headerLeft}>
 
-          <div style={responsiveStyles.headerIcon}>
+          <div style={themedStyles.headerIcon}>
             🏦
           </div>
 
           <div>
-            <h1 style={responsiveStyles.headerTitle}>
+            <h1 style={themedStyles.headerTitle}>
               Bond Management
             </h1>
 
-            <p style={responsiveStyles.headerSubtitle}>
+            <p style={themedStyles.headerSubtitle}>
               Invest in bonds and manage your fixed-income portfolio
             </p>
           </div>
@@ -786,20 +865,20 @@ export default function BondManagement() {
 
       </div>
 
-      <div style={responsiveStyles.container}>
+      <div style={themedStyles.container}>
 
         {/* =================================================
             MESSAGES
         ================================================= */}
 
         {message && (
-          <div style={responsiveStyles.successMessage}>
+          <div style={themedStyles.successMessage}>
             ✓ {message}
           </div>
         )}
 
         {error && (
-          <div style={responsiveStyles.errorMessage}>
+          <div style={themedStyles.errorMessage}>
             ⚠ {error}
           </div>
         )}
@@ -808,67 +887,67 @@ export default function BondManagement() {
             SUMMARY
         ================================================= */}
 
-        <div style={responsiveStyles.summaryGrid}>
+        <div style={themedStyles.summaryGrid}>
 
-          <div style={responsiveStyles.summaryCard}>
-            <div style={responsiveStyles.summaryIcon}>
+          <div style={themedStyles.summaryCard}>
+            <div style={themedStyles.summaryIcon}>
               💰
             </div>
 
             <div>
-              <div style={responsiveStyles.summaryLabel}>
+              <div style={themedStyles.summaryLabel}>
                 Total Investment
               </div>
 
-              <div style={responsiveStyles.summaryValue}>
+              <div style={themedStyles.summaryValue}>
                 {formatMoney(totalInvestment)}
               </div>
             </div>
           </div>
 
-          <div style={responsiveStyles.summaryCard}>
-            <div style={responsiveStyles.summaryIcon}>
+          <div style={themedStyles.summaryCard}>
+            <div style={themedStyles.summaryIcon}>
               📈
             </div>
 
             <div>
-              <div style={responsiveStyles.summaryLabel}>
+              <div style={themedStyles.summaryLabel}>
                 Interest Earned
               </div>
 
-              <div style={responsiveStyles.summaryValue}>
+              <div style={themedStyles.summaryValue}>
                 {formatMoney(totalInterest)}
               </div>
             </div>
           </div>
 
-          <div style={responsiveStyles.summaryCard}>
-            <div style={responsiveStyles.summaryIcon}>
+          <div style={themedStyles.summaryCard}>
+            <div style={themedStyles.summaryIcon}>
               🏦
             </div>
 
             <div>
-              <div style={responsiveStyles.summaryLabel}>
+              <div style={themedStyles.summaryLabel}>
                 Current Value
               </div>
 
-              <div style={responsiveStyles.summaryValue}>
+              <div style={themedStyles.summaryValue}>
                 {formatMoney(currentValue)}
               </div>
             </div>
           </div>
 
-          <div style={responsiveStyles.summaryCard}>
-            <div style={responsiveStyles.summaryIcon}>
+          <div style={themedStyles.summaryCard}>
+            <div style={themedStyles.summaryIcon}>
               📊
             </div>
 
             <div>
-              <div style={responsiveStyles.summaryLabel}>
+              <div style={themedStyles.summaryLabel}>
                 Active Bonds
               </div>
 
-              <div style={responsiveStyles.summaryValue}>
+              <div style={themedStyles.summaryValue}>
                 {activeBonds.length}
               </div>
             </div>
@@ -880,41 +959,41 @@ export default function BondManagement() {
             PURCHASE SECTION
         ================================================= */}
 
-        <div style={responsiveStyles.mainGrid}>
+        <div style={themedStyles.mainGrid}>
 
-          <div style={responsiveStyles.card}>
+          <div style={themedStyles.card}>
 
-            <div style={responsiveStyles.sectionHeader}>
+            <div style={themedStyles.sectionHeader}>
               <div>
-                <h2 style={responsiveStyles.sectionTitle}>
+                <h2 style={themedStyles.sectionTitle}>
                   Invest in Bonds
                 </h2>
 
-                <p style={responsiveStyles.sectionSubtitle}>
+                <p style={themedStyles.sectionSubtitle}>
                   Choose a bond plan and start investing
                 </p>
               </div>
 
-              <div style={responsiveStyles.sectionIcon}>
+              <div style={themedStyles.sectionIcon}>
                 💼
               </div>
             </div>
 
             {loading ? (
-              <div style={responsiveStyles.loading}>
+              <div style={themedStyles.loading}>
                 Loading bond plans...
               </div>
             ) : (
               <form onSubmit={handlePurchase}>
 
-                <label style={responsiveStyles.label}>
+                <label style={themedStyles.label}>
                   Select Bond Plan
                 </label>
 
                 <select
                   value={selectedPlanCode}
                   onChange={handlePlanChange}
-                  style={responsiveStyles.input}
+                  style={themedStyles.input}
                   required
                 >
                   <option value="">
@@ -932,20 +1011,20 @@ export default function BondManagement() {
                 </select>
 
                 {selectedPlan && (
-                  <div style={responsiveStyles.planDetails}>
+                  <div style={themedStyles.planDetails}>
 
-                    <div style={responsiveStyles.planTop}>
+                    <div style={themedStyles.planTop}>
                       <div>
-                        <h3 style={responsiveStyles.planName}>
+                        <h3 style={themedStyles.planName}>
                           {selectedPlan.bondName}
                         </h3>
 
-                        <span style={responsiveStyles.planType}>
+                        <span style={themedStyles.planType}>
                           {selectedPlan.bondType}
                         </span>
                       </div>
 
-                      <div style={responsiveStyles.rateBox}>
+                      <div style={themedStyles.rateBox}>
                         <strong>
                           {selectedPlan.couponRate}%
                         </strong>
@@ -956,10 +1035,10 @@ export default function BondManagement() {
                       </div>
                     </div>
 
-                    <div style={responsiveStyles.detailGrid}>
+                    <div style={themedStyles.detailGrid}>
 
                       <div>
-                        <span style={responsiveStyles.detailLabel}>
+                        <span style={themedStyles.detailLabel}>
                           Face Value
                         </span>
 
@@ -971,7 +1050,7 @@ export default function BondManagement() {
                       </div>
 
                       <div>
-                        <span style={responsiveStyles.detailLabel}>
+                        <span style={themedStyles.detailLabel}>
                           Minimum Investment
                         </span>
 
@@ -983,7 +1062,7 @@ export default function BondManagement() {
                       </div>
 
                       <div>
-                        <span style={responsiveStyles.detailLabel}>
+                        <span style={themedStyles.detailLabel}>
                           Tenure
                         </span>
 
@@ -993,7 +1072,7 @@ export default function BondManagement() {
                       </div>
 
                       <div>
-                        <span style={responsiveStyles.detailLabel}>
+                        <span style={themedStyles.detailLabel}>
                           Interest
                         </span>
 
@@ -1004,14 +1083,14 @@ export default function BondManagement() {
 
                     </div>
 
-                    <p style={responsiveStyles.description}>
+                    <p style={themedStyles.description}>
                       {selectedPlan.description}
                     </p>
 
                   </div>
                 )}
 
-                <label style={responsiveStyles.label}>
+                <label style={themedStyles.label}>
                   Debit Account
                 </label>
 
@@ -1020,7 +1099,7 @@ export default function BondManagement() {
                   onChange={(e) =>
                     setAccountId(e.target.value)
                   }
-                  style={responsiveStyles.input}
+                  style={themedStyles.input}
                   required
                 >
                   <option value="">
@@ -1040,12 +1119,12 @@ export default function BondManagement() {
                   ))}
                 </select>
 
-                <label style={responsiveStyles.label}>
+                <label style={themedStyles.label}>
                   Investment Amount
                 </label>
 
-                <div style={responsiveStyles.amountWrapper}>
-                  <span style={responsiveStyles.currency}>
+                <div style={themedStyles.amountWrapper}>
+                  <span style={themedStyles.currency}>
                     ₹
                   </span>
 
@@ -1064,16 +1143,16 @@ export default function BondManagement() {
                       )
                     }
                     placeholder="Enter investment amount"
-                    style={responsiveStyles.amountInput}
+                    style={themedStyles.amountInput}
                     required
                   />
                 </div>
 
                 {selectedPlan &&
                   Number(investmentAmount) > 0 && (
-                    <div style={responsiveStyles.calculationBox}>
+                    <div style={themedStyles.calculationBox}>
 
-                      <div style={responsiveStyles.calcRow}>
+                      <div style={themedStyles.calcRow}>
                         <span>
                           Investment
                         </span>
@@ -1085,21 +1164,21 @@ export default function BondManagement() {
                         </strong>
                       </div>
 
-                      <div style={responsiveStyles.calcRow}>
+                      <div style={themedStyles.calcRow}>
                         <span>
                           Expected Total Interest
                         </span>
 
-                        <strong style={responsiveStyles.greenText}>
+                        <strong style={themedStyles.greenText}>
                           {formatMoney(
                             expectedInterest
                           )}
                         </strong>
                       </div>
 
-                      <div style={responsiveStyles.calcDivider} />
+                      <div style={themedStyles.calcDivider} />
 
-                      <div style={responsiveStyles.calcRow}>
+                      <div style={themedStyles.calcRow}>
                         <span>
                           Expected Total Value
                         </span>
@@ -1123,7 +1202,7 @@ export default function BondManagement() {
                     !selectedPlan
                   }
                   style={{
-                    ...responsiveStyles.primaryButton,
+                    ...themedStyles.primaryButton,
                     opacity:
                       purchasing ||
                       loading ||
@@ -1146,17 +1225,17 @@ export default function BondManagement() {
               BOND INFO
           ================================================= */}
 
-          <div style={responsiveStyles.infoCard}>
+          <div style={themedStyles.infoCard}>
 
-            <div style={responsiveStyles.infoIcon}>
+            <div style={themedStyles.infoIcon}>
               🛡️
             </div>
 
-            <h2 style={responsiveStyles.infoTitle}>
+            <h2 style={themedStyles.infoTitle}>
               Why Invest in Bonds?
             </h2>
 
-            <div style={responsiveStyles.infoItem}>
+            <div style={themedStyles.infoItem}>
               <span>✓</span>
               <div>
                 <strong>Fixed Coupon Income</strong>
@@ -1167,7 +1246,7 @@ export default function BondManagement() {
               </div>
             </div>
 
-            <div style={responsiveStyles.infoItem}>
+            <div style={themedStyles.infoItem}>
               <span>✓</span>
               <div>
                 <strong>Defined Maturity</strong>
@@ -1178,7 +1257,7 @@ export default function BondManagement() {
               </div>
             </div>
 
-            <div style={responsiveStyles.infoItem}>
+            <div style={themedStyles.infoItem}>
               <span>✓</span>
               <div>
                 <strong>Portfolio Tracking</strong>
@@ -1189,7 +1268,7 @@ export default function BondManagement() {
               </div>
             </div>
 
-            <div style={responsiveStyles.infoNote}>
+            <div style={themedStyles.infoNote}>
               Bond returns and availability are
               based on the selected Avani Bank
               product plan.
@@ -1203,31 +1282,31 @@ export default function BondManagement() {
             ACTIVE BONDS
         ================================================= */}
 
-        <div style={responsiveStyles.card}>
+        <div style={themedStyles.card}>
 
-          <div style={responsiveStyles.sectionHeader}>
+          <div style={themedStyles.sectionHeader}>
             <div>
-              <h2 style={responsiveStyles.sectionTitle}>
+              <h2 style={themedStyles.sectionTitle}>
                 My Active Bonds
               </h2>
 
-              <p style={responsiveStyles.sectionSubtitle}>
+              <p style={themedStyles.sectionSubtitle}>
                 Manage your currently active bond investments
               </p>
             </div>
 
-            <div style={responsiveStyles.activeBadge}>
+            <div style={themedStyles.activeBadge}>
               {activeBonds.length} Active
             </div>
           </div>
 
           {loading ? (
-            <div style={responsiveStyles.loading}>
+            <div style={themedStyles.loading}>
               Loading bonds...
             </div>
           ) : activeBonds.length === 0 ? (
-            <div style={responsiveStyles.emptyState}>
-              <div style={responsiveStyles.emptyIcon}>
+            <div style={themedStyles.emptyState}>
+              <div style={themedStyles.emptyIcon}>
                 📋
               </div>
 
@@ -1241,7 +1320,7 @@ export default function BondManagement() {
               </p>
             </div>
           ) : (
-            <div style={responsiveStyles.bondGrid}>
+            <div style={themedStyles.bondGrid}>
 
               {activeBonds.map((bond) => {
 
@@ -1258,28 +1337,28 @@ export default function BondManagement() {
                 return (
                   <div
                     key={bond.id}
-                    style={responsiveStyles.bondCard}
+                    style={themedStyles.bondCard}
                   >
 
-                    <div style={responsiveStyles.bondHeader}>
+                    <div style={themedStyles.bondHeader}>
 
                       <div>
-                        <h3 style={responsiveStyles.bondName}>
+                        <h3 style={themedStyles.bondName}>
                           {bond.bondName}
                         </h3>
 
-                        <span style={responsiveStyles.bondType}>
+                        <span style={themedStyles.bondType}>
                           {bond.bondType}
                         </span>
                       </div>
 
-                      <span style={responsiveStyles.statusBadge}>
+                      <span style={themedStyles.statusBadge}>
                         ACTIVE
                       </span>
 
                     </div>
 
-                    <div style={responsiveStyles.bondAmount}>
+                    <div style={themedStyles.bondAmount}>
                       {formatMoney(investment)}
 
                       <span>
@@ -1287,7 +1366,7 @@ export default function BondManagement() {
                       </span>
                     </div>
 
-                    <div style={responsiveStyles.bondDetails}>
+                    <div style={themedStyles.bondDetails}>
 
                       <div>
                         <span>
@@ -1338,7 +1417,7 @@ export default function BondManagement() {
                           Interest Earned
                         </span>
 
-                        <strong style={responsiveStyles.greenText}>
+                        <strong style={themedStyles.greenText}>
                           {formatMoney(
                             bondInterest
                           )}
@@ -1360,7 +1439,7 @@ export default function BondManagement() {
                     </div>
 
                     <button
-                      style={responsiveStyles.sellButton}
+                      style={themedStyles.sellButton}
                       onClick={() =>
                         openSellConfirmation(bond)
                       }
@@ -1386,47 +1465,47 @@ export default function BondManagement() {
             String(bond.status || "").toUpperCase() !==
             "ACTIVE"
         ) && (
-          <div style={responsiveStyles.card}>
+          <div style={themedStyles.card}>
 
-            <div style={responsiveStyles.sectionHeader}>
+            <div style={themedStyles.sectionHeader}>
               <div>
-                <h2 style={responsiveStyles.sectionTitle}>
+                <h2 style={themedStyles.sectionTitle}>
                   Bond History
                 </h2>
 
-                <p style={responsiveStyles.sectionSubtitle}>
+                <p style={themedStyles.sectionSubtitle}>
                   Previously sold or matured investments
                 </p>
               </div>
             </div>
 
-            <div style={responsiveStyles.historyTableWrapper}>
+            <div style={themedStyles.historyTableWrapper}>
 
-              <table style={responsiveStyles.table}>
+              <table style={themedStyles.table}>
 
                 <thead>
                   <tr>
-                    <th style={responsiveStyles.th}>
+                    <th style={themedStyles.th}>
                       Bond
                     </th>
 
-                    <th style={responsiveStyles.th}>
+                    <th style={themedStyles.th}>
                       Investment
                     </th>
 
-                    <th style={responsiveStyles.th}>
+                    <th style={themedStyles.th}>
                       Interest
                     </th>
 
-                    <th style={responsiveStyles.th}>
+                    <th style={themedStyles.th}>
                       Purchase Date
                     </th>
 
-                    <th style={responsiveStyles.th}>
+                    <th style={themedStyles.th}>
                       Maturity Date
                     </th>
 
-                    <th style={responsiveStyles.th}>
+                    <th style={themedStyles.th}>
                       Status
                     </th>
                   </tr>
@@ -1446,45 +1525,45 @@ export default function BondManagement() {
 
                       <tr key={bond.id}>
 
-                        <td style={responsiveStyles.td}>
+                        <td style={themedStyles.td}>
                           <strong>
                             {bond.bondName}
                           </strong>
                         </td>
 
-                        <td style={responsiveStyles.td}>
+                        <td style={themedStyles.td}>
                           {formatMoney(
                             bond.investmentAmount
                           )}
                         </td>
 
-                        <td style={responsiveStyles.td}>
+                        <td style={themedStyles.td}>
                           {formatMoney(
                             bond.totalInterestEarned
                           )}
                         </td>
 
-                        <td style={responsiveStyles.td}>
+                        <td style={themedStyles.td}>
                           {formatDate(
                             bond.purchaseDate
                           )}
                         </td>
 
-                        <td style={responsiveStyles.td}>
+                        <td style={themedStyles.td}>
                           {formatDate(
                             bond.maturityDate
                           )}
                         </td>
 
-                        <td style={responsiveStyles.td}>
+                        <td style={themedStyles.td}>
                           <span
                             style={
                               String(
                                 bond.status || ""
                               ).toUpperCase() ===
                               "MATURED"
-                                ? styles.maturedBadge
-                                : styles.soldBadge
+                                ? themedStyles.maturedBadge
+                                : themedStyles.soldBadge
                             }
                           >
                             {bond.status}
@@ -1511,24 +1590,24 @@ export default function BondManagement() {
       =================================================== */}
 
       {sellBondData && (
-        <div style={responsiveStyles.modalOverlay}>
+        <div style={themedStyles.modalOverlay}>
 
-          <div style={responsiveStyles.modal}>
+          <div style={themedStyles.modal}>
 
-            <div style={responsiveStyles.modalIcon}>
+            <div style={themedStyles.modalIcon}>
               ⚠️
             </div>
 
-            <h2 style={responsiveStyles.modalTitle}>
+            <h2 style={themedStyles.modalTitle}>
               Sell Bond?
             </h2>
 
-            <p style={responsiveStyles.modalText}>
+            <p style={themedStyles.modalText}>
               Are you sure you want to sell this
               bond before maturity?
             </p>
 
-            <div style={responsiveStyles.modalDetails}>
+            <div style={themedStyles.modalDetails}>
 
               <div>
                 <span>Bond</span>
@@ -1557,16 +1636,16 @@ export default function BondManagement() {
 
             </div>
 
-            <div style={responsiveStyles.warningBox}>
+            <div style={themedStyles.warningBox}>
               Premature selling may reduce your
               earned interest according to the
               applicable early-exit adjustment.
             </div>
 
-            <div style={responsiveStyles.modalActions}>
+            <div style={themedStyles.modalActions}>
 
               <button
-                style={responsiveStyles.cancelButton}
+                style={themedStyles.cancelButton}
                 onClick={closeSellConfirmation}
                 disabled={sellingId !== null}
               >
@@ -1574,7 +1653,7 @@ export default function BondManagement() {
               </button>
 
               <button
-                style={responsiveStyles.confirmSellButton}
+                style={themedStyles.confirmSellButton}
                 onClick={handleSellBond}
                 disabled={sellingId !== null}
               >

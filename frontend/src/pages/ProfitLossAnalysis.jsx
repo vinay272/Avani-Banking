@@ -3,6 +3,17 @@ import { useNavigate } from "react-router-dom";
 
 const ProfitLossAnalysis = () => {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () =>
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
 
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" ? window.innerWidth <= 768 : false
@@ -15,9 +26,47 @@ const ProfitLossAnalysis = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const darkOverrides = {
+    page: { background: "#0b1220", color: "#e5e7eb" },
+    heroCard: { background: "#111c2e", borderColor: "#263449", boxShadow: "0 8px 25px rgba(0,0,0,0.18)" },
+    heroLabel: { color: "#a7b4c7" },
+    heroDescription: { color: "#a7b4c7" },
+    performanceCircleInner: { background: "#111c2e" },
+    circleLabel: { color: "#a7b4c7" },
+    summaryCard: { background: "#111c2e", borderColor: "#263449", boxShadow: "0 6px 18px rgba(0,0,0,0.14)" },
+    cardLabel: { color: "#a7b4c7" },
+    cardValue: { color: "#e5e7eb" },
+    highlightCard: { background: "#111c2e", borderColor: "#263449", boxShadow: "0 6px 18px rgba(0,0,0,0.14)" },
+    highlightLabel: { color: "#a7b4c7" },
+    highlightTitle: { color: "#e5e7eb" },
+    returnPill: { background: "#263449", color: "#dbeafe" },
+    sectionCard: { background: "#111c2e", borderColor: "#263449", boxShadow: "0 6px 18px rgba(0,0,0,0.14)" },
+    sectionTitle: { color: "#e5e7eb" },
+    sectionSubtitle: { color: "#a7b4c7" },
+    investmentRow: { borderColor: "#263449" },
+    investmentName: { color: "#e5e7eb" },
+    investmentReturn: { color: "#a7b4c7" },
+    barBackground: { background: "#263449" },
+    insightCard: { background: "linear-gradient(135deg, #142746 0%, #111c2e 100%)", borderColor: "#284a78" },
+    insightIcon: { background: "#1e293b" },
+    insightTitle: { color: "#bfdbfe" },
+    insightText: { color: "#cbd5e1" },
+    generatedText: { color: "#94a3b8" },
+    secondaryButton: { background: "#172337", borderColor: "#3a4a60", color: "#e2e8f0" },
+    loadingContainer: { background: "#0b1220" },
+    loadingTitle: { color: "#e5e7eb" },
+    loadingText: { color: "#a7b4c7" },
+    errorContainer: { background: "#0b1220" },
+    errorTitle: { color: "#e5e7eb" },
+    errorText: { color: "#a7b4c7" },
+  };
+
   const getResponsiveStyle = (name) => ({
     ...(styles[name] || {}),
     ...(isMobile ? (responsiveStyles[name] || {}) : {}),
+    ...(darkMode && name !== "header" && name !== "backButton"
+      ? (darkOverrides[name] || {})
+      : {}),
   });
 
   const [analysis, setAnalysis] = useState(null);
@@ -164,7 +213,7 @@ const ProfitLossAnalysis = () => {
 
   if (loading) {
     return (
-      <div style={getResponsiveStyle("page")}>
+      <div data-theme={darkMode ? "dark" : "light"} style={getResponsiveStyle("page")}>
         <div style={getResponsiveStyle("loadingContainer")}>
           <div style={getResponsiveStyle("spinner")}></div>
           <h3 style={getResponsiveStyle("loadingTitle")}>Analyzing Your Investments</h3>
@@ -178,7 +227,7 @@ const ProfitLossAnalysis = () => {
 
   if (error) {
     return (
-      <div style={getResponsiveStyle("page")}>
+      <div data-theme={darkMode ? "dark" : "light"} style={getResponsiveStyle("page")}>
         <div style={getResponsiveStyle("errorContainer")}>
           <div style={getResponsiveStyle("errorIcon")}>!</div>
 
@@ -215,7 +264,7 @@ const ProfitLossAnalysis = () => {
   const returnPercentage = Number(analysis.returnPercentage || 0);
 
   return (
-    <div style={getResponsiveStyle("page")}>
+    <div data-theme={darkMode ? "dark" : "light"} style={getResponsiveStyle("page")}>
       {/* Header */}
       <div style={getResponsiveStyle("header")}>
         <div style={getResponsiveStyle("headerLeft")}>
@@ -693,6 +742,7 @@ const responsiveStyles = {
 const styles = {
   page: {
     minHeight: "100vh",
+    padding: "25px 32px",
     background: "#f8fafc",
     color: "#0f172a",
     fontFamily:
@@ -700,6 +750,7 @@ const styles = {
   },
 
   header: {
+    borderRadius: "18px",
     background: "linear-gradient(135deg, #0f5bd7 0%, #1677f2 100%)",
     padding: "22px 34px",
     display: "flex",
@@ -744,8 +795,8 @@ const styles = {
 
   backButton: {
     border: "1px solid rgba(255,255,255,0.35)",
-    background: "rgba(255,255,255,0.13)",
-    color: "#ffffff",
+    background: "#ffffff",
+    color: "#1e2e88",
     padding: "11px 17px",
     borderRadius: "10px",
     cursor: "pointer",

@@ -28,6 +28,36 @@ function InvestmentDashboard() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Sync with the theme selected on the Dashboard.
+  const [darkMode, setDarkMode] = useState(
+    () => typeof window !== "undefined" && localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    window.addEventListener("storage", syncTheme);
+    window.addEventListener("avani-theme-change", syncTheme);
+    syncTheme();
+    return () => {
+      window.removeEventListener("storage", syncTheme);
+      window.removeEventListener("avani-theme-change", syncTheme);
+    };
+  }, []);
+
+  const darkThemeCss = `
+    .investment-dark { background: #0f172a !important; color: #e5e7eb !important; }
+    .investment-dark .investment-dark-card { background: #1e293b !important; border-color: #334155 !important; color: #e5e7eb !important; }
+    .investment-dark .investment-dark-card .investment-muted { color: #a8b4c7 !important; }
+    .investment-dark .investment-dark-card .investment-dark-text { color: #f1f5f9 !important; }
+    .investment-dark .investment-dark-card button { color: #ffffff !important; }
+    .investment-dark .investment-dark-text { color: #e5e7eb !important; }
+    .investment-dark .investment-muted { color: #a8b4c7 !important; }
+    .investment-dark .investment-dark-divider { background: #334155 !important; }
+    .investment-dark .investment-dark-soft { background: #273449 !important; color: #e5e7eb !important; }
+  `;
+
   const getToken = () => localStorage.getItem("token");
 
   const formatCurrency = (value) => {
@@ -297,8 +327,9 @@ function InvestmentDashboard() {
 
   if (loading) {
     return (
-      <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
-        <div style={styles.loadingCard}>
+      <div className={darkMode ? "investment-dark" : ""} style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
+        <style>{darkThemeCss}</style>
+        <div className={darkMode ? "investment-dark-card" : ""} style={styles.loadingCard}>
           <div style={styles.loadingIcon}>💼</div>
           <div style={styles.loadingTitle}>Loading Investment Portfolio...</div>
           <div style={styles.loadingText}>
@@ -310,7 +341,8 @@ function InvestmentDashboard() {
   }
 
   return (
-    <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
+    <div className={darkMode ? "investment-dark" : ""} style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
+      <style>{darkThemeCss}</style>
       <div style={{ ...styles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
         {/* =========================
     HEADER
@@ -344,35 +376,35 @@ function InvestmentDashboard() {
             ERROR
         ========================= */}
 
-        {error && <div style={styles.errorBox}>⚠️ {error}</div>}
+        {error && <div className={darkMode ? "investment-dark-soft" : ""} style={styles.errorBox}>⚠️ {error}</div>}
 
         {/* =========================
             PORTFOLIO SUMMARY
         ========================= */}
 
         <div style={{ ...styles.summaryGrid, ...(isMobile ? responsiveStyles.summaryGrid : {}) }}>
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryLabel}>Total Invested</div>
+          <div className={darkMode ? "investment-dark-card" : ""} style={styles.summaryCard}>
+            <div className={darkMode ? "investment-muted" : ""} style={styles.summaryLabel}>Total Invested</div>
 
             <div style={styles.summaryValue}>
               {formatCurrency(portfolioData.totalInvested)}
             </div>
 
-            <div style={styles.summaryHint}>Across active investments</div>
+            <div className={darkMode ? "investment-muted" : ""} style={styles.summaryHint}>Across active investments</div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryLabel}>Current Value</div>
+          <div className={darkMode ? "investment-dark-card" : ""} style={styles.summaryCard}>
+            <div className={darkMode ? "investment-muted" : ""} style={styles.summaryLabel}>Current Value</div>
 
             <div style={styles.summaryValue}>
               {formatCurrency(portfolioData.currentValue)}
             </div>
 
-            <div style={styles.summaryHint}>Current portfolio value</div>
+            <div className={darkMode ? "investment-muted" : ""} style={styles.summaryHint}>Current portfolio value</div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryLabel}>Profit / Loss</div>
+          <div className={darkMode ? "investment-dark-card" : ""} style={styles.summaryCard}>
+            <div className={darkMode ? "investment-muted" : ""} style={styles.summaryLabel}>Profit / Loss</div>
 
             <div
               style={{
@@ -395,14 +427,14 @@ function InvestmentDashboard() {
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
-            <div style={styles.summaryLabel}>Active Investments</div>
+          <div className={darkMode ? "investment-dark-card" : ""} style={styles.summaryCard}>
+            <div className={darkMode ? "investment-muted" : ""} style={styles.summaryLabel}>Active Investments</div>
 
             <div style={styles.summaryValue}>
               {mutualFunds.length + fixedDeposits.length}
             </div>
 
-            <div style={styles.summaryHint}>Mutual Funds + Fixed Deposits</div>
+            <div className={darkMode ? "investment-muted" : ""} style={styles.summaryHint}>Mutual Funds + Fixed Deposits</div>
           </div>
         </div>
 
@@ -412,9 +444,9 @@ function InvestmentDashboard() {
 
         <div style={styles.sectionHeader}>
           <div>
-            <div style={styles.sectionTitle}>Investment Products</div>
+            <div className={darkMode ? "investment-dark-text" : ""} style={styles.sectionTitle}>Investment Products</div>
 
-            <div style={styles.sectionSubtitle}>
+            <div className={darkMode ? "investment-muted" : ""} style={styles.sectionSubtitle}>
               Choose an investment category to manage your portfolio.
             </div>
           </div>
@@ -422,32 +454,32 @@ function InvestmentDashboard() {
 
         <div style={{ ...styles.productGrid, ...(isMobile ? responsiveStyles.productGrid : {}) }}>
           {investmentCards.map((card) => (
-            <div key={card.title} style={styles.productCard}>
+            <div key={card.title} className={darkMode ? "investment-dark-card" : ""} style={styles.productCard}>
               <div style={styles.productTop}>
-                <div style={styles.productIcon}>{card.icon}</div>
+                <div className={darkMode ? "investment-dark-soft" : ""} style={styles.productIcon}>{card.icon}</div>
 
                 {card.comingSoon && (
                   <span style={styles.comingSoonBadge}>Coming Soon</span>
                 )}
               </div>
 
-              <div style={styles.productTitle}>{card.title}</div>
+              <div className={darkMode ? "investment-dark-text" : ""} style={styles.productTitle}>{card.title}</div>
 
-              <div style={styles.productDescription}>{card.description}</div>
+              <div className={darkMode ? "investment-muted" : ""} style={styles.productDescription}>{card.description}</div>
 
               {!card.comingSoon ? (
                 <>
                   <div style={styles.productStats}>
                     <div>
-                      <span style={styles.statLabel}>Investments</span>
+                      <span className={darkMode ? "investment-muted" : ""} style={styles.statLabel}>Investments</span>
 
-                      <strong style={styles.statValue}>{card.count}</strong>
+                      <strong className={darkMode ? "investment-dark-text" : ""} style={styles.statValue}>{card.count}</strong>
                     </div>
 
                     <div>
-                      <span style={styles.statLabel}>Value</span>
+                      <span className={darkMode ? "investment-muted" : ""} style={styles.statLabel}>Value</span>
 
-                      <strong style={styles.statValue}>
+                      <strong className={darkMode ? "investment-dark-text" : ""} style={styles.statValue}>
                         {formatCurrency(card.value)}
                       </strong>
                     </div>
@@ -465,7 +497,7 @@ function InvestmentDashboard() {
                   </button>
                 </>
               ) : (
-                <div style={styles.comingSoonText}>
+                <div className={darkMode ? "investment-dark-soft" : ""} style={styles.comingSoonText}>
                   This investment category will be available in the upcoming
                   module.
                 </div>
@@ -480,9 +512,9 @@ function InvestmentDashboard() {
 
         <div style={styles.sectionHeader}>
           <div>
-            <div style={styles.sectionTitle}>Portfolio & Analytics</div>
+            <div className={darkMode ? "investment-dark-text" : ""} style={styles.sectionTitle}>Portfolio & Analytics</div>
 
-            <div style={styles.sectionSubtitle}>
+            <div className={darkMode ? "investment-muted" : ""} style={styles.sectionSubtitle}>
               Analyse performance and keep track of your wealth.
             </div>
           </div>
@@ -491,6 +523,7 @@ function InvestmentDashboard() {
         {/* PORTFOLIO DASHBOARD */}
         <div style={{ ...styles.analyticsGrid, ...(isMobile ? responsiveStyles.analyticsGrid : {}) }}>
           <div
+            className={darkMode ? "investment-dark-card" : ""}
             style={{
               ...styles.analyticsCard,
               cursor: "pointer",
@@ -499,12 +532,12 @@ function InvestmentDashboard() {
               window.location.href = "/investments/portfolio";
             }}
           >
-            <div style={styles.analyticsIcon}>📊</div>
+            <div className={darkMode ? "investment-dark-soft" : ""} style={styles.analyticsIcon}>📊</div>
 
             <div>
-              <div style={styles.analyticsTitle}>Portfolio Dashboard</div>
+              <div className={darkMode ? "investment-dark-text" : ""} style={styles.analyticsTitle}>Portfolio Dashboard</div>
 
-              <div style={styles.analyticsText}>
+              <div className={darkMode ? "investment-muted" : ""} style={styles.analyticsText}>
                 View investment allocation, current value and overall portfolio
                 performance.
               </div>
@@ -514,6 +547,7 @@ function InvestmentDashboard() {
           {/* Investment Reports */}
 
           <div
+            className={darkMode ? "investment-dark-card" : ""}
             style={{
               ...styles.analyticsCard,
               cursor: "pointer",
@@ -522,12 +556,12 @@ function InvestmentDashboard() {
               window.location.href = "/investments/reports";
             }}
           >
-            <div style={styles.analyticsIcon}>📑</div>
+            <div className={darkMode ? "investment-dark-soft" : ""} style={styles.analyticsIcon}>📑</div>
 
             <div>
-              <div style={styles.analyticsTitle}>Investment Reports</div>
+              <div className={darkMode ? "investment-dark-text" : ""} style={styles.analyticsTitle}>Investment Reports</div>
 
-              <div style={styles.analyticsText}>
+              <div className={darkMode ? "investment-muted" : ""} style={styles.analyticsText}>
                 Review investment activity and generate detailed investment
                 reports.
               </div>
@@ -537,6 +571,7 @@ function InvestmentDashboard() {
           {/* Profit / Loss Analysis */}
 
           <div
+            className={darkMode ? "investment-dark-card" : ""}
             style={{
               ...styles.analyticsCard,
               cursor: "pointer",
@@ -545,12 +580,12 @@ function InvestmentDashboard() {
               window.location.href = "/investments/profit-loss";
             }}
           >
-            <div style={styles.analyticsIcon}>📈</div>
+            <div className={darkMode ? "investment-dark-soft" : ""} style={styles.analyticsIcon}>📈</div>
 
             <div>
-              <div style={styles.analyticsTitle}>Profit / Loss Analysis</div>
+              <div className={darkMode ? "investment-dark-text" : ""} style={styles.analyticsTitle}>Profit / Loss Analysis</div>
 
-              <div style={styles.analyticsText}>
+              <div className={darkMode ? "investment-muted" : ""} style={styles.analyticsText}>
                 Analyse your investment returns and compare invested amount with
                 current value.
               </div>
@@ -559,6 +594,7 @@ function InvestmentDashboard() {
           {/* Dividend Tracking */}
 
           <div
+            className={darkMode ? "investment-dark-card" : ""}
             style={{
               ...styles.analyticsCard,
               cursor: "pointer",
@@ -567,12 +603,12 @@ function InvestmentDashboard() {
               window.location.href = "/investments/dividends";
             }}
           >
-            <div style={styles.analyticsIcon}>💸</div>
+            <div className={darkMode ? "investment-dark-soft" : ""} style={styles.analyticsIcon}>💸</div>
 
             <div>
-              <div style={styles.analyticsTitle}>Dividend Tracking</div>
+              <div className={darkMode ? "investment-dark-text" : ""} style={styles.analyticsTitle}>Dividend Tracking</div>
 
-              <div style={styles.analyticsText}>
+              <div className={darkMode ? "investment-muted" : ""} style={styles.analyticsText}>
                 Track dividend income from eligible investments.
               </div>
             </div>
@@ -586,24 +622,24 @@ function InvestmentDashboard() {
 
       <div style={styles.sectionHeader}>
         <div>
-          <div style={styles.sectionTitle}>Portfolio Breakdown</div>
+          <div className={darkMode ? "investment-dark-text" : ""} style={styles.sectionTitle}>Portfolio Breakdown</div>
 
-          <div style={styles.sectionSubtitle}>
+          <div className={darkMode ? "investment-muted" : ""} style={styles.sectionSubtitle}>
             Current distribution of your active investments.
           </div>
         </div>
       </div>
 
-      <div style={{ ...styles.breakdownCard, ...(isMobile ? responsiveStyles.breakdownCard : {}) }}>
+      <div className={darkMode ? "investment-dark-card" : ""} style={{ ...styles.breakdownCard, ...(isMobile ? responsiveStyles.breakdownCard : {}) }}>
         {/* Mutual Funds */}
         <div style={{ ...styles.breakdownRow, ...(isMobile ? responsiveStyles.breakdownRow : {}) }}>
           <div style={{ ...styles.breakdownLeft, ...(isMobile ? responsiveStyles.breakdownLeft : {}) }}>
-            <span style={styles.breakdownIcon}>📈</span>
+            <span className={darkMode ? "investment-dark-soft" : ""} style={styles.breakdownIcon}>📈</span>
 
             <div>
-              <div style={styles.breakdownTitle}>Mutual Funds</div>
+              <div className={darkMode ? "investment-dark-text" : ""} style={styles.breakdownTitle}>Mutual Funds</div>
 
-              <div style={styles.breakdownSubtext}>
+              <div className={darkMode ? "investment-muted" : ""} style={styles.breakdownSubtext}>
                 {mutualFunds.length} active investment
                 {mutualFunds.length !== 1 ? "s" : ""}
               </div>
@@ -611,7 +647,7 @@ function InvestmentDashboard() {
           </div>
 
           <div style={{ ...styles.breakdownValueBox, ...(isMobile ? responsiveStyles.breakdownValueBox : {}) }}>
-            <div style={styles.breakdownAmount}>
+            <div className={darkMode ? "investment-dark-text" : ""} style={styles.breakdownAmount}>
               {formatCurrency(portfolioSummary?.mutualFundValue || 0)}
             </div>
 
@@ -629,17 +665,17 @@ function InvestmentDashboard() {
           </div>
         </div>
 
-        <div style={styles.divider} />
+        <div className={darkMode ? "investment-dark-divider" : ""} style={styles.divider} />
 
         {/* Fixed Deposits */}
         <div style={{ ...styles.breakdownRow, ...(isMobile ? responsiveStyles.breakdownRow : {}) }}>
           <div style={{ ...styles.breakdownLeft, ...(isMobile ? responsiveStyles.breakdownLeft : {}) }}>
-            <span style={styles.breakdownIcon}>🏦</span>
+            <span className={darkMode ? "investment-dark-soft" : ""} style={styles.breakdownIcon}>🏦</span>
 
             <div>
-              <div style={styles.breakdownTitle}>Fixed Deposits</div>
+              <div className={darkMode ? "investment-dark-text" : ""} style={styles.breakdownTitle}>Fixed Deposits</div>
 
-              <div style={styles.breakdownSubtext}>
+              <div className={darkMode ? "investment-muted" : ""} style={styles.breakdownSubtext}>
                 {fixedDeposits.length} active deposit
                 {fixedDeposits.length !== 1 ? "s" : ""}
               </div>
@@ -647,7 +683,7 @@ function InvestmentDashboard() {
           </div>
 
           <div style={{ ...styles.breakdownValueBox, ...(isMobile ? responsiveStyles.breakdownValueBox : {}) }}>
-            <div style={styles.breakdownAmount}>
+            <div className={darkMode ? "investment-dark-text" : ""} style={styles.breakdownAmount}>
               {formatCurrency(portfolioSummary?.fixedDepositValue || 0)}
             </div>
 
@@ -665,22 +701,22 @@ function InvestmentDashboard() {
           </div>
         </div>
 
-        <div style={styles.divider} />
+        <div className={darkMode ? "investment-dark-divider" : ""} style={styles.divider} />
 
         {/* SIP */}
         <div style={{ ...styles.breakdownRow, ...(isMobile ? responsiveStyles.breakdownRow : {}) }}>
           <div style={{ ...styles.breakdownLeft, ...(isMobile ? responsiveStyles.breakdownLeft : {}) }}>
-            <span style={styles.breakdownIcon}>🔄</span>
+            <span className={darkMode ? "investment-dark-soft" : ""} style={styles.breakdownIcon}>🔄</span>
 
             <div>
-              <div style={styles.breakdownTitle}>SIP</div>
+              <div className={darkMode ? "investment-dark-text" : ""} style={styles.breakdownTitle}>SIP</div>
 
-              <div style={styles.breakdownSubtext}>Active SIP investments</div>
+              <div className={darkMode ? "investment-muted" : ""} style={styles.breakdownSubtext}>Active SIP investments</div>
             </div>
           </div>
 
           <div style={{ ...styles.breakdownValueBox, ...(isMobile ? responsiveStyles.breakdownValueBox : {}) }}>
-            <div style={styles.breakdownAmount}>
+            <div className={darkMode ? "investment-dark-text" : ""} style={styles.breakdownAmount}>
               {formatCurrency(portfolioSummary?.sipValue || 0)}
             </div>
 
@@ -698,22 +734,22 @@ function InvestmentDashboard() {
           </div>
         </div>
 
-        <div style={styles.divider} />
+        <div className={darkMode ? "investment-dark-divider" : ""} style={styles.divider} />
 
         {/* Bonds */}
         <div style={{ ...styles.breakdownRow, ...(isMobile ? responsiveStyles.breakdownRow : {}) }}>
           <div style={{ ...styles.breakdownLeft, ...(isMobile ? responsiveStyles.breakdownLeft : {}) }}>
-            <span style={styles.breakdownIcon}>📜</span>
+            <span className={darkMode ? "investment-dark-soft" : ""} style={styles.breakdownIcon}>📜</span>
 
             <div>
-              <div style={styles.breakdownTitle}>Bonds</div>
+              <div className={darkMode ? "investment-dark-text" : ""} style={styles.breakdownTitle}>Bonds</div>
 
-              <div style={styles.breakdownSubtext}>Active bond investments</div>
+              <div className={darkMode ? "investment-muted" : ""} style={styles.breakdownSubtext}>Active bond investments</div>
             </div>
           </div>
 
           <div style={{ ...styles.breakdownValueBox, ...(isMobile ? responsiveStyles.breakdownValueBox : {}) }}>
-            <div style={styles.breakdownAmount}>
+            <div className={darkMode ? "investment-dark-text" : ""} style={styles.breakdownAmount}>
               {formatCurrency(portfolioSummary?.bondValue || 0)}
             </div>
 
@@ -731,22 +767,22 @@ function InvestmentDashboard() {
           </div>
         </div>
 
-        <div style={styles.divider} />
+        <div className={darkMode ? "investment-dark-divider" : ""} style={styles.divider} />
 
         {/* Gold */}
         <div style={{ ...styles.breakdownRow, ...(isMobile ? responsiveStyles.breakdownRow : {}) }}>
           <div style={{ ...styles.breakdownLeft, ...(isMobile ? responsiveStyles.breakdownLeft : {}) }}>
-            <span style={styles.breakdownIcon}>🪙</span>
+            <span className={darkMode ? "investment-dark-soft" : ""} style={styles.breakdownIcon}>🪙</span>
 
             <div>
-              <div style={styles.breakdownTitle}>Gold</div>
+              <div className={darkMode ? "investment-dark-text" : ""} style={styles.breakdownTitle}>Gold</div>
 
-              <div style={styles.breakdownSubtext}>Active gold investments</div>
+              <div className={darkMode ? "investment-muted" : ""} style={styles.breakdownSubtext}>Active gold investments</div>
             </div>
           </div>
 
           <div style={{ ...styles.breakdownValueBox, ...(isMobile ? responsiveStyles.breakdownValueBox : {}) }}>
-            <div style={styles.breakdownAmount}>
+            <div className={darkMode ? "investment-dark-text" : ""} style={styles.breakdownAmount}>
               {formatCurrency(portfolioSummary?.goldValue || 0)}
             </div>
 
@@ -764,13 +800,13 @@ function InvestmentDashboard() {
           </div>
         </div>
 
-        <div style={styles.divider} />
+        <div className={darkMode ? "investment-dark-divider" : ""} style={styles.divider} />
 
         {/* Total */}
         <div style={{ ...styles.totalRow, ...(isMobile ? responsiveStyles.totalRow : {}) }}>
-          <div style={styles.totalLabel}>Total Portfolio Value</div>
+          <div className={darkMode ? "investment-dark-text" : ""} style={styles.totalLabel}>Total Portfolio Value</div>
 
-          <div style={styles.totalAmount}>
+          <div className={darkMode ? "investment-dark-text" : ""} style={styles.totalAmount}>
             {formatCurrency(portfolioSummary?.currentValue || 0)}
           </div>
         </div>
@@ -812,7 +848,7 @@ const responsiveStyles = {
   summaryGrid: {
     gridTemplateColumns: "1fr",
     gap: "10px",
-    marginBottom: "24px",
+    marginTop: "20px",
   },
 
   summaryValue: {
@@ -936,8 +972,8 @@ const styles = {
     border: "1px solid rgba(255, 255, 255, 0.65)",
     borderRadius: "8px",
     padding: "10px 16px",
-    background: "rgba(255, 255, 255, 0.10)",
-    color: "#ffffff",
+    background: "#ffffff",
+    color: "#284aa0",
     fontSize: "11px",
     fontWeight: "800",
     cursor: "pointer",
@@ -986,6 +1022,7 @@ const styles = {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
     gap: "15px",
+    marginTop: "20px",
     marginBottom: "32px",
   },
 

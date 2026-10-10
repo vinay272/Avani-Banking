@@ -3,6 +3,18 @@ import { useNavigate } from "react-router-dom";
 
 function InterestCalculation() {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
 
   // Responsive layout state
   const [isMobile, setIsMobile] = useState(
@@ -336,28 +348,68 @@ function InterestCalculation() {
     },
   };
 
+  const themedStyles = darkMode
+    ? {
+        ...responsiveStyles,
+        page: { ...responsiveStyles.page, background: "#0b1220", color: "#e5e7eb" },
+        container: { ...responsiveStyles.container, color: "#e5e7eb" },
+        eyebrow: { ...responsiveStyles.eyebrow, color: "#8eb5ff" },
+        title: { ...responsiveStyles.title, color: "#f1f5f9" },
+        subtitle: { ...responsiveStyles.subtitle, color: "#a5b4c8" },
+        errorBox: { ...responsiveStyles.errorBox, background: "#3a1d24", border: "1px solid #7f303c", color: "#fecaca" },
+        accountCard: { ...responsiveStyles.accountCard, background: "#111c2e", border: "1px solid #26364e", boxShadow: "0 8px 25px rgba(0,0,0,0.18)" },
+        label: { ...responsiveStyles.label, color: "#a5b4c8" },
+        accountNumber: { ...responsiveStyles.accountNumber, color: "#f1f5f9" },
+        accountType: { ...responsiveStyles.accountType, color: "#a5b4c8" },
+        rateBox: { ...responsiveStyles.rateBox, background: "#12352d" },
+        calculatorCard: { ...responsiveStyles.calculatorCard, background: "#111c2e", border: "1px solid #26364e", boxShadow: "0 8px 25px rgba(0,0,0,0.18)" },
+        sectionEyebrow: { ...responsiveStyles.sectionEyebrow, color: "#9bb8f5" },
+        cardTitle: { ...responsiveStyles.cardTitle, color: "#f1f5f9" },
+        fieldLabel: { ...responsiveStyles.fieldLabel, color: "#c0cada" },
+        input: { ...responsiveStyles.input, background: "#0b1424", border: "1px solid #35445d", color: "#f1f5f9", colorScheme: "dark" },
+        readOnlyInput: { ...responsiveStyles.readOnlyInput, background: "#1a2940", border: "1px solid #35445d", color: "#f1f5f9" },
+        inputSuffix: { ...responsiveStyles.inputSuffix, color: "#a5b4c8" },
+        helperText: { ...responsiveStyles.helperText, color: "#9aa9bf" },
+        resetButton: { ...responsiveStyles.resetButton, background: "#1a2940", border: "1px solid #35445d", color: "#e5e7eb" },
+        resultCard: { ...responsiveStyles.resultCard, background: "#111c2e", border: "1px solid #2b4b3d", boxShadow: "0 8px 25px rgba(0,0,0,0.18)" },
+        resultTitle: { ...responsiveStyles.resultTitle, color: "#f1f5f9" },
+        resultItem: { ...responsiveStyles.resultItem, background: "#1a2940" },
+        resultItemHighlight: { ...responsiveStyles.resultItemHighlight, background: "#12352d" },
+        resultLabel: { ...responsiveStyles.resultLabel, color: "#b4c0d2" },
+        resultValue: { ...responsiveStyles.resultValue, color: "#f1f5f9" },
+        infoCard: { ...responsiveStyles.infoCard, background: "#111c2e", border: "1px solid #26364e" },
+        infoTitle: { ...responsiveStyles.infoTitle, color: "#f1f5f9" },
+        infoText: { ...responsiveStyles.infoText, color: "#b0bdcf" },
+        footer: { ...responsiveStyles.footer, background: "#0e1829", borderTop: "1px solid #26364e", color: "#a5b4c8" },
+        loadingPage: { ...responsiveStyles.loadingPage, background: "#0b1220" },
+        loadingCard: { ...responsiveStyles.loadingCard, background: "#111c2e", boxShadow: "0 15px 40px rgba(0,0,0,0.25)" },
+        loadingTitle: { ...responsiveStyles.loadingTitle, color: "#f1f5f9" },
+        loadingText: { ...responsiveStyles.loadingText, color: "#a5b4c8" },
+      }
+    : responsiveStyles;
+
   if (loading) {
     return (
-      <div style={responsiveStyles.loadingPage}>
-        <div style={responsiveStyles.loadingCard}>
-          <div style={responsiveStyles.loadingIcon}>%</div>
+      <div style={themedStyles.loadingPage}>
+        <div style={themedStyles.loadingCard}>
+          <div style={themedStyles.loadingIcon}>%</div>
 
-          <h2 style={responsiveStyles.loadingTitle}>
+          <h2 style={themedStyles.loadingTitle}>
             Loading interest details
           </h2>
 
-          <p style={responsiveStyles.loadingText}>
+          <p style={themedStyles.loadingText}>
             Please wait while we fetch your account information...
           </p>
 
-          <div style={responsiveStyles.loader}></div>
+          <div style={themedStyles.loader}></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={responsiveStyles.page}>
+    <div style={themedStyles.page}>
       <style>{`
         @keyframes spin {
           to { transform: rotate(360deg); }
@@ -374,19 +426,19 @@ function InterestCalculation() {
 
       {/* ================= HEADER ================= */}
 
-      <header style={responsiveStyles.header}>
-        <div style={responsiveStyles.brandArea}>
+      <header style={themedStyles.header}>
+        <div style={themedStyles.brandArea}>
 
-          <div style={responsiveStyles.brandIcon}>
+          <div style={themedStyles.brandIcon}>
             %
           </div>
 
           <div>
-            <div style={responsiveStyles.brandName}>
+            <div style={themedStyles.brandName}>
               AVANI BANK
             </div>
 
-            <div style={responsiveStyles.brandSubtitle}>
+            <div style={themedStyles.brandSubtitle}>
               Interest Calculation
             </div>
           </div>
@@ -394,7 +446,7 @@ function InterestCalculation() {
         </div>
 
         <button
-          style={responsiveStyles.headerButton}
+          style={themedStyles.headerButton}
           onClick={() => navigate("/accounts")}
         >
           ← Account Management
@@ -403,26 +455,26 @@ function InterestCalculation() {
 
       {/* ================= MAIN ================= */}
 
-      <main style={responsiveStyles.container}>
+      <main style={themedStyles.container}>
 
-        <section style={responsiveStyles.pageHeading}>
+        <section style={themedStyles.pageHeading}>
 
-          <p style={responsiveStyles.eyebrow}>
+          <p style={themedStyles.eyebrow}>
             ACCOUNT SERVICES
           </p>
 
-          <h1 style={responsiveStyles.title}>
+          <h1 style={themedStyles.title}>
             Interest Calculation
           </h1>
 
-          <p style={responsiveStyles.subtitle}>
+          <p style={themedStyles.subtitle}>
             Calculate the estimated interest on your account balance.
           </p>
 
         </section>
 
         {error && (
-          <div style={responsiveStyles.errorBox}>
+          <div style={themedStyles.errorBox}>
             ⚠️ {error}
           </div>
         )}
@@ -431,41 +483,41 @@ function InterestCalculation() {
           <>
             {/* ================= ACCOUNT SUMMARY ================= */}
 
-            <section style={responsiveStyles.accountCard}>
+            <section style={themedStyles.accountCard}>
 
-              <div style={responsiveStyles.accountLeft}>
+              <div style={themedStyles.accountLeft}>
 
-                <div style={responsiveStyles.accountIcon}>
+                <div style={themedStyles.accountIcon}>
                   🏦
                 </div>
 
                 <div>
-                  <p style={responsiveStyles.label}>
+                  <p style={themedStyles.label}>
                     ACCOUNT NUMBER
                   </p>
 
-                  <p style={responsiveStyles.accountNumber}>
+                  <p style={themedStyles.accountNumber}>
                     {account.accountNumber || "N/A"}
                   </p>
 
-                  <p style={responsiveStyles.accountType}>
+                  <p style={themedStyles.accountType}>
                     {account.accountType || "N/A"} Account
                   </p>
                 </div>
 
               </div>
 
-              <div style={responsiveStyles.rateBox}>
+              <div style={themedStyles.rateBox}>
 
-                <p style={responsiveStyles.rateLabel}>
+                <p style={themedStyles.rateLabel}>
                   CURRENT INTEREST RATE
                 </p>
 
-                <p style={responsiveStyles.rate}>
+                <p style={themedStyles.rate}>
                   {account.interestRate || 0}%
                 </p>
 
-                <p style={responsiveStyles.rateNote}>
+                <p style={themedStyles.rateNote}>
                   Per annum
                 </p>
 
@@ -475,33 +527,33 @@ function InterestCalculation() {
 
             {/* ================= CALCULATOR ================= */}
 
-            <section style={responsiveStyles.calculatorCard}>
+            <section style={themedStyles.calculatorCard}>
 
-              <div style={responsiveStyles.cardHeader}>
+              <div style={themedStyles.cardHeader}>
 
                 <div>
-                  <p style={responsiveStyles.sectionEyebrow}>
+                  <p style={themedStyles.sectionEyebrow}>
                     INTEREST CALCULATOR
                   </p>
 
-                  <h2 style={responsiveStyles.cardTitle}>
+                  <h2 style={themedStyles.cardTitle}>
                     Calculate Your Interest
                   </h2>
                 </div>
 
-                <div style={responsiveStyles.percentIcon}>
+                <div style={themedStyles.percentIcon}>
                   %
                 </div>
 
               </div>
 
-              <div style={responsiveStyles.formGrid}>
+              <div style={themedStyles.formGrid}>
 
                 {/* AMOUNT */}
 
-                <div style={responsiveStyles.fieldGroup}>
+                <div style={themedStyles.fieldGroup}>
 
-                  <label style={responsiveStyles.fieldLabel}>
+                  <label style={themedStyles.fieldLabel}>
                     PRINCIPAL AMOUNT (₹)
                   </label>
 
@@ -510,10 +562,10 @@ function InterestCalculation() {
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     placeholder="Enter amount"
-                    style={responsiveStyles.input}
+                    style={themedStyles.input}
                   />
 
-                  <p style={responsiveStyles.helperText}>
+                  <p style={themedStyles.helperText}>
                     Current balance: ₹
                     {formatCurrency(account.balance)}
                   </p>
@@ -522,20 +574,20 @@ function InterestCalculation() {
 
                 {/* RATE */}
 
-                <div style={responsiveStyles.fieldGroup}>
+                <div style={themedStyles.fieldGroup}>
 
-                  <label style={responsiveStyles.fieldLabel}>
+                  <label style={themedStyles.fieldLabel}>
                     INTEREST RATE
                   </label>
 
-                  <div style={responsiveStyles.readOnlyInput}>
+                  <div style={themedStyles.readOnlyInput}>
                     {account.interestRate || 0}%
-                    <span style={responsiveStyles.inputSuffix}>
+                    <span style={themedStyles.inputSuffix}>
                       p.a.
                     </span>
                   </div>
 
-                  <p style={responsiveStyles.helperText}>
+                  <p style={themedStyles.helperText}>
                     Based on your account type
                   </p>
 
@@ -543,16 +595,16 @@ function InterestCalculation() {
 
                 {/* PERIOD */}
 
-                <div style={responsiveStyles.fieldGroup}>
+                <div style={themedStyles.fieldGroup}>
 
-                  <label style={responsiveStyles.fieldLabel}>
+                  <label style={themedStyles.fieldLabel}>
                     TIME PERIOD
                   </label>
 
                   <select
                     value={months}
                     onChange={(e) => setMonths(e.target.value)}
-                    style={responsiveStyles.input}
+                    style={themedStyles.input}
                   >
                     <option value="3">3 Months</option>
                     <option value="6">6 Months</option>
@@ -561,7 +613,7 @@ function InterestCalculation() {
                     <option value="36">36 Months</option>
                   </select>
 
-                  <p style={responsiveStyles.helperText}>
+                  <p style={themedStyles.helperText}>
                     Select calculation period
                   </p>
 
@@ -571,17 +623,17 @@ function InterestCalculation() {
 
               {/* ================= BUTTONS ================= */}
 
-              <div style={responsiveStyles.buttonRow}>
+              <div style={themedStyles.buttonRow}>
 
                 <button
-                  style={responsiveStyles.calculateButton}
+                  style={themedStyles.calculateButton}
                   onClick={calculateInterest}
                 >
                   Calculate Interest
                 </button>
 
                 <button
-                  style={responsiveStyles.resetButton}
+                  style={themedStyles.resetButton}
                   onClick={resetCalculation}
                 >
                   Reset
@@ -594,34 +646,34 @@ function InterestCalculation() {
             {/* ================= RESULT ================= */}
 
             {calculatedInterest && (
-              <section style={responsiveStyles.resultCard}>
+              <section style={themedStyles.resultCard}>
 
-                <div style={responsiveStyles.resultHeader}>
+                <div style={themedStyles.resultHeader}>
 
                   <div>
-                    <p style={responsiveStyles.resultEyebrow}>
+                    <p style={themedStyles.resultEyebrow}>
                       CALCULATION RESULT
                     </p>
 
-                    <h2 style={responsiveStyles.resultTitle}>
+                    <h2 style={themedStyles.resultTitle}>
                       Estimated Interest
                     </h2>
                   </div>
 
-                  <div style={responsiveStyles.resultIcon}>
+                  <div style={themedStyles.resultIcon}>
                     ₹
                   </div>
 
                 </div>
 
-                <div style={responsiveStyles.resultGrid}>
+                <div style={themedStyles.resultGrid}>
 
-                  <div style={responsiveStyles.resultItem}>
-                    <p style={responsiveStyles.resultLabel}>
+                  <div style={themedStyles.resultItem}>
+                    <p style={themedStyles.resultLabel}>
                       PRINCIPAL
                     </p>
 
-                    <p style={responsiveStyles.resultValue}>
+                    <p style={themedStyles.resultValue}>
                       ₹
                       {formatCurrency(
                         calculatedInterest.principal
@@ -629,32 +681,32 @@ function InterestCalculation() {
                     </p>
                   </div>
 
-                  <div style={responsiveStyles.resultItem}>
-                    <p style={responsiveStyles.resultLabel}>
+                  <div style={themedStyles.resultItem}>
+                    <p style={themedStyles.resultLabel}>
                       RATE
                     </p>
 
-                    <p style={responsiveStyles.resultValue}>
+                    <p style={themedStyles.resultValue}>
                       {calculatedInterest.rate}%
                     </p>
                   </div>
 
-                  <div style={responsiveStyles.resultItem}>
-                    <p style={responsiveStyles.resultLabel}>
+                  <div style={themedStyles.resultItem}>
+                    <p style={themedStyles.resultLabel}>
                       PERIOD
                     </p>
 
-                    <p style={responsiveStyles.resultValue}>
+                    <p style={themedStyles.resultValue}>
                       {months} Months
                     </p>
                   </div>
 
-                  <div style={responsiveStyles.resultItemHighlight}>
-                    <p style={responsiveStyles.resultLabelGreen}>
+                  <div style={themedStyles.resultItemHighlight}>
+                    <p style={themedStyles.resultLabelGreen}>
                       ESTIMATED INTEREST
                     </p>
 
-                    <p style={responsiveStyles.interestValue}>
+                    <p style={themedStyles.interestValue}>
                       ₹
                       {formatCurrency(
                         calculatedInterest.interest
@@ -664,19 +716,19 @@ function InterestCalculation() {
 
                 </div>
 
-                <div style={responsiveStyles.totalBox}>
+                <div style={themedStyles.totalBox}>
 
                   <div>
-                    <p style={responsiveStyles.totalLabel}>
+                    <p style={themedStyles.totalLabel}>
                       ESTIMATED TOTAL AMOUNT
                     </p>
 
-                    <p style={responsiveStyles.totalNote}>
+                    <p style={themedStyles.totalNote}>
                       Principal + estimated interest
                     </p>
                   </div>
 
-                  <p style={responsiveStyles.totalAmount}>
+                  <p style={themedStyles.totalAmount}>
                     ₹
                     {formatCurrency(
                       calculatedInterest.totalAmount
@@ -690,19 +742,19 @@ function InterestCalculation() {
 
             {/* ================= INFORMATION ================= */}
 
-            <section style={responsiveStyles.infoCard}>
+            <section style={themedStyles.infoCard}>
 
-              <div style={responsiveStyles.infoIcon}>
+              <div style={themedStyles.infoIcon}>
                 ℹ
               </div>
 
               <div>
 
-                <h3 style={responsiveStyles.infoTitle}>
+                <h3 style={themedStyles.infoTitle}>
                   Interest Calculation
                 </h3>
 
-                <p style={responsiveStyles.infoText}>
+                <p style={themedStyles.infoText}>
                   This calculator provides an estimated interest
                   amount using simple interest based on your
                   account's applicable interest rate.
@@ -718,7 +770,7 @@ function InterestCalculation() {
 
       {/* ================= FOOTER ================= */}
 
-      <footer style={responsiveStyles.footer}>
+      <footer style={themedStyles.footer}>
         <div>
           © {new Date().getFullYear()} Avani Bank
         </div>

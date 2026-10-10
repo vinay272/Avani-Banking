@@ -4,6 +4,19 @@ import { useNavigate } from "react-router-dom";
 function AccountManagement() {
   const navigate = useNavigate();
 
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" && window.innerWidth <= 700
   );
@@ -20,6 +33,9 @@ function AccountManagement() {
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const themeStyle = (key) =>
+    darkMode ? { ...styles[key], ...(darkStyles[key] || {}) } : styles[key];
 
   // =========================
   // FETCH ACCOUNTS
@@ -229,21 +245,21 @@ function AccountManagement() {
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.loadingCard}>
-          <div style={styles.loadingIcon}>
+      <div style={themeStyle("loadingPage")}>
+        <div style={themeStyle("loadingCard")}>
+          <div style={themeStyle("loadingIcon")}>
             🏦
           </div>
 
-          <h2 style={styles.loadingTitle}>
+          <h2 style={themeStyle("loadingTitle")}>
             Loading accounts
           </h2>
 
-          <p style={styles.loadingText}>
+          <p style={themeStyle("loadingText")}>
             Please wait while we fetch your account information...
           </p>
 
-          <div style={styles.loader}></div>
+          <div style={themeStyle("loader")}></div>
         </div>
       </div>
     );
@@ -254,24 +270,24 @@ function AccountManagement() {
   // =========================
 
   return (
-    <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
+    <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}), ...(darkMode ? (darkStyles.page || {}) : {}) }}>
 
       {/* ================= NAVBAR ================= */}
 
-      <header style={{ ...styles.navbar, ...(isMobile ? responsiveStyles.navbar : {}) }}>
+      <header style={{ ...styles.navbar, ...(isMobile ? responsiveStyles.navbar : {}), ...(darkMode ? (darkStyles.navbar || {}) : {}) }}>
 
-        <div style={{ ...styles.brandArea, ...(isMobile ? responsiveStyles.brandArea : {}) }}>
+        <div style={{ ...styles.brandArea, ...(isMobile ? responsiveStyles.brandArea : {}), ...(darkMode ? (darkStyles.brandArea || {}) : {}) }}>
 
-          <div style={styles.brandIcon}>
+          <div style={themeStyle("brandIcon")}>
             🏦
           </div>
 
           <div>
-            <div style={styles.brandName}>
+            <div style={themeStyle("brandName")}>
               AVANI BANK
             </div>
 
-            <div style={styles.brandSubtitle}>
+            <div style={themeStyle("brandSubtitle")}>
               Account Management
             </div>
           </div>
@@ -279,7 +295,7 @@ function AccountManagement() {
         </div>
 
         <button
-          style={{ ...styles.backButton, ...(isMobile ? responsiveStyles.backButton : {}) }}
+          style={{ ...styles.backButton, ...(isMobile ? responsiveStyles.backButton : {}), ...(darkMode ? (darkStyles.backButton || {}) : {}) }}
           onClick={() => navigate("/dashboard")}
         >
           ← Dashboard
@@ -289,29 +305,29 @@ function AccountManagement() {
 
       {/* ================= MAIN ================= */}
 
-      <main style={{ ...styles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
+      <main style={{ ...styles.container, ...(isMobile ? responsiveStyles.container : {}), ...(darkMode ? (darkStyles.container || {}) : {}) }}>
 
         {/* ================= PAGE HEADER ================= */}
 
-        <section style={{ ...styles.pageHeader, ...(isMobile ? responsiveStyles.pageHeader : {}) }}>
+        <section style={{ ...styles.pageHeader, ...(isMobile ? responsiveStyles.pageHeader : {}), ...(darkMode ? (darkStyles.pageHeader || {}) : {}) }}>
 
           <div>
 
-            <p style={styles.eyebrow}>
+            <p style={themeStyle("eyebrow")}>
               BANKING SERVICES
             </p>
 
-            <h1 style={{ ...styles.title, ...(isMobile ? responsiveStyles.title : {}) }}>
+            <h1 style={{ ...styles.title, ...(isMobile ? responsiveStyles.title : {}), ...(darkMode ? (darkStyles.title || {}) : {}) }}>
               Account Management
             </h1>
 
-            <p style={{ ...styles.subtitle, ...(isMobile ? responsiveStyles.subtitle : {}) }}>
+            <p style={{ ...styles.subtitle, ...(isMobile ? responsiveStyles.subtitle : {}), ...(darkMode ? (darkStyles.subtitle || {}) : {}) }}>
               Manage your bank accounts and access account services.
             </p>
 
           </div>
 
-          <div style={{ ...styles.accountCount, ...(isMobile ? responsiveStyles.accountCount : {}) }}>
+          <div style={{ ...styles.accountCount, ...(isMobile ? responsiveStyles.accountCount : {}), ...(darkMode ? (darkStyles.accountCount || {}) : {}) }}>
             {accounts.length} Account
             {accounts.length !== 1 ? "s" : ""}
           </div>
@@ -321,24 +337,24 @@ function AccountManagement() {
         {/* ================= ERROR ================= */}
 
         {error && (
-          <div style={styles.errorBox}>
+          <div style={themeStyle("errorBox")}>
             ⚠️ {error}
           </div>
         )}
 
         {/* ================= ACCOUNTS ================= */}
 
-        <section style={{ ...styles.section, ...(isMobile ? responsiveStyles.section : {}) }}>
+        <section style={{ ...styles.section, ...(isMobile ? responsiveStyles.section : {}), ...(darkMode ? (darkStyles.section || {}) : {}) }}>
 
-          <div style={styles.sectionHeader}>
+          <div style={themeStyle("sectionHeader")}>
 
             <div>
 
-              <p style={styles.sectionEyebrow}>
+              <p style={themeStyle("sectionEyebrow")}>
                 MY ACCOUNTS
               </p>
 
-              <h2 style={styles.sectionTitle}>
+              <h2 style={themeStyle("sectionTitle")}>
                 Your Bank Accounts
               </h2>
 
@@ -350,17 +366,17 @@ function AccountManagement() {
 
           {accounts.length === 0 ? (
 
-            <div style={styles.emptyCard}>
+            <div style={themeStyle("emptyCard")}>
 
-              <div style={styles.emptyIcon}>
+              <div style={themeStyle("emptyIcon")}>
                 🏦
               </div>
 
-              <h3 style={styles.emptyTitle}>
+              <h3 style={themeStyle("emptyTitle")}>
                 No Account Found
               </h3>
 
-              <p style={styles.emptyText}>
+              <p style={themeStyle("emptyText")}>
                 No separate account has been created yet.
               </p>
 
@@ -370,7 +386,7 @@ function AccountManagement() {
 
             /* ================= ACCOUNT GRID ================= */
 
-            <div style={{ ...styles.accountsGrid, ...(isMobile ? responsiveStyles.accountsGrid : {}) }}>
+            <div style={{ ...styles.accountsGrid, ...(isMobile ? responsiveStyles.accountsGrid : {}), ...(darkMode ? (darkStyles.accountsGrid || {}) : {}) }}>
 
               {accounts.map((account) => {
 
@@ -390,24 +406,24 @@ function AccountManagement() {
 
                   <div
                     key={account.id}
-                    style={{ ...styles.accountCard, ...(isMobile ? responsiveStyles.accountCard : {}) }}
+                    style={{ ...styles.accountCard, ...(isMobile ? responsiveStyles.accountCard : {}), ...(darkMode ? (darkStyles.accountCard || {}) : {}) }}
                   >
 
                     {/* ================= ACCOUNT TOP ================= */}
 
-                    <div style={{ ...styles.accountTop, ...(isMobile ? responsiveStyles.accountTop : {}) }}>
+                    <div style={{ ...styles.accountTop, ...(isMobile ? responsiveStyles.accountTop : {}), ...(darkMode ? (darkStyles.accountTop || {}) : {}) }}>
 
-                      <div style={styles.accountIcon}>
+                      <div style={themeStyle("accountIcon")}>
                         🏦
                       </div>
 
-                      <div style={{ ...styles.accountTopText, ...(isMobile ? responsiveStyles.accountTopText : {}) }}>
+                      <div style={{ ...styles.accountTopText, ...(isMobile ? responsiveStyles.accountTopText : {}), ...(darkMode ? (darkStyles.accountTopText || {}) : {}) }}>
 
-                        <p style={styles.accountLabel}>
+                        <p style={themeStyle("accountLabel")}>
                           ACCOUNT TYPE
                         </p>
 
-                        <h3 style={styles.accountType}>
+                        <h3 style={themeStyle("accountType")}>
                           {account.accountType || "N/A"}
                         </h3>
 
@@ -427,13 +443,13 @@ function AccountManagement() {
 
                     {/* ================= ACCOUNT NUMBER ================= */}
 
-                    <div style={{ ...styles.accountNumberBox, ...(isMobile ? responsiveStyles.accountNumberBox : {}) }}>
+                    <div style={{ ...styles.accountNumberBox, ...(isMobile ? responsiveStyles.accountNumberBox : {}), ...(darkMode ? (darkStyles.accountNumberBox || {}) : {}) }}>
 
-                      <p style={styles.accountLabel}>
+                      <p style={themeStyle("accountLabel")}>
                         ACCOUNT NUMBER
                       </p>
 
-                      <p style={{ ...styles.accountNumber, ...(isMobile ? responsiveStyles.accountNumber : {}) }}>
+                      <p style={{ ...styles.accountNumber, ...(isMobile ? responsiveStyles.accountNumber : {}), ...(darkMode ? (darkStyles.accountNumber || {}) : {}) }}>
                         {account.accountNumber || "N/A"}
                       </p>
 
@@ -441,27 +457,27 @@ function AccountManagement() {
 
                     {/* ================= BALANCE ================= */}
 
-                    <div style={{ ...styles.balanceBox, ...(isMobile ? responsiveStyles.balanceBox : {}) }}>
+                    <div style={{ ...styles.balanceBox, ...(isMobile ? responsiveStyles.balanceBox : {}), ...(darkMode ? (darkStyles.balanceBox || {}) : {}) }}>
 
                       <div>
 
-                        <p style={styles.accountLabel}>
+                        <p style={themeStyle("accountLabel")}>
                           AVAILABLE BALANCE
                         </p>
 
-                        <h2 style={{ ...styles.balance, ...(isMobile ? responsiveStyles.balance : {}) }}>
+                        <h2 style={{ ...styles.balance, ...(isMobile ? responsiveStyles.balance : {}), ...(darkMode ? (darkStyles.balance || {}) : {}) }}>
                           ₹{formatCurrency(account.balance)}
                         </h2>
 
                       </div>
 
-                      <div style={{ ...styles.interestBox, ...(isMobile ? responsiveStyles.interestBox : {}) }}>
+                      <div style={{ ...styles.interestBox, ...(isMobile ? responsiveStyles.interestBox : {}), ...(darkMode ? (darkStyles.interestBox || {}) : {}) }}>
 
-                        <p style={styles.accountLabel}>
+                        <p style={themeStyle("accountLabel")}>
                           INTEREST RATE
                         </p>
 
-                        <p style={styles.interestRate}>
+                        <p style={themeStyle("interestRate")}>
                           {account.interestRate || 0}%
                         </p>
 
@@ -471,12 +487,12 @@ function AccountManagement() {
 
                     {/* ================= ACTIONS ================= */}
 
-                    <div style={{ ...styles.actions, ...(isMobile ? responsiveStyles.actions : {}) }}>
+                    <div style={{ ...styles.actions, ...(isMobile ? responsiveStyles.actions : {}), ...(darkMode ? (darkStyles.actions || {}) : {}) }}>
 
                       {/* VIEW DETAILS */}
 
                       <button
-                        style={{ ...styles.actionButton, ...(isMobile ? responsiveStyles.actionButton : {}) }}
+                        style={{ ...styles.actionButton, ...(isMobile ? responsiveStyles.actionButton : {}), ...(darkMode ? (darkStyles.actionButton || {}) : {}) }}
                         onClick={() =>
                           navigate(
                             `/accounts/${account.id}`
@@ -489,7 +505,7 @@ function AccountManagement() {
                       {/* STATEMENT */}
 
                       <button
-                        style={{ ...styles.secondaryButton, ...(isMobile ? responsiveStyles.secondaryButton : {}) }}
+                        style={{ ...styles.secondaryButton, ...(isMobile ? responsiveStyles.secondaryButton : {}), ...(darkMode ? (darkStyles.secondaryButton || {}) : {}) }}
                         onClick={() =>
                           navigate(
                             `/accounts/${account.id}/statement`
@@ -535,17 +551,17 @@ function AccountManagement() {
 
         {/* ================= SERVICES ================= */}
 
-        <section style={styles.section}>
+        <section style={themeStyle("section")}>
 
-          <div style={styles.sectionHeader}>
+          <div style={themeStyle("sectionHeader")}>
 
             <div>
 
-              <p style={styles.sectionEyebrow}>
+              <p style={themeStyle("sectionEyebrow")}>
                 ACCOUNT SERVICES
               </p>
 
-              <h2 style={styles.sectionTitle}>
+              <h2 style={themeStyle("sectionTitle")}>
                 Banking Services
               </h2>
 
@@ -553,12 +569,12 @@ function AccountManagement() {
 
           </div>
 
-          <div style={{ ...styles.servicesGrid, ...(isMobile ? responsiveStyles.servicesGrid : {}) }}>
+          <div style={{ ...styles.servicesGrid, ...(isMobile ? responsiveStyles.servicesGrid : {}), ...(darkMode ? (darkStyles.servicesGrid || {}) : {}) }}>
 
             {/* ================= BALANCE ================= */}
 
             <button
-              style={{ ...styles.serviceCard, ...(isMobile ? responsiveStyles.serviceCard : {}) }}
+              style={{ ...styles.serviceCard, ...(isMobile ? responsiveStyles.serviceCard : {}), ...(darkMode ? (darkStyles.serviceCard || {}) : {}) }}
               onClick={() =>
                 navigate("/accounts/balance")
               }
@@ -566,8 +582,7 @@ function AccountManagement() {
 
               <div
                 style={{
-                  ...styles.serviceIcon,
-                  ...(isMobile ? responsiveStyles.serviceIcon : {}),
+                  ...styles.serviceIcon, ...(isMobile ? responsiveStyles.serviceIcon : {}), ...(darkMode ? (darkStyles.serviceIcon || {}) : {}),
                   background: "#ecfdf5",
                   color: "#11895b",
                 }}
@@ -575,19 +590,19 @@ function AccountManagement() {
                 ₹
               </div>
 
-              <div style={{ ...styles.serviceText, ...(isMobile ? responsiveStyles.serviceText : {}) }}>
+              <div style={{ ...styles.serviceText, ...(isMobile ? responsiveStyles.serviceText : {}), ...(darkMode ? (darkStyles.serviceText || {}) : {}) }}>
 
-                <h3 style={styles.serviceTitle}>
+                <h3 style={themeStyle("serviceTitle")}>
                   Balance Inquiry
                 </h3>
 
-                <p style={styles.serviceDescription}>
+                <p style={themeStyle("serviceDescription")}>
                   Check your current account balance.
                 </p>
 
               </div>
 
-              <span style={styles.arrow}>
+              <span style={themeStyle("arrow")}>
                 →
               </span>
 
@@ -596,7 +611,7 @@ function AccountManagement() {
             {/* ================= MINI STATEMENT ================= */}
 
             <button
-              style={styles.serviceCard}
+              style={themeStyle("serviceCard")}
               onClick={() =>
                 navigate("/accounts/mini-statement")
               }
@@ -604,8 +619,7 @@ function AccountManagement() {
 
               <div
                 style={{
-                  ...styles.serviceIcon,
-                  ...(isMobile ? responsiveStyles.serviceIcon : {}),
+                  ...styles.serviceIcon, ...(isMobile ? responsiveStyles.serviceIcon : {}), ...(darkMode ? (darkStyles.serviceIcon || {}) : {}),
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -613,19 +627,19 @@ function AccountManagement() {
                 📋
               </div>
 
-              <div style={styles.serviceText}>
+              <div style={themeStyle("serviceText")}>
 
-                <h3 style={styles.serviceTitle}>
+                <h3 style={themeStyle("serviceTitle")}>
                   Mini Statement
                 </h3>
 
-                <p style={styles.serviceDescription}>
+                <p style={themeStyle("serviceDescription")}>
                   View your recent account transactions.
                 </p>
 
               </div>
 
-              <span style={styles.arrow}>
+              <span style={themeStyle("arrow")}>
                 →
               </span>
 
@@ -634,7 +648,7 @@ function AccountManagement() {
             {/* ================= ACCOUNT STATEMENTS ================= */}
 
             <button
-              style={styles.serviceCard}
+              style={themeStyle("serviceCard")}
               onClick={() =>
                 navigate("/accounts/statements")
               }
@@ -642,8 +656,7 @@ function AccountManagement() {
 
               <div
                 style={{
-                  ...styles.serviceIcon,
-                  ...(isMobile ? responsiveStyles.serviceIcon : {}),
+                  ...styles.serviceIcon, ...(isMobile ? responsiveStyles.serviceIcon : {}), ...(darkMode ? (darkStyles.serviceIcon || {}) : {}),
                   background: "#f5f3ff",
                   color: "#7048c6",
                 }}
@@ -651,19 +664,19 @@ function AccountManagement() {
                 📄
               </div>
 
-              <div style={styles.serviceText}>
+              <div style={themeStyle("serviceText")}>
 
-                <h3 style={styles.serviceTitle}>
+                <h3 style={themeStyle("serviceTitle")}>
                   Account Statements
                 </h3>
 
-                <p style={styles.serviceDescription}>
+                <p style={themeStyle("serviceDescription")}>
                   View your complete account statement.
                 </p>
 
               </div>
 
-              <span style={styles.arrow}>
+              <span style={themeStyle("arrow")}>
                 →
               </span>
 
@@ -672,7 +685,7 @@ function AccountManagement() {
             {/* ================= INTEREST ================= */}
 
             <button
-              style={styles.serviceCard}
+              style={themeStyle("serviceCard")}
               onClick={() =>
                 navigate("/accounts/interest")
               }
@@ -680,8 +693,7 @@ function AccountManagement() {
 
               <div
                 style={{
-                  ...styles.serviceIcon,
-                  ...(isMobile ? responsiveStyles.serviceIcon : {}),
+                  ...styles.serviceIcon, ...(isMobile ? responsiveStyles.serviceIcon : {}), ...(darkMode ? (darkStyles.serviceIcon || {}) : {}),
                   background: "#fff8e7",
                   color: "#9a6700",
                 }}
@@ -689,19 +701,19 @@ function AccountManagement() {
                 %
               </div>
 
-              <div style={styles.serviceText}>
+              <div style={themeStyle("serviceText")}>
 
-                <h3 style={styles.serviceTitle}>
+                <h3 style={themeStyle("serviceTitle")}>
                   Interest Calculation
                 </h3>
 
-                <p style={styles.serviceDescription}>
+                <p style={themeStyle("serviceDescription")}>
                   Calculate applicable account interest.
                 </p>
 
               </div>
 
-              <span style={styles.arrow}>
+              <span style={themeStyle("arrow")}>
                 →
               </span>
 
@@ -710,7 +722,7 @@ function AccountManagement() {
             {/* ================= FIXED DEPOSIT ================= */}
 
             <button
-              style={styles.serviceCard}
+              style={themeStyle("serviceCard")}
               onClick={() =>
                 navigate("/accounts/fixed-deposit")
               }
@@ -718,8 +730,7 @@ function AccountManagement() {
 
               <div
                 style={{
-                  ...styles.serviceIcon,
-                  ...(isMobile ? responsiveStyles.serviceIcon : {}),
+                  ...styles.serviceIcon, ...(isMobile ? responsiveStyles.serviceIcon : {}), ...(darkMode ? (darkStyles.serviceIcon || {}) : {}),
                   background: "#edf8f3",
                   color: "#11895b",
                 }}
@@ -727,19 +738,19 @@ function AccountManagement() {
                 💰
               </div>
 
-              <div style={styles.serviceText}>
+              <div style={themeStyle("serviceText")}>
 
-                <h3 style={styles.serviceTitle}>
+                <h3 style={themeStyle("serviceTitle")}>
                   Fixed Deposit
                 </h3>
 
-                <p style={styles.serviceDescription}>
+                <p style={themeStyle("serviceDescription")}>
                   Manage your fixed deposit investments.
                 </p>
 
               </div>
 
-              <span style={styles.arrow}>
+              <span style={themeStyle("arrow")}>
                 →
               </span>
 
@@ -748,7 +759,7 @@ function AccountManagement() {
             {/* ================= RECURRING DEPOSIT ================= */}
 
             <button
-              style={styles.serviceCard}
+              style={themeStyle("serviceCard")}
               onClick={() =>
                 navigate("/accounts/recurring-deposit")
               }
@@ -756,8 +767,7 @@ function AccountManagement() {
 
               <div
                 style={{
-                  ...styles.serviceIcon,
-                  ...(isMobile ? responsiveStyles.serviceIcon : {}),
+                  ...styles.serviceIcon, ...(isMobile ? responsiveStyles.serviceIcon : {}), ...(darkMode ? (darkStyles.serviceIcon || {}) : {}),
                   background: "#eef4ff",
                   color: "#2457c6",
                 }}
@@ -765,19 +775,19 @@ function AccountManagement() {
                 🔄
               </div>
 
-              <div style={styles.serviceText}>
+              <div style={themeStyle("serviceText")}>
 
-                <h3 style={styles.serviceTitle}>
+                <h3 style={themeStyle("serviceTitle")}>
                   Recurring Deposit
                 </h3>
 
-                <p style={styles.serviceDescription}>
+                <p style={themeStyle("serviceDescription")}>
                   Manage your recurring deposit accounts.
                 </p>
 
               </div>
 
-              <span style={styles.arrow}>
+              <span style={themeStyle("arrow")}>
                 →
               </span>
 
@@ -791,7 +801,7 @@ function AccountManagement() {
 
       {/* ================= FOOTER ================= */}
 
-      <footer style={{ ...styles.footer, ...(isMobile ? responsiveStyles.footer : {}) }}>
+      <footer style={{ ...styles.footer, ...(isMobile ? responsiveStyles.footer : {}), ...(darkMode ? (darkStyles.footer || {}) : {}) }}>
 
         <div>
           © {new Date().getFullYear()} Avani Bank
@@ -1336,6 +1346,42 @@ navbar: {
   },
 };
 
+
+
+
+// Dark theme overrides. The blue gradient navbar and white Dashboard button
+// intentionally retain their original appearance.
+const darkStyles = {
+  page: { background: "#0b1220", color: "#e5edf8" },
+  container: {},
+  pageHeader: {},
+  title: { color: "#f1f5f9" },
+  subtitle: { color: "#a5b4c8" },
+  accountCount: { background: "#1d2d49", color: "#c7d8ff" },
+  errorBox: { background: "#332817", border: "1px solid #715523", color: "#f9d98b" },
+  sectionEyebrow: { color: "#9bb8f5" },
+  sectionTitle: { color: "#e7eef9" },
+  accountCard: { background: "#111a2b", border: "1px solid #29374d", boxShadow: "0 6px 22px rgba(0,0,0,0.18)" },
+  accountLabel: { color: "#9aa9bf" },
+  accountType: { color: "#e5edf8" },
+  accountNumberBox: { background: "#172235" },
+  accountNumber: { color: "#dbe7fb" },
+  balance: { color: "#f1f5f9" },
+  secondaryButton: { background: "#172235", border: "1px solid #34445d", color: "#dce7f8" },
+  serviceCard: { background: "#111a2b", border: "1px solid #29374d", boxShadow: "0 5px 16px rgba(0,0,0,0.16)" },
+  serviceTitle: { color: "#e5edf8" },
+  serviceDescription: { color: "#a0aec2" },
+  emptyCard: { background: "#111a2b", border: "1px solid #29374d" },
+  emptyIcon: { background: "#1b2a40" },
+  emptyTitle: { color: "#e5edf8" },
+  emptyText: { color: "#a0aec2" },
+  footer: { background: "#0f1929", borderTop: "1px solid #29374d", color: "#9aa9bf" },
+  loadingPage: { background: "linear-gradient(135deg, #0b1220, #111c30)" },
+  loadingCard: { background: "#111a2b", boxShadow: "0 15px 40px rgba(0,0,0,0.25)" },
+  loadingTitle: { color: "#e5edf8" },
+  loadingText: { color: "#a0aec2" },
+  loader: { border: "3px solid #29374d", borderTop: "3px solid #5b8def" }
+};
 
 /* =====================================================
    RESPONSIVE STYLE OVERRIDES

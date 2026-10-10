@@ -1220,6 +1220,101 @@ newDepositButton: {
       color: #172b4d !important;
     }
 
+
+    /* Complete dark-mode coverage for inline-styled components */
+    .cash-deposit-page.dark-mode .cash-deposit-topbar,
+    .cash-deposit-page.dark-mode .cash-deposit-card,
+    .cash-deposit-page.dark-mode .cash-deposit-side-card,
+    .cash-deposit-page.dark-mode .cash-deposit-side-stack > div {
+      background: #111c2e !important;
+      color: #e7edf7 !important;
+      border-color: #26364f !important;
+    }
+
+    .cash-deposit-page.dark-mode .cash-deposit-topbar *:not(button):not(.cashierAvatar),
+    .cash-deposit-page.dark-mode .cash-deposit-card h2,
+    .cash-deposit-page.dark-mode .cash-deposit-side-card h2,
+    .cash-deposit-page.dark-mode .cash-deposit-side-card strong,
+    .cash-deposit-page.dark-mode .cash-deposit-side-card span,
+    .cash-deposit-page.dark-mode .cash-deposit-card p,
+    .cash-deposit-page.dark-mode .cash-deposit-side-card p,
+    .cash-deposit-page.dark-mode .cash-deposit-side-card div {
+      color: #e7edf7;
+    }
+
+    .cash-deposit-page.dark-mode .cash-deposit-card p,
+    .cash-deposit-page.dark-mode .cash-deposit-side-card p,
+    .cash-deposit-page.dark-mode .cash-deposit-side-card span {
+      color: #aab8ca !important;
+    }
+
+    .cash-deposit-page.dark-mode input,
+    .cash-deposit-page.dark-mode select,
+    .cash-deposit-page.dark-mode textarea {
+      background: #0d1829 !important;
+      color: #edf3ff !important;
+      border-color: #30435f !important;
+    }
+
+    .cash-deposit-page.dark-mode input::placeholder,
+    .cash-deposit-page.dark-mode textarea::placeholder {
+      color: #8797ad !important;
+    }
+
+    .cash-deposit-page.dark-mode .cash-deposit-side-stack > div > div[style],
+    .cash-deposit-page.dark-mode .cash-deposit-side-stack > div div[style*="background"] {
+      background-color: #17253b !important;
+      border-color: #30435f !important;
+    }
+
+    .cash-deposit-page.dark-mode .cash-deposit-secure-card {
+      background: linear-gradient(135deg, #2b2718, #292719) !important;
+      border-color: #66582d !important;
+    }
+
+    .cash-deposit-page.dark-mode .cash-deposit-secure-card p {
+      color: #e3d59b !important;
+    }
+
+    /* Fix remaining light controls and low-contrast side-panel headings. */
+    .cash-deposit-page.dark-mode .cash-deposit-quick-amount {
+      background: #172943 !important;
+      color: #dbeafe !important;
+      border-color: #385273 !important;
+    }
+
+    .cash-deposit-page.dark-mode .cash-deposit-action-area {
+      background: #17253b !important;
+      color: #e7edf7 !important;
+      border-color: #385273 !important;
+    }
+
+    .cash-deposit-page.dark-mode .cash-deposit-action-area strong,
+    .cash-deposit-page.dark-mode .cash-deposit-action-area div {
+      color: #dbe7f7 !important;
+    }
+
+    .cash-deposit-page.dark-mode .cash-deposit-side-title,
+    .cash-deposit-page.dark-mode .cash-deposit-side-title * {
+      color: #e7edf7 !important;
+    }
+
+    .cash-deposit-page.dark-mode .cash-deposit-side-icon {
+      background: #203754 !important;
+      color: #8fc2ff !important;
+    }
+
+    .cash-deposit-page.dark-mode .cash-deposit-guideline {
+      background: #17253b !important;
+      color: #c5d3e6 !important;
+      border-color: #30435f !important;
+    }
+
+    .cash-deposit-page.dark-mode .cash-deposit-receipt {
+      background: #ffffff !important;
+      color: #172b4d !important;
+    }
+
     @media (max-width: 760px) {
       .cash-deposit-page.dark-mode .cash-deposit-topbar {
         flex-wrap: wrap;
@@ -1438,6 +1533,7 @@ newDepositButton: {
                       <button
                         key={value}
                         type="button"
+                        className="cash-deposit-quick-amount"
                         style={getResponsiveStyle("quickAmount")}
                         disabled={loading}
                         onClick={() => setAmount(String(value))}
@@ -1474,7 +1570,7 @@ newDepositButton: {
               )}
 
               {!transaction && (
-                <div style={getResponsiveStyle("actionArea")}>
+                <div className="cash-deposit-action-area" style={getResponsiveStyle("actionArea")}>
                   <div style={getResponsiveStyle("verificationText")}>
                     <strong>Important:</strong> Verify the account number and count
                     the cash carefully before processing this transaction.
@@ -1501,8 +1597,8 @@ newDepositButton: {
           <div className="cash-deposit-side-stack" style={getResponsiveStyle("sideStack")}>
             <div className="cash-deposit-side-card" style={getResponsiveStyle("sideCard")}>
               <div style={getResponsiveStyle("sideHeader")}>
-                <div style={getResponsiveStyle("sideTitle")}>
-                  <div style={getResponsiveStyle("sideIcon")}>▣</div>
+                <div className="cash-deposit-side-title" style={getResponsiveStyle("sideTitle")}>
+                  <div className="cash-deposit-side-icon" style={getResponsiveStyle("sideIcon")}>▣</div>
                   Cashier Information
                 </div>
                 <span style={getResponsiveStyle("onlineBadge")}>ONLINE</span>
@@ -1527,8 +1623,8 @@ newDepositButton: {
             </div>
 
             <div className="cash-deposit-side-card cash-deposit-secure-card" style={{ ...styles.sideCard, ...styles.secureCard }}>
-              <div style={getResponsiveStyle("sideTitle")}>
-                <div style={getResponsiveStyle("sideIcon")}>🛡</div>
+              <div className="cash-deposit-side-title" style={getResponsiveStyle("sideTitle")}>
+                <div className="cash-deposit-side-icon" style={getResponsiveStyle("sideIcon")}>🛡</div>
                 Secure Transaction
               </div>
               <p style={getResponsiveStyle("secureText")}>
@@ -1539,8 +1635,8 @@ newDepositButton: {
 
             <div style={getResponsiveStyle("sideCard")}>
               <div style={getResponsiveStyle("sideHeader")}>
-                <div style={getResponsiveStyle("sideTitle")}>
-                  <div style={getResponsiveStyle("sideIcon")}>☷</div>
+                <div className="cash-deposit-side-title" style={getResponsiveStyle("sideTitle")}>
+                  <div className="cash-deposit-side-icon" style={getResponsiveStyle("sideIcon")}>☷</div>
                   Quick Guidelines
                 </div>
               </div>

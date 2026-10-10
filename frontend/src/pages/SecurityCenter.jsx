@@ -6,6 +6,53 @@ const API_BASE = "http://localhost:8080/api";
 function SecurityCenter() {
   const navigate = useNavigate();
 
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () =>
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
+  const darkOverrides = {
+    page: { background: "#0f172a", color: "#e2e8f0" },
+    title: { color: "#f8fafc" },
+    subtitle: { color: "#cbd5e1" },
+    error: { background: "#451a1a", borderColor: "#7f1d1d", color: "#fecaca" },
+    card: { background: "#1e293b", borderColor: "#334155", boxShadow: "0 2px 8px rgba(0,0,0,0.18)" },
+    cardLabel: { color: "#cbd5e1" },
+    cardValue: { color: "#f8fafc" },
+    statusBanner: { background: "#1e293b", borderColor: "#475569" },
+    statusTitle: { color: "#f8fafc" },
+    statusText: { color: "#cbd5e1" },
+    section: { background: "#1e293b", borderColor: "#334155", boxShadow: "0 2px 8px rgba(0,0,0,0.18)" },
+    sectionTitle: { color: "#f1f5f9" },
+    sectionSubtitle: { color: "#cbd5e1" },
+    emptyState: { color: "#cbd5e1" },
+    alertCard: { background: "#172033", borderColor: "#334155" },
+    alertType: { color: "#f8fafc" },
+    alertDate: { color: "#cbd5e1" },
+    infoLabel: { color: "#94a3b8" },
+    description: { color: "#cbd5e1" },
+    tipsSection: { background: "#1e293b", borderColor: "#334155" },
+    tip: { background: "#172033", color: "#e2e8f0" },
+    overlay: { background: "rgba(2,6,23,0.78)" },
+    modal: { background: "#1e293b", color: "#e2e8f0" },
+    modalLabel: { color: "#cbd5e1" },
+    modalTitle: { color: "#f8fafc" },
+    closeButton: { background: "#334155", color: "#f8fafc" },
+    descriptionBox: { background: "#172033", color: "#e2e8f0" },
+  };
+
+  const getThemeStyle = (name) => ({
+    ...(styles[name] || {}),
+    ...(darkMode ? (darkOverrides[name] || {}) : {}),
+  });
+
   const [alerts, setAlerts] = useState([]);
   const [openCount, setOpenCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -234,14 +281,14 @@ function SecurityCenter() {
   };
 
   return (
-    <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
-      <div style={{ ...styles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
+    <div style={{ ...getThemeStyle("page"), ...(isMobile ? responsiveStyles.page : {}) }}>
+      <div style={{ ...getThemeStyle("container"), ...(isMobile ? responsiveStyles.container : {}) }}>
         {/* Header */}
         <div style={{ ...styles.header, ...(isMobile ? responsiveStyles.header : {}) }}>
             
           <div>
-            <div style={styles.brand}>AVANI BANK</div>
-            <div style={styles.headerLabel}>
+            <div style={getThemeStyle("brand")}>AVANI BANK</div>
+            <div style={getThemeStyle("headerLabel")}>
               DIGITAL BANKING • SECURITY CENTER
             </div>
           </div>
@@ -255,17 +302,17 @@ function SecurityCenter() {
         </div>
 
         {/* Title */}
-        <div style={{ ...styles.titleSection, ...(isMobile ? responsiveStyles.titleSection : {}) }}>
+        <div style={{ ...getThemeStyle("titleSection"), ...(isMobile ? responsiveStyles.titleSection : {}) }}>
           <div>
-            <h1 style={styles.title}>Security Center</h1>
-            <p style={styles.subtitle}>
+            <h1 style={getThemeStyle("title")}>Security Center</h1>
+            <p style={getThemeStyle("subtitle")}>
               Monitor your account security, fraud alerts and suspicious
               activity in real time.
             </p>
           </div>
 
           <button
-            style={{ ...styles.refreshButton, ...(isMobile ? responsiveStyles.refreshButton : {}) }}
+            style={{ ...getThemeStyle("refreshButton"), ...(isMobile ? responsiveStyles.refreshButton : {}) }}
             onClick={loadSecurityData}
             disabled={loading}
           >
@@ -273,33 +320,33 @@ function SecurityCenter() {
           </button>
         </div>
 
-        {error && <div style={styles.error}>{error}</div>}
+        {error && <div style={getThemeStyle("error")}>{error}</div>}
 
         {/* Security Overview */}
-        <div style={{ ...styles.grid, ...(isMobile ? responsiveStyles.grid : {}) }}>
-          <div style={styles.card}>
-            <div style={styles.cardIcon}>🛡️</div>
+        <div style={{ ...getThemeStyle("grid"), ...(isMobile ? responsiveStyles.grid : {}) }}>
+          <div style={getThemeStyle("card")}>
+            <div style={getThemeStyle("cardIcon")}>🛡️</div>
             <div>
-              <div style={styles.cardLabel}>Security Status</div>
-              <div style={styles.cardValue}>
+              <div style={getThemeStyle("cardLabel")}>Security Status</div>
+              <div style={getThemeStyle("cardValue")}>
                 {openCount > 0 ? "Attention Required" : "Protected"}
               </div>
             </div>
           </div>
 
-          <div style={styles.card}>
-            <div style={styles.cardIcon}>⚠️</div>
+          <div style={getThemeStyle("card")}>
+            <div style={getThemeStyle("cardIcon")}>⚠️</div>
             <div>
-              <div style={styles.cardLabel}>Open Alerts</div>
-              <div style={styles.cardValue}>{openCount}</div>
+              <div style={getThemeStyle("cardLabel")}>Open Alerts</div>
+              <div style={getThemeStyle("cardValue")}>{openCount}</div>
             </div>
           </div>
 
-          <div style={styles.card}>
-            <div style={styles.cardIcon}>🔴</div>
+          <div style={getThemeStyle("card")}>
+            <div style={getThemeStyle("cardIcon")}>🔴</div>
             <div>
-              <div style={styles.cardLabel}>Critical Alerts</div>
-              <div style={styles.cardValue}>
+              <div style={getThemeStyle("cardLabel")}>Critical Alerts</div>
+              <div style={getThemeStyle("cardValue")}>
                 {
                   alerts.filter(
                     (alert) =>
@@ -310,13 +357,13 @@ function SecurityCenter() {
             </div>
           </div>
 
-          <div style={styles.card}>
-            <div style={styles.cardIcon}>📡</div>
+          <div style={getThemeStyle("card")}>
+            <div style={getThemeStyle("cardIcon")}>📡</div>
             <div>
-              <div style={styles.cardLabel}>Live Monitoring</div>
+              <div style={getThemeStyle("cardLabel")}>Live Monitoring</div>
               <div
                 style={{
-                  ...styles.cardValue,
+                  ...getThemeStyle("cardValue"),
                   color:
                     liveStatus === "Live"
                       ? "#15803d"
@@ -332,25 +379,27 @@ function SecurityCenter() {
         {/* Security Status Banner */}
         <div
           style={{
-            ...styles.statusBanner,
-            background:
-              openCount > 0 ? "#fff7ed" : "#f0fdf4",
-            borderColor:
-              openCount > 0 ? "#fed7aa" : "#bbf7d0",
+            ...getThemeStyle("statusBanner"),
+            background: darkMode
+              ? (openCount > 0 ? "#422006" : "#123323")
+              : (openCount > 0 ? "#fff7ed" : "#f0fdf4"),
+            borderColor: darkMode
+              ? (openCount > 0 ? "#92400e" : "#166534")
+              : (openCount > 0 ? "#fed7aa" : "#bbf7d0"),
           }}
         >
-          <div style={styles.statusIcon}>
+          <div style={getThemeStyle("statusIcon")}>
             {openCount > 0 ? "⚠️" : "✓"}
           </div>
 
           <div>
-            <div style={styles.statusTitle}>
+            <div style={getThemeStyle("statusTitle")}>
               {openCount > 0
                 ? "Security alerts need your attention"
                 : "Your account is currently secure"}
             </div>
 
-            <div style={styles.statusText}>
+            <div style={getThemeStyle("statusText")}>
               {openCount > 0
                 ? `You currently have ${openCount} open security alert${
                     openCount === 1 ? "" : "s"
@@ -361,26 +410,26 @@ function SecurityCenter() {
         </div>
 
         {/* Alerts */}
-        <div style={{ ...styles.section, ...(isMobile ? responsiveStyles.section : {}) }}>
-          <div style={{ ...styles.sectionHeader, ...(isMobile ? responsiveStyles.sectionHeader : {}) }}>
+        <div style={{ ...getThemeStyle("section"), ...(isMobile ? responsiveStyles.section : {}) }}>
+          <div style={{ ...getThemeStyle("sectionHeader"), ...(isMobile ? responsiveStyles.sectionHeader : {}) }}>
             <div>
-              <h2 style={styles.sectionTitle}>Security & Fraud Alerts</h2>
-              <p style={styles.sectionSubtitle}>
+              <h2 style={getThemeStyle("sectionTitle")}>Security & Fraud Alerts</h2>
+              <p style={getThemeStyle("sectionSubtitle")}>
                 Alerts detected by Avani Bank's fraud risk engine.
               </p>
             </div>
 
-            <span style={styles.liveBadge}>
-              <span style={styles.liveDot}></span>
+            <span style={getThemeStyle("liveBadge")}>
+              <span style={getThemeStyle("liveDot")}></span>
               {liveStatus === "Live" ? "REAL-TIME" : "MONITORING"}
             </span>
           </div>
 
           {loading ? (
-            <div style={styles.emptyState}>Loading security alerts...</div>
+            <div style={getThemeStyle("emptyState")}>Loading security alerts...</div>
           ) : alerts.length === 0 ? (
-            <div style={styles.emptyState}>
-              <div style={styles.emptyIcon}>✓</div>
+            <div style={getThemeStyle("emptyState")}>
+              <div style={getThemeStyle("emptyIcon")}>✓</div>
               <h3>No Security Alerts</h3>
               <p>
                 We haven't detected any suspicious activity on your
@@ -388,7 +437,7 @@ function SecurityCenter() {
               </p>
             </div>
           ) : (
-            <div style={styles.alertList}>
+            <div style={getThemeStyle("alertList")}>
               {alerts.map((alert, index) => {
                 const risk = String(
                   alert.riskLevel || "LOW"
@@ -400,64 +449,64 @@ function SecurityCenter() {
                       alert.id ||
                       `${alert.detectedAt}-${index}`
                     }
-                    style={styles.alertCard}
+                    style={getThemeStyle("alertCard")}
                   >
-                    <div style={{ ...styles.alertTop, ...(isMobile ? responsiveStyles.alertTop : {}) }}>
+                    <div style={{ ...getThemeStyle("alertTop"), ...(isMobile ? responsiveStyles.alertTop : {}) }}>
                       <div>
-                        <div style={styles.alertType}>
+                        <div style={getThemeStyle("alertType")}>
                           {formatAlertType(alert.alertType)}
                         </div>
 
-                        <div style={styles.alertDate}>
+                        <div style={getThemeStyle("alertDate")}>
                           Detected {formatDate(alert.detectedAt)}
                         </div>
                       </div>
 
                       <span
                         className={`risk-badge ${getRiskClass(risk)}`}
-                        style={styles.riskBadge}
+                        style={getThemeStyle("riskBadge")}
                       >
                         {risk}
                       </span>
                     </div>
 
-                    <div style={{ ...styles.alertBody, ...(isMobile ? responsiveStyles.alertBody : {}) }}>
+                    <div style={{ ...getThemeStyle("alertBody"), ...(isMobile ? responsiveStyles.alertBody : {}) }}>
                       <div>
-                        <span style={styles.infoLabel}>Risk Score</span>
+                        <span style={getThemeStyle("infoLabel")}>Risk Score</span>
                         <strong>
                           {getRiskScore(alert).toFixed(2)}
                         </strong>
                       </div>
 
                       <div>
-                        <span style={styles.infoLabel}>Type</span>
+                        <span style={getThemeStyle("infoLabel")}>Type</span>
                         <strong>
                           {alert.transactionType || "LOGIN"}
                         </strong>
                       </div>
 
                       <div>
-                        <span style={styles.infoLabel}>Status</span>
+                        <span style={getThemeStyle("infoLabel")}>Status</span>
                         <strong>
                           {alert.status || "OPEN"}
                         </strong>
                       </div>
 
                       <div>
-                        <span style={styles.infoLabel}>Location</span>
+                        <span style={getThemeStyle("infoLabel")}>Location</span>
                         <strong>
                           {alert.location || "Not available"}
                         </strong>
                       </div>
                     </div>
 
-                    <p style={styles.description}>
+                    <p style={getThemeStyle("description")}>
                       {alert.description ||
                         "Suspicious activity was detected by the security monitoring system."}
                     </p>
 
                     <button
-                      style={styles.viewButton}
+                      style={getThemeStyle("viewButton")}
                       onClick={() => setSelectedAlert(alert)}
                     >
                       View Details →
@@ -470,11 +519,11 @@ function SecurityCenter() {
         </div>
 
         {/* Security Tips */}
-        <div style={{ ...styles.tipsSection, ...(isMobile ? responsiveStyles.tipsSection : {}) }}>
-          <h2 style={styles.sectionTitle}>Security Tips</h2>
+        <div style={{ ...getThemeStyle("tipsSection"), ...(isMobile ? responsiveStyles.tipsSection : {}) }}>
+          <h2 style={getThemeStyle("sectionTitle")}>Security Tips</h2>
 
-          <div style={{ ...styles.tipsGrid, ...(isMobile ? responsiveStyles.tipsGrid : {}) }}>
-            <div style={{ ...styles.tip, ...(isMobile ? responsiveStyles.tip : {}) }}>
+          <div style={{ ...getThemeStyle("tipsGrid"), ...(isMobile ? responsiveStyles.tipsGrid : {}) }}>
+            <div style={{ ...getThemeStyle("tip"), ...(isMobile ? responsiveStyles.tip : {}) }}>
               <span>🔐</span>
               <div>
                 <strong>Protect your credentials</strong>
@@ -484,7 +533,7 @@ function SecurityCenter() {
               </div>
             </div>
 
-            <div style={{ ...styles.tip, ...(isMobile ? responsiveStyles.tip : {}) }}>
+            <div style={{ ...getThemeStyle("tip"), ...(isMobile ? responsiveStyles.tip : {}) }}>
               <span>📱</span>
               <div>
                 <strong>Use trusted devices</strong>
@@ -494,7 +543,7 @@ function SecurityCenter() {
               </div>
             </div>
 
-            <div style={{ ...styles.tip, ...(isMobile ? responsiveStyles.tip : {}) }}>
+            <div style={{ ...getThemeStyle("tip"), ...(isMobile ? responsiveStyles.tip : {}) }}>
               <span>🚨</span>
               <div>
                 <strong>Report suspicious activity</strong>
@@ -511,67 +560,67 @@ function SecurityCenter() {
       {/* Details Modal */}
       {selectedAlert && (
         <div
-          style={{ ...styles.overlay, ...(isMobile ? responsiveStyles.overlay : {}) }}
+          style={{ ...getThemeStyle("overlay"), ...(isMobile ? responsiveStyles.overlay : {}) }}
           onClick={() => setSelectedAlert(null)}
         >
           <div
-            style={{ ...styles.modal, ...(isMobile ? responsiveStyles.modal : {}) }}
+            style={{ ...getThemeStyle("modal"), ...(isMobile ? responsiveStyles.modal : {}) }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ ...styles.modalHeader, ...(isMobile ? responsiveStyles.modalHeader : {}) }}>
+            <div style={{ ...getThemeStyle("modalHeader"), ...(isMobile ? responsiveStyles.modalHeader : {}) }}>
               <div>
-                <div style={styles.modalLabel}>SECURITY ALERT</div>
-                <h2 style={styles.modalTitle}>
+                <div style={getThemeStyle("modalLabel")}>SECURITY ALERT</div>
+                <h2 style={getThemeStyle("modalTitle")}>
                   {formatAlertType(selectedAlert.alertType)}
                 </h2>
               </div>
 
               <button
-                style={{ ...styles.closeButton, ...(isMobile ? responsiveStyles.closeButton : {}) }}
+                style={{ ...getThemeStyle("closeButton"), ...(isMobile ? responsiveStyles.closeButton : {}) }}
                 onClick={() => setSelectedAlert(null)}
               >
                 ×
               </button>
             </div>
 
-            <div style={{ ...styles.modalGrid, ...(isMobile ? responsiveStyles.modalGrid : {}) }}>
+            <div style={{ ...getThemeStyle("modalGrid"), ...(isMobile ? responsiveStyles.modalGrid : {}) }}>
               <div>
-                <span style={styles.infoLabel}>Risk Level</span>
+                <span style={getThemeStyle("infoLabel")}>Risk Level</span>
                 <strong>
                   {selectedAlert.riskLevel || "LOW"}
                 </strong>
               </div>
 
               <div>
-                <span style={styles.infoLabel}>Risk Score</span>
+                <span style={getThemeStyle("infoLabel")}>Risk Score</span>
                 <strong>
                   {getRiskScore(selectedAlert).toFixed(2)}
                 </strong>
               </div>
 
               <div>
-                <span style={styles.infoLabel}>Status</span>
+                <span style={getThemeStyle("infoLabel")}>Status</span>
                 <strong>
                   {selectedAlert.status || "OPEN"}
                 </strong>
               </div>
 
               <div>
-                <span style={styles.infoLabel}>Transaction Type</span>
+                <span style={getThemeStyle("infoLabel")}>Transaction Type</span>
                 <strong>
                   {selectedAlert.transactionType || "LOGIN"}
                 </strong>
               </div>
 
               <div>
-                <span style={styles.infoLabel}>Location</span>
+                <span style={getThemeStyle("infoLabel")}>Location</span>
                 <strong>
                   {selectedAlert.location || "Not available"}
                 </strong>
               </div>
 
               <div>
-                <span style={styles.infoLabel}>Detected At</span>
+                <span style={getThemeStyle("infoLabel")}>Detected At</span>
                 <strong>
                   {formatDate(selectedAlert.detectedAt)}
                 </strong>
@@ -579,14 +628,14 @@ function SecurityCenter() {
 
               {selectedAlert.transactionId && (
                 <div>
-                  <span style={styles.infoLabel}>Transaction ID</span>
+                  <span style={getThemeStyle("infoLabel")}>Transaction ID</span>
                   <strong>{selectedAlert.transactionId}</strong>
                 </div>
               )}
             </div>
 
-            <div style={styles.descriptionBox}>
-              <span style={styles.infoLabel}>Description</span>
+            <div style={getThemeStyle("descriptionBox")}>
+              <span style={getThemeStyle("infoLabel")}>Description</span>
               <p>
                 {selectedAlert.description ||
                   "No additional description available."}
@@ -594,7 +643,7 @@ function SecurityCenter() {
             </div>
 
             <button
-              style={styles.modalButton}
+              style={getThemeStyle("modalButton")}
               onClick={() => setSelectedAlert(null)}
             >
               Close

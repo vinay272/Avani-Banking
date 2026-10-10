@@ -3,6 +3,18 @@ import { useNavigate } from "react-router-dom";
 
 function FixedDeposit() {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark",
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
 
   // =========================
   // RESPONSIVE STATE
@@ -997,22 +1009,231 @@ function FixedDeposit() {
   };
 
   // =========================
+  // THEME-AWARE STYLES
+  // Keep the blue navbar and back button unchanged in both themes.
+  // =========================
+  const themedStyles = darkMode
+    ? {
+        ...responsiveStyles,
+        page: {
+          ...responsiveStyles.page,
+          background: "#0b1220",
+          color: "#e5e7eb",
+        },
+        container: {
+          ...responsiveStyles.container,
+          color: "#e5e7eb",
+        },
+        heroEyebrow: { ...responsiveStyles.heroEyebrow, color: "#93b4ff" },
+        heroTitle: { ...responsiveStyles.heroTitle, color: "#f3f6ff" },
+        heroSubtitle: { ...responsiveStyles.heroSubtitle, color: "#a6b2c8" },
+        createCard: {
+          ...responsiveStyles.createCard,
+          background: "#111c2e",
+          border: "1px solid #263750",
+          boxShadow: "0 12px 35px rgba(0,0,0,0.22)",
+        },
+        label: { ...responsiveStyles.label, color: "#a8b5ca" },
+        select: {
+          ...responsiveStyles.select,
+          background: "#0b1627",
+          color: "#e5edf9",
+          border: "1px solid #354761",
+          colorScheme: "dark",
+        },
+        inputWrapper: {
+          ...responsiveStyles.inputWrapper,
+          background: "#0b1627",
+          border: "1px solid #354761",
+        },
+        inputField: {
+          ...responsiveStyles.inputField,
+          background: "#0b1627",
+          color: "#e5edf9",
+          colorScheme: "dark",
+        },
+        inputSuffix: {
+          ...responsiveStyles.inputSuffix,
+          borderLeft: "1px solid #354761",
+        },
+        monthSuffix: {
+          ...responsiveStyles.monthSuffix,
+          borderLeft: "1px solid #354761",
+          color: "#a6b2c8",
+        },
+        estimateCard: {
+          ...responsiveStyles.estimateCard,
+          background: "linear-gradient(135deg, #172b4b, #14233c)",
+          border: "1px solid #2d4770",
+        },
+        estimateLabel: { ...responsiveStyles.estimateLabel, color: "#aabbd8" },
+        estimateAmount: { ...responsiveStyles.estimateAmount, color: "#a8c7ff" },
+        estimateIcon: {
+          ...responsiveStyles.estimateIcon,
+          background: "#203553",
+          boxShadow: "none",
+        },
+        myFdHeader: { ...responsiveStyles.myFdHeader },
+        sectionEyebrow: { ...responsiveStyles.sectionEyebrow, color: "#93b4ff" },
+        sectionTitle: { ...responsiveStyles.sectionTitle, color: "#f3f6ff" },
+        sectionDescription: {
+          ...responsiveStyles.sectionDescription,
+          color: "#a6b2c8",
+        },
+        fdCount: {
+          ...responsiveStyles.fdCount,
+          background: "#1b3154",
+          color: "#b9d0ff",
+        },
+        fdCard: {
+          ...responsiveStyles.fdCard,
+          background: "#111c2e",
+          border: "1px solid #263750",
+          boxShadow: "0 10px 26px rgba(0,0,0,0.18)",
+        },
+        fdIcon: {
+          ...responsiveStyles.fdIcon,
+          background: "#203553",
+        },
+        accountLabel: { ...responsiveStyles.accountLabel, color: "#a6b2c8" },
+        fdId: { ...responsiveStyles.fdId, color: "#f3f6ff" },
+        fdAmountBox: {
+          ...responsiveStyles.fdAmountBox,
+          background: "#17263b",
+          border: "1px solid #2b405c",
+        },
+        fdAmount: { ...responsiveStyles.fdAmount, color: "#f3f6ff" },
+        detailLabel: { ...responsiveStyles.detailLabel, color: "#9baac1" },
+        detailValue: { ...responsiveStyles.detailValue, color: "#e5edf9" },
+        maturityBox: {
+          ...responsiveStyles.maturityBox,
+          background: "#142c2b",
+          border: "1px solid #24534b",
+        },
+        maturityAmount: {
+          ...responsiveStyles.maturityAmount,
+          color: "#6ee7b7",
+        },
+        emptyCard: {
+          ...responsiveStyles.emptyCard,
+          background: "#111c2e",
+          border: "1px dashed #354761",
+        },
+        emptyTitle: { ...responsiveStyles.emptyTitle, color: "#f3f6ff" },
+        emptyText: { ...responsiveStyles.emptyText, color: "#a6b2c8" },
+        footer: {
+          ...responsiveStyles.footer,
+          background: "#0a101c",
+          color: "#9baac1",
+          borderTop: "1px solid #263750",
+        },
+        loadingPage: {
+          ...responsiveStyles.loadingPage,
+          background: "#0b1220",
+          color: "#e5e7eb",
+        },
+        loadingCard: {
+          ...responsiveStyles.loadingCard,
+          background: "#111c2e",
+          border: "1px solid #263750",
+          boxShadow: "0 12px 35px rgba(0,0,0,0.25)",
+        },
+        loadingTitle: { ...responsiveStyles.loadingTitle, color: "#f3f6ff" },
+        loadingText: { ...responsiveStyles.loadingText, color: "#a6b2c8" },
+        planLoading: {
+          ...responsiveStyles.planLoading,
+          background: "#0b1627",
+          border: "1px solid #354761",
+          color: "#a6b2c8",
+        },
+        planSelect: {
+          ...responsiveStyles.planSelect,
+          backgroundColor: "#0b1627",
+          color: "#e5edf9",
+          border: "1px solid #354761",
+          colorScheme: "dark",
+        },
+        planDetailsBox: {
+          ...responsiveStyles.planDetailsBox,
+          background: "#0b1627",
+          border: "1px solid #354761",
+        },
+        planPlaceholder: {
+          ...responsiveStyles.planPlaceholder,
+          color: "#9baac1",
+        },
+        planSelectedName: {
+          ...responsiveStyles.planSelectedName,
+          color: "#e5edf9",
+        },
+        planMeta: { ...responsiveStyles.planMeta, color: "#a8c7ff" },
+        planDescription: {
+          ...responsiveStyles.planDescription,
+          color: "#a6b2c8",
+        },
+        errorBox: {
+          ...responsiveStyles.errorBox,
+          background: "#351b25",
+          border: "1px solid #743344",
+          color: "#ffb4c0",
+        },
+        successBox: {
+          ...responsiveStyles.successBox,
+          background: "#12352d",
+          border: "1px solid #24634f",
+          color: "#8ce8c2",
+        },
+        closeModalOverlay: {
+          ...responsiveStyles.closeModalOverlay,
+          background: "rgba(2,6,15,0.78)",
+        },
+        closeModal: {
+          ...responsiveStyles.closeModal,
+          background: "#111c2e",
+          border: "1px solid #354761",
+          color: "#e5edf9",
+          boxShadow: "0 24px 70px rgba(0,0,0,0.45)",
+        },
+        closeModalTitle: {
+          ...responsiveStyles.closeModalTitle,
+          color: "#f3f6ff",
+        },
+        closeModalText: {
+          ...responsiveStyles.closeModalText,
+          color: "#c2cde0",
+        },
+        closeModalWarning: {
+          ...responsiveStyles.closeModalWarning,
+          background: "#382c19",
+          border: "1px solid #6d542b",
+          color: "#f8d58b",
+        },
+        closeCancelButton: {
+          ...responsiveStyles.closeCancelButton,
+          background: "#263750",
+          border: "1px solid #40536e",
+          color: "#e5edf9",
+        },
+      }
+    : responsiveStyles;
+
+  // =========================
   // LOADING
   // =========================
 
   if (loading) {
     return (
-      <div style={responsiveStyles.loadingPage}>
-        <div style={responsiveStyles.loadingCard}>
-          <div style={responsiveStyles.loadingIcon}>💰</div>
+      <div style={themedStyles.loadingPage}>
+        <div style={themedStyles.loadingCard}>
+          <div style={themedStyles.loadingIcon}>💰</div>
 
-          <h2 style={responsiveStyles.loadingTitle}>Loading Fixed Deposits</h2>
+          <h2 style={themedStyles.loadingTitle}>Loading Fixed Deposits</h2>
 
-          <p style={responsiveStyles.loadingText}>
+          <p style={themedStyles.loadingText}>
             Please wait while we fetch your fixed deposit information...
           </p>
 
-          <div style={responsiveStyles.loader}></div>
+          <div style={themedStyles.loader}></div>
         </div>
       </div>
     );
@@ -1025,7 +1246,7 @@ function FixedDeposit() {
   return (
     <div
       className="fixed-deposit-page"
-      style={responsiveStyles.page}
+      style={themedStyles.page}
     >
       <style>{`
         .fixed-deposit-page {
@@ -1065,20 +1286,20 @@ function FixedDeposit() {
           TOP NAVIGATION
       ========================= */}
 
-      <header style={responsiveStyles.navbar}>
-        <div style={responsiveStyles.brandArea}>
-          <div style={responsiveStyles.brandIcon}>💰</div>
+      <header style={themedStyles.navbar}>
+        <div style={themedStyles.brandArea}>
+          <div style={themedStyles.brandIcon}>💰</div>
 
           <div>
-            <div style={responsiveStyles.brandName}>AVANI BANK</div>
+            <div style={themedStyles.brandName}>AVANI BANK</div>
 
-            <div style={responsiveStyles.brandSubtitle}>Fixed Deposit</div>
+            <div style={themedStyles.brandSubtitle}>Fixed Deposit</div>
           </div>
         </div>
 
         <button
           type="button"
-          style={responsiveStyles.backButton}
+          style={themedStyles.backButton}
           onClick={() => navigate("/accounts")}
         >
           ← Back to Accounts
@@ -1089,17 +1310,17 @@ function FixedDeposit() {
           MAIN
       ========================= */}
 
-      <main style={responsiveStyles.container}>
+      <main style={themedStyles.container}>
         {/* =========================
             HERO
         ========================= */}
 
-        <section style={responsiveStyles.heroSection}>
-          <p style={responsiveStyles.heroEyebrow}>NEW INVESTMENT</p>
+        <section style={themedStyles.heroSection}>
+          <p style={themedStyles.heroEyebrow}>NEW INVESTMENT</p>
 
-          <h1 style={responsiveStyles.heroTitle}>Create Fixed Deposit</h1>
+          <h1 style={themedStyles.heroTitle}>Create Fixed Deposit</h1>
 
-          <p style={responsiveStyles.heroSubtitle}>
+          <p style={themedStyles.heroSubtitle}>
             Choose your account, deposit amount and investment period.
           </p>
         </section>
@@ -1109,8 +1330,8 @@ function FixedDeposit() {
         ========================= */}
 
         {error && (
-          <div style={responsiveStyles.errorBox}>
-            <span style={responsiveStyles.messageIcon}>⚠</span>
+          <div style={themedStyles.errorBox}>
+            <span style={themedStyles.messageIcon}>⚠</span>
 
             <span>{error}</span>
           </div>
@@ -1121,8 +1342,8 @@ function FixedDeposit() {
         ========================= */}
 
         {success && (
-          <div style={responsiveStyles.successBox}>
-            <span style={responsiveStyles.messageIcon}>✓</span>
+          <div style={themedStyles.successBox}>
+            <span style={themedStyles.messageIcon}>✓</span>
 
             <span>{success}</span>
           </div>
@@ -1132,21 +1353,21 @@ function FixedDeposit() {
             CREATE FD CARD
         ========================= */}
 
-        <section style={responsiveStyles.createCard}>
-          <form onSubmit={handleCreateFD} style={responsiveStyles.form}>
+        <section style={themedStyles.createCard}>
+          <form onSubmit={handleCreateFD} style={themedStyles.form}>
             {/* =========================
                 ACCOUNT
             ========================= */}
 
-            <div style={responsiveStyles.formGroup}>
-              <label style={responsiveStyles.label}>DEBIT ACCOUNT</label>
+            <div style={themedStyles.formGroup}>
+              <label style={themedStyles.label}>DEBIT ACCOUNT</label>
 
-              <div style={responsiveStyles.selectWrapper}>
+              <div style={themedStyles.selectWrapper}>
                 <select
                   name="accountId"
                   value={form.accountId}
                   onChange={handleChange}
-                  style={responsiveStyles.select}
+                  style={themedStyles.select}
                 >
                   <option value="">Select Account</option>
 
@@ -1158,7 +1379,7 @@ function FixedDeposit() {
                   ))}
                 </select>
 
-                <span style={responsiveStyles.selectArrow}>▼</span>
+                <span style={themedStyles.selectArrow}>▼</span>
               </div>
             </div>
 
@@ -1166,11 +1387,11 @@ function FixedDeposit() {
                 DEPOSIT AMOUNT
             ========================= */}
 
-            <div style={responsiveStyles.formGroup}>
-              <label style={responsiveStyles.label}>DEPOSIT AMOUNT</label>
+            <div style={themedStyles.formGroup}>
+              <label style={themedStyles.label}>DEPOSIT AMOUNT</label>
 
-              <div style={responsiveStyles.inputWrapper}>
-                <span style={responsiveStyles.currency}>₹</span>
+              <div style={themedStyles.inputWrapper}>
+                <span style={themedStyles.currency}>₹</span>
 
                 <input
                   type="number"
@@ -1180,18 +1401,18 @@ function FixedDeposit() {
                   placeholder="Enter amount"
                   min="1"
                   step="0.01"
-                  style={responsiveStyles.inputField}
+                  style={themedStyles.inputField}
                 />
               </div>
             </div>
 
             {/* FD PLAN */}
 
-            <div style={responsiveStyles.formGroup}>
-              <label style={responsiveStyles.label}>FIXED DEPOSIT PLAN</label>
+            <div style={themedStyles.formGroup}>
+              <label style={themedStyles.label}>FIXED DEPOSIT PLAN</label>
 
               {plansLoading ? (
-                <div style={responsiveStyles.planLoading}>Loading FD plans...</div>
+                <div style={themedStyles.planLoading}>Loading FD plans...</div>
               ) : (
                 <select
                   value={
@@ -1203,7 +1424,7 @@ function FixedDeposit() {
                     )?.planCode || ""
                   }
                   onChange={handlePlanChange}
-                  style={responsiveStyles.planSelect}
+                  style={themedStyles.planSelect}
                   disabled={fdPlans.length === 0}
                 >
                   <option value="">Select FD Plan</option>
@@ -1222,10 +1443,10 @@ function FixedDeposit() {
                 INTEREST RATE
             ========================= */}
 
-            {/* <div style={responsiveStyles.formGroup}>
-              <label style={responsiveStyles.label}>INTEREST RATE (% PER ANNUM)</label>
+            {/* <div style={themedStyles.formGroup}>
+              <label style={themedStyles.label}>INTEREST RATE (% PER ANNUM)</label>
 
-              <div style={responsiveStyles.inputWrapper}>
+              <div style={themedStyles.inputWrapper}>
                 <input
                   type="number"
                   name="interestRate"
@@ -1234,10 +1455,10 @@ function FixedDeposit() {
                   placeholder="Interest rate"
                   min="0"
                   step="0.01"
-                  style={responsiveStyles.inputField}
+                  style={themedStyles.inputField}
                 />
 
-                <span style={responsiveStyles.inputSuffix}>%</span>
+                <span style={themedStyles.inputSuffix}>%</span>
               </div>
             </div> */}
 
@@ -1245,10 +1466,10 @@ function FixedDeposit() {
                 TENURE
             ========================= */}
 
-            {/* <div style={responsiveStyles.formGroup}>
-              <label style={responsiveStyles.label}>TENURE</label>
+            {/* <div style={themedStyles.formGroup}>
+              <label style={themedStyles.label}>TENURE</label>
 
-              <div style={responsiveStyles.inputWrapper}>
+              <div style={themedStyles.inputWrapper}>
                 <input
                   type="number"
                   name="tenureMonths"
@@ -1256,19 +1477,19 @@ function FixedDeposit() {
                   onChange={handleChange}
                   placeholder="Months"
                   min="1"
-                  style={responsiveStyles.inputField}
+                  style={themedStyles.inputField}
                 />
 
-                <span style={responsiveStyles.monthSuffix}>Months</span>
+                <span style={themedStyles.monthSuffix}>Months</span>
               </div>
             </div>  */}
 
             {/* SELECTED PLAN DETAILS */}
 
-            <div style={responsiveStyles.formGroup}>
-              <label style={responsiveStyles.label}>SELECTED PLAN DETAILS</label>
+            <div style={themedStyles.formGroup}>
+              <label style={themedStyles.label}>SELECTED PLAN DETAILS</label>
 
-              <div style={responsiveStyles.planDetailsBox}>
+              <div style={themedStyles.planDetailsBox}>
                 {(() => {
                   const selectedPlan = fdPlans.find(
                     (plan) =>
@@ -1278,7 +1499,7 @@ function FixedDeposit() {
 
                   if (!selectedPlan) {
                     return (
-                      <span style={responsiveStyles.planPlaceholder}>
+                      <span style={themedStyles.planPlaceholder}>
                         Select an FD plan
                       </span>
                     );
@@ -1286,17 +1507,17 @@ function FixedDeposit() {
 
                   return (
                     <div>
-                      <div style={responsiveStyles.planSelectedName}>
+                      <div style={themedStyles.planSelectedName}>
                         {selectedPlan.planName}
                       </div>
 
-                      <div style={responsiveStyles.planMeta}>
+                      <div style={themedStyles.planMeta}>
                         {selectedPlan.tenureMonths} Months
                         {" • "}
                         {selectedPlan.interestRate}% p.a.
                       </div>
 
-                      <div style={responsiveStyles.planDescription}>
+                      <div style={themedStyles.planDescription}>
                         {selectedPlan.description}
                       </div>
                     </div>
@@ -1309,16 +1530,16 @@ function FixedDeposit() {
                 ESTIMATED MATURITY
             ========================= */}
 
-            <div style={responsiveStyles.estimateCard}>
+            <div style={themedStyles.estimateCard}>
               <div>
-                <p style={responsiveStyles.estimateLabel}>ESTIMATED MATURITY AMOUNT</p>
+                <p style={themedStyles.estimateLabel}>ESTIMATED MATURITY AMOUNT</p>
 
-                <h2 style={responsiveStyles.estimateAmount}>
+                <h2 style={themedStyles.estimateAmount}>
                   ₹{formatCurrency(calculateMaturityAmount())}
                 </h2>
               </div>
 
-              <div style={responsiveStyles.estimateIcon}>💰</div>
+              <div style={themedStyles.estimateIcon}>💰</div>
             </div>
 
             {/* =========================
@@ -1329,7 +1550,7 @@ function FixedDeposit() {
               type="submit"
               disabled={creating}
               style={
-                creating ? styles.createButtonDisabled : styles.createButton
+                creating ? themedStyles.createButtonDisabled : themedStyles.createButton
               }
             >
               {creating
@@ -1343,55 +1564,55 @@ function FixedDeposit() {
             MY FIXED DEPOSITS
         ========================= */}
 
-        <section style={responsiveStyles.myFdSection}>
-          <div style={responsiveStyles.myFdHeader}>
+        <section style={themedStyles.myFdSection}>
+          <div style={themedStyles.myFdHeader}>
             <div>
-              <p style={responsiveStyles.sectionEyebrow}>MY INVESTMENTS</p>
+              <p style={themedStyles.sectionEyebrow}>MY INVESTMENTS</p>
 
-              <h2 style={responsiveStyles.sectionTitle}>My Fixed Deposits</h2>
+              <h2 style={themedStyles.sectionTitle}>My Fixed Deposits</h2>
 
-              <p style={responsiveStyles.sectionDescription}>
+              <p style={themedStyles.sectionDescription}>
                 View your active and previous fixed deposits.
               </p>
             </div>
 
-            <div style={responsiveStyles.fdCount}>
+            <div style={themedStyles.fdCount}>
               {fixedDeposits.length} FD
               {fixedDeposits.length !== 1 ? "s" : ""}
             </div>
           </div>
 
           {fixedDeposits.length === 0 ? (
-            <div style={responsiveStyles.emptyCard}>
-              <div style={responsiveStyles.emptyIcon}>💰</div>
+            <div style={themedStyles.emptyCard}>
+              <div style={themedStyles.emptyIcon}>💰</div>
 
-              <h3 style={responsiveStyles.emptyTitle}>No Fixed Deposit Found</h3>
+              <h3 style={themedStyles.emptyTitle}>No Fixed Deposit Found</h3>
 
-              <p style={responsiveStyles.emptyText}>
+              <p style={themedStyles.emptyText}>
                 You have not created any fixed deposit yet.
               </p>
             </div>
           ) : (
-            <div style={responsiveStyles.fdGrid}>
+            <div style={themedStyles.fdGrid}>
               {fixedDeposits.map((fd) => {
                 const statusStyle = getStatusStyle(fd.status);
 
                 return (
-                  <div key={fd.id} style={responsiveStyles.fdCard}>
+                  <div key={fd.id} style={themedStyles.fdCard}>
                     {/* TOP */}
 
-                    <div style={responsiveStyles.fdTop}>
-                      <div style={responsiveStyles.fdIcon}>💰</div>
+                    <div style={themedStyles.fdTop}>
+                      <div style={themedStyles.fdIcon}>💰</div>
 
-                      <div style={responsiveStyles.fdTopText}>
-                        <p style={responsiveStyles.accountLabel}>FIXED DEPOSIT</p>
+                      <div style={themedStyles.fdTopText}>
+                        <p style={themedStyles.accountLabel}>FIXED DEPOSIT</p>
 
-                        <h3 style={responsiveStyles.fdId}>FD #{fd.id}</h3>
+                        <h3 style={themedStyles.fdId}>FD #{fd.id}</h3>
                       </div>
 
                       <span
                         style={{
-                          ...styles.statusBadge,
+                          ...themedStyles.statusBadge,
                           ...statusStyle,
                         }}
                       >
@@ -1407,7 +1628,7 @@ function FixedDeposit() {
                           setCloseFDId(fd.id);
                           setShowCloseFDForm(true);
                         }}
-                        style={responsiveStyles.closeFDButton}
+                        style={themedStyles.closeFDButton}
                       >
                         🔒 Premature Close
                       </button>
@@ -1415,45 +1636,45 @@ function FixedDeposit() {
 
                     {/* PRINCIPAL */}
 
-                    <div style={responsiveStyles.fdAmountBox}>
-                      <p style={responsiveStyles.accountLabel}>PRINCIPAL AMOUNT</p>
+                    <div style={themedStyles.fdAmountBox}>
+                      <p style={themedStyles.accountLabel}>PRINCIPAL AMOUNT</p>
 
-                      <h2 style={responsiveStyles.fdAmount}>
+                      <h2 style={themedStyles.fdAmount}>
                         ₹{formatCurrency(fd.principalAmount)}
                       </h2>
                     </div>
 
                     {/* DETAILS */}
 
-                    <div style={responsiveStyles.detailsGrid}>
+                    <div style={themedStyles.detailsGrid}>
                       <div>
-                        <p style={responsiveStyles.detailLabel}>INTEREST RATE</p>
+                        <p style={themedStyles.detailLabel}>INTEREST RATE</p>
 
-                        <p style={responsiveStyles.detailValue}>
+                        <p style={themedStyles.detailValue}>
                           {fd.interestRate ?? 0}%
                         </p>
                       </div>
 
                       <div>
-                        <p style={responsiveStyles.detailLabel}>TENURE</p>
+                        <p style={themedStyles.detailLabel}>TENURE</p>
 
-                        <p style={responsiveStyles.detailValue}>
+                        <p style={themedStyles.detailValue}>
                           {fd.tenureMonths ?? 0} Months
                         </p>
                       </div>
 
                       <div>
-                        <p style={responsiveStyles.detailLabel}>CREATED</p>
+                        <p style={themedStyles.detailLabel}>CREATED</p>
 
-                        <p style={responsiveStyles.detailValue}>
+                        <p style={themedStyles.detailValue}>
                           {formatDate(fd.createdAt)}
                         </p>
                       </div>
 
                       <div>
-                        <p style={responsiveStyles.detailLabel}>MATURITY</p>
+                        <p style={themedStyles.detailLabel}>MATURITY</p>
 
-                        <p style={responsiveStyles.detailValue}>
+                        <p style={themedStyles.detailValue}>
                           {formatDate(fd.maturityDate)}
                         </p>
                       </div>
@@ -1461,38 +1682,38 @@ function FixedDeposit() {
 
                     {/* MATURITY */}
 
-                    <div style={responsiveStyles.maturityBox}>
-                      <p style={responsiveStyles.detailLabel}>MATURITY AMOUNT</p>
+                    <div style={themedStyles.maturityBox}>
+                      <p style={themedStyles.detailLabel}>MATURITY AMOUNT</p>
 
-                      <p style={responsiveStyles.maturityAmount}>
+                      <p style={themedStyles.maturityAmount}>
                         ₹{formatCurrency(fd.maturityAmount)}
                       </p>
                     </div>
                     {showCloseFDForm && (
-                      <div style={responsiveStyles.closeModalOverlay}>
-                        <div style={responsiveStyles.closeModal}>
-                          <div style={responsiveStyles.closeModalTitle}>
+                      <div style={themedStyles.closeModalOverlay}>
+                        <div style={themedStyles.closeModal}>
+                          <div style={themedStyles.closeModalTitle}>
                             🔒 Premature FD Closure
                           </div>
 
-                          <div style={responsiveStyles.closeModalText}>
+                          <div style={themedStyles.closeModalText}>
                             Are you sure you want to close this Fixed Deposit
                             before its maturity date?
                           </div>
 
-                          <div style={responsiveStyles.closeModalWarning}>
+                          <div style={themedStyles.closeModalWarning}>
                             ⚠️ Premature closure will use the applicable reduced
                             interest rate.
                           </div>
 
-                          <div style={responsiveStyles.closeModalActions}>
+                          <div style={themedStyles.closeModalActions}>
                             <button
                               type="button"
                               onClick={() => {
                                 setShowCloseFDForm(false);
                                 setCloseFDId(null);
                               }}
-                              style={responsiveStyles.closeCancelButton}
+                              style={themedStyles.closeCancelButton}
                               disabled={closingFD}
                             >
                               Cancel
@@ -1501,7 +1722,7 @@ function FixedDeposit() {
                             <button
                               type="button"
                               onClick={handleCloseFixedDeposit}
-                              style={responsiveStyles.closeConfirmButton}
+                              style={themedStyles.closeConfirmButton}
                               disabled={closingFD}
                             >
                               {closingFD ? "Closing..." : "Confirm Closure"}
@@ -1522,7 +1743,7 @@ function FixedDeposit() {
           FOOTER
       ========================= */}
 
-      <footer style={responsiveStyles.footer}>
+      <footer style={themedStyles.footer}>
         <div>© {new Date().getFullYear()} Avani Bank</div>
 
         <div>Secure • Reliable • Digital Banking</div>

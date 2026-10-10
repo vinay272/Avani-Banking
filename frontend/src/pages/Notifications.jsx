@@ -3,6 +3,57 @@ import { useNavigate } from "react-router-dom";
 
 function Notifications() {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () =>
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
+  const themedStyles = useMemo(() => {
+    if (!darkMode) return styles;
+    const overrides = {
+      page: { background: "#0b1220", color: "#e5edf9" },
+      container: { color: "#e5edf9" },
+      errorBox: { background: "#351c24", border: "1px solid #713642", color: "#ffb9c3" },
+      summaryCard: { background: "#172235", border: "1px solid #304158", boxShadow: "0 6px 22px rgba(0,0,0,.16)" },
+      summaryLabel: { color: "#a8b8cf" },
+      summaryValue: { color: "#f1f5fb" },
+      summaryText: { color: "#a5b4ca" },
+      sectionEyebrow: { color: "#9bbcff" },
+      sectionTitle: { color: "#eef4ff" },
+      filterBar: { background: "#172235", border: "1px solid #304158" },
+      filterButton: { color: "#b8c6da" },
+      filterButtonActive: { background: "#233b62", color: "#b8d2ff" },
+      notificationCard: { background: "#172235", border: "1px solid #304158", boxShadow: "0 5px 18px rgba(0,0,0,.14)" },
+      notificationType: { color: "#a9c5ff" },
+      channelBadge: { background: "#26344a", color: "#c1cde0" },
+      notificationTitle: { color: "#f0f5ff" },
+      notificationMessage: { color: "#c0cce0" },
+      notificationDate: { color: "#9cacc4" },
+      readButton: { background: "#1d2b42", border: "1px solid #3a5274", color: "#b9d2ff" },
+      emptyCard: { background: "#172235", border: "1px solid #304158" },
+      emptyTitle: { color: "#edf3ff" },
+      emptyText: { color: "#b0bfd5" },
+      footer: { background: "#111b2b", borderTop: "1px solid #304158", color: "#9eafc8" },
+      loadingPage: { background: "linear-gradient(135deg, #0b1220, #121e32)" },
+      loadingCard: { background: "#172235", boxShadow: "0 15px 40px rgba(0,0,0,.24)" },
+      loadingTitle: { color: "#edf3ff" },
+      loadingText: { color: "#b0bfd5" },
+      loader: { border: "3px solid #304158", borderTop: "3px solid #6d9eff" },
+    };
+    return Object.fromEntries(
+      Object.entries(styles).map(([key, value]) => [
+        key,
+        overrides[key] ? { ...value, ...overrides[key] } : value,
+      ])
+    );
+  }, [darkMode]);
 
   const [notifications, setNotifications] = useState([]);
   const [activeFilter, setActiveFilter] = useState("ALL");
@@ -307,36 +358,36 @@ function Notifications() {
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.loadingCard}>
-          <div style={styles.loadingIcon}>🔔</div>
+      <div data-theme={darkMode ? "dark" : "light"} style={themedStyles.loadingPage}>
+        <div style={themedStyles.loadingCard}>
+          <div style={themedStyles.loadingIcon}>🔔</div>
 
-          <h2 style={styles.loadingTitle}>Loading notifications</h2>
+          <h2 style={themedStyles.loadingTitle}>Loading notifications</h2>
 
-          <p style={styles.loadingText}>
+          <p style={themedStyles.loadingText}>
             Please wait while we fetch your latest banking alerts...
           </p>
 
-          <div style={styles.loader}></div>
+          <div style={themedStyles.loader}></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ ...styles.page, ...(isMobile ? styles.mobilePage : {}) }}>
+    <div data-theme={darkMode ? "dark" : "light"} style={{ ...themedStyles.page, ...(isMobile ? themedStyles.mobilePage : {}) }}>
       {/* ================= HEADER ================= */}
 
-      <header style={{ ...styles.header, ...(isMobile ? styles.mobileHeader : {}) }}>
-        <div style={{ ...styles.headerLeft, ...(isMobile ? styles.mobileHeaderLeft : {}) }}>
-          <div style={{ ...styles.headerIcon, ...(isMobile ? styles.mobileHeaderIcon : {}) }}>🔔</div>
+      <header style={{ ...themedStyles.header, ...(isMobile ? themedStyles.mobileHeader : {}) }}>
+        <div style={{ ...themedStyles.headerLeft, ...(isMobile ? themedStyles.mobileHeaderLeft : {}) }}>
+          <div style={{ ...themedStyles.headerIcon, ...(isMobile ? themedStyles.mobileHeaderIcon : {}) }}>🔔</div>
 
           <div>
-            <div style={styles.headerBrand}>AVANI BANK • DIGITAL BANKING</div>
+            <div style={themedStyles.headerBrand}>AVANI BANK • DIGITAL BANKING</div>
 
-            <h1 style={{ ...styles.headerTitle, ...(isMobile ? styles.mobileHeaderTitle : {}) }}>Notifications</h1>
+            <h1 style={{ ...themedStyles.headerTitle, ...(isMobile ? themedStyles.mobileHeaderTitle : {}) }}>Notifications</h1>
 
-            <p style={{ ...styles.headerSubtitle, ...(isMobile ? styles.mobileHeaderSubtitle : {}) }}>
+            <p style={{ ...themedStyles.headerSubtitle, ...(isMobile ? themedStyles.mobileHeaderSubtitle : {}) }}>
               Stay updated with important banking alerts, transactions and
               security notifications.
             </p>
@@ -345,7 +396,7 @@ function Notifications() {
 
         <button
           type="button"
-          style={{ ...styles.backButton, ...(isMobile ? styles.mobileBackButton : {}) }}
+          style={{ ...themedStyles.backButton, ...(isMobile ? themedStyles.mobileBackButton : {}) }}
           onClick={() => navigate("/dashboard")}
         >
           ← Dashboard
@@ -354,16 +405,16 @@ function Notifications() {
 
       {/* ================= MAIN ================= */}
 
-      <main style={{ ...styles.container, ...(isMobile ? styles.mobileContainer : {}) }}>
-        {error && <div style={styles.errorBox}>⚠️ {error}</div>}
+      <main style={{ ...themedStyles.container, ...(isMobile ? themedStyles.mobileContainer : {}) }}>
+        {error && <div style={themedStyles.errorBox}>⚠️ {error}</div>}
 
         {/* ================= SUMMARY ================= */}
 
-        <section style={{ ...styles.summaryGrid, ...(isMobile ? styles.mobileSummaryGrid : {}) }}>
-          <div style={styles.summaryCard}>
+        <section style={{ ...themedStyles.summaryGrid, ...(isMobile ? themedStyles.mobileSummaryGrid : {}) }}>
+          <div style={themedStyles.summaryCard}>
             <div
               style={{
-                ...styles.summaryIcon,
+                ...themedStyles.summaryIcon,
                 background: "#eef4ff",
                 color: "#2457c6",
               }}
@@ -372,18 +423,18 @@ function Notifications() {
             </div>
 
             <div>
-              <p style={styles.summaryLabel}>TOTAL NOTIFICATIONS</p>
+              <p style={themedStyles.summaryLabel}>TOTAL NOTIFICATIONS</p>
 
-              <h2 style={styles.summaryValue}>{notifications.length}</h2>
+              <h2 style={themedStyles.summaryValue}>{notifications.length}</h2>
 
-              <p style={styles.summaryText}>All banking alerts</p>
+              <p style={themedStyles.summaryText}>All banking alerts</p>
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
+          <div style={themedStyles.summaryCard}>
             <div
               style={{
-                ...styles.summaryIcon,
+                ...themedStyles.summaryIcon,
                 background: "#fff8e7",
                 color: "#9a6700",
               }}
@@ -392,18 +443,18 @@ function Notifications() {
             </div>
 
             <div>
-              <p style={styles.summaryLabel}>UNREAD</p>
+              <p style={themedStyles.summaryLabel}>UNREAD</p>
 
-              <h2 style={styles.summaryValue}>{unreadNotifications.length}</h2>
+              <h2 style={themedStyles.summaryValue}>{unreadNotifications.length}</h2>
 
-              <p style={styles.summaryText}>Require your attention</p>
+              <p style={themedStyles.summaryText}>Require your attention</p>
             </div>
           </div>
 
-          <div style={styles.summaryCard}>
+          <div style={themedStyles.summaryCard}>
             <div
               style={{
-                ...styles.summaryIcon,
+                ...themedStyles.summaryIcon,
                 background: "#ecfdf5",
                 color: "#119463",
               }}
@@ -412,25 +463,25 @@ function Notifications() {
             </div>
 
             <div>
-              <p style={styles.summaryLabel}>READ</p>
+              <p style={themedStyles.summaryLabel}>READ</p>
 
-              <h2 style={styles.summaryValue}>
+              <h2 style={themedStyles.summaryValue}>
                 {notifications.length - unreadNotifications.length}
               </h2>
 
-              <p style={styles.summaryText}>Already reviewed</p>
+              <p style={themedStyles.summaryText}>Already reviewed</p>
             </div>
           </div>
         </section>
 
         {/* ================= CONTROLS ================= */}
 
-        <section style={{ ...styles.section, ...(isMobile ? styles.mobileSection : {}) }}>
-          <div style={styles.sectionHeader}>
+        <section style={{ ...themedStyles.section, ...(isMobile ? themedStyles.mobileSection : {}) }}>
+          <div style={themedStyles.sectionHeader}>
             <div>
-              <p style={styles.sectionEyebrow}>ALERT CENTER</p>
+              <p style={themedStyles.sectionEyebrow}>ALERT CENTER</p>
 
-              <h2 style={styles.sectionTitle}>Your Notifications</h2>
+              <h2 style={themedStyles.sectionTitle}>Your Notifications</h2>
             </div>
 
             <div
@@ -449,7 +500,7 @@ function Notifications() {
                 }
                 onClick={markAllAsRead}
                 style={{
-                  ...styles.markAllButton,
+                  ...themedStyles.markAllButton,
                   opacity:
                     unreadNotifications.length === 0 || actionLoading === "ALL"
                       ? 0.55
@@ -470,7 +521,7 @@ function Notifications() {
                 }
                 onClick={() => setClearConfirm(true)}
                 style={{
-                  ...styles.clearAllButton,
+                  ...themedStyles.clearAllButton,
                   opacity:
                     notifications.length === 0 || actionLoading === "CLEAR_ALL"
                       ? 0.55
@@ -486,29 +537,29 @@ function Notifications() {
             </div>
           </div>
 
-          <div style={styles.filterBar}>
+          <div style={themedStyles.filterBar}>
             <button
               type="button"
               onClick={() => setActiveFilter("ALL")}
               style={{
-                ...styles.filterButton,
-                ...(activeFilter === "ALL" ? styles.filterButtonActive : {}),
+                ...themedStyles.filterButton,
+                ...(activeFilter === "ALL" ? themedStyles.filterButtonActive : {}),
               }}
             >
               All
-              <span style={styles.filterCount}>{notifications.length}</span>
+              <span style={themedStyles.filterCount}>{notifications.length}</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveFilter("UNREAD")}
               style={{
-                ...styles.filterButton,
-                ...(activeFilter === "UNREAD" ? styles.filterButtonActive : {}),
+                ...themedStyles.filterButton,
+                ...(activeFilter === "UNREAD" ? themedStyles.filterButtonActive : {}),
               }}
             >
               Unread
-              <span style={styles.filterCount}>
+              <span style={themedStyles.filterCount}>
                 {unreadNotifications.length}
               </span>
             </button>
@@ -517,20 +568,20 @@ function Notifications() {
 
         {/* ================= NOTIFICATIONS ================= */}
 
-        <section style={{ ...styles.notificationList, ...(isMobile ? styles.mobileNotificationList : {}) }}>
+        <section style={{ ...themedStyles.notificationList, ...(isMobile ? themedStyles.mobileNotificationList : {}) }}>
           {filteredNotifications.length === 0 ? (
-            <div style={styles.emptyCard}>
-              <div style={styles.emptyIcon}>
+            <div style={themedStyles.emptyCard}>
+              <div style={themedStyles.emptyIcon}>
                 {activeFilter === "UNREAD" ? "✓" : "🔔"}
               </div>
 
-              <h3 style={styles.emptyTitle}>
+              <h3 style={themedStyles.emptyTitle}>
                 {activeFilter === "UNREAD"
                   ? "You're all caught up"
                   : "No notifications yet"}
               </h3>
 
-              <p style={styles.emptyText}>
+              <p style={themedStyles.emptyText}>
                 {activeFilter === "UNREAD"
                   ? "There are no unread notifications requiring your attention."
                   : "Your banking alerts and important updates will appear here."}
@@ -546,47 +597,47 @@ function Notifications() {
                 <div
                   key={notification.id}
                   style={{
-                    ...styles.notificationCard,
-                    ...(notification.read ? {} : styles.unreadCard),
+                    ...themedStyles.notificationCard,
+                    ...(notification.read ? {} : themedStyles.unreadCard),
                   }}
                 >
                   <div
                     style={{
-                      ...styles.notificationIcon,
+                      ...themedStyles.notificationIcon,
                       ...iconStyle,
                     }}
                   >
                     {getNotificationIcon(notification.notificationType)}
                   </div>
 
-                  <div style={styles.notificationContent}>
-                    <div style={{ ...styles.notificationTop, ...(isMobile ? styles.mobileNotificationTop : {}) }}>
+                  <div style={themedStyles.notificationContent}>
+                    <div style={{ ...themedStyles.notificationTop, ...(isMobile ? themedStyles.mobileNotificationTop : {}) }}>
                       <div>
-                        <span style={styles.notificationType}>
+                        <span style={themedStyles.notificationType}>
                           {formatType(notification.notificationType)}
                         </span>
 
                         {!notification.read && (
-                          <span style={styles.unreadBadge}>NEW</span>
+                          <span style={themedStyles.unreadBadge}>NEW</span>
                         )}
                       </div>
 
-                      <span style={styles.channelBadge}>
+                      <span style={themedStyles.channelBadge}>
                         {notification.channel || "IN_APP"}
                       </span>
                     </div>
 
-                    <h3 style={{ ...styles.notificationTitle, ...(isMobile ? styles.mobileNotificationTitle : {}) }}>
+                    <h3 style={{ ...themedStyles.notificationTitle, ...(isMobile ? themedStyles.mobileNotificationTitle : {}) }}>
                       {notification.title || "Avani Bank Notification"}
                     </h3>
 
-                    <p style={{ ...styles.notificationMessage, ...(isMobile ? styles.mobileNotificationMessage : {}) }}>
+                    <p style={{ ...themedStyles.notificationMessage, ...(isMobile ? themedStyles.mobileNotificationMessage : {}) }}>
                       {notification.message ||
                         "You have a new notification from Avani Bank."}
                     </p>
 
-                    <div style={{ ...styles.notificationBottom, ...(isMobile ? styles.mobileNotificationBottom : {}) }}>
-                      <span style={styles.notificationDate}>
+                    <div style={{ ...themedStyles.notificationBottom, ...(isMobile ? themedStyles.mobileNotificationBottom : {}) }}>
+                      <span style={themedStyles.notificationDate}>
                         {formatDate(notification.createdAt)}
 
                         {formatTime(notification.createdAt) &&
@@ -598,7 +649,7 @@ function Notifications() {
                           type="button"
                           disabled={actionLoading === notification.id}
                           style={{
-                            ...styles.readButton,
+                            ...themedStyles.readButton,
                             opacity:
                               actionLoading === notification.id ? 0.6 : 1,
                           }}
@@ -635,7 +686,8 @@ function Notifications() {
             style={{
               width: "100%",
               maxWidth: "390px",
-              background: "#ffffff",
+              background: darkMode ? "#172235" : "#ffffff",
+              border: darkMode ? "1px solid #304158" : "none",
               borderRadius: "18px",
               padding: "25px",
               boxSizing: "border-box",
@@ -663,7 +715,7 @@ function Notifications() {
               style={{
                 margin: "0 0 7px",
                 fontSize: "17px",
-                color: "#202b45",
+                color: darkMode ? "#edf3ff" : "#202b45",
               }}
             >
               Clear all notifications?
@@ -672,7 +724,7 @@ function Notifications() {
             <p
               style={{
                 margin: 0,
-                color: "#7b8497",
+                color: darkMode ? "#b0bfd5" : "#7b8497",
                 fontSize: "11px",
                 lineHeight: "1.5",
               }}
@@ -695,8 +747,9 @@ function Notifications() {
                 disabled={actionLoading === "CLEAR_ALL"}
                 style={{
                   border: "1px solid #dce4f2",
-                  background: "#ffffff",
-                  color: "#59657b",
+                  background: darkMode ? "#1d2b42" : "#ffffff",
+                  color: darkMode ? "#d3def0" : "#59657b",
+                  border: darkMode ? "1px solid #3a5274" : "1px solid #dce4f2",
                   borderRadius: "9px",
                   padding: "9px 14px",
                   fontSize: "10px",
@@ -732,7 +785,7 @@ function Notifications() {
       )}
       {/* ================= FOOTER ================= */}
 
-      <footer style={{ ...styles.footer, ...(isMobile ? styles.mobileFooter : {}) }}>
+      <footer style={{ ...themedStyles.footer, ...(isMobile ? themedStyles.mobileFooter : {}) }}>
         <div>© {new Date().getFullYear()} Avani Bank</div>
 
         <div>Secure • Reliable • Digital Banking</div>

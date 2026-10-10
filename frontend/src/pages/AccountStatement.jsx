@@ -5,6 +5,18 @@ function AccountStatement() {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -265,29 +277,157 @@ function AccountStatement() {
     loadingCard: { ...styles.loadingCard, width: "100%", maxWidth: "380px", padding: isMobile ? "25px 18px" : "35px", boxSizing: "border-box" },
   };
 
+  const themedStyles = {
+    ...responsiveStyles,
+    page: {
+      ...responsiveStyles.page,
+      background: darkMode ? "#0b1220" : responsiveStyles.page.background,
+      color: darkMode ? "#e5e7eb" : responsiveStyles.page.color,
+    },
+    container: {
+      ...responsiveStyles.container,
+    },
+    eyebrow: {
+      ...responsiveStyles.eyebrow,
+      color: darkMode ? "#8fb4ff" : responsiveStyles.eyebrow.color,
+    },
+    title: {
+      ...responsiveStyles.title,
+      color: darkMode ? "#f1f5f9" : responsiveStyles.title.color,
+    },
+    subtitle: {
+      ...responsiveStyles.subtitle,
+      color: darkMode ? "#a5b4c8" : responsiveStyles.subtitle.color,
+    },
+    summaryCard: {
+      ...responsiveStyles.summaryCard,
+      background: darkMode ? "#151f31" : responsiveStyles.summaryCard.background,
+      borderColor: darkMode ? "#2b3950" : "#e5eaf2",
+      boxShadow: darkMode ? "0 8px 25px rgba(0,0,0,0.18)" : responsiveStyles.summaryCard.boxShadow,
+    },
+    accountNumber: {
+      ...responsiveStyles.accountNumber,
+      color: darkMode ? "#e5edf9" : responsiveStyles.accountNumber.color,
+    },
+    label: {
+      ...responsiveStyles.label,
+      color: darkMode ? "#a5b4c8" : responsiveStyles.label.color,
+    },
+    balanceSummary: {
+      ...responsiveStyles.balanceSummary,
+      background: darkMode ? "#12372e" : responsiveStyles.balanceSummary.background,
+    },
+    statementCard: {
+      ...responsiveStyles.statementCard,
+      background: darkMode ? "#151f31" : responsiveStyles.statementCard.background,
+      borderColor: darkMode ? "#2b3950" : "#e5eaf2",
+      boxShadow: darkMode ? "0 8px 25px rgba(0,0,0,0.18)" : responsiveStyles.statementCard.boxShadow,
+    },
+    th: {
+      ...responsiveStyles.th,
+      background: darkMode ? "#1c2940" : responsiveStyles.th.background,
+      color: darkMode ? "#c2cee0" : responsiveStyles.th.color,
+      borderBottomColor: darkMode ? "#334155" : "#e6ebf2",
+    },
+    tableRow: {
+      ...responsiveStyles.tableRow,
+      borderBottomColor: darkMode ? "#2b3950" : "#edf0f4",
+    },
+    td: {
+      ...responsiveStyles.td,
+      color: darkMode ? "#d5deeb" : responsiveStyles.td.color,
+    },
+    description: {
+      ...responsiveStyles.description,
+      color: darkMode ? "#e5edf9" : responsiveStyles.description.color,
+    },
+    securityCard: {
+      ...responsiveStyles.securityCard,
+      background: darkMode ? "#151f31" : responsiveStyles.securityCard.background,
+      borderColor: darkMode ? "#2b3950" : "#e5eaf2",
+      boxShadow: darkMode ? "0 6px 20px rgba(0,0,0,0.16)" : responsiveStyles.securityCard.boxShadow,
+    },
+    securityTitle: {
+      ...responsiveStyles.securityTitle,
+      color: darkMode ? "#e5edf9" : responsiveStyles.securityTitle.color,
+    },
+    securityText: {
+      ...responsiveStyles.securityText,
+      color: darkMode ? "#a5b4c8" : responsiveStyles.securityText.color,
+    },
+    errorBox: {
+      ...responsiveStyles.errorBox,
+      background: darkMode ? "#3a1d26" : responsiveStyles.errorBox.background,
+      borderColor: darkMode ? "#713344" : "#ffd0d0",
+      color: darkMode ? "#ffb4bd" : responsiveStyles.errorBox.color,
+    },
+    emptyTitle: {
+      ...responsiveStyles.emptyTitle,
+      color: darkMode ? "#e5edf9" : responsiveStyles.emptyTitle.color,
+    },
+    emptyText: {
+      ...responsiveStyles.emptyText,
+      color: darkMode ? "#a5b4c8" : responsiveStyles.emptyText.color,
+    },
+    loadingPage: {
+      ...responsiveStyles.loadingPage,
+      background: darkMode ? "#0b1220" : responsiveStyles.loadingPage.background,
+    },
+    loadingCard: {
+      ...responsiveStyles.loadingCard,
+      background: darkMode ? "#151f31" : responsiveStyles.loadingCard.background,
+      boxShadow: darkMode ? "0 15px 40px rgba(0,0,0,0.25)" : responsiveStyles.loadingCard.boxShadow,
+    },
+    loadingTitle: {
+      ...responsiveStyles.loadingTitle,
+      color: darkMode ? "#e5edf9" : responsiveStyles.loadingTitle.color,
+    },
+    loadingText: {
+      ...responsiveStyles.loadingText,
+      color: darkMode ? "#a5b4c8" : responsiveStyles.loadingText.color,
+    },
+    loader: {
+      ...responsiveStyles.loader,
+      borderColor: darkMode ? "#334155" : "#dfe6f2",
+      borderTopColor: "#2457c6",
+    },
+    creditBadge: {
+      ...responsiveStyles.creditBadge,
+      color: darkMode ? "#6ee7b7" : responsiveStyles.creditBadge.color,
+      background: darkMode ? "#12372e" : responsiveStyles.creditBadge.background,
+      borderColor: darkMode ? "#245c4a" : "#cceede",
+    },
+    debitBadge: {
+      ...responsiveStyles.debitBadge,
+      color: darkMode ? "#fca5a5" : responsiveStyles.debitBadge.color,
+      background: darkMode ? "#3a1d26" : responsiveStyles.debitBadge.background,
+      borderColor: darkMode ? "#713344" : "#ffd1d1",
+    },
+  };
+
   // =====================================================
   // LOADING
   // =====================================================
 
   if (loading) {
     return (
-      <div style={responsiveStyles.loadingPage}>
-        <div style={responsiveStyles.loadingCard}>
+      <div style={themedStyles.loadingPage}>
+        <div style={themedStyles.loadingCard}>
 
-          <div style={responsiveStyles.loadingIcon}>
+          <div style={themedStyles.loadingIcon}>
             📄
           </div>
 
-          <h2 style={responsiveStyles.loadingTitle}>
+          <h2 style={themedStyles.loadingTitle}>
             Loading statement
           </h2>
 
-          <p style={responsiveStyles.loadingText}>
+          <p style={themedStyles.loadingText}>
             Please wait while we fetch your
             account statement...
           </p>
 
-          <div style={responsiveStyles.loader}></div>
+          <div style={themedStyles.loader}></div>
 
         </div>
       </div>
@@ -299,25 +439,25 @@ function AccountStatement() {
   // =====================================================
 
   return (
-    <div style={responsiveStyles.page}>
+    <div style={themedStyles.page}>
 
       {/* ================= HEADER ================= */}
 
-      <header style={responsiveStyles.header}>
+      <header style={themedStyles.header}>
 
-        <div style={responsiveStyles.brandArea}>
+        <div style={themedStyles.brandArea}>
 
-          <div style={responsiveStyles.brandIcon}>
+          <div style={themedStyles.brandIcon}>
             🏦
           </div>
 
           <div>
 
-            <div style={responsiveStyles.brandName}>
+            <div style={themedStyles.brandName}>
               AVANI BANK
             </div>
 
-            <div style={responsiveStyles.brandSubtitle}>
+            <div style={themedStyles.brandSubtitle}>
               Account Statement
             </div>
 
@@ -326,7 +466,7 @@ function AccountStatement() {
         </div>
 
         <button
-          style={responsiveStyles.headerButton}
+          style={themedStyles.headerButton}
           onClick={() =>
             navigate("/accounts")
           }
@@ -338,19 +478,19 @@ function AccountStatement() {
 
       {/* ================= MAIN ================= */}
 
-      <main style={responsiveStyles.container}>
+      <main style={themedStyles.container}>
 
-        <section style={responsiveStyles.pageHeading}>
+        <section style={themedStyles.pageHeading}>
 
-          <p style={responsiveStyles.eyebrow}>
+          <p style={themedStyles.eyebrow}>
             ACCOUNT SERVICES
           </p>
 
-          <h1 style={responsiveStyles.title}>
+          <h1 style={themedStyles.title}>
             Account Statement
           </h1>
 
-          <p style={responsiveStyles.subtitle}>
+          <p style={themedStyles.subtitle}>
             View your recent transactions and
             account activity.
           </p>
@@ -359,7 +499,7 @@ function AccountStatement() {
 
         {error ? (
 
-          <div style={responsiveStyles.errorBox}>
+          <div style={themedStyles.errorBox}>
             {error}
           </div>
 
@@ -369,21 +509,21 @@ function AccountStatement() {
 
             {/* ================= SUMMARY ================= */}
 
-            <section style={responsiveStyles.summaryCard}>
+            <section style={themedStyles.summaryCard}>
 
-              <div style={responsiveStyles.accountSummary}>
+              <div style={themedStyles.accountSummary}>
 
-                <div style={responsiveStyles.summaryIcon}>
+                <div style={themedStyles.summaryIcon}>
                   💳
                 </div>
 
                 <div>
 
-                  <p style={responsiveStyles.label}>
+                  <p style={themedStyles.label}>
                     ACCOUNT NUMBER
                   </p>
 
-                  <p style={responsiveStyles.accountNumber}>
+                  <p style={themedStyles.accountNumber}>
                     {account?.accountNumber ||
                       "N/A"}
                   </p>
@@ -392,13 +532,13 @@ function AccountStatement() {
 
               </div>
 
-              <div style={responsiveStyles.balanceSummary}>
+              <div style={themedStyles.balanceSummary}>
 
-                <p style={responsiveStyles.balanceLabel}>
+                <p style={themedStyles.balanceLabel}>
                   AVAILABLE BALANCE
                 </p>
 
-                <p style={responsiveStyles.summaryBalance}>
+                <p style={themedStyles.summaryBalance}>
                   ₹
                   {formatCurrency(
                     account?.balance
@@ -411,21 +551,21 @@ function AccountStatement() {
 
             {/* ================= TRANSACTIONS ================= */}
 
-            <section style={responsiveStyles.statementCard}>
+            <section style={themedStyles.statementCard}>
 
               {transactions.length === 0 ? (
 
-                <div style={responsiveStyles.emptyState}>
+                <div style={themedStyles.emptyState}>
 
-                  <div style={responsiveStyles.emptyIcon}>
+                  <div style={themedStyles.emptyIcon}>
                     📄
                   </div>
 
-                  <h3 style={responsiveStyles.emptyTitle}>
+                  <h3 style={themedStyles.emptyTitle}>
                     No Transactions Found
                   </h3>
 
-                  <p style={responsiveStyles.emptyText}>
+                  <p style={themedStyles.emptyText}>
                     There are no transactions
                     available for this account.
                   </p>
@@ -434,29 +574,29 @@ function AccountStatement() {
 
               ) : (
 
-                <div style={responsiveStyles.tableWrapper}>
+                <div style={themedStyles.tableWrapper}>
 
-                  <table style={responsiveStyles.table}>
+                  <table style={themedStyles.table}>
 
                     <thead>
 
                       <tr>
 
-                        <th style={responsiveStyles.th}>
+                        <th style={themedStyles.th}>
                           DATE
                         </th>
 
-                        <th style={responsiveStyles.th}>
+                        <th style={themedStyles.th}>
                           DESCRIPTION
                         </th>
 
-                        <th style={responsiveStyles.th}>
+                        <th style={themedStyles.th}>
                           TYPE
                         </th>
 
                         <th
                           style={{
-                            ...responsiveStyles.th,
+                            ...themedStyles.th,
                             textAlign: "right",
                           }}
                         >
@@ -465,7 +605,7 @@ function AccountStatement() {
 
                         <th
                           style={{
-                            ...responsiveStyles.th,
+                            ...themedStyles.th,
                             textAlign: "right",
                           }}
                         >
@@ -509,12 +649,12 @@ function AccountStatement() {
                                 index
                               }
                               style={
-                                styles.tableRow
+                                themedStyles.tableRow
                               }
                             >
 
                               <td
-                                style={responsiveStyles.td}
+                                style={themedStyles.td}
                               >
                                 {formatDate(
                                   transaction.transactionDate ||
@@ -524,12 +664,12 @@ function AccountStatement() {
                               </td>
 
                               <td
-                                style={responsiveStyles.td}
+                                style={themedStyles.td}
                               >
 
                                 <span
                                   style={
-                                    styles.description
+                                    themedStyles.description
                                   }
                                 >
                                   {getDescription(
@@ -540,15 +680,15 @@ function AccountStatement() {
                               </td>
 
                               <td
-                                style={responsiveStyles.td}
+                                style={themedStyles.td}
                               >
 
                                 <span
                                   style={{
-                                    ...responsiveStyles.typeBadge,
+                                    ...themedStyles.typeBadge,
                                     ...(isCredit
-                                      ? styles.creditBadge
-                                      : styles.debitBadge),
+                                      ? themedStyles.creditBadge
+                                      : themedStyles.debitBadge),
                                   }}
                                 >
                                   {isCredit
@@ -560,7 +700,7 @@ function AccountStatement() {
 
                               <td
                                 style={{
-                                  ...styles.td,
+                                  ...themedStyles.td,
                                   textAlign: "right",
                                   fontWeight: "800",
                                   color: isCredit
@@ -578,7 +718,7 @@ function AccountStatement() {
 
                               <td
                                 style={{
-                                  ...styles.td,
+                                  ...themedStyles.td,
                                   textAlign: "right",
                                   fontWeight: "700",
                                   color: "#253657",
@@ -607,19 +747,19 @@ function AccountStatement() {
 
             {/* ================= SECURITY ================= */}
 
-            <section style={responsiveStyles.securityCard}>
+            <section style={themedStyles.securityCard}>
 
-              <div style={responsiveStyles.securityIcon}>
+              <div style={themedStyles.securityIcon}>
                 🛡️
               </div>
 
               <div>
 
-                <h3 style={responsiveStyles.securityTitle}>
+                <h3 style={themedStyles.securityTitle}>
                   This is your account statement
                 </h3>
 
-                <p style={responsiveStyles.securityText}>
+                <p style={themedStyles.securityText}>
                   This statement contains your
                   recent transactions and account
                   activity.

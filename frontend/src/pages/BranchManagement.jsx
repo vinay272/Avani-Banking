@@ -16,6 +16,19 @@ const STAFF_ROLES = [
 
 const BranchManagement = () => {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("adminTheme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => setDarkMode(localStorage.getItem("adminTheme") === "dark");
+    window.addEventListener("storage", syncTheme);
+    window.addEventListener("admin-theme-change", syncTheme);
+    return () => {
+      window.removeEventListener("storage", syncTheme);
+      window.removeEventListener("admin-theme-change", syncTheme);
+    };
+  }, []);
 
   // =========================================================
   // MAIN STATES
@@ -2468,12 +2481,122 @@ const BranchManagement = () => {
   // RENDER
   // =========================================================
   return (
-    <div className="branch-management-page" style={responsiveStyles.page}>
+    <div className="branch-management-page" data-theme={darkMode ? "dark" : "light"} style={responsiveStyles.page}>
       <style>{`
         .branch-management-page {
           width: 100%;
           max-width: 100%;
           overflow-x: hidden;
+        }
+        .branch-management-page[data-theme="dark"] {
+          background: #0b1220 !important;
+          color: #e5edf8 !important;
+          color-scheme: dark;
+        }
+        .branch-management-page[data-theme="dark"] main,
+        .branch-management-page[data-theme="dark"] section,
+        .branch-management-page[data-theme="dark"] article,
+        .branch-management-page[data-theme="dark"] [style*="background: rgb(255, 255, 255)"],
+        .branch-management-page[data-theme="dark"] [style*="background-color: rgb(255, 255, 255)"],
+        .branch-management-page[data-theme="dark"] [style*="background: white"],
+        .branch-management-page[data-theme="dark"] [style*="background-color: white"],
+        .branch-management-page[data-theme="dark"] [style*="background: #fff"],
+        .branch-management-page[data-theme="dark"] [style*="background-color: #fff"] {
+          background: #111c2e !important;
+          background-color: #111c2e !important;
+          color: #e5edf8 !important;
+        }
+        .branch-management-page[data-theme="dark"] [style*="background: rgb(244, 247, 251)"],
+        .branch-management-page[data-theme="dark"] [style*="background-color: rgb(244, 247, 251)"] {
+          background: #0b1220 !important;
+          background-color: #0b1220 !important;
+        }
+        /* Dark mode for detail cards inside Branch/ATM/Vault/Daily Closing modals. */
+        .branch-management-page[data-theme="dark"] [style*="background: #f8fafc"],
+        .branch-management-page[data-theme="dark"] [style*="background-color: #f8fafc"],
+        .branch-management-page[data-theme="dark"] [style*="background: rgb(248, 250, 252)"],
+        .branch-management-page[data-theme="dark"] [style*="background: #f7faff"],
+        .branch-management-page[data-theme="dark"] [style*="background: rgb(247, 250, 255)"],
+        .branch-management-page[data-theme="dark"] [style*="background: #f2f5f9"],
+        .branch-management-page[data-theme="dark"] [style*="background: rgb(242, 245, 249)"] {
+          background: #17263b !important;
+          background-color: #17263b !important;
+          border-color: #34445d !important;
+          color: #e5edf8 !important;
+        }
+        .branch-management-page[data-theme="dark"] [style*="color: rgb(29, 42, 61)"],
+        .branch-management-page[data-theme="dark"] [style*="color: #1d2a3d"],
+        .branch-management-page[data-theme="dark"] [style*="color: rgb(113, 128, 150)"],
+        .branch-management-page[data-theme="dark"] [style*="color: #718096"] {
+          color: #c1cfe1 !important;
+        }
+        .branch-management-page[data-theme="dark"] input,
+        .branch-management-page[data-theme="dark"] select,
+        .branch-management-page[data-theme="dark"] textarea {
+          background: #0b1628 !important;
+          color: #e5edf8 !important;
+          border-color: #34445d !important;
+        }
+        .branch-management-page[data-theme="dark"] input::placeholder,
+        .branch-management-page[data-theme="dark"] textarea::placeholder {
+          color: #94a3b8 !important;
+        }
+        .branch-management-page[data-theme="dark"] table,
+        .branch-management-page[data-theme="dark"] thead,
+        .branch-management-page[data-theme="dark"] tbody,
+        .branch-management-page[data-theme="dark"] tr,
+        .branch-management-page[data-theme="dark"] td,
+        .branch-management-page[data-theme="dark"] th {
+          background-color: #111c2e !important;
+          color: #dbe7f7 !important;
+          border-color: #2a3a52 !important;
+        }
+        .branch-management-page[data-theme="dark"] h1,
+        .branch-management-page[data-theme="dark"] h2,
+        .branch-management-page[data-theme="dark"] h3,
+        .branch-management-page[data-theme="dark"] p,
+        .branch-management-page[data-theme="dark"] label,
+        .branch-management-page[data-theme="dark"] span,
+        .branch-management-page[data-theme="dark"] strong,
+        .branch-management-page[data-theme="dark"] div {
+          border-color: #2a3a52;
+        }
+        /* Keep section headings readable when their inline light-mode color is present. */
+        .branch-management-page[data-theme="dark"] h2,
+        .branch-management-page[data-theme="dark"] h3,
+        .branch-management-page[data-theme="dark"] [style*="color: rgb(22, 36, 58)"],
+        .branch-management-page[data-theme="dark"] [style*="color: #16243a"],
+        .branch-management-page[data-theme="dark"] [style*="color: rgb(23, 32, 51)"],
+        .branch-management-page[data-theme="dark"] [style*="color: #172033"] {
+          color: #e5edf8 !important;
+        }
+        /* Branch analytics cards use light inline backgrounds, so override them explicitly. */
+        .branch-management-page[data-theme="dark"] .branch-analytics-hero {
+          background: #17263b !important;
+          background-image: none !important;
+          border-color: #34445d !important;
+          color: #e5edf8 !important;
+        }
+        .branch-management-page[data-theme="dark"] .branch-analytics-hero h3,
+        .branch-management-page[data-theme="dark"] .branch-analytics-hero p {
+          color: #e5edf8 !important;
+        }
+        .branch-management-page[data-theme="dark"] .branch-analytics-card {
+          background: #17263b !important;
+          border-color: #34445d !important;
+          color: #e5edf8 !important;
+        }
+        .branch-management-page[data-theme="dark"] .branch-analytics-label {
+          color: #a9bad0 !important;
+        }
+        .branch-management-page[data-theme="dark"] .branch-analytics-value {
+          color: #f1f6ff !important;
+        }
+        .branch-management-page[data-theme="dark"] button:not([style*="linear-gradient"]) {
+          border-color: #34445d;
+        }
+        .branch-management-page[data-theme="dark"] [style*="box-shadow"] {
+          box-shadow: 0 5px 18px rgba(0,0,0,.22) !important;
         }
         .branch-management-page * {
           box-sizing: border-box;
@@ -3518,7 +3641,7 @@ const BranchManagement = () => {
             )}
             {analytics && !analyticsLoading && (
               <>
-                <div style={responsiveStyles.analyticsHero}>
+                <div className="branch-analytics-hero" style={responsiveStyles.analyticsHero}>
                   <div>
                     <div style={responsiveStyles.analyticsCode}>
                       {analytics.branchCode || "—"}
@@ -3567,9 +3690,9 @@ const BranchManagement = () => {
                       analytics.latestTransactionCount ?? "—",
                     ],
                   ].map(([label, value]) => (
-                    <div style={responsiveStyles.analyticsCard} key={label}>
-                      <div style={responsiveStyles.detailLabel}>{label}</div>
-                      <div style={responsiveStyles.analyticsValue}>{value}</div>
+                    <div className="branch-analytics-card" style={responsiveStyles.analyticsCard} key={label}>
+                      <div className="branch-analytics-label" style={responsiveStyles.detailLabel}>{label}</div>
+                      <div className="branch-analytics-value" style={responsiveStyles.analyticsValue}>{value}</div>
                     </div>
                   ))}
                 </div>
@@ -4202,7 +4325,7 @@ const BranchManagement = () => {
                   ["Updated At", formatDate(selectedAtm.updatedAt)],
                 ].map(([label, value]) => (
                   <div style={responsiveStyles.detailItem} key={label}>
-                    <div style={responsiveStyles.detailLabel}>{label}</div>
+                    <div className="branch-analytics-label" style={responsiveStyles.detailLabel}>{label}</div>
                     <div style={responsiveStyles.detailValue}>{value}</div>
                   </div>
                 ))}
@@ -4941,7 +5064,7 @@ const BranchManagement = () => {
                   ["Updated At", formatDate(selectedCashCounter.updatedAt)],
                 ].map(([label, value]) => (
                   <div style={responsiveStyles.cashCounterDetailItem} key={label}>
-                    <div style={responsiveStyles.detailLabel}>{label}</div>
+                    <div className="branch-analytics-label" style={responsiveStyles.detailLabel}>{label}</div>
                     <div style={responsiveStyles.detailValue}>{value}</div>
                   </div>
                 ))}

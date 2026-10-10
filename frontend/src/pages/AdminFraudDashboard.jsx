@@ -6,6 +6,28 @@ const API_BASE = "http://localhost:8080/api";
 function AdminFraudDashboard() {
   const navigate = useNavigate();
 
+  // Follow the parent Admin Dashboard theme preference.
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("adminTheme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("adminTheme") === "dark");
+    };
+
+    syncTheme();
+    window.addEventListener("storage", syncTheme);
+    window.addEventListener("focus", syncTheme);
+    window.addEventListener("admin-theme-change", syncTheme);
+
+    return () => {
+      window.removeEventListener("storage", syncTheme);
+      window.removeEventListener("focus", syncTheme);
+      window.removeEventListener("admin-theme-change", syncTheme);
+    };
+  }, []);
+
   const [alerts, setAlerts] = useState([]);
   const [statistics, setStatistics] = useState(null);
 
@@ -21,6 +43,52 @@ function AdminFraudDashboard() {
   const [resolving, setResolving] = useState(false);
 
   const token = localStorage.getItem("token");
+
+  const themedStyles = useMemo(() => {
+    const darkOverrides = {
+      page: { background: "#0b1220", color: "#e5edf8" },
+      container: { color: "#e5edf8" },
+      eyebrow: { color: "#8eafff" },
+      title: { color: "#f1f5ff" },
+      subtitle: { color: "#a9bad3" },
+      kpiCard: { background: "#172235", border: "1px solid #2b3a52", boxShadow: "none" },
+      kpiLabel: { color: "#b7c5da" },
+      kpiValue: { color: "#f1f5ff" },
+      kpiSub: { color: "#a9bad3" },
+      sectionTitle: { color: "#f1f5ff" },
+      filterBar: { background: "#172235", borderColor: "#2b3a52" },
+      select: { background: "#101a2b", color: "#e5edf8", borderColor: "#34445d" },
+      clearButton: { background: "#26354b", color: "#dce7f7" },
+      tableCard: { background: "#172235", borderColor: "#2b3a52", boxShadow: "none" },
+      customerAvatar: { background: "#263b5b", color: "#c6d8ff" },
+      customerName: { color: "#e5edf8" },
+      customerEmail: { color: "#a9bad3" },
+      alertType: { color: "#d5e0f1" },
+      score: { color: "#e5edf8" },
+      actionButton: { background: "#1b2b43", color: "#a9c5ff", borderColor: "#3b4e6b" },
+      tableLoading: { color: "#b3c2d8" },
+      emptyState: { color: "#dbe6f6" },
+      analyticsCard: { background: "#172235", borderColor: "#2b3a52", boxShadow: "none" },
+      analyticsTitle: { color: "#f1f5ff" },
+      analyticsRow: { color: "#c4d0e2", borderBottomColor: "#2b3a52" },
+      modal: { background: "#172235", color: "#e5edf8" },
+      modalHeader: { borderBottomColor: "#2b3a52" },
+      modalTitle: { color: "#f1f5ff" },
+      closeButton: { background: "#26354b", color: "#dce7f7" },
+      detailLabel: { color: "#a9bad3" },
+      descriptionBox: { background: "#101a2b", color: "#dbe6f6" },
+      resolveSection: { borderTopColor: "#2b3a52" },
+      textarea: { background: "#101a2b", color: "#e5edf8", borderColor: "#34445d" },
+      detectedBox: { color: "#a9bad3" },
+    };
+
+    return Object.fromEntries(
+      Object.entries(styles).map(([key, value]) => [
+        key,
+        { ...value, ...(darkMode ? darkOverrides[key] || {} : {}) },
+      ])
+    );
+  }, [darkMode]);
 
   const getHeaders = () => ({
     Authorization: `Bearer ${token}`,
@@ -362,31 +430,31 @@ function AdminFraudDashboard() {
   };
 
   return (
-    <div style={styles.page} className="admin-fraud-page">
+    <div style={themedStyles.page} className="admin-fraud-page" data-theme={darkMode ? "dark" : "light"}>
       {/* ================= HEADER ================= */}
 
-      <header style={styles.navbar} className="admin-fraud-navbar">
-        <div style={styles.brandArea} className="admin-fraud-brand">
-          <div style={styles.brandIcon} className="admin-fraud-brand-icon">🛡️</div>
+      <header style={themedStyles.navbar} className="admin-fraud-navbar">
+        <div style={themedStyles.brandArea} className="admin-fraud-brand">
+          <div style={themedStyles.brandIcon} className="admin-fraud-brand-icon">🛡️</div>
 
           <div>
-            <div style={styles.brandName}>
+            <div style={themedStyles.brandName}>
               AVANI BANK
             </div>
 
-            <div style={styles.brandSubtitle}>
+            <div style={themedStyles.brandSubtitle}>
               Security & Risk Management
             </div>
           </div>
         </div>
 
-        <div style={styles.navRight} className="admin-fraud-nav-right">
-          <span style={styles.adminBadge}>
+        <div style={themedStyles.navRight} className="admin-fraud-nav-right">
+          <span style={themedStyles.adminBadge}>
             ADMIN SECURITY PANEL
           </span>
 
           <button
-            style={styles.backButton}
+            style={themedStyles.backButton}
             onClick={() => navigate("/admin/dashboard")}
           >
            ← Admin Dashboard
@@ -396,25 +464,25 @@ function AdminFraudDashboard() {
 
       {/* ================= MAIN ================= */}
 
-      <main style={styles.container} className="admin-fraud-container">
-        <section style={styles.heading} className="admin-fraud-heading">
+      <main style={themedStyles.container} className="admin-fraud-container">
+        <section style={themedStyles.heading} className="admin-fraud-heading">
           <div>
-            <p style={styles.eyebrow}>
+            <p style={themedStyles.eyebrow}>
               SECURITY OPERATIONS
             </p>
 
-            <h1 style={styles.title}>
+            <h1 style={themedStyles.title}>
               Fraud Detection & Risk Management
             </h1>
 
-            <p style={styles.subtitle}>
+            <p style={themedStyles.subtitle}>
               Monitor suspicious activity, investigate risk
               alerts and manage security incidents.
             </p>
           </div>
 
           <button
-            style={styles.refreshButton}
+            style={themedStyles.refreshButton}
             onClick={refreshDashboard}
           >
             ↻ Refresh
@@ -422,54 +490,54 @@ function AdminFraudDashboard() {
         </section>
 
         {error && (
-          <div style={styles.errorBox}>
+          <div style={themedStyles.errorBox}>
             ⚠️ {error}
           </div>
         )}
 
         {/* ================= KPI ================= */}
 
-        <section style={styles.kpiGrid} className="admin-fraud-kpi">
-          <div style={styles.kpiCard}>
-            <div style={styles.kpiIcon}>🔔</div>
+        <section style={themedStyles.kpiGrid} className="admin-fraud-kpi">
+          <div style={themedStyles.kpiCard}>
+            <div style={themedStyles.kpiIcon}>🔔</div>
 
             <div>
-              <p style={styles.kpiLabel}>
+              <p style={themedStyles.kpiLabel}>
                 TOTAL ALERTS
               </p>
 
-              <h2 style={styles.kpiValue}>
+              <h2 style={themedStyles.kpiValue}>
                 {totalAlerts}
               </h2>
 
-              <p style={styles.kpiSub}>
+              <p style={themedStyles.kpiSub}>
                 All fraud incidents
               </p>
             </div>
           </div>
 
-          <div style={styles.kpiCard}>
-            <div style={styles.kpiIcon}>⏳</div>
+          <div style={themedStyles.kpiCard}>
+            <div style={themedStyles.kpiIcon}>⏳</div>
 
             <div>
-              <p style={styles.kpiLabel}>
+              <p style={themedStyles.kpiLabel}>
                 OPEN ALERTS
               </p>
 
-              <h2 style={styles.kpiValue}>
+              <h2 style={themedStyles.kpiValue}>
                 {openAlerts}
               </h2>
 
-              <p style={styles.kpiSub}>
+              <p style={themedStyles.kpiSub}>
                 Require investigation
               </p>
             </div>
           </div>
 
-          <div style={styles.kpiCard}>
+          <div style={themedStyles.kpiCard}>
             <div
               style={{
-                ...styles.kpiIcon,
+                ...themedStyles.kpiIcon,
                 background: "#fee2e2",
               }}
             >
@@ -477,29 +545,29 @@ function AdminFraudDashboard() {
             </div>
 
             <div>
-              <p style={styles.kpiLabel}>
+              <p style={themedStyles.kpiLabel}>
                 CRITICAL
               </p>
 
               <h2
                 style={{
-                  ...styles.kpiValue,
+                  ...themedStyles.kpiValue,
                   color: "#b91c1c",
                 }}
               >
                 {criticalAlerts}
               </h2>
 
-              <p style={styles.kpiSub}>
+              <p style={themedStyles.kpiSub}>
                 Highest risk
               </p>
             </div>
           </div>
 
-          <div style={styles.kpiCard}>
+          <div style={themedStyles.kpiCard}>
             <div
               style={{
-                ...styles.kpiIcon,
+                ...themedStyles.kpiIcon,
                 background: "#fff1f2",
               }}
             >
@@ -507,29 +575,29 @@ function AdminFraudDashboard() {
             </div>
 
             <div>
-              <p style={styles.kpiLabel}>
+              <p style={themedStyles.kpiLabel}>
                 HIGH RISK
               </p>
 
               <h2
                 style={{
-                  ...styles.kpiValue,
+                  ...themedStyles.kpiValue,
                   color: "#dc2626",
                 }}
               >
                 {highAlerts}
               </h2>
 
-              <p style={styles.kpiSub}>
+              <p style={themedStyles.kpiSub}>
                 Priority incidents
               </p>
             </div>
           </div>
 
-          <div style={styles.kpiCard}>
+          <div style={themedStyles.kpiCard}>
             <div
               style={{
-                ...styles.kpiIcon,
+                ...themedStyles.kpiIcon,
                 background: "#fff7ed",
               }}
             >
@@ -537,29 +605,29 @@ function AdminFraudDashboard() {
             </div>
 
             <div>
-              <p style={styles.kpiLabel}>
+              <p style={themedStyles.kpiLabel}>
                 MEDIUM RISK
               </p>
 
               <h2
                 style={{
-                  ...styles.kpiValue,
+                  ...themedStyles.kpiValue,
                   color: "#b7791f",
                 }}
               >
                 {mediumAlerts}
               </h2>
 
-              <p style={styles.kpiSub}>
+              <p style={themedStyles.kpiSub}>
                 Monitor closely
               </p>
             </div>
           </div>
 
-          <div style={styles.kpiCard}>
+          <div style={themedStyles.kpiCard}>
             <div
               style={{
-                ...styles.kpiIcon,
+                ...themedStyles.kpiIcon,
                 background: "#ecfdf5",
               }}
             >
@@ -567,20 +635,20 @@ function AdminFraudDashboard() {
             </div>
 
             <div>
-              <p style={styles.kpiLabel}>
+              <p style={themedStyles.kpiLabel}>
                 RESOLVED
               </p>
 
               <h2
                 style={{
-                  ...styles.kpiValue,
+                  ...themedStyles.kpiValue,
                   color: "#16875a",
                 }}
               >
                 {resolvedAlerts}
               </h2>
 
-              <p style={styles.kpiSub}>
+              <p style={themedStyles.kpiSub}>
                 Closed incidents
               </p>
             </div>
@@ -589,14 +657,14 @@ function AdminFraudDashboard() {
 
         {/* ================= ALERTS ================= */}
 
-        <section style={styles.section}>
-          <div style={styles.sectionHeader}>
+        <section style={themedStyles.section}>
+          <div style={themedStyles.sectionHeader}>
             <div>
-              <p style={styles.eyebrow}>
+              <p style={themedStyles.eyebrow}>
                 FRAUD MONITORING
               </p>
 
-              <h2 style={styles.sectionTitle}>
+              <h2 style={themedStyles.sectionTitle}>
                 Fraud Alerts
               </h2>
             </div>
@@ -604,13 +672,13 @@ function AdminFraudDashboard() {
 
           {/* FILTERS */}
 
-          <div style={styles.filterBar} className="admin-fraud-filter-bar">
+          <div style={themedStyles.filterBar} className="admin-fraud-filter-bar">
             <select
               value={riskFilter}
               onChange={(event) =>
                 handleRiskChange(event.target.value)
               }
-              style={styles.select}
+              style={themedStyles.select}
             >
               <option value="">
                 All Risk Levels
@@ -638,7 +706,7 @@ function AdminFraudDashboard() {
               onChange={(event) =>
                 handleTypeChange(event.target.value)
               }
-              style={styles.select}
+              style={themedStyles.select}
             >
               <option value="">
                 All Alert Types
@@ -670,22 +738,22 @@ function AdminFraudDashboard() {
             </select>
 
             <button
-              style={styles.clearButton}
+              style={themedStyles.clearButton}
               onClick={clearFilters}
             >
               Clear Filters
             </button>
           </div>
 
-          <div style={styles.tableCard}>
+          <div style={themedStyles.tableCard}>
             {loading ? (
-              <div style={styles.tableLoading}>
-                <div style={styles.loader}></div>
+              <div style={themedStyles.tableLoading}>
+                <div style={themedStyles.loader}></div>
                 Loading fraud alerts...
               </div>
             ) : alerts.length === 0 ? (
-              <div style={styles.emptyState}>
-                <div style={styles.emptyIcon}>
+              <div style={themedStyles.emptyState}>
+                <div style={themedStyles.emptyIcon}>
                   ✓
                 </div>
 
@@ -697,8 +765,8 @@ function AdminFraudDashboard() {
                 </p>
               </div>
             ) : (
-              <div style={styles.tableWrapper}>
-                <table style={styles.table}>
+              <div style={themedStyles.tableWrapper}>
+                <table style={themedStyles.table}>
                   <thead>
                     <tr>
                       <th>ALERT ID</th>
@@ -724,8 +792,8 @@ function AdminFraudDashboard() {
                         </td>
 
                         <td>
-                          <div style={styles.customerCell}>
-                            <div style={styles.customerAvatar}>
+                          <div style={themedStyles.customerCell}>
+                            <div style={themedStyles.customerAvatar}>
                               {(
                                 alert.customer?.fullName ||
                                 alert.customer?.email ||
@@ -736,13 +804,13 @@ function AdminFraudDashboard() {
                             </div>
 
                             <div>
-                              <div style={styles.customerName}>
+                              <div style={themedStyles.customerName}>
                                 {alert.customer?.fullName ||
                                   alert.customer?.email ||
                                   "Customer"}
                               </div>
 
-                              <div style={styles.customerEmail}>
+                              <div style={themedStyles.customerEmail}>
                                 {alert.customer?.email || "N/A"}
                               </div>
                             </div>
@@ -750,7 +818,7 @@ function AdminFraudDashboard() {
                         </td>
 
                         <td>
-                          <span style={styles.alertType}>
+                          <span style={themedStyles.alertType}>
                             {formatAlertType(
                               alert.alertType
                             )}
@@ -760,7 +828,7 @@ function AdminFraudDashboard() {
                         <td>
                           <span
                             style={{
-                              ...styles.riskBadge,
+                              ...themedStyles.riskBadge,
                               ...styles[
                                 getRiskClass(
                                   alert.riskLevel
@@ -773,7 +841,7 @@ function AdminFraudDashboard() {
                         </td>
 
                         <td>
-                          <strong style={styles.score}>
+                          <strong style={themedStyles.score}>
                             {Number(
                               alert.riskScore || 0
                             ).toFixed(0)}
@@ -793,8 +861,8 @@ function AdminFraudDashboard() {
                             style={
                               String(alert.status).toUpperCase() ===
                               "RESOLVED"
-                                ? styles.resolvedBadge
-                                : styles.openBadge
+                                ? themedStyles.resolvedBadge
+                                : themedStyles.openBadge
                             }
                           >
                             {alert.status || "OPEN"}
@@ -810,7 +878,7 @@ function AdminFraudDashboard() {
 
                         <td>
                           <button
-                            style={styles.actionButton}
+                            style={themedStyles.actionButton}
                             onClick={() =>
                               setSelectedAlert(alert)
                             }
@@ -828,25 +896,25 @@ function AdminFraudDashboard() {
         </section>
         {/* ================= RISK ANALYTICS ================= */}
 
-<section style={styles.analyticsSection} className="admin-fraud-analytics-section">
-  <div style={styles.sectionHeader}>
+<section style={themedStyles.analyticsSection} className="admin-fraud-analytics-section">
+  <div style={themedStyles.sectionHeader}>
     <div>
-      <p style={styles.eyebrow}>
+      <p style={themedStyles.eyebrow}>
         SECURITY INTELLIGENCE
       </p>
 
-      <h2 style={styles.sectionTitle}>
+      <h2 style={themedStyles.sectionTitle}>
         Fraud Risk Analytics
       </h2>
     </div>
   </div>
 
-  <div style={styles.analyticsGrid} className="admin-fraud-analytics">
+  <div style={themedStyles.analyticsGrid} className="admin-fraud-analytics">
 
     {/* RISK DISTRIBUTION */}
 
-    <div style={styles.analyticsCard}>
-      <h3 style={styles.analyticsTitle}>
+    <div style={themedStyles.analyticsCard}>
+      <h3 style={themedStyles.analyticsTitle}>
         Risk Distribution
       </h3>
 
@@ -876,12 +944,12 @@ function AdminFraudDashboard() {
       ].map((item) => (
         <div
           key={item.label}
-          style={styles.analyticsRow}
+          style={themedStyles.analyticsRow}
         >
-          <div style={styles.analyticsRowLeft}>
+          <div style={themedStyles.analyticsRowLeft}>
             <span
               style={{
-                ...styles.analyticsDot,
+                ...themedStyles.analyticsDot,
                 ...styles[item.className],
               }}
             ></span>
@@ -896,8 +964,8 @@ function AdminFraudDashboard() {
 
     {/* ALERT TYPE DISTRIBUTION */}
 
-    <div style={styles.analyticsCard}>
-      <h3 style={styles.analyticsTitle}>
+    <div style={themedStyles.analyticsCard}>
+      <h3 style={themedStyles.analyticsTitle}>
         Alert Types
       </h3>
 
@@ -917,7 +985,7 @@ function AdminFraudDashboard() {
         return (
           <div
             key={type}
-            style={styles.analyticsRow}
+            style={themedStyles.analyticsRow}
           >
             <span>
               {formatAlertType(type)}
@@ -931,8 +999,8 @@ function AdminFraudDashboard() {
 
     {/* TRANSACTION RISK */}
 
-    <div style={styles.analyticsCard}>
-      <h3 style={styles.analyticsTitle}>
+    <div style={themedStyles.analyticsCard}>
+      <h3 style={themedStyles.analyticsTitle}>
         Transaction Risk
       </h3>
 
@@ -953,7 +1021,7 @@ function AdminFraudDashboard() {
         return (
           <div
             key={type}
-            style={styles.analyticsRow}
+            style={themedStyles.analyticsRow}
           >
             <span>{type}</span>
 
@@ -965,8 +1033,8 @@ function AdminFraudDashboard() {
 
     {/* LOGIN / SECURITY RISK */}
 
-    <div style={styles.analyticsCard}>
-      <h3 style={styles.analyticsTitle}>
+    <div style={themedStyles.analyticsCard}>
+      <h3 style={themedStyles.analyticsTitle}>
         Login & Security Risk
       </h3>
 
@@ -983,7 +1051,7 @@ function AdminFraudDashboard() {
         return (
           <div
             key={type}
-            style={styles.analyticsRow}
+            style={themedStyles.analyticsRow}
           >
             <span>
               {formatAlertType(type)}
@@ -1000,14 +1068,14 @@ function AdminFraudDashboard() {
 
 {/* ================= CUSTOMER SUPPORT ================= */}
 
-<section style={styles.section}>
-  <div style={styles.sectionHeader}>
+<section style={themedStyles.section}>
+  <div style={themedStyles.sectionHeader}>
     <div>
-      <p style={styles.eyebrow}>
+      <p style={themedStyles.eyebrow}>
         CUSTOMER SERVICE
       </p>
 
-      <h2 style={styles.sectionTitle}>
+      <h2 style={themedStyles.sectionTitle}>
         Customer Support
       </h2>
     </div>
@@ -1016,7 +1084,7 @@ function AdminFraudDashboard() {
   <button
     type="button"
     style={{
-      ...styles.analyticsCard,
+      ...themedStyles.analyticsCard,
       width: "100%",
       textAlign: "left",
       cursor: "pointer",
@@ -1080,14 +1148,14 @@ function AdminFraudDashboard() {
 
 {/* ================= REPORTS & ANALYTICS ================= */}
 
-<section style={styles.section}>
-  <div style={styles.sectionHeader}>
+<section style={themedStyles.section}>
+  <div style={themedStyles.sectionHeader}>
     <div>
-      <p style={styles.eyebrow}>
+      <p style={themedStyles.eyebrow}>
         EXECUTIVE INTELLIGENCE
       </p>
 
-      <h2 style={styles.sectionTitle}>
+      <h2 style={themedStyles.sectionTitle}>
         Reports & Analytics
       </h2>
     </div>
@@ -1096,7 +1164,7 @@ function AdminFraudDashboard() {
   <button
     type="button"
     style={{
-      ...styles.analyticsCard,
+      ...themedStyles.analyticsCard,
       width: "100%",
       textAlign: "left",
       cursor: "pointer",
@@ -1169,28 +1237,28 @@ function AdminFraudDashboard() {
 
       {selectedAlert && (
         <div
-          style={styles.modalOverlay}
+          style={themedStyles.modalOverlay}
           onClick={() => setSelectedAlert(null)}
         >
           <div
-            style={styles.modal}
+            style={themedStyles.modal}
             onClick={(event) =>
               event.stopPropagation()
             }
           >
-            <div style={styles.modalHeader}>
+            <div style={themedStyles.modalHeader}>
               <div>
-                <p style={styles.eyebrow}>
+                <p style={themedStyles.eyebrow}>
                   SECURITY INCIDENT
                 </p>
 
-                <h2 style={styles.modalTitle}>
+                <h2 style={themedStyles.modalTitle}>
                   Alert #{selectedAlert.id}
                 </h2>
               </div>
 
               <button
-                style={styles.closeButton}
+                style={themedStyles.closeButton}
                 onClick={() =>
                   setSelectedAlert(null)
                 }
@@ -1199,9 +1267,9 @@ function AdminFraudDashboard() {
               </button>
             </div>
 
-            <div style={styles.detailGrid} className="admin-fraud-detail-grid">
+            <div style={themedStyles.detailGrid} className="admin-fraud-detail-grid">
               <div>
-                <span style={styles.detailLabel}>
+                <span style={themedStyles.detailLabel}>
                   CUSTOMER
                 </span>
 
@@ -1213,7 +1281,7 @@ function AdminFraudDashboard() {
               </div>
 
               <div>
-                <span style={styles.detailLabel}>
+                <span style={themedStyles.detailLabel}>
                   ALERT TYPE
                 </span>
 
@@ -1225,7 +1293,7 @@ function AdminFraudDashboard() {
               </div>
 
               <div>
-                <span style={styles.detailLabel}>
+                <span style={themedStyles.detailLabel}>
                   RISK LEVEL
                 </span>
 
@@ -1235,7 +1303,7 @@ function AdminFraudDashboard() {
               </div>
 
               <div>
-                <span style={styles.detailLabel}>
+                <span style={themedStyles.detailLabel}>
                   RISK SCORE
                 </span>
 
@@ -1247,7 +1315,7 @@ function AdminFraudDashboard() {
               </div>
 
               <div>
-                <span style={styles.detailLabel}>
+                <span style={themedStyles.detailLabel}>
                   TRANSACTION TYPE
                 </span>
 
@@ -1258,7 +1326,7 @@ function AdminFraudDashboard() {
               </div>
 
               <div>
-                <span style={styles.detailLabel}>
+                <span style={themedStyles.detailLabel}>
                   LOCATION
                 </span>
 
@@ -1268,7 +1336,7 @@ function AdminFraudDashboard() {
               </div>
 
               <div>
-                <span style={styles.detailLabel}>
+                <span style={themedStyles.detailLabel}>
                   STATUS
                 </span>
 
@@ -1278,7 +1346,7 @@ function AdminFraudDashboard() {
               </div>
 
               <div>
-                <span style={styles.detailLabel}>
+                <span style={themedStyles.detailLabel}>
                   TRANSACTION ID
                 </span>
 
@@ -1289,8 +1357,8 @@ function AdminFraudDashboard() {
               </div>
             </div>
 
-            <div style={styles.descriptionBox}>
-              <span style={styles.detailLabel}>
+            <div style={themedStyles.descriptionBox}>
+              <span style={themedStyles.detailLabel}>
                 DESCRIPTION
               </span>
 
@@ -1302,8 +1370,8 @@ function AdminFraudDashboard() {
 
             {String(selectedAlert.status).toUpperCase() ===
               "OPEN" && (
-              <div style={styles.resolveSection}>
-                <span style={styles.detailLabel}>
+              <div style={themedStyles.resolveSection}>
+                <span style={themedStyles.detailLabel}>
                   RESOLUTION NOTE
                 </span>
 
@@ -1315,12 +1383,12 @@ function AdminFraudDashboard() {
                     )
                   }
                   placeholder="Enter investigation/resolution note..."
-                  style={styles.textarea}
+                  style={themedStyles.textarea}
                   rows={4}
                 />
 
                 <button
-                  style={styles.resolveButton}
+                  style={themedStyles.resolveButton}
                   onClick={resolveAlert}
                   disabled={resolving}
                 >
@@ -1331,7 +1399,7 @@ function AdminFraudDashboard() {
               </div>
             )}
 
-            <div style={styles.detectedBox}>
+            <div style={themedStyles.detectedBox}>
               Detected:{" "}
               {formatDate(
                 selectedAlert.detectedAt ||
@@ -1595,7 +1663,10 @@ const styles = {
     width: "100%",
     borderCollapse: "collapse",
     minWidth: "1100px",
+    marginLeft: "10px",
   },
+
+  
 
 //   table th: {
 //     background: "#f8f9fc",
@@ -1913,6 +1984,24 @@ analyticsDot: {
 const styleSheet = document.createElement("style");
 
 styleSheet.innerHTML = `
+
+  .admin-fraud-page[data-theme="dark"] table th {
+    background: #101a2b;
+    color: #a9bad3;
+    border-bottom: 1px solid #2b3a52;
+  }
+  .admin-fraud-page[data-theme="dark"] table td {
+    color: #d5e0f1;
+    border-bottom: 1px solid #26354b;
+  }
+  .admin-fraud-page[data-theme="dark"] table tbody tr:hover {
+    background: #1d2a40;
+  }
+  .admin-fraud-page[data-theme="dark"] .admin-fraud-container h3,
+  .admin-fraud-page[data-theme="dark"] .admin-fraud-container p {
+    color: inherit;
+  }
+
   @keyframes adminFraudSpin {
     from {
       transform: rotate(0deg);

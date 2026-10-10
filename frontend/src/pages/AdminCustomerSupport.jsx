@@ -62,6 +62,21 @@ function AdminCustomerSupport() {
 
   const token = localStorage.getItem("token");
 
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("adminTheme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("adminTheme") === "dark");
+    };
+
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
   const [activeTab, setActiveTab] =
     useState("complaints");
 
@@ -458,7 +473,7 @@ function AdminCustomerSupport() {
       <>
         <style>{adminStyles}</style>
 
-        <div className="admin-support-loading">
+        <div className="admin-support-loading" data-theme={darkMode ? "dark" : "light"}>
           <div className="admin-support-loader"></div>
 
           <h2>
@@ -478,7 +493,7 @@ function AdminCustomerSupport() {
     <>
       <style>{adminStyles}</style>
 
-      <div className="admin-support-page">
+      <div className="admin-support-page" data-theme={darkMode ? "dark" : "light"}>
         <div className="admin-support-container">
 
           {/* HEADER */}
@@ -2439,6 +2454,71 @@ const adminStyles = `
     padding: 15px;
   }
 }
+
+/* Admin dashboard theme integration */
+.admin-support-page[data-theme="dark"],
+.admin-support-loading[data-theme="dark"] { background: #0b1220; color: #e5eaf3; }
+.admin-support-page[data-theme="dark"] .admin-support-kpis > div,
+.admin-support-page[data-theme="dark"] .admin-support-tabs,
+.admin-support-page[data-theme="dark"] .admin-table-card,
+.admin-support-page[data-theme="dark"] .feedback-admin-card,
+.admin-support-page[data-theme="dark"] .admin-chat-card,
+.admin-support-page[data-theme="dark"] .admin-modal,
+.admin-support-page[data-theme="dark"] .admin-chat-row.customer .admin-chat-bubble {
+  background: #151f30; border-color: #2b394e; color: #e5eaf3;
+}
+.admin-support-page[data-theme="dark"] .admin-support-kpis strong,
+.admin-support-page[data-theme="dark"] .admin-section-heading h2,
+.admin-support-page[data-theme="dark"] .admin-table-wrapper td strong,
+.admin-support-page[data-theme="dark"] .feedback-admin-card > strong,
+.admin-support-page[data-theme="dark"] .admin-modal-header h2,
+.admin-support-page[data-theme="dark"] .admin-detail-box strong { color: #edf3ff; }
+.admin-support-page[data-theme="dark"] .admin-support-kpis span,
+.admin-support-page[data-theme="dark"] .admin-section-heading p,
+.admin-support-page[data-theme="dark"] .admin-table-wrapper td,
+.admin-support-page[data-theme="dark"] .admin-table-wrapper td small,
+.admin-support-page[data-theme="dark"] .feedback-admin-card p,
+.admin-support-page[data-theme="dark"] .admin-modal-header p,
+.admin-support-page[data-theme="dark"] .admin-detail-box p,
+.admin-support-page[data-theme="dark"] .admin-chat-controls label,
+.admin-support-page[data-theme="dark"] .admin-form-group label { color: #a7b4c8; }
+.admin-support-page[data-theme="dark"] .admin-support-tabs button { color: #b7c4d8; }
+.admin-support-page[data-theme="dark"] .admin-table-wrapper th {
+  background: #1b293d; border-color: #2b394e; color: #b7c4d8;
+}
+.admin-support-page[data-theme="dark"] .admin-table-wrapper td { border-color: #27354a; }
+.admin-support-page[data-theme="dark"] .refresh-button,
+.admin-support-page[data-theme="dark"] .action-button,
+.admin-support-page[data-theme="dark"] .status-select,
+.admin-support-page[data-theme="dark"] .admin-chat-controls input,
+.admin-support-page[data-theme="dark"] .admin-form-group input,
+.admin-support-page[data-theme="dark"] .admin-form-group select,
+.admin-support-page[data-theme="dark"] .admin-form-group textarea,
+.admin-support-page[data-theme="dark"] .admin-chat-input input,
+.admin-support-page[data-theme="dark"] .modal-cancel {
+  background: #101a2a; border-color: #35445b; color: #e5eaf3;
+}
+.admin-support-page[data-theme="dark"] .admin-detail-box {
+  background: #1b293d; border-color: #35445b;
+}
+.admin-support-page[data-theme="dark"] .admin-chat-controls,
+.admin-support-page[data-theme="dark"] .admin-chat-input { border-color: #2b394e; }
+.admin-support-page[data-theme="dark"] .admin-chat-messages {
+  background: linear-gradient(180deg, #101a2a, #0f1725);
+}
+.admin-support-page[data-theme="dark"] .admin-modal-header button {
+  background: #263449; color: #e5eaf3;
+}
+.admin-support-page[data-theme="dark"] .admin-support-footer { color: #8796ad; }
+.admin-support-page[data-theme="dark"] .admin-alert.error {
+  background: #351e29; border-color: #713344; color: #ffb8c0;
+}
+.admin-support-page[data-theme="dark"] .admin-alert.success {
+  background: #15352d; border-color: #28614e; color: #9ce8c5;
+}
+.admin-support-loading[data-theme="dark"] h2 { color: #edf3ff; }
+.admin-support-loading[data-theme="dark"] p { color: #a7b4c8; }
+
 `;
 
 export default AdminCustomerSupport;

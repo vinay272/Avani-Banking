@@ -4,6 +4,54 @@ import { useNavigate } from "react-router-dom";
 function Settings() {
   const navigate = useNavigate();
 
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    window.addEventListener("storage", syncTheme);
+    window.addEventListener("avani-theme-change", syncTheme);
+    syncTheme();
+    return () => {
+      window.removeEventListener("storage", syncTheme);
+      window.removeEventListener("avani-theme-change", syncTheme);
+    };
+  }, []);
+
+  const themedStyles = darkMode
+    ? {
+        ...styles,
+        page: { ...styles.page, background: "#0b1220", color: "#e5e7eb" },
+        container: { ...styles.container },
+        header: styles.header,
+        headerButton: styles.headerButton,
+        profileButton: styles.profileButton,
+        card: { ...styles.card, background: "#111c2e", border: "1px solid #263449", boxShadow: "0 8px 30px rgba(0,0,0,0.18)" },
+        cardTitle: { ...styles.cardTitle, color: "#f1f5f9" },
+        cardSubtitle: { ...styles.cardSubtitle, color: "#a6b4c8" },
+        accountItem: { ...styles.accountItem, background: "#172438", border: "1px solid #2b3b52" },
+        label: { ...styles.label, color: "#a6b4c8" },
+        value: { ...styles.value, color: "#e5edf7" },
+        settingRow: { ...styles.settingRow, borderTop: "1px solid #29384d" },
+        settingTitle: { ...styles.settingTitle, color: "#e5edf7" },
+        settingDescription: { ...styles.settingDescription, color: "#a6b4c8" },
+        settingIcon: { ...styles.settingIcon, background: "#22334c" },
+        actionButton: { ...styles.actionButton, background: "#1b2b45", border: "1px solid #344b6c", color: "#c6d8ff" },
+        quickCard: { ...styles.quickCard, background: "#172438", border: "1px solid #2b3b52" },
+        quickTitle: { ...styles.quickTitle, color: "#e5edf7" },
+        quickText: { ...styles.quickText, color: "#a6b4c8" },
+        arrow: { ...styles.arrow, color: "#9bbcff" },
+        logoutCard: { ...styles.logoutCard, background: "#111c2e", border: "1px solid #57353b" },
+        logoutTitle: { ...styles.logoutTitle, color: "#f1f5f9" },
+        logoutText: { ...styles.logoutText, color: "#a6b4c8" },
+        loadingTitle: { ...styles.loadingTitle, color: "#f1f5f9" },
+        loadingText: { ...styles.loadingText, color: "#a6b4c8" },
+      }
+    : styles;
+
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -175,15 +223,15 @@ function Settings() {
 
   if (loading) {
     return (
-      <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
-        <div style={styles.loading}>
-          <div style={styles.loadingIcon}>⟳</div>
+      <div style={{ ...themedStyles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
+        <div style={themedStyles.loading}>
+          <div style={themedStyles.loadingIcon}>⟳</div>
 
-          <h2 style={styles.loadingTitle}>
+          <h2 style={themedStyles.loadingTitle}>
             Loading Settings
           </h2>
 
-          <p style={styles.loadingText}>
+          <p style={themedStyles.loadingText}>
             Please wait...
           </p>
         </div>
@@ -192,41 +240,41 @@ function Settings() {
   }
 
   return (
-    <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
-      <div style={{ ...styles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
+    <div style={{ ...themedStyles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
+      <div style={{ ...themedStyles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
 
         {/* =========================
             HEADER
         ========================= */}
 
-        <div style={{ ...styles.header, ...(isMobile ? responsiveStyles.header : {}) }}>
+        <div style={{ ...themedStyles.header, ...(isMobile ? responsiveStyles.header : {}) }}>
 
           <div>
-            <p style={styles.smallTitle}>
+            <p style={themedStyles.smallTitle}>
               AVANI BANK
             </p>
 
-            <h1 style={styles.title}>
+            <h1 style={themedStyles.title}>
               Settings
             </h1>
 
-            <p style={styles.subtitle}>
+            <p style={themedStyles.subtitle}>
               Manage your account preferences and security.
             </p>
           </div>
 
-          <div style={{ ...styles.headerActions, ...(isMobile ? responsiveStyles.headerActions : {}) }}>
+          <div style={{ ...themedStyles.headerActions, ...(isMobile ? responsiveStyles.headerActions : {}) }}>
 
             <button
               onClick={() => navigate("/dashboard")}
-              style={{ ...styles.headerButton, ...(isMobile ? responsiveStyles.headerButton : {}) }}
+              style={{ ...themedStyles.headerButton, ...(isMobile ? responsiveStyles.headerButton : {}) }}
             >
               ← Dashboard
             </button>
 
             <button
               onClick={() => navigate("/profile")}
-              style={{ ...styles.profileButton, ...(isMobile ? responsiveStyles.profileButton : {}) }}
+              style={{ ...themedStyles.profileButton, ...(isMobile ? responsiveStyles.profileButton : {}) }}
             >
               👤 Profile
             </button>
@@ -240,7 +288,7 @@ function Settings() {
         ========================= */}
 
         {message && (
-          <div style={styles.message}>
+          <div style={themedStyles.message}>
             ✓ {message}
           </div>
         )}
@@ -249,66 +297,66 @@ function Settings() {
             ACCOUNT OVERVIEW
         ========================= */}
 
-        <div style={{ ...styles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
+        <div style={{ ...themedStyles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
 
-          <div style={{ ...styles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
+          <div style={{ ...themedStyles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
 
             <div>
-              <h2 style={styles.cardTitle}>
+              <h2 style={themedStyles.cardTitle}>
                 Account Overview
               </h2>
 
-              <p style={styles.cardSubtitle}>
+              <p style={themedStyles.cardSubtitle}>
                 Your current account information
               </p>
             </div>
 
-            <div style={styles.iconBox}>
+            <div style={themedStyles.iconBox}>
               🏦
             </div>
 
           </div>
 
-          <div style={{ ...styles.accountGrid, ...(isMobile ? responsiveStyles.accountGrid : {}) }}>
+          <div style={{ ...themedStyles.accountGrid, ...(isMobile ? responsiveStyles.accountGrid : {}) }}>
 
-            <div style={styles.accountItem}>
-              <span style={styles.label}>
+            <div style={themedStyles.accountItem}>
+              <span style={themedStyles.label}>
                 Account Holder
               </span>
 
-              <strong style={styles.value}>
+              <strong style={themedStyles.value}>
                 {customer?.fullName || "N/A"}
               </strong>
             </div>
 
-            <div style={styles.accountItem}>
-              <span style={styles.label}>
+            <div style={themedStyles.accountItem}>
+              <span style={themedStyles.label}>
                 Account Number
               </span>
 
-              <strong style={styles.value}>
+              <strong style={themedStyles.value}>
                 {customer?.accountNumber || "N/A"}
               </strong>
             </div>
 
-            <div style={styles.accountItem}>
-              <span style={styles.label}>
+            <div style={themedStyles.accountItem}>
+              <span style={themedStyles.label}>
                 Account Type
               </span>
 
-              <strong style={styles.value}>
+              <strong style={themedStyles.value}>
                 {customer?.accountType || "N/A"}
               </strong>
             </div>
 
-            <div style={styles.accountItem}>
-              <span style={styles.label}>
+            <div style={themedStyles.accountItem}>
+              <span style={themedStyles.label}>
                 Account Status
               </span>
 
               <strong
                 style={{
-                  ...styles.value,
+                  ...themedStyles.value,
                    ...(isMobile ? responsiveStyles.value : {}),
                    color:
                     customer?.status === "ACTIVE"
@@ -328,40 +376,40 @@ function Settings() {
             SECURITY
         ========================= */}
 
-        <div style={{ ...styles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
+        <div style={{ ...themedStyles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
 
-          <div style={{ ...styles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
+          <div style={{ ...themedStyles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
 
             <div>
-              <h2 style={styles.cardTitle}>
+              <h2 style={themedStyles.cardTitle}>
                 Security
               </h2>
 
-              <p style={styles.cardSubtitle}>
+              <p style={themedStyles.cardSubtitle}>
                 Keep your account secure
               </p>
             </div>
 
-            <div style={styles.securityIcon}>
+            <div style={themedStyles.securityIcon}>
               🔐
             </div>
 
           </div>
 
-          <div style={{ ...styles.settingRow, ...(isMobile ? responsiveStyles.settingRow : {}) }}>
+          <div style={{ ...themedStyles.settingRow, ...(isMobile ? responsiveStyles.settingRow : {}) }}>
 
-            <div style={{ ...styles.settingLeft, ...(isMobile ? responsiveStyles.settingLeft : {}) }}>
+            <div style={{ ...themedStyles.settingLeft, ...(isMobile ? responsiveStyles.settingLeft : {}) }}>
 
-              <div style={styles.settingIcon}>
+              <div style={themedStyles.settingIcon}>
                 🔑
               </div>
 
               <div>
-                <h3 style={styles.settingTitle}>
+                <h3 style={themedStyles.settingTitle}>
                   Password
                 </h3>
 
-                <p style={styles.settingDescription}>
+                <p style={themedStyles.settingDescription}>
                   Change your account password regularly
                   for better security.
                 </p>
@@ -371,27 +419,27 @@ function Settings() {
 
             <button
               onClick={() => navigate("/profile")}
-              style={{ ...styles.actionButton, ...(isMobile ? responsiveStyles.actionButton : {}) }}
+              style={{ ...themedStyles.actionButton, ...(isMobile ? responsiveStyles.actionButton : {}) }}
             >
               Change Password →
             </button>
 
           </div>
 
-          <div style={{ ...styles.settingRow, ...(isMobile ? responsiveStyles.settingRow : {}) }}>
+          <div style={{ ...themedStyles.settingRow, ...(isMobile ? responsiveStyles.settingRow : {}) }}>
 
-            <div style={{ ...styles.settingLeft, ...(isMobile ? responsiveStyles.settingLeft : {}) }}>
+            <div style={{ ...themedStyles.settingLeft, ...(isMobile ? responsiveStyles.settingLeft : {}) }}>
 
-              <div style={styles.settingIcon}>
+              <div style={themedStyles.settingIcon}>
                 🛡️
               </div>
 
               <div>
-                <h3 style={styles.settingTitle}>
+                <h3 style={themedStyles.settingTitle}>
                   Account Security
                 </h3>
 
-                <p style={styles.settingDescription}>
+                <p style={themedStyles.settingDescription}>
                   Your account is protected with secure
                   authentication.
                 </p>
@@ -399,7 +447,7 @@ function Settings() {
 
             </div>
 
-            <span style={styles.secureBadge}>
+            <span style={themedStyles.secureBadge}>
               ✓ Secure
             </span>
 
@@ -411,21 +459,21 @@ function Settings() {
             NOTIFICATIONS
         ========================= */}
 
-        <div style={{ ...styles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
+        <div style={{ ...themedStyles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
 
-          <div style={{ ...styles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
+          <div style={{ ...themedStyles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
 
             <div>
-              <h2 style={styles.cardTitle}>
+              <h2 style={themedStyles.cardTitle}>
                 Notifications
               </h2>
 
-              <p style={styles.cardSubtitle}>
+              <p style={themedStyles.cardSubtitle}>
                 Manage your notification preferences
               </p>
             </div>
 
-            <div style={styles.iconBox}>
+            <div style={themedStyles.iconBox}>
               🔔
             </div>
 
@@ -433,20 +481,20 @@ function Settings() {
 
           {/* Transaction Notification */}
 
-          <div style={{ ...styles.settingRow, ...(isMobile ? responsiveStyles.settingRow : {}) }}>
+          <div style={{ ...themedStyles.settingRow, ...(isMobile ? responsiveStyles.settingRow : {}) }}>
 
-            <div style={{ ...styles.settingLeft, ...(isMobile ? responsiveStyles.settingLeft : {}) }}>
+            <div style={{ ...themedStyles.settingLeft, ...(isMobile ? responsiveStyles.settingLeft : {}) }}>
 
-              <div style={styles.settingIcon}>
+              <div style={themedStyles.settingIcon}>
                 💸
               </div>
 
               <div>
-                <h3 style={styles.settingTitle}>
+                <h3 style={themedStyles.settingTitle}>
                   Transaction Notifications
                 </h3>
 
-                <p style={styles.settingDescription}>
+                <p style={themedStyles.settingDescription}>
                   Receive notifications about account
                   transactions.
                 </p>
@@ -457,7 +505,7 @@ function Settings() {
             <button
               onClick={handleTransactionNotification}
               style={{
-                ...styles.toggle,
+                ...themedStyles.toggle,
                 background:
                   transactionNotifications
                     ? "#173b8c"
@@ -466,7 +514,7 @@ function Settings() {
             >
               <span
                 style={{
-                  ...styles.toggleCircle,
+                  ...themedStyles.toggleCircle,
                   transform:
                     transactionNotifications
                       ? "translateX(22px)"
@@ -479,20 +527,20 @@ function Settings() {
 
           {/* Security Notification */}
 
-          <div style={{ ...styles.settingRow, ...(isMobile ? responsiveStyles.settingRow : {}) }}>
+          <div style={{ ...themedStyles.settingRow, ...(isMobile ? responsiveStyles.settingRow : {}) }}>
 
-            <div style={{ ...styles.settingLeft, ...(isMobile ? responsiveStyles.settingLeft : {}) }}>
+            <div style={{ ...themedStyles.settingLeft, ...(isMobile ? responsiveStyles.settingLeft : {}) }}>
 
-              <div style={styles.settingIcon}>
+              <div style={themedStyles.settingIcon}>
                 🚨
               </div>
 
               <div>
-                <h3 style={styles.settingTitle}>
+                <h3 style={themedStyles.settingTitle}>
                   Security Notifications
                 </h3>
 
-                <p style={styles.settingDescription}>
+                <p style={themedStyles.settingDescription}>
                   Receive important security alerts about
                   your account.
                 </p>
@@ -503,7 +551,7 @@ function Settings() {
             <button
               onClick={handleSecurityNotification}
               style={{
-                ...styles.toggle,
+                ...themedStyles.toggle,
                 background:
                   securityNotifications
                     ? "#173b8c"
@@ -512,7 +560,7 @@ function Settings() {
             >
               <span
                 style={{
-                  ...styles.toggleCircle,
+                  ...themedStyles.toggleCircle,
                   transform:
                     securityNotifications
                       ? "translateX(22px)"
@@ -529,43 +577,43 @@ function Settings() {
             QUICK LINKS
         ========================= */}
 
-        <div style={{ ...styles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
+        <div style={{ ...themedStyles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
 
-          <div style={{ ...styles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
+          <div style={{ ...themedStyles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
 
             <div>
-              <h2 style={styles.cardTitle}>
+              <h2 style={themedStyles.cardTitle}>
                 Quick Links
               </h2>
 
-              <p style={styles.cardSubtitle}>
+              <p style={themedStyles.cardSubtitle}>
                 Quickly access your banking features
               </p>
             </div>
 
           </div>
 
-          <div style={{ ...styles.quickGrid, ...(isMobile ? responsiveStyles.quickGrid : {}) }}>
+          <div style={{ ...themedStyles.quickGrid, ...(isMobile ? responsiveStyles.quickGrid : {}) }}>
 
             <button
               onClick={() => navigate("/profile")}
-              style={styles.quickCard}
+              style={themedStyles.quickCard}
             >
-              <div style={styles.quickIcon}>
+              <div style={themedStyles.quickIcon}>
                 👤
               </div>
 
-              <div style={styles.quickContent}>
-                <h3 style={styles.quickTitle}>
+              <div style={themedStyles.quickContent}>
+                <h3 style={themedStyles.quickTitle}>
                   Profile & Account
                 </h3>
 
-                <p style={styles.quickText}>
+                <p style={themedStyles.quickText}>
                   View your account details
                 </p>
               </div>
 
-              <span style={styles.arrow}>
+              <span style={themedStyles.arrow}>
                 →
               </span>
             </button>
@@ -574,23 +622,23 @@ function Settings() {
               onClick={() =>
                 navigate("/transactions")
               }
-              style={styles.quickCard}
+              style={themedStyles.quickCard}
             >
-              <div style={styles.quickIcon}>
+              <div style={themedStyles.quickIcon}>
                 📋
               </div>
 
-              <div style={styles.quickContent}>
-                <h3 style={styles.quickTitle}>
+              <div style={themedStyles.quickContent}>
+                <h3 style={themedStyles.quickTitle}>
                   Transaction History
                 </h3>
 
-                <p style={styles.quickText}>
+                <p style={themedStyles.quickText}>
                   View all transactions
                 </p>
               </div>
 
-              <span style={styles.arrow}>
+              <span style={themedStyles.arrow}>
                 →
               </span>
             </button>
@@ -603,14 +651,14 @@ function Settings() {
             LOGOUT
         ========================= */}
 
-        <div style={{ ...styles.logoutCard, ...(isMobile ? responsiveStyles.logoutCard : {}) }}>
+        <div style={{ ...themedStyles.logoutCard, ...(isMobile ? responsiveStyles.logoutCard : {}) }}>
 
           <div>
-            <h3 style={styles.logoutTitle}>
+            <h3 style={themedStyles.logoutTitle}>
               Sign out of Avani Bank
             </h3>
 
-            <p style={styles.logoutText}>
+            <p style={themedStyles.logoutText}>
               You will need to login again to access
               your account.
             </p>
@@ -618,7 +666,7 @@ function Settings() {
 
           <button
             onClick={handleLogout}
-            style={{ ...styles.logoutAction, ...(isMobile ? responsiveStyles.logoutAction : {}) }}
+            style={{ ...themedStyles.logoutAction, ...(isMobile ? responsiveStyles.logoutAction : {}) }}
           >
             Logout
           </button>

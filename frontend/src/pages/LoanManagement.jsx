@@ -3,6 +3,19 @@ import { useNavigate } from "react-router-dom";
 
 function LoanManagement() {
   const navigate = useNavigate();
+
+  const [darkMode, setDarkMode] = React.useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  React.useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
   const [accounts, setAccounts] = React.useState([]);
 
   // =========================
@@ -1156,9 +1169,82 @@ if (!response.ok) {
             grid-template-columns: 1fr;
           }
         }
+
+        /* Avani Banking shared Dark Mode */ 
+        .loan-page.dark-mode [style*="background: rgb(255, 255, 255)"],
+        .loan-page.dark-mode [style*="background: #ffffff"],
+        .loan-page.dark-mode [style*="background: white"],
+        .loan-page.dark-mode [style*="background: #fbfcff"],
+        .loan-page.dark-mode [style*="background: #f8fbff"],
+        .loan-page.dark-mode [style*="background: #f8fafc"] {
+          background: #172235 !important;
+          border-color: #2b394d !important;
+        }
+        .loan-page.dark-mode [style*="color: #71809a"],
+        .loan-page.dark-mode [style*="color: #75839a"],
+        .loan-page.dark-mode [style*="color: #8490a8"],
+        .loan-page.dark-mode [style*="color: #667085"],
+        .loan-page.dark-mode [style*="color: #7b879a"] {
+          color: #aab7ca !important;
+        }
+
+        .loan-page.dark-mode {
+          background: #0b1220 !important;
+          color: #e5eaf3 !important;
+        }
+        .loan-page.dark-mode .section-card,
+        .loan-page.dark-mode .loan-type-card,
+        .loan-page.dark-mode .feature-card,
+        .loan-page.dark-mode .loan-applications-section {
+          background: #151f30 !important;
+          border-color: #2b394d !important;
+          color: #e5eaf3 !important;
+          box-shadow: 0 8px 25px rgba(0,0,0,0.18) !important;
+        }
+        .loan-page.dark-mode .section-heading,
+        .loan-page.dark-mode .loan-type-name,
+        .loan-page.dark-mode .feature-title {
+          color: #f1f5f9 !important;
+        }
+        .loan-page.dark-mode .section-description,
+        .loan-page.dark-mode .loan-type-description,
+        .loan-page.dark-mode .feature-description,
+        .loan-page.dark-mode .loan-footer {
+          color: #aab7ca !important;
+        }
+        .loan-page.dark-mode input,
+        .loan-page.dark-mode select,
+        .loan-page.dark-mode textarea {
+          background: #101827 !important;
+          color: #e5eaf3 !important;
+          border-color: #3a4960 !important;
+        }
+        .loan-page.dark-mode input::placeholder,
+        .loan-page.dark-mode textarea::placeholder {
+          color: #8998ad !important;
+        }
+        .loan-page.dark-mode option {
+          background: #101827;
+          color: #e5eaf3;
+        }
+        .loan-page.dark-mode .loan-type-card:hover,
+        .loan-page.dark-mode .feature-card:hover {
+          background: #1c2a40 !important;
+          border-color: #4a6da8 !important;
+        }
+        .loan-page.dark-mode .loan-header {
+          background: linear-gradient(135deg, #102354 0%, #173b8c 58%, #2457c6 100%);
+        }
+        .loan-page.dark-mode button:focus-visible,
+        .loan-page.dark-mode input:focus-visible,
+        .loan-page.dark-mode select:focus-visible,
+        .loan-page.dark-mode textarea:focus-visible {
+          outline: 2px solid #60a5fa;
+          outline-offset: 2px;
+        }
       `}</style>
 
-      <div className="loan-page">
+      <div className={`loan-page${darkMode ? " dark-mode" : ""}`}>
         <div className="loan-container">
           <div style={{ ...styles.loanHeader, ...(isMobile ? responsiveStyles.loanHeader : {}) }}>
             <div style={{ ...styles.loanHeaderContent, ...(isMobile ? responsiveStyles.loanHeaderContent : {}) }}>
@@ -1428,39 +1514,6 @@ if (!response.ok) {
                     }}
                   />
                 </div>
-
-                {/* <div>
-                  <label
-                    style={{
-                      display: "block",
-                      marginBottom: "7px",
-                      fontSize: "12px",
-                      fontWeight: "700",
-                    }}
-                  >
-                    Employment Type
-                  </label>
-
-                  <select
-                    name="employmentType"
-                    value={loanForm.employmentType}
-                    onChange={handleLoanFormChange}
-                    required
-                    style={{
-                      width: "100%",
-                      padding: "12px",
-                      border: "1px solid #dce3ee",
-                      borderRadius: "10px",
-                      background: "white",
-                    }}
-                  >
-                    <option value="SALARIED">Salaried</option>
-                    <option value="SELF_EMPLOYED">Self Employed</option>
-                    <option value="BUSINESS">Business Owner</option>
-                    <option value="STUDENT">Student</option>
-                  </select>
-                
-              </div> */}
               </div>
 
               <div style={{ marginTop: "16px" }}>

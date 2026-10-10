@@ -35,6 +35,22 @@ function BiometricVerification() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  // Sync this page with the theme selected on the Dashboard.
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("avani-theme") === "dark";
+  });
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
   const token = localStorage.getItem("token");
 
   // =========================
@@ -321,28 +337,28 @@ function BiometricVerification() {
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.loadingCard}>
+      <div style={{ ...styles.loadingPage, ...(darkMode ? darkStyles.loadingPage : {}) }}>
+        <div style={{ ...styles.loadingCard, ...(darkMode ? darkStyles.loadingCard : {}) }}>
           <div style={styles.loadingIcon}>
             🛡️
           </div>
 
-          <h2 style={styles.loadingTitle}>
+          <h2 style={{ ...styles.loadingTitle, ...(darkMode ? darkStyles.loadingTitle : {}) }}>
             Loading Biometric Verification
           </h2>
 
-          <p style={styles.loadingText}>
+          <p style={{ ...styles.loadingText, ...(darkMode ? darkStyles.loadingText : {}) }}>
             Please wait...
           </p>
 
-          <div style={styles.loader}></div>
+          <div style={{ ...styles.loader, ...(darkMode ? darkStyles.loader : {}) }}></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.mobilePage : {}) }}>
+    <div style={{ ...styles.page, ...(darkMode ? darkStyles.page : {}), ...(isMobile ? responsiveStyles.mobilePage : {}) }}>
 
       {/* =========================
           HEADER
@@ -377,7 +393,7 @@ function BiometricVerification() {
           CUSTOMER SUMMARY
       ========================= */}
 
-      <section style={{ ...styles.customerCard, ...(isMobile ? responsiveStyles.mobileCustomerCard : {}) }}>
+      <section style={{ ...styles.customerCard, ...(darkMode ? darkStyles.customerCard : {}), ...(isMobile ? responsiveStyles.mobileCustomerCard : {}) }}>
 
         <div style={styles.avatar}>
           {customer?.fullName
@@ -386,26 +402,26 @@ function BiometricVerification() {
         </div>
 
         <div style={{ ...styles.customerInfo, ...(isMobile ? responsiveStyles.mobileCustomerInfo : {}) }}>
-          <p style={styles.smallLabel}>
+          <p style={{ ...styles.smallLabel, ...(darkMode ? darkStyles.smallLabel : {}) }}>
             CUSTOMER
           </p>
 
-          <h2 style={styles.customerName}>
+          <h2 style={{ ...styles.customerName, ...(darkMode ? darkStyles.customerName : {}) }}>
             {customer?.fullName || "Customer"}
           </h2>
 
-          <p style={{ ...styles.customerEmail, overflowWrap: "anywhere" }}>
+          <p style={{ ...styles.customerEmail, ...(darkMode ? darkStyles.customerEmail : {}), overflowWrap: "anywhere" }}>
             {customer?.email ||
               "Email unavailable"}
           </p>
         </div>
 
-        <div style={{ ...styles.customerIdBox, ...(isMobile ? responsiveStyles.mobileCustomerIdBox : {}) }}>
-          <p style={styles.smallLabel}>
+        <div style={{ ...styles.customerIdBox, ...(darkMode ? darkStyles.customerIdBox : {}), ...(isMobile ? responsiveStyles.mobileCustomerIdBox : {}), ...(darkMode && isMobile ? darkStyles.mobileCustomerIdBox : {}) }}>
+          <p style={{ ...styles.smallLabel, ...(darkMode ? darkStyles.smallLabel : {}) }}>
             CUSTOMER ID
           </p>
 
-          <strong style={{ ...styles.customerId, overflowWrap: "anywhere" }}>
+          <strong style={{ ...styles.customerId, ...(darkMode ? darkStyles.customerId : {}), overflowWrap: "anywhere" }}>
             {customer?.id || "N/A"}
           </strong>
         </div>
@@ -417,13 +433,13 @@ function BiometricVerification() {
       ========================= */}
 
       {error && (
-        <div style={{ ...styles.errorMessage, overflowWrap: "anywhere" }}>
+        <div style={{ ...styles.errorMessage, ...(darkMode ? darkStyles.errorMessage : {}), overflowWrap: "anywhere" }}>
           ⚠️ {error}
         </div>
       )}
 
       {message && (
-        <div style={{ ...styles.successMessage, overflowWrap: "anywhere" }}>
+        <div style={{ ...styles.successMessage, ...(darkMode ? darkStyles.successMessage : {}), overflowWrap: "anywhere" }}>
           ✓ {message}
         </div>
       )}
@@ -432,25 +448,25 @@ function BiometricVerification() {
           VERIFICATION FORM
       ========================= */}
 
-      <section style={{ ...styles.formCard, ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
+      <section style={{ ...styles.formCard, ...(darkMode ? darkStyles.card : {}), ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
 
         <div style={styles.cardHeader}>
           <div>
-            <p style={styles.cardEyebrow}>
+            <p style={{ ...styles.cardEyebrow, ...(darkMode ? darkStyles.cardEyebrow : {}) }}>
               VERIFY IDENTITY
             </p>
 
-            <h2 style={styles.cardTitle}>
+            <h2 style={{ ...styles.cardTitle, ...(darkMode ? darkStyles.cardTitle : {}) }}>
               Record Biometric Verification
             </h2>
 
-            <p style={styles.cardDescription}>
+            <p style={{ ...styles.cardDescription, ...(darkMode ? darkStyles.cardDescription : {}) }}>
               Record the biometric verification
               result for this customer.
             </p>
           </div>
 
-          <div style={styles.cardIcon}>
+          <div style={{ ...styles.cardIcon, ...(darkMode ? darkStyles.cardIcon : {}) }}>
             🛡️
           </div>
         </div>
@@ -462,7 +478,7 @@ function BiometricVerification() {
             {/* BIOMETRIC TYPE */}
 
             <div style={styles.fieldGroup}>
-              <label style={styles.label}>
+              <label style={{ ...styles.label, ...(darkMode ? darkStyles.label : {}) }}>
                 Biometric Type
               </label>
 
@@ -473,7 +489,7 @@ function BiometricVerification() {
                     event.target.value
                   )
                 }
-                style={styles.input}
+                style={{ ...styles.input, ...(darkMode ? darkStyles.input : {}) }}
                 disabled={saving}
               >
                 <option value="FINGERPRINT">
@@ -493,7 +509,7 @@ function BiometricVerification() {
             {/* STATUS */}
 
             <div style={styles.fieldGroup}>
-              <label style={styles.label}>
+              <label style={{ ...styles.label, ...(darkMode ? darkStyles.label : {}) }}>
                 Verification Status
               </label>
 
@@ -504,7 +520,7 @@ function BiometricVerification() {
                     event.target.value
                   )
                 }
-                style={styles.input}
+                style={{ ...styles.input, ...(darkMode ? darkStyles.input : {}) }}
                 disabled={saving}
               >
                 <option value="VERIFIED">
@@ -526,9 +542,9 @@ function BiometricVerification() {
           {/* REMARKS */}
 
           <div style={styles.fieldGroup}>
-            <label style={styles.label}>
+            <label style={{ ...styles.label, ...(darkMode ? darkStyles.label : {}) }}>
               Remarks
-              <span style={styles.optional}>
+              <span style={{ ...styles.optional, ...(darkMode ? darkStyles.optional : {}) }}>
                 {" "}
                 (Optional)
               </span>
@@ -542,15 +558,15 @@ function BiometricVerification() {
                 )
               }
               placeholder="Enter verification remarks..."
-              style={styles.textarea}
+              style={{ ...styles.textarea, ...(darkMode ? darkStyles.input : {}) }}
               rows={4}
               disabled={saving}
             />
           </div>
 
-          <div style={{ ...styles.formFooter, ...(isMobile ? responsiveStyles.mobileFormFooter : {}) }}>
+          <div style={{ ...styles.formFooter, ...(darkMode ? darkStyles.formFooter : {}), ...(isMobile ? responsiveStyles.mobileFormFooter : {}) }}>
 
-            <p style={styles.footerNote}>
+            <p style={{ ...styles.footerNote, ...(darkMode ? darkStyles.footerNote : {}) }}>
               Customer ID{" "}
               <strong>
                 {customer?.id}
@@ -583,40 +599,40 @@ function BiometricVerification() {
           VERIFICATION HISTORY
       ========================= */}
 
-      <section style={{ ...styles.historyCard, ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
+      <section style={{ ...styles.historyCard, ...(darkMode ? darkStyles.card : {}), ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
 
         <div style={styles.cardHeader}>
           <div>
-            <p style={styles.cardEyebrow}>
+            <p style={{ ...styles.cardEyebrow, ...(darkMode ? darkStyles.cardEyebrow : {}) }}>
               VERIFICATION RECORDS
             </p>
 
-            <h2 style={styles.cardTitle}>
+            <h2 style={{ ...styles.cardTitle, ...(darkMode ? darkStyles.cardTitle : {}) }}>
               Biometric History
             </h2>
 
-            <p style={styles.cardDescription}>
+            <p style={{ ...styles.cardDescription, ...(darkMode ? darkStyles.cardDescription : {}) }}>
               Previous biometric verification
               records for this customer.
             </p>
           </div>
 
-          <div style={styles.countBadge}>
+          <div style={{ ...styles.countBadge, ...(darkMode ? darkStyles.countBadge : {}) }}>
             {verifications.length}
           </div>
         </div>
 
         {verifications.length === 0 ? (
-          <div style={{ ...styles.emptyState, ...(isMobile ? responsiveStyles.mobileEmptyState : {}) }}>
-            <div style={styles.emptyIcon}>
+          <div style={{ ...styles.emptyState, ...(darkMode ? darkStyles.emptyState : {}), ...(isMobile ? responsiveStyles.mobileEmptyState : {}) }}>
+            <div style={{ ...styles.emptyIcon, ...(darkMode ? darkStyles.emptyIcon : {}) }}>
               🛡️
             </div>
 
-            <h3 style={styles.emptyTitle}>
+            <h3 style={{ ...styles.emptyTitle, ...(darkMode ? darkStyles.emptyTitle : {}) }}>
               No Verification Records
             </h3>
 
-            <p style={styles.emptyText}>
+            <p style={{ ...styles.emptyText, ...(darkMode ? darkStyles.emptyText : {}) }}>
               No biometric verification has been
               recorded for this customer yet.
             </p>
@@ -630,10 +646,10 @@ function BiometricVerification() {
                   key={
                     verification.id || index
                   }
-                  style={{ ...styles.recordItem, ...(isMobile ? responsiveStyles.mobileRecordItem : {}) }}
+                  style={{ ...styles.recordItem, ...(darkMode ? darkStyles.recordItem : {}), ...(isMobile ? responsiveStyles.mobileRecordItem : {}) }}
                 >
 
-                  <div style={styles.recordIcon}>
+                  <div style={{ ...styles.recordIcon, ...(darkMode ? darkStyles.recordIcon : {}) }}>
                     {verification.biometricType ===
                     "FINGERPRINT"
                       ? "☝"
@@ -653,9 +669,7 @@ function BiometricVerification() {
                     >
                       <div>
                         <p
-                          style={
-                            styles.recordLabel
-                          }
+                          style={{ ...styles.recordLabel, ...(darkMode ? darkStyles.recordLabel : {}) }}
                         >
                           BIOMETRIC TYPE
                         </p>
@@ -663,6 +677,7 @@ function BiometricVerification() {
                         <h3
                           style={{
                             ...styles.recordTitle,
+                            ...(darkMode ? darkStyles.recordTitle : {}),
                             overflowWrap: "anywhere"
                           }}
                         >
@@ -688,6 +703,7 @@ function BiometricVerification() {
                     <p
                       style={{
                         ...styles.recordRemarks,
+                        ...(darkMode ? darkStyles.recordRemarks : {}),
                         overflowWrap: "anywhere"
                       }}
                     >
@@ -698,6 +714,7 @@ function BiometricVerification() {
                     <div
                       style={{
                         ...styles.recordMeta,
+                        ...(darkMode ? darkStyles.recordMeta : {}),
                         ...(isMobile ? responsiveStyles.mobileRecordMeta : {})
                       }}
                     >
@@ -729,17 +746,17 @@ function BiometricVerification() {
           INFORMATION
       ========================= */}
 
-      <div style={{ ...styles.infoBox, ...(isMobile ? responsiveStyles.mobileInfoBox : {}) }}>
-        <span style={styles.infoIcon}>
+      <div style={{ ...styles.infoBox, ...(darkMode ? darkStyles.infoBox : {}), ...(isMobile ? responsiveStyles.mobileInfoBox : {}) }}>
+        <span style={{ ...styles.infoIcon, ...(darkMode ? darkStyles.infoIcon : {}) }}>
           🔒
         </span>
 
         <div>
-          <strong style={styles.infoTitle}>
+          <strong style={{ ...styles.infoTitle, ...(darkMode ? darkStyles.infoTitle : {}) }}>
             Secure Biometric Record
           </strong>
 
-          <p style={{ ...styles.infoText, overflowWrap: "anywhere" }}>
+          <p style={{ ...styles.infoText, ...(darkMode ? darkStyles.infoText : {}), overflowWrap: "anywhere" }}>
             This page records verification results.
             It does not capture or store raw biometric
             data such as fingerprint or face images.
@@ -754,6 +771,90 @@ function BiometricVerification() {
 // =====================================================
 // STYLES
 // =====================================================
+
+const darkStyles = {
+  page: {
+    background: "linear-gradient(135deg, #0b1220 0%, #0e1728 100%)",
+    color: "#e8eef7",
+  },
+  customerCard: {
+    background: "#111a2b",
+    border: "1px solid #26344b",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
+  },
+  smallLabel: { color: "#8795aa" },
+  customerName: { color: "#edf3ff" },
+  customerEmail: { color: "#8795aa" },
+  customerIdBox: { borderLeft: "1px solid #30405a" },
+  mobileCustomerIdBox: { borderTop: "1px solid #30405a" },
+  customerId: { color: "#b9c8dd" },
+  errorMessage: {
+    background: "#351b22",
+    border: "1px solid #63303b",
+    color: "#ff9da9",
+  },
+  successMessage: {
+    background: "#123323",
+    border: "1px solid #245c3c",
+    color: "#65d995",
+  },
+  card: {
+    background: "#111a2b",
+    border: "1px solid #26344b",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.28)",
+  },
+  cardEyebrow: { color: "#7fa7f5" },
+  cardTitle: { color: "#edf3ff" },
+  cardDescription: { color: "#8795aa" },
+  cardIcon: { background: "#192944" },
+  label: { color: "#b8c4d6" },
+  optional: { color: "#8795aa" },
+  input: {
+    background: "#172235",
+    border: "1px solid #34445e",
+    color: "#e8eef7",
+    colorScheme: "dark",
+  },
+  formFooter: { borderTop: "1px solid #30405a" },
+  footerNote: { color: "#8795aa" },
+  countBadge: { background: "#172f63", color: "#9ebeff" },
+  recordItem: {
+    background: "#172235",
+    border: "1px solid #30405a",
+  },
+  recordIcon: { background: "#1d2c45", color: "#9ebeff" },
+  recordLabel: { color: "#8795aa" },
+  recordTitle: { color: "#dce5f1" },
+  recordRemarks: { color: "#a5b2c5" },
+  recordMeta: { color: "#8795aa" },
+  emptyState: {
+    background: "#172235",
+    border: "1px dashed #34445e",
+  },
+  emptyIcon: { background: "#1d2c45" },
+  emptyTitle: { color: "#dce5f1" },
+  emptyText: { color: "#8795aa" },
+  infoBox: {
+    background: "#172235",
+    border: "1px solid #30405a",
+  },
+  infoIcon: { color: "#9ebeff" },
+  infoTitle: { color: "#dce5f1" },
+  infoText: { color: "#8795aa" },
+  loadingPage: {
+    background: "linear-gradient(135deg, #0b1220, #0e1728)",
+  },
+  loadingCard: {
+    background: "#111a2b",
+    boxShadow: "0 20px 50px rgba(0,0,0,0.40)",
+  },
+  loadingTitle: { color: "#edf3ff" },
+  loadingText: { color: "#8795aa" },
+  loader: {
+    border: "3px solid #29384e",
+    borderTop: "3px solid #5b91ff",
+  },
+};
 
 const styles = {
   page: {

@@ -4,6 +4,19 @@ import { useNavigate } from "react-router-dom";
 function Beneficiary() {
   const navigate = useNavigate();
 
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" && window.innerWidth <= 600
   );
@@ -280,15 +293,44 @@ function Beneficiary() {
     });
   };
 
+  const darkStyleOverrides = {
+    page: { background: "#0b1220", color: "#e8eef7" },
+    dashboardButton: { background: "#ffffff", color: "#173b8c", border: "1px solid #dce3ee", boxShadow: "0 4px 12px rgba(0,0,0,0.08)" },
+    success: { background: "#123526", color: "#a7f3c5", border: "1px solid #245b40" },
+    error: { background: "#3a2027", color: "#ffc2c2", border: "1px solid #69313b" },
+    card: { background: "#111a2b", border: "1px solid #26344b", boxShadow: "0 8px 25px rgba(0,0,0,0.18)" },
+    cardTitle: { color: "#e8eef7" },
+    cardSubtitle: { color: "#a6b4c8" },
+    label: { color: "#c5d0e0" },
+    input: { background: "#172235", color: "#e8eef7", border: "1px solid #34445e", colorScheme: "dark" },
+    beneficiaryCard: { background: "#151f31", border: "1px solid #2a3a52" },
+    name: { color: "#e8eef7" },
+    account: { color: "#c0ccdd" },
+    date: { color: "#9eacc1" },
+    emptyTitle: { color: "#e8eef7" },
+    emptyText: { color: "#a6b4c8" },
+    loading: { color: "#c0ccdd" },
+    loader: { border: "3px solid #34445e", borderTop: "3px solid #6ea0ff" },
+  };
+
+  const themedStyles = darkMode
+    ? Object.fromEntries(
+        Object.entries(styles).map(([key, value]) => [
+          key,
+          { ...value, ...(darkStyleOverrides[key] || {}) },
+        ])
+      )
+    : styles;
+
   // =========================
   // LOADING
   // =========================
 
   if (loading) {
     return (
-      <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
-        <div style={styles.loading}>
-          <div style={styles.loader}></div>
+      <div style={{ ...themedStyles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
+        <div style={themedStyles.loading}>
+          <div style={themedStyles.loader}></div>
           <p>Loading beneficiaries...</p>
         </div>
       </div>
@@ -296,23 +338,23 @@ function Beneficiary() {
   }
 
   return (
-    <div style={styles.page}>
-      <div style={{ ...styles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
+    <div style={themedStyles.page}>
+      <div style={{ ...themedStyles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
 
         {/* HEADER */}
 
-        <div style={{ ...styles.header, ...(isMobile ? responsiveStyles.header : {}) }}>
+        <div style={{ ...themedStyles.header, ...(isMobile ? responsiveStyles.header : {}) }}>
 
           <div>
-            <p style={styles.brand}>
+            <p style={themedStyles.brand}>
               AVANI BANK
             </p>
 
-            <h1 style={{ ...styles.title, ...(isMobile ? responsiveStyles.title : {}) }}>
+            <h1 style={{ ...themedStyles.title, ...(isMobile ? responsiveStyles.title : {}) }}>
               Beneficiaries
             </h1>
 
-            <p style={{ ...styles.subtitle, ...(isMobile ? responsiveStyles.subtitle : {}) }}>
+            <p style={{ ...themedStyles.subtitle, ...(isMobile ? responsiveStyles.subtitle : {}) }}>
               Manage your saved beneficiaries securely.
             </p>
           </div>
@@ -321,7 +363,7 @@ function Beneficiary() {
             onClick={() =>
               navigate("/dashboard")
             }
-            style={{ ...styles.dashboardButton, ...(isMobile ? responsiveStyles.dashboardButton : {}) }}
+            style={{ ...themedStyles.dashboardButton, ...(isMobile ? responsiveStyles.dashboardButton : {}) }}
           >
             ← Dashboard
           </button>
@@ -331,33 +373,33 @@ function Beneficiary() {
         {/* MESSAGES */}
 
         {message && (
-          <div style={styles.success}>
+          <div style={themedStyles.success}>
             ✓ {message}
           </div>
         )}
 
         {error && (
-          <div style={styles.error}>
+          <div style={themedStyles.error}>
             ⚠ {error}
           </div>
         )}
 
         {/* ADD BENEFICIARY */}
 
-        <div style={{ ...styles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
+        <div style={{ ...themedStyles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
 
-          <div style={{ ...styles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
+          <div style={{ ...themedStyles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
             <div>
-              <h2 style={styles.cardTitle}>
+              <h2 style={themedStyles.cardTitle}>
                 Add Beneficiary
               </h2>
 
-              <p style={styles.cardSubtitle}>
+              <p style={themedStyles.cardSubtitle}>
                 Save another Avani Bank account for quick transfers.
               </p>
             </div>
 
-            <div style={styles.addIcon}>
+            <div style={themedStyles.addIcon}>
               +
             </div>
           </div>
@@ -366,10 +408,10 @@ function Beneficiary() {
             onSubmit={handleAddBeneficiary}
           >
 
-            <div style={{ ...styles.formGrid, ...(isMobile ? responsiveStyles.formGrid : {}) }}>
+            <div style={{ ...themedStyles.formGrid, ...(isMobile ? responsiveStyles.formGrid : {}) }}>
 
-              <div style={styles.field}>
-                <label style={styles.label}>
+              <div style={themedStyles.field}>
+                <label style={themedStyles.label}>
                   Beneficiary Name
                 </label>
 
@@ -382,12 +424,12 @@ function Beneficiary() {
                     )
                   }
                   placeholder="Enter beneficiary name"
-                  style={styles.input}
+                  style={themedStyles.input}
                 />
               </div>
 
-              <div style={styles.field}>
-                <label style={styles.label}>
+              <div style={themedStyles.field}>
+                <label style={themedStyles.label}>
                   Account Number
                 </label>
 
@@ -400,7 +442,7 @@ function Beneficiary() {
                     )
                   }
                   placeholder="Enter account number"
-                  style={styles.input}
+                  style={themedStyles.input}
                 />
               </div>
 
@@ -410,7 +452,7 @@ function Beneficiary() {
               type="submit"
               disabled={adding}
               style={{
-                ...styles.addButton,
+                ...themedStyles.addButton,
                 ...(isMobile ? responsiveStyles.addButton : {}),
                 opacity: adding ? 0.7 : 1,
                 cursor: adding
@@ -428,21 +470,21 @@ function Beneficiary() {
 
         {/* BENEFICIARY LIST */}
 
-        <div style={styles.card}>
+        <div style={themedStyles.card}>
 
-          <div style={styles.cardHeader}>
+          <div style={themedStyles.cardHeader}>
 
             <div>
-              <h2 style={styles.cardTitle}>
+              <h2 style={themedStyles.cardTitle}>
                 My Beneficiaries
               </h2>
 
-              <p style={styles.cardSubtitle}>
+              <p style={themedStyles.cardSubtitle}>
                 Your saved beneficiary accounts.
               </p>
             </div>
 
-            <span style={styles.count}>
+            <span style={themedStyles.count}>
               {beneficiaries.length}
             </span>
 
@@ -450,17 +492,17 @@ function Beneficiary() {
 
           {beneficiaries.length === 0 ? (
 
-            <div style={{ ...styles.empty, ...(isMobile ? responsiveStyles.empty : {}) }}>
+            <div style={{ ...themedStyles.empty, ...(isMobile ? responsiveStyles.empty : {}) }}>
 
-              <div style={styles.emptyIcon}>
+              <div style={themedStyles.emptyIcon}>
                 👥
               </div>
 
-              <h3 style={styles.emptyTitle}>
+              <h3 style={themedStyles.emptyTitle}>
                 No Beneficiaries
               </h3>
 
-              <p style={styles.emptyText}>
+              <p style={themedStyles.emptyText}>
                 Add a beneficiary to make future transfers faster.
               </p>
 
@@ -468,34 +510,34 @@ function Beneficiary() {
 
           ) : (
 
-            <div style={styles.list}>
+            <div style={themedStyles.list}>
 
               {beneficiaries.map(
                 (beneficiary) => (
 
                   <div
                     key={beneficiary.id}
-                    style={{ ...styles.beneficiaryCard, ...(isMobile ? responsiveStyles.beneficiaryCard : {}) }}
+                    style={{ ...themedStyles.beneficiaryCard, ...(isMobile ? responsiveStyles.beneficiaryCard : {}) }}
                   >
 
-                    <div style={styles.personIcon}>
+                    <div style={themedStyles.personIcon}>
                       {beneficiary.beneficiaryName
                         ?.charAt(0)
                         ?.toUpperCase() || "B"}
                     </div>
 
-                    <div style={{ ...styles.info, ...(isMobile ? responsiveStyles.info : {}) }}>
+                    <div style={{ ...themedStyles.info, ...(isMobile ? responsiveStyles.info : {}) }}>
 
-                      <h3 style={styles.name}>
+                      <h3 style={themedStyles.name}>
                         {beneficiary.beneficiaryName}
                       </h3>
 
-                      <p style={styles.account}>
+                      <p style={themedStyles.account}>
                         A/C:{" "}
                         {beneficiary.accountNumber}
                       </p>
 
-                      <p style={styles.date}>
+                      <p style={themedStyles.date}>
                         Added:{" "}
                         {beneficiary.createdAt
                           ? new Date(
@@ -508,7 +550,7 @@ function Beneficiary() {
 
                     </div>
 
-                    <div style={{ ...styles.actions, ...(isMobile ? responsiveStyles.actions : {}) }}>
+                    <div style={{ ...themedStyles.actions, ...(isMobile ? responsiveStyles.actions : {}) }}>
 
                       <button
                         onClick={() =>
@@ -516,7 +558,7 @@ function Beneficiary() {
                             beneficiary.accountNumber
                           )
                         }
-                        style={{ ...styles.transferButton, ...(isMobile ? responsiveStyles.actionButton : {}) }}
+                        style={{ ...themedStyles.transferButton, ...(isMobile ? responsiveStyles.actionButton : {}) }}
                       >
                         Transfer
                       </button>
@@ -531,7 +573,7 @@ function Beneficiary() {
                           deletingId ===
                           beneficiary.id
                         }
-                        style={{ ...styles.deleteButton, ...(isMobile ? responsiveStyles.actionButton : {}) }}
+                        style={{ ...themedStyles.deleteButton, ...(isMobile ? responsiveStyles.actionButton : {}) }}
                       >
                         {deletingId ===
                         beneficiary.id

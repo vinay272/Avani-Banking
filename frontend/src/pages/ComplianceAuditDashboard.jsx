@@ -5,6 +5,28 @@ const API_BASE = "http://localhost:8080/api";
 
 function ComplianceAuditDashboard() {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("adminTheme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("adminTheme") === "dark");
+    };
+
+    // The storage event does not fire in the same tab that changes localStorage.
+    // Listen for cross-tab changes and also check the shared admin theme briefly.
+    window.addEventListener("storage", syncTheme);
+    window.addEventListener("admin-theme-change", syncTheme);
+    const themeCheck = window.setInterval(syncTheme, 300);
+    syncTheme();
+
+    return () => {
+      window.removeEventListener("storage", syncTheme);
+      window.removeEventListener("admin-theme-change", syncTheme);
+      window.clearInterval(themeCheck);
+    };
+  }, []);
 
   const [activeTab, setActiveTab] = useState("overview");
 
@@ -453,7 +475,8 @@ function ComplianceAuditDashboard() {
   // =====================================================
 
   return (
-    <div className="compliance-audit-dashboard" style={styles.page}>
+    <div className="compliance-audit-dashboard" data-theme={darkMode ? "dark" : "light"} style={styles.page}>
+      <style>{complianceAuditResponsiveStyles}</style>
 
       {/* =================================================
           HEADER
@@ -2763,6 +2786,126 @@ export const complianceAuditResponsiveStyles = `
 
   .compliance-audit-dashboard footer {
     font-size: 10px !important;
+  }
+
+}
+
+/* Dark mode overrides for the component's inline style objects. */
+.compliance-audit-dashboard[data-theme="dark"] main [style*="background"],
+.compliance-audit-dashboard[data-theme="dark"] main [style*="backgroundColor"] {
+  background: #162338 !important;
+  background-color: #162338 !important;
+  border-color: #2d3e56 !important;
+  color: #dbe6f5 !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main [style*="linear-gradient"] {
+  background: inherit;
+  color: #ffffff !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main > div,
+.compliance-audit-dashboard[data-theme="dark"] main section,
+.compliance-audit-dashboard[data-theme="dark"] main article {
+  color: #dbe6f5 !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main h1,
+.compliance-audit-dashboard[data-theme="dark"] main h2,
+.compliance-audit-dashboard[data-theme="dark"] main h3,
+.compliance-audit-dashboard[data-theme="dark"] main h4,
+.compliance-audit-dashboard[data-theme="dark"] main p,
+.compliance-audit-dashboard[data-theme="dark"] main label,
+.compliance-audit-dashboard[data-theme="dark"] main strong,
+.compliance-audit-dashboard[data-theme="dark"] main span {
+  color: #dbe6f5;
+}
+.compliance-audit-dashboard[data-theme="dark"] main button {
+  border-color: #34445d;
+}
+.compliance-audit-dashboard[data-theme="dark"] main button[style*="linear-gradient"] {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  color: #ffffff !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main [style*="background: rgb(255, 255, 255)"],
+.compliance-audit-dashboard[data-theme="dark"] main [style*="background-color: rgb(255, 255, 255)"] {
+  background: #162338 !important;
+}
+
+/* Dark mode follows the Admin Dashboard theme stored in localStorage. */
+.compliance-audit-dashboard[data-theme="dark"] {
+  background: #0b1220 !important;
+  color: #e5edf8 !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main,
+.compliance-audit-dashboard[data-theme="dark"] main > section,
+.compliance-audit-dashboard[data-theme="dark"] main > div:not(header div),
+.compliance-audit-dashboard[data-theme="dark"] footer {
+  color: #e5edf8 !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main h1,
+.compliance-audit-dashboard[data-theme="dark"] main h2,
+.compliance-audit-dashboard[data-theme="dark"] main h3,
+.compliance-audit-dashboard[data-theme="dark"] main p,
+.compliance-audit-dashboard[data-theme="dark"] main label,
+.compliance-audit-dashboard[data-theme="dark"] main strong,
+.compliance-audit-dashboard[data-theme="dark"] main span:not(button span) {
+  color: #dbe6f5 !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main button:not(.activeTab) {
+  color: #e5edf8;
+}
+.compliance-audit-dashboard[data-theme="dark"] main button[style*="linear-gradient"] {
+  color: #ffffff !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main input,
+.compliance-audit-dashboard[data-theme="dark"] main select,
+.compliance-audit-dashboard[data-theme="dark"] main textarea {
+  background: #111c2e !important;
+  color: #e5edf8 !important;
+  border-color: #34445d !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main table {
+  background: #111c2e !important;
+  color: #dbe6f5 !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main th {
+  background: #1a2940 !important;
+  color: #dbe6f5 !important;
+  border-color: #34445d !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main td {
+  background: #111c2e !important;
+  color: #cbd7e8 !important;
+  border-color: #293950 !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main div[style*="linear-gradient"] {
+  color: #ffffff !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main div[style*="#ffffff"],
+.compliance-audit-dashboard[data-theme="dark"] main div[style*="white"],
+.compliance-audit-dashboard[data-theme="dark"] main div[style*="#f7"],
+.compliance-audit-dashboard[data-theme="dark"] main div[style*="#edf"],
+.compliance-audit-dashboard[data-theme="dark"] main div[style*="#f6"],
+.compliance-audit-dashboard[data-theme="dark"] main div[style*="#e8"] {
+  background-color: #162338 !important;
+  border-color: #2d3e56 !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main > section > div,
+.compliance-audit-dashboard[data-theme="dark"] main > div > div,
+.compliance-audit-dashboard[data-theme="dark"] main section > div {
+  border-color: #2d3e56;
+}
+.compliance-audit-dashboard[data-theme="dark"] footer {
+  background: #101a2a !important;
+  border-color: #2d3e56 !important;
+  color: #94a6bf !important;
+}
+.compliance-audit-dashboard[data-theme="dark"] main .activeTab {
+  color: #ffffff !important;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .compliance-audit-dashboard,
+  .compliance-audit-dashboard main,
+  .compliance-audit-dashboard footer {
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
 `;

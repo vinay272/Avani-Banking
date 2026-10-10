@@ -84,6 +84,19 @@ const statusClass = (status) => {
 function CustomerServicePortal() {
   const navigate = useNavigate();
 
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
   const [activeTab, setActiveTab] = useState("overview");
 
   const [complaints, setComplaints] = useState([]);
@@ -731,7 +744,7 @@ function CustomerServicePortal() {
       <>
         <style>{portalStyles}</style>
 
-        <div className="support-loading-page">
+        <div className={`support-loading-page${darkMode ? " theme-dark" : ""}`}>
           <div className="support-loading-card">
             <div className="support-loader"></div>
 
@@ -753,7 +766,7 @@ function CustomerServicePortal() {
     <>
       <style>{portalStyles}</style>
 
-      <div className="support-page">
+      <div className={`support-page${darkMode ? " theme-dark" : ""}`}>
         <div className="support-container">
 
           {/* =================================================
@@ -3957,6 +3970,169 @@ const portalStyles = `
   }
 }
 
+
+/* Improve emoji/icon visibility in dark mode without changing the branded header. */
+.theme-dark .support-stat-icon,
+.theme-dark .quick-icon,
+.theme-dark .heading-icon,
+.theme-dark .chat-agent-icon,
+.theme-dark .assistant-avatar,
+.theme-dark .empty-state > span,
+.theme-dark .chat-empty > span {
+  filter: saturate(1.45) contrast(1.12);
+  text-shadow: 0 1px 2px rgba(15, 23, 42, 0.22);
+}
+.theme-dark .support-stat-icon.purple,
+.theme-dark .quick-icon,
+.theme-dark .heading-icon.purple {
+  background-color: #e0e7ff;
+}
+.theme-dark .support-stat-icon.blue,
+.theme-dark .heading-icon.blue {
+  background-color: #dbeafe;
+}
+.theme-dark .support-stat-icon.green,
+.theme-dark .heading-icon.green {
+  background-color: #dcfce7;
+}
+.theme-dark .support-stat-icon.orange,
+.theme-dark .heading-icon.orange {
+  background-color: #fef3c7;
+}
+
+/* Dashboard-synced dark theme */
+.support-page.theme-dark {
+  background: linear-gradient(180deg, #0b1220 0%, #111827 100%);
+  color: #e5e7eb;
+}
+.support-loading-page.theme-dark {
+  background: #0b1220;
+  color: #e5e7eb;
+}
+.theme-dark .support-loading-card,
+.theme-dark .support-stat-card,
+.theme-dark .quick-card,
+.theme-dark .support-card,
+.theme-dark .security-note,
+.theme-dark .ticket-item,
+.theme-dark .request-item,
+.theme-dark .appointment-item,
+.theme-dark .feedback-item,
+.theme-dark .chat-card,
+.theme-dark .assistant-card,
+.theme-dark .chat-messages,
+.theme-dark .assistant-messages {
+  background: #172033;
+  border-color: #334155;
+  color: #e5e7eb;
+}
+.theme-dark .support-tabs {
+  background: #111827;
+  border-color: #334155;
+}
+.theme-dark .support-tab {
+  color: #cbd5e1;
+}
+.theme-dark .support-tab.active {
+  background: #1d4ed8;
+  color: #ffffff;
+}
+.theme-dark .section-heading h2,
+.theme-dark .support-stat-card strong,
+.theme-dark .quick-card strong,
+.theme-dark .card-heading h3,
+.theme-dark .ticket-item h4,
+.theme-dark .request-item h4,
+.theme-dark .appointment-info h4,
+.theme-dark .feedback-item > strong,
+.theme-dark .chat-header strong,
+.theme-dark .assistant-header strong,
+.theme-dark .empty-state strong,
+.theme-dark .chat-empty strong {
+  color: #f8fafc;
+}
+.theme-dark .section-heading p,
+.theme-dark .quick-card p,
+.theme-dark .support-stat-card span,
+.theme-dark .card-heading p,
+.theme-dark .ticket-item p,
+.theme-dark .request-item p,
+.theme-dark .appointment-info p,
+.theme-dark .feedback-item p,
+.theme-dark .ticket-meta,
+.theme-dark .ticket-meta span,
+.theme-dark .feedback-top small,
+.theme-dark .chat-header span,
+.theme-dark .chat-session,
+.theme-dark .empty-state p,
+.theme-dark .chat-empty p,
+.theme-dark .support-footer {
+  color: #aab7ca;
+}
+.theme-dark .form-group label,
+.theme-dark .rating-selector label {
+  color: #dbe4f0;
+}
+.theme-dark .form-group input,
+.theme-dark .form-group select,
+.theme-dark .form-group textarea,
+.theme-dark .chat-input-area input,
+.theme-dark .assistant-input input {
+  background: #0f172a;
+  color: #f1f5f9;
+  border-color: #475569;
+}
+.theme-dark .form-group input::placeholder,
+.theme-dark .form-group textarea::placeholder,
+.theme-dark .chat-input-area input::placeholder,
+.theme-dark .assistant-input input::placeholder {
+  color: #94a3b8;
+}
+.theme-dark .form-group select option {
+  background: #172033;
+  color: #f1f5f9;
+}
+.theme-dark .empty-state,
+.theme-dark .chat-empty {
+  background: #111827;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+.theme-dark .resolution-box,
+.theme-dark .description-box,
+.theme-dark .assistant-suggestions {
+  background: #0f172a;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+.theme-dark .chat-bubble,
+.theme-dark .assistant-bubble {
+  color: #e5e7eb;
+}
+.theme-dark .chat-row.support .chat-bubble,
+.theme-dark .assistant-row.bot .assistant-bubble {
+  background: #273449;
+}
+.theme-dark .appointment-date-box {
+  background: #1e3a5f;
+  color: #dbeafe;
+}
+.theme-dark .assistant-suggestions button {
+  background: #1e293b;
+  border-color: #475569;
+  color: #dbeafe;
+}
+.theme-dark .support-message-success {
+  background: #123326;
+  color: #86efac;
+  border-color: #166534;
+}
+.theme-dark .support-message-error {
+  background: #3b1d26;
+  color: #fca5a5;
+  border-color: #7f1d1d;
+}
+/* Keep the branded gradient header and its white dashboard button unchanged. */
 `;
 
 export default CustomerServicePortal;

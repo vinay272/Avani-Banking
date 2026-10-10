@@ -34,6 +34,22 @@ function CustomerRelationshipHistory() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  // Sync this page with the theme selected on the Dashboard.
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("avani-theme") === "dark";
+  });
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
   const token = localStorage.getItem("token");
 
   // =========================
@@ -330,28 +346,28 @@ function CustomerRelationshipHistory() {
 
   if (loading) {
     return (
-      <div style={styles.loadingPage}>
-        <div style={styles.loadingCard}>
+      <div style={{ ...styles.loadingPage, ...(darkMode ? darkStyles.loadingPage : {}) }}>
+        <div style={{ ...styles.loadingCard, ...(darkMode ? darkStyles.loadingCard : {}) }}>
           <div style={styles.loadingIcon}>
             🔗
           </div>
 
-          <h2 style={styles.loadingTitle}>
+          <h2 style={{ ...styles.loadingTitle, ...(darkMode ? darkStyles.loadingTitle : {}) }}>
             Loading Relationship History
           </h2>
 
-          <p style={styles.loadingText}>
+          <p style={{ ...styles.loadingText, ...(darkMode ? darkStyles.loadingText : {}) }}>
             Please wait...
           </p>
 
-          <div style={styles.loader}></div>
+          <div style={{ ...styles.loader, ...(darkMode ? darkStyles.loader : {}) }}></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.mobilePage : {}) }}>
+    <div style={{ ...styles.page, ...(darkMode ? darkStyles.page : {}), ...(isMobile ? responsiveStyles.mobilePage : {}) }}>
 
       {/* =========================
           HEADER
@@ -386,7 +402,7 @@ function CustomerRelationshipHistory() {
           CUSTOMER SUMMARY
       ========================= */}
 
-      <section style={{ ...styles.customerCard, ...(isMobile ? responsiveStyles.mobileCustomerCard : {}) }}>
+      <section style={{ ...styles.customerCard, ...(darkMode ? darkStyles.customerCard : {}), ...(isMobile ? responsiveStyles.mobileCustomerCard : {}) }}>
         <div style={styles.avatar}>
           {customer?.fullName
             ?.charAt(0)
@@ -394,25 +410,25 @@ function CustomerRelationshipHistory() {
         </div>
 
         <div style={{ ...styles.customerInfo, ...(isMobile ? responsiveStyles.mobileCustomerInfo : {}) }}>
-          <p style={styles.smallLabel}>
+          <p style={{ ...styles.smallLabel, ...(darkMode ? darkStyles.smallLabel : {}) }}>
             PRIMARY CUSTOMER
           </p>
 
-          <h2 style={styles.customerName}>
+          <h2 style={{ ...styles.customerName, ...(darkMode ? darkStyles.customerName : {}) }}>
             {customer?.fullName || "Customer"}
           </h2>
 
-          <p style={{ ...styles.customerEmail, overflowWrap: "anywhere" }}>
+          <p style={{ ...styles.customerEmail, ...(darkMode ? darkStyles.customerEmail : {}), overflowWrap: "anywhere" }}>
             {customer?.email || "Email unavailable"}
           </p>
         </div>
 
-        <div style={{ ...styles.customerIdBox, ...(isMobile ? responsiveStyles.mobileCustomerIdBox : {}) }}>
-          <p style={styles.smallLabel}>
+        <div style={{ ...styles.customerIdBox, ...(isMobile ? responsiveStyles.mobileCustomerIdBox : {}), ...(darkMode ? (isMobile ? { borderTop: "1px solid #30405a", borderLeft: "none" } : darkStyles.customerIdBox) : {}) }}>
+          <p style={{ ...styles.smallLabel, ...(darkMode ? darkStyles.smallLabel : {}) }}>
             CUSTOMER ID
           </p>
 
-          <strong style={{ ...styles.customerId, overflowWrap: "anywhere" }}>
+          <strong style={{ ...styles.customerId, ...(darkMode ? darkStyles.customerId : {}), overflowWrap: "anywhere" }}>
             {customer?.id || "N/A"}
           </strong>
         </div>
@@ -423,13 +439,13 @@ function CustomerRelationshipHistory() {
       ========================= */}
 
       {error && (
-        <div style={{ ...styles.errorMessage, overflowWrap: "anywhere" }}>
+        <div style={{ ...styles.errorMessage, ...(darkMode ? darkStyles.errorMessage : {}), overflowWrap: "anywhere" }}>
           ⚠️ {error}
         </div>
       )}
 
       {message && (
-        <div style={{ ...styles.successMessage, overflowWrap: "anywhere" }}>
+        <div style={{ ...styles.successMessage, ...(darkMode ? darkStyles.successMessage : {}), overflowWrap: "anywhere" }}>
           ✓ {message}
         </div>
       )}
@@ -438,25 +454,25 @@ function CustomerRelationshipHistory() {
           ADD HISTORY
       ========================= */}
 
-      <section style={{ ...styles.formCard, ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
+      <section style={{ ...styles.formCard, ...(darkMode ? darkStyles.card : {}), ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
 
         <div style={styles.cardHeader}>
           <div>
-            <p style={styles.cardEyebrow}>
+            <p style={{ ...styles.cardEyebrow, ...(darkMode ? darkStyles.cardEyebrow : {}) }}>
               RECORD EVENT
             </p>
 
-            <h2 style={styles.cardTitle}>
+            <h2 style={{ ...styles.cardTitle, ...(darkMode ? darkStyles.cardTitle : {}) }}>
               Add Relationship History
             </h2>
 
-            <p style={styles.cardDescription}>
+            <p style={{ ...styles.cardDescription, ...(darkMode ? darkStyles.cardDescription : {}) }}>
               Record a relationship or important
               customer event for future reference.
             </p>
           </div>
 
-          <div style={styles.cardIcon}>
+          <div style={{ ...styles.cardIcon, ...(darkMode ? darkStyles.cardIcon : {}) }}>
             🔗
           </div>
         </div>
@@ -468,7 +484,7 @@ function CustomerRelationshipHistory() {
             {/* RELATIONSHIP TYPE */}
 
             <div style={styles.fieldGroup}>
-              <label style={styles.label}>
+              <label style={{ ...styles.label, ...(darkMode ? darkStyles.label : {}) }}>
                 Relationship Type
               </label>
 
@@ -479,7 +495,7 @@ function CustomerRelationshipHistory() {
                     event.target.value
                   )
                 }
-                style={styles.input}
+                style={{ ...styles.input, ...(darkMode ? darkStyles.input : {}) }}
                 disabled={saving}
               >
                 <option value="JOINT_ACCOUNT">
@@ -507,7 +523,7 @@ function CustomerRelationshipHistory() {
             {/* RELATED CUSTOMER */}
 
             <div style={styles.fieldGroup}>
-              <label style={styles.label}>
+              <label style={{ ...styles.label, ...(darkMode ? darkStyles.label : {}) }}>
                 Related Customer ID
                 <span style={styles.optional}>
                   {" "}
@@ -524,7 +540,7 @@ function CustomerRelationshipHistory() {
                   )
                 }
                 placeholder="e.g. 6"
-                style={styles.input}
+                style={{ ...styles.input, ...(darkMode ? darkStyles.input : {}) }}
                 disabled={saving}
               />
             </div>
@@ -534,7 +550,7 @@ function CustomerRelationshipHistory() {
           {/* DESCRIPTION */}
 
           <div style={styles.fieldGroup}>
-            <label style={styles.label}>
+            <label style={{ ...styles.label, ...(darkMode ? darkStyles.label : {}) }}>
               Description
             </label>
 
@@ -546,15 +562,15 @@ function CustomerRelationshipHistory() {
                 )
               }
               placeholder="Describe the relationship or event..."
-              style={styles.textarea}
+              style={{ ...styles.textarea, ...(darkMode ? darkStyles.input : {}) }}
               rows={4}
               disabled={saving}
             />
           </div>
 
-          <div style={{ ...styles.formFooter, ...(isMobile ? responsiveStyles.mobileFormFooter : {}) }}>
+          <div style={{ ...styles.formFooter, ...(darkMode ? darkStyles.formFooter : {}), ...(isMobile ? responsiveStyles.mobileFormFooter : {}) }}>
 
-            <p style={styles.footerNote}>
+            <p style={{ ...styles.footerNote, ...(darkMode ? darkStyles.footerNote : {}) }}>
               This record will be linked to customer ID{" "}
               <strong>
                 {customer?.id}
@@ -587,40 +603,40 @@ function CustomerRelationshipHistory() {
           HISTORY LIST
       ========================= */}
 
-      <section style={{ ...styles.historyCard, ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
+      <section style={{ ...styles.historyCard, ...(darkMode ? darkStyles.card : {}), ...(isMobile ? responsiveStyles.mobileCard : {}) }}>
 
         <div style={styles.cardHeader}>
           <div>
-            <p style={styles.cardEyebrow}>
+            <p style={{ ...styles.cardEyebrow, ...(darkMode ? darkStyles.cardEyebrow : {}) }}>
               CUSTOMER RECORD
             </p>
 
-            <h2 style={styles.cardTitle}>
+            <h2 style={{ ...styles.cardTitle, ...(darkMode ? darkStyles.cardTitle : {}) }}>
               Relationship Timeline
             </h2>
 
-            <p style={styles.cardDescription}>
+            <p style={{ ...styles.cardDescription, ...(darkMode ? darkStyles.cardDescription : {}) }}>
               Previous relationship events associated
               with this customer.
             </p>
           </div>
 
-          <div style={styles.countBadge}>
+          <div style={{ ...styles.countBadge, ...(darkMode ? darkStyles.countBadge : {}) }}>
             {history.length}
           </div>
         </div>
 
         {history.length === 0 ? (
-          <div style={{ ...styles.emptyState, ...(isMobile ? responsiveStyles.mobileEmptyState : {}) }}>
-            <div style={styles.emptyIcon}>
+          <div style={{ ...styles.emptyState, ...(darkMode ? darkStyles.emptyState : {}), ...(isMobile ? responsiveStyles.mobileEmptyState : {}) }}>
+            <div style={{ ...styles.emptyIcon, ...(darkMode ? darkStyles.emptyIcon : {}) }}>
               📋
             </div>
 
-            <h3 style={styles.emptyTitle}>
+            <h3 style={{ ...styles.emptyTitle, ...(darkMode ? darkStyles.emptyTitle : {}) }}>
               No Relationship History
             </h3>
 
-            <p style={styles.emptyText}>
+            <p style={{ ...styles.emptyText, ...(darkMode ? darkStyles.emptyText : {}) }}>
               No relationship events have been
               recorded for this customer yet.
             </p>
@@ -632,10 +648,10 @@ function CustomerRelationshipHistory() {
 
               <div
                 key={item.id || index}
-                style={{ ...styles.timelineItem, ...(isMobile ? responsiveStyles.mobileTimelineItem : {}) }}
+                style={{ ...styles.timelineItem, ...(darkMode ? darkStyles.timelineItem : {}), ...(isMobile ? responsiveStyles.mobileTimelineItem : {}) }}
               >
 
-                <div style={{ ...styles.timelineMarker, ...(isMobile ? responsiveStyles.mobileTimelineMarker : {}) }}>
+                <div style={{ ...styles.timelineMarker, ...(darkMode ? darkStyles.timelineMarker : {}), ...(isMobile ? responsiveStyles.mobileTimelineMarker : {}) }}>
                   {index + 1}
                 </div>
 
@@ -646,7 +662,7 @@ function CustomerRelationshipHistory() {
                     <div>
                       <span
                         style={
-                          styles.relationshipBadge
+                          { ...styles.relationshipBadge, ...(darkMode ? darkStyles.relationshipBadge : {}) }
                         }
                       >
                         {getRelationshipLabel(
@@ -655,7 +671,7 @@ function CustomerRelationshipHistory() {
                       </span>
 
                       <h3
-                        style={{ ...styles.timelineTitle, overflowWrap: "anywhere" }}
+                        style={{ ...styles.timelineTitle, ...(darkMode ? darkStyles.timelineTitle : {}), overflowWrap: "anywhere" }}
                       >
                         {item.description ||
                           "Relationship event"}
@@ -666,7 +682,7 @@ function CustomerRelationshipHistory() {
                       style={{ ...styles.dateBlock, ...(isMobile ? responsiveStyles.mobileDateBlock : {}) }}
                     >
                       <span
-                        style={styles.date}
+                        style={{ ...styles.date, ...(darkMode ? darkStyles.date : {}) }}
                       >
                         {formatDate(
                           item.createdAt
@@ -674,7 +690,7 @@ function CustomerRelationshipHistory() {
                       </span>
 
                       <span
-                        style={styles.time}
+                        style={{ ...styles.time, ...(darkMode ? darkStyles.time : {}) }}
                       >
                         {formatTime(
                           item.createdAt
@@ -685,7 +701,7 @@ function CustomerRelationshipHistory() {
                   </div>
 
                   <div
-                    style={{ ...styles.timelineMeta, ...(isMobile ? responsiveStyles.mobileTimelineMeta : {}) }}
+                    style={{ ...styles.timelineMeta, ...(darkMode ? darkStyles.timelineMeta : {}), ...(isMobile ? responsiveStyles.mobileTimelineMeta : {}) }}
                   >
                     <span>
                       Customer ID:{" "}
@@ -716,17 +732,17 @@ function CustomerRelationshipHistory() {
           INFORMATION
       ========================= */}
 
-      <div style={{ ...styles.infoBox, ...(isMobile ? responsiveStyles.mobileInfoBox : {}) }}>
-        <span style={styles.infoIcon}>
+      <div style={{ ...styles.infoBox, ...(darkMode ? darkStyles.infoBox : {}), ...(isMobile ? responsiveStyles.mobileInfoBox : {}) }}>
+        <span style={{ ...styles.infoIcon, ...(darkMode ? darkStyles.infoIcon : {}) }}>
           🔒
         </span>
 
         <div>
-          <strong style={styles.infoTitle}>
+          <strong style={{ ...styles.infoTitle, ...(darkMode ? darkStyles.infoTitle : {}) }}>
             Secure Customer Record
           </strong>
 
-          <p style={{ ...styles.infoText, overflowWrap: "anywhere" }}>
+          <p style={{ ...styles.infoText, ...(darkMode ? darkStyles.infoText : {}), overflowWrap: "anywhere" }}>
             Relationship history is stored against
             the customer record and can be used for
             future customer relationship management.
@@ -1276,6 +1292,51 @@ if (!document.head.contains(styleElement)) {
   document.head.appendChild(styleElement);
 }
 
+
+
+// Dark theme overrides. The blue header, Dashboard button, and primary action
+// intentionally keep their existing appearance.
+const darkStyles = {
+  page: { background: "linear-gradient(135deg, #0b1220 0%, #0e1728 100%)", color: "#e8eef7" },
+  loadingPage: { background: "linear-gradient(135deg, #0b1220, #0e1728)" },
+  loadingCard: { background: "#111a2b", boxShadow: "0 20px 50px rgba(0,0,0,0.40)" },
+  loadingTitle: { color: "#edf3ff" },
+  loadingText: { color: "#8795aa" },
+  loader: { border: "3px solid #29384e", borderTop: "3px solid #5b91ff" },
+  customerCard: { background: "#111a2b", border: "1px solid #26344b", boxShadow: "0 10px 30px rgba(0,0,0,0.28)" },
+  smallLabel: { color: "#8795aa" },
+  customerName: { color: "#edf3ff" },
+  customerEmail: { color: "#8795aa" },
+  customerIdBox: { borderLeft: "1px solid #30405a" },
+  customerId: { color: "#b9c8dd" },
+  errorMessage: { background: "#351b22", border: "1px solid #63303b", color: "#ff9da9" },
+  successMessage: { background: "#123323", border: "1px solid #245c3c", color: "#65d995" },
+  card: { background: "#111a2b", border: "1px solid #26344b", boxShadow: "0 10px 30px rgba(0,0,0,0.28)" },
+  cardEyebrow: { color: "#7fa7f5" },
+  cardTitle: { color: "#edf3ff" },
+  cardDescription: { color: "#8795aa" },
+  cardIcon: { background: "#192944" },
+  countBadge: { background: "#172f63", color: "#9ebeff" },
+  label: { color: "#b8c4d6" },
+  input: { background: "#172235", border: "1px solid #34445e", color: "#e8eef7", colorScheme: "dark" },
+  formFooter: { borderTop: "1px solid #30405a" },
+  footerNote: { color: "#8795aa" },
+  timelineItem: { borderBottom: "1px solid #30405a" },
+  timelineMarker: { background: "#1d2c45", color: "#9ebeff" },
+  relationshipBadge: { background: "#1b2e50", color: "#9ebeff" },
+  timelineTitle: { color: "#dce5f1" },
+  date: { color: "#b9c8dd" },
+  time: { color: "#8795aa" },
+  timelineMeta: { color: "#8795aa" },
+  emptyState: { background: "#172235", border: "1px dashed #34445e" },
+  emptyIcon: { background: "#1d2c45" },
+  emptyTitle: { color: "#dce5f1" },
+  emptyText: { color: "#8795aa" },
+  infoBox: { background: "#172235", border: "1px solid #30405a" },
+  infoIcon: { color: "#9ebeff" },
+  infoTitle: { color: "#dce5f1" },
+  infoText: { color: "#8795aa" },
+};
 
 // =====================================================
 // RESPONSIVE OVERRIDES

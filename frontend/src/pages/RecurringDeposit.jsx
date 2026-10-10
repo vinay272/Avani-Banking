@@ -6,6 +6,21 @@ const API_BASE_URL = "http://localhost:8080";
 const RecurringDeposit = () => {
     const navigate = useNavigate();
 
+    // Sync with the theme selected on the main dashboard.
+    const [darkMode, setDarkMode] = useState(
+        () => localStorage.getItem("avani-theme") === "dark"
+    );
+
+    useEffect(() => {
+        const syncTheme = () => {
+            setDarkMode(localStorage.getItem("avani-theme") === "dark");
+        };
+
+        window.addEventListener("storage", syncTheme);
+        syncTheme();
+        return () => window.removeEventListener("storage", syncTheme);
+    }, []);
+
     // Responsive state
     const [isMobile, setIsMobile] = useState(
         typeof window !== "undefined" ? window.innerWidth <= 768 : false
@@ -333,9 +348,99 @@ const RecurringDeposit = () => {
     // UI
     // =====================================================
 
+    const darkStyles = {
+        page: { background: "#0b1220", color: "#e5e7eb" },
+        main: { background: "#0b1220" },
+        eyebrow: { color: "#93b4ff" },
+        pageTitle: { color: "#f3f6fc" },
+        pageSubtitle: { color: "#a6b2c7" },
+        infoCard: {
+            background: "#151f30",
+            border: "1px solid #2b394f",
+            boxShadow: "0 4px 15px rgba(0,0,0,0.15)",
+        },
+        infoIcon: { background: "#20345a" },
+        infoLabel: { color: "#a6b2c7" },
+        infoValue: { color: "#edf2fb" },
+        sectionEyebrow: { color: "#a6b2c7" },
+        sectionTitle: { color: "#f3f6fc" },
+        rdCount: {
+            color: "#b8ccff",
+            background: "#1b2c4a",
+            border: "1px solid #304a75",
+        },
+        card: {
+            background: "#151f30",
+            border: "1px solid #2b394f",
+            boxShadow: "0 6px 22px rgba(0,0,0,0.18)",
+        },
+        cardTitle: { color: "#f3f6fc" },
+        accountInfo: { background: "#101827", color: "#d7e0ef" },
+        detailBox: { background: "#101827", border: "1px solid #2b394f" },
+        detailLabel: { color: "#a6b2c7" },
+        detailValue: { color: "#edf2fb" },
+        progressTop: { color: "#c0cad9" },
+        progressBackground: { background: "#2b394f" },
+        amountSection: {
+            borderTop: "1px solid #2b394f",
+            borderBottom: "1px solid #2b394f",
+        },
+        amount: { color: "#f3f6fc" },
+        maturity: { color: "#8fb2ff" },
+        empty: {
+            background: "#151f30",
+            border: "1px dashed #3a4b64",
+        },
+        emptyTitle: { color: "#f3f6fc" },
+        emptyText: { color: "#a6b2c7" },
+        modal: {
+            background: "#151f30",
+            color: "#e5e7eb",
+            border: "1px solid #2b394f",
+        },
+        modalTitle: { color: "#f3f6fc" },
+        modalSubtitle: { color: "#a6b2c7" },
+        closeButton: {
+            background: "#202c40",
+            border: "1px solid #3a4b64",
+            color: "#e5e7eb",
+        },
+        label: { color: "#d7e0ef" },
+        input: {
+            background: "#101827",
+            color: "#f3f6fc",
+            border: "1px solid #3a4b64",
+            boxShadow: "none",
+            colorScheme: "dark",
+        },
+        inputWrapper: {
+            background: "#101827",
+            border: "1px solid #3a4b64",
+            boxShadow: "none",
+        },
+        inputWithPrefix: { background: "#101827", color: "#f3f6fc", colorScheme: "dark" },
+        inputWithSuffix: { background: "#101827", color: "#f3f6fc", colorScheme: "dark" },
+        inputPrefix: { color: "#b5c2d6" },
+        inputSuffix: { color: "#b5c2d6" },
+        formButtons: { borderTop: "1px solid #2b394f" },
+        cancelButton: {
+            background: "#202c40",
+            color: "#e5e7eb",
+            border: "1px solid #3a4b64",
+        },
+        footer: {
+            background: "#101827",
+            borderTop: "1px solid #2b394f",
+            color: "#a6b2c7",
+        },
+    };
+
     const getResponsiveStyle = (name) => ({
         ...(styles[name] || {}),
         ...(isMobile ? (responsiveStyles[name] || {}) : {}),
+        ...(darkMode && name !== "header" && name !== "backButton"
+            ? (darkStyles[name] || {})
+            : {}),
     });
 
     return (

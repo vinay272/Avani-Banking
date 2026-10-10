@@ -4,6 +4,19 @@ import { useNavigate } from "react-router-dom";
 function Nominee() {
   const navigate = useNavigate();
 
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" && window.innerWidth <= 600
   );
@@ -312,8 +325,8 @@ function Nominee() {
 
   if (loading) {
     return (
-      <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
-        <div style={styles.loadingCard}>
+      <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}), ...(darkMode ? darkStyles.page : {}) }}>
+        <div style={{ ...styles.loadingCard, ...(darkMode ? darkStyles.loadingCard : {}) }}>
           <div style={styles.loader}></div>
           <p>Loading nominee details...</p>
         </div>
@@ -326,29 +339,29 @@ function Nominee() {
   // =========================
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, ...(darkMode ? darkStyles.page : {}) }}>
 
       {/* =========================
           HEADER
       ========================= */}
 
-      <div style={{ ...styles.header, ...(isMobile ? responsiveStyles.header : {}) }}>
+      <div style={{ ...styles.header, ...(isMobile ? responsiveStyles.header : {}), ...(darkMode ? darkStyles.header : {}) }}>
 
         <div>
           <div style={styles.brand}>AVANI BANK</div>
 
-          <h1 style={{ ...styles.title, ...(isMobile ? responsiveStyles.title : {}) }}>
+          <h1 style={{ ...styles.title, ...(isMobile ? responsiveStyles.title : {}), ...(darkMode ? darkStyles.title : {}) }}>
             Nominee Management
           </h1>
 
-          <p style={{ ...styles.subtitle, ...(isMobile ? responsiveStyles.subtitle : {}) }}>
+          <p style={{ ...styles.subtitle, ...(isMobile ? responsiveStyles.subtitle : {}), ...(darkMode ? darkStyles.subtitle : {}) }}>
             Manage the nominee details linked to your bank account.
           </p>
         </div>
 
         <button
           onClick={() => navigate("/dashboard")}
-          style={{ ...styles.dashboardButton, ...(isMobile ? responsiveStyles.dashboardButton : {}) }}
+          style={{ ...styles.dashboardButton, ...(isMobile ? responsiveStyles.dashboardButton : {}), ...(darkMode ? darkStyles.dashboardButton : {}) }}
         >
           ← Dashboard
         </button>
@@ -360,13 +373,13 @@ function Nominee() {
       ========================= */}
 
       {message && (
-        <div style={styles.successMessage}>
+        <div style={{ ...styles.successMessage, ...(darkMode ? darkStyles.successMessage : {}) }}>
           ✓ {message}
         </div>
       )}
 
       {error && (
-        <div style={styles.errorMessage}>
+        <div style={{ ...styles.errorMessage, ...(darkMode ? darkStyles.errorMessage : {}) }}>
           ⚠ {error}
         </div>
       )}
@@ -375,18 +388,18 @@ function Nominee() {
           TOP CARD
       ========================= */}
 
-      <div style={{ ...styles.summaryCard, ...(isMobile ? responsiveStyles.summaryCard : {}) }}>
+      <div style={{ ...styles.summaryCard, ...(isMobile ? responsiveStyles.summaryCard : {}), ...(darkMode ? darkStyles.summaryCard : {}) }}>
 
-        <div style={styles.summaryIcon}>
+        <div style={{ ...styles.summaryIcon, ...(darkMode ? darkStyles.summaryIcon : {}) }}>
           👥
         </div>
 
-        <div style={{ ...styles.summaryContent, ...(isMobile ? responsiveStyles.summaryContent : {}) }}>
-          <h2 style={styles.summaryTitle}>
+        <div style={{ ...styles.summaryContent, ...(isMobile ? responsiveStyles.summaryContent : {}), ...(darkMode ? darkStyles.summaryContent : {}) }}>
+          <h2 style={{ ...styles.summaryTitle, ...(darkMode ? darkStyles.summaryTitle : {}) }}>
             Your Nominee
           </h2>
 
-          <p style={styles.summaryText}>
+          <p style={{ ...styles.summaryText, ...(darkMode ? darkStyles.summaryText : {}) }}>
             Add or update the person who can receive benefits
             associated with your account.
           </p>
@@ -395,7 +408,7 @@ function Nominee() {
         {!showForm && (
           <button
             onClick={openAddForm}
-            style={{ ...styles.addButton, ...(isMobile ? responsiveStyles.addButton : {}) }}
+            style={{ ...styles.addButton, ...(isMobile ? responsiveStyles.addButton : {}), ...(darkMode ? darkStyles.addButton : {}) }}
           >
             + Add Nominee
           </button>
@@ -408,22 +421,22 @@ function Nominee() {
       ========================= */}
 
       {showForm && (
-        <div style={{ ...styles.formCard, ...(isMobile ? responsiveStyles.formCard : {}) }}>
+        <div style={{ ...styles.formCard, ...(isMobile ? responsiveStyles.formCard : {}), ...(darkMode ? darkStyles.formCard : {}) }}>
 
-          <div style={{ ...styles.formHeader, ...(isMobile ? responsiveStyles.formHeader : {}) }}>
+          <div style={{ ...styles.formHeader, ...(isMobile ? responsiveStyles.formHeader : {}), ...(darkMode ? darkStyles.formHeader : {}) }}>
             <div>
-              <h2 style={styles.formTitle}>
+              <h2 style={{ ...styles.formTitle, ...(darkMode ? darkStyles.formTitle : {}) }}>
                 {editingId ? "Edit Nominee" : "Add Nominee"}
               </h2>
 
-              <p style={styles.formSubtitle}>
+              <p style={{ ...styles.formSubtitle, ...(darkMode ? darkStyles.formSubtitle : {}) }}>
                 Enter the nominee's details carefully.
               </p>
             </div>
 
             <button
               onClick={resetForm}
-              style={styles.closeButton}
+              style={{ ...styles.closeButton, ...(darkMode ? darkStyles.closeButton : {}) }}
               type="button"
             >
               ×
@@ -432,12 +445,12 @@ function Nominee() {
 
           <form onSubmit={handleSubmit}>
 
-            <div style={{ ...styles.formGrid, ...(isMobile ? responsiveStyles.formGrid : {}) }}>
+            <div style={{ ...styles.formGrid, ...(isMobile ? responsiveStyles.formGrid : {}), ...(darkMode ? darkStyles.formGrid : {}) }}>
 
               {/* Full Name */}
 
               <div style={styles.field}>
-                <label style={styles.label}>
+                <label style={{ ...styles.label, ...(darkMode ? darkStyles.label : {}) }}>
                   Full Name
                 </label>
 
@@ -447,7 +460,7 @@ function Nominee() {
                   value={formData.fullName}
                   onChange={handleChange}
                   placeholder="Enter nominee full name"
-                  style={styles.input}
+                  style={{ ...styles.input, ...(darkMode ? darkStyles.input : {}) }}
                   required
                 />
               </div>
@@ -455,7 +468,7 @@ function Nominee() {
               {/* Relationship */}
 
               <div style={styles.field}>
-                <label style={styles.label}>
+                <label style={{ ...styles.label, ...(darkMode ? darkStyles.label : {}) }}>
                   Relationship
                 </label>
 
@@ -463,7 +476,7 @@ function Nominee() {
                   name="relationship"
                   value={formData.relationship}
                   onChange={handleChange}
-                  style={styles.input}
+                  style={{ ...styles.input, ...(darkMode ? darkStyles.input : {}) }}
                   required
                 >
                   <option value="">
@@ -507,7 +520,7 @@ function Nominee() {
               {/* Phone */}
 
               <div style={styles.field}>
-                <label style={styles.label}>
+                <label style={{ ...styles.label, ...(darkMode ? darkStyles.label : {}) }}>
                   Phone Number
                 </label>
 
@@ -518,7 +531,7 @@ function Nominee() {
                   onChange={handleChange}
                   placeholder="10-digit phone number"
                   maxLength="10"
-                  style={styles.input}
+                  style={{ ...styles.input, ...(darkMode ? darkStyles.input : {}) }}
                   required
                 />
               </div>
@@ -526,7 +539,7 @@ function Nominee() {
               {/* DOB */}
 
               <div style={styles.field}>
-                <label style={styles.label}>
+                <label style={{ ...styles.label, ...(darkMode ? darkStyles.label : {}) }}>
                   Date of Birth
                 </label>
 
@@ -535,14 +548,14 @@ function Nominee() {
                   name="dateOfBirth"
                   value={formData.dateOfBirth}
                   onChange={handleChange}
-                  style={styles.input}
+                  style={{ ...styles.input, ...(darkMode ? darkStyles.input : {}) }}
                 />
               </div>
 
               {/* Share */}
 
               <div style={styles.field}>
-                <label style={styles.label}>
+                <label style={{ ...styles.label, ...(darkMode ? darkStyles.label : {}) }}>
                   Share Percentage
                 </label>
 
@@ -553,7 +566,7 @@ function Nominee() {
                   onChange={handleChange}
                   min="1"
                   max="100"
-                  style={styles.input}
+                  style={{ ...styles.input, ...(darkMode ? darkStyles.input : {}) }}
                   required
                 />
               </div>
@@ -561,7 +574,7 @@ function Nominee() {
               {/* Address */}
 
               <div style={styles.fieldFull}>
-                <label style={styles.label}>
+                <label style={{ ...styles.label, ...(darkMode ? darkStyles.label : {}) }}>
                   Address
                 </label>
 
@@ -571,7 +584,7 @@ function Nominee() {
                   onChange={handleChange}
                   placeholder="Enter nominee address"
                   rows="3"
-                  style={styles.textarea}
+                  style={{ ...styles.textarea, ...(darkMode ? darkStyles.textarea : {}) }}
                 />
               </div>
 
@@ -579,12 +592,12 @@ function Nominee() {
 
             {/* Form Buttons */}
 
-            <div style={{ ...styles.formActions, ...(isMobile ? responsiveStyles.formActions : {}) }}>
+            <div style={{ ...styles.formActions, ...(isMobile ? responsiveStyles.formActions : {}), ...(darkMode ? darkStyles.formActions : {}) }}>
 
               <button
                 type="button"
                 onClick={resetForm}
-                style={{ ...styles.cancelButton, ...(isMobile ? responsiveStyles.cancelButton : {}) }}
+                style={{ ...styles.cancelButton, ...(isMobile ? responsiveStyles.cancelButton : {}), ...(darkMode ? darkStyles.cancelButton : {}) }}
                 disabled={saving}
               >
                 Cancel
@@ -592,7 +605,7 @@ function Nominee() {
 
               <button
                 type="submit"
-                style={{ ...styles.saveButton, ...(isMobile ? responsiveStyles.saveButton : {}) }}
+                style={{ ...styles.saveButton, ...(isMobile ? responsiveStyles.saveButton : {}), ...(darkMode ? darkStyles.saveButton : {}) }}
                 disabled={saving}
               >
                 {saving
@@ -613,15 +626,15 @@ function Nominee() {
           NOMINEE LIST
       ========================= */}
 
-      <div style={{ ...styles.listCard, ...(isMobile ? responsiveStyles.listCard : {}) }}>
+      <div style={{ ...styles.listCard, ...(isMobile ? responsiveStyles.listCard : {}), ...(darkMode ? darkStyles.listCard : {}) }}>
 
         <div style={styles.listHeader}>
           <div>
-            <h2 style={styles.listTitle}>
+            <h2 style={{ ...styles.listTitle, ...(darkMode ? darkStyles.listTitle : {}) }}>
               Nominee Details
             </h2>
 
-            <p style={styles.listSubtitle}>
+            <p style={{ ...styles.listSubtitle, ...(darkMode ? darkStyles.listSubtitle : {}) }}>
               {nominees.length === 0
                 ? "No nominee has been added yet."
                 : `${nominees.length} nominee${
@@ -633,24 +646,24 @@ function Nominee() {
 
         {nominees.length === 0 ? (
 
-          <div style={{ ...styles.emptyState, ...(isMobile ? responsiveStyles.emptyState : {}) }}>
+          <div style={{ ...styles.emptyState, ...(isMobile ? responsiveStyles.emptyState : {}), ...(darkMode ? darkStyles.emptyState : {}) }}>
 
-            <div style={styles.emptyIcon}>
+            <div style={{ ...styles.emptyIcon, ...(darkMode ? darkStyles.emptyIcon : {}) }}>
               👤
             </div>
 
-            <h3 style={styles.emptyTitle}>
+            <h3 style={{ ...styles.emptyTitle, ...(darkMode ? darkStyles.emptyTitle : {}) }}>
               No Nominee Added
             </h3>
 
-            <p style={styles.emptyText}>
+            <p style={{ ...styles.emptyText, ...(darkMode ? darkStyles.emptyText : {}) }}>
               Add a nominee to keep your account information
               complete.
             </p>
 
             <button
               onClick={openAddForm}
-              style={{ ...styles.emptyButton, ...(isMobile ? responsiveStyles.emptyButton : {}) }}
+              style={{ ...styles.emptyButton, ...(isMobile ? responsiveStyles.emptyButton : {}), ...(darkMode ? darkStyles.emptyButton : {}) }}
             >
               + Add Your Nominee
             </button>
@@ -665,10 +678,10 @@ function Nominee() {
 
               <div
                 key={nominee.id}
-                style={{ ...styles.nomineeCard, ...(isMobile ? responsiveStyles.nomineeCard : {}) }}
+                style={{ ...styles.nomineeCard, ...(isMobile ? responsiveStyles.nomineeCard : {}), ...(darkMode ? darkStyles.nomineeCard : {}) }}
               >
 
-                <div style={styles.nomineeIcon}>
+                <div style={{ ...styles.nomineeIcon, ...(darkMode ? darkStyles.nomineeIcon : {}) }}>
                   {nominee.fullName
                     ? nominee.fullName
                         .charAt(0)
@@ -678,15 +691,15 @@ function Nominee() {
 
                 <div style={styles.nomineeInfo}>
 
-                  <h3 style={styles.nomineeName}>
+                  <h3 style={{ ...styles.nomineeName, ...(darkMode ? darkStyles.nomineeName : {}) }}>
                     {nominee.fullName}
                   </h3>
 
-                  <p style={styles.relationship}>
+                  <p style={{ ...styles.relationship, ...(darkMode ? darkStyles.relationship : {}) }}>
                     {nominee.relationship}
                   </p>
 
-                  <div style={styles.detailsRow}>
+                  <div style={{ ...styles.detailsRow, ...(darkMode ? darkStyles.detailsRow : {}) }}>
 
                     <span>
                       📱 {nominee.phone}
@@ -708,17 +721,17 @@ function Nominee() {
 
                 </div>
 
-                <div style={{ ...styles.nomineeRight, ...(isMobile ? responsiveStyles.nomineeRight : {}) }}>
+                <div style={{ ...styles.nomineeRight, ...(isMobile ? responsiveStyles.nomineeRight : {}), ...(darkMode ? darkStyles.nomineeRight : {}) }}>
 
-                  <div style={styles.shareBadge}>
+                  <div style={{ ...styles.shareBadge, ...(darkMode ? darkStyles.shareBadge : {}) }}>
                     {nominee.sharePercentage}%
                   </div>
 
-                  <span style={styles.shareLabel}>
+                  <span style={{ ...styles.shareLabel, ...(darkMode ? darkStyles.shareLabel : {}) }}>
                     Share
                   </span>
 
-                  <div style={{ ...styles.actionButtons, ...(isMobile ? responsiveStyles.actionButtons : {}) }}>
+                  <div style={{ ...styles.actionButtons, ...(isMobile ? responsiveStyles.actionButtons : {}), ...(darkMode ? darkStyles.actionButtons : {}) }}>
 
                     <button
                       onClick={() =>
@@ -759,6 +772,52 @@ function Nominee() {
 // =====================================================
 // STYLES
 // =====================================================
+
+const darkStyles = {
+  page: { background: "linear-gradient(135deg, #0b1220 0%, #111a2b 100%)", color: "#e8eef7" },
+  loadingCard: { color: "#c3cee0" },
+  summaryCard: { background: "#111a2b", borderColor: "#26344b", boxShadow: "0 8px 25px rgba(0,0,0,0.2)" },
+  summaryIcon: { background: "#20314d" },
+  summaryTitle: { color: "#edf3fc" },
+  summaryText: { color: "#aab8cc" },
+  successMessage: { background: "#123323", color: "#9be2b5", borderColor: "#245b3b" },
+  errorMessage: { background: "#3b1d25", color: "#ffb8c0", borderColor: "#71313d" },
+  formCard: { background: "#111a2b", borderColor: "#26344b", boxShadow: "0 8px 25px rgba(0,0,0,0.2)" },
+  formTitle: { color: "#edf3fc" },
+  formSubtitle: { color: "#aab8cc" },
+  label: { color: "#c3cee0" },
+  input: { background: "#172235", color: "#edf3fc", borderColor: "#34445e", colorScheme: "dark" },
+  textarea: { background: "#172235", color: "#edf3fc", borderColor: "#34445e", colorScheme: "dark" },
+  closeButton: { background: "#26344b", color: "#dbe5f4" },
+  cancelButton: { background: "#172235", color: "#dbe5f4", borderColor: "#34445e" },
+  listCard: { background: "#111a2b", borderColor: "#26344b", boxShadow: "0 8px 25px rgba(0,0,0,0.2)" },
+  listTitle: { color: "#edf3fc" },
+  listSubtitle: { color: "#aab8cc" },
+  nomineeCard: { background: "#151f31", borderColor: "#2a3a52" },
+  nomineeIcon: { background: "#20314d", color: "#dbe8ff" },
+  nomineeName: { color: "#edf3fc" },
+  relationship: { color: "#aab8cc" },
+  detailsRow: { color: "#b4c0d2" },
+  shareBadge: { color: "#dbe8ff" },
+  shareLabel: { color: "#aab8cc" },
+  emptyState: { color: "#edf3fc" },
+  emptyIcon: { background: "#20314d" },
+  emptyTitle: { color: "#edf3fc" },
+  emptyText: { color: "#aab8cc" },
+  header: {},
+  title: {},
+  subtitle: {},
+  dashboardButton: { background: "#ffffff", color: "#26344a", borderColor: "#d7dee9" },
+  summaryContent: {},
+  addButton: {},
+  formHeader: {},
+  formGrid: {},
+  formActions: {},
+  saveButton: {},
+  nomineeRight: { borderColor: "#2a3a52" },
+  actionButtons: {},
+  emptyButton: {},
+};
 
 const styles = {
 

@@ -3,6 +3,18 @@ import { useNavigate } from "react-router-dom";
 
 function MiniStatement() {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -296,85 +308,121 @@ function MiniStatement() {
     },
   };
 
+  const themedStyles = darkMode
+    ? {
+        ...responsiveStyles,
+        page: { ...responsiveStyles.page, background: "#0b1220", color: "#e5eaf5" },
+        container: { ...responsiveStyles.container, color: "#e5eaf5" },
+        eyebrow: { ...responsiveStyles.eyebrow, color: "#8fb2ff" },
+        title: { ...responsiveStyles.title, color: "#f1f5ff" },
+        subtitle: { ...responsiveStyles.subtitle, color: "#a4afc3" },
+        summaryCard: { ...responsiveStyles.summaryCard, background: "#151f32", border: "1px solid #2b3850", boxShadow: "0 8px 25px rgba(0,0,0,0.18)" },
+        summaryIcon: { ...responsiveStyles.summaryIcon, background: "#23375a" },
+        summaryLabel: { ...responsiveStyles.summaryLabel, color: "#a8b5cb" },
+        transactionCount: { ...responsiveStyles.transactionCount, color: "#f1f5ff" },
+        secureBadge: { ...responsiveStyles.secureBadge, background: "#173b32", color: "#78e0b2", border: "1px solid #285d4d" },
+        statementCard: { ...responsiveStyles.statementCard, background: "#151f32", border: "1px solid #2b3850", boxShadow: "0 8px 25px rgba(0,0,0,0.18)" },
+        cardHeader: { ...responsiveStyles.cardHeader, borderBottom: "1px solid #2b3850" },
+        cardTitle: { ...responsiveStyles.cardTitle, color: "#eaf0fc" },
+        cardSubtitle: { ...responsiveStyles.cardSubtitle, color: "#a4afc3" },
+        transactionRow: { ...responsiveStyles.transactionRow, borderBottom: "1px solid #2b3850" },
+        transactionTitle: { ...responsiveStyles.transactionTitle, color: "#e2e9f6" },
+        transactionBottom: { ...responsiveStyles.transactionBottom, color: "#a4afc3" },
+        infoCard: { ...responsiveStyles.infoCard, background: "#151f32", border: "1px solid #2b3850", boxShadow: "0 6px 20px rgba(0,0,0,0.16)" },
+        infoIcon: { ...responsiveStyles.infoIcon, background: "#23375a" },
+        infoTitle: { ...responsiveStyles.infoTitle, color: "#eaf0fc" },
+        infoText: { ...responsiveStyles.infoText, color: "#a4afc3" },
+        errorBox: { ...responsiveStyles.errorBox, background: "#3a2027", border: "1px solid #713640", color: "#ffb8c0" },
+        emptyState: { ...responsiveStyles.emptyState, color: "#e5eaf5" },
+        emptyTitle: { ...responsiveStyles.emptyTitle, color: "#eaf0fc" },
+        emptyText: { ...responsiveStyles.emptyText, color: "#a4afc3" },
+        loadingPage: { ...responsiveStyles.loadingPage, background: "linear-gradient(135deg, #0b1220, #111c30)" },
+        loadingCard: { ...responsiveStyles.loadingCard, background: "#151f32", boxShadow: "0 15px 40px rgba(0,0,0,0.25)" },
+        loadingTitle: { ...responsiveStyles.loadingTitle, color: "#eaf0fc" },
+        loadingText: { ...responsiveStyles.loadingText, color: "#a4afc3" },
+        loader: { ...responsiveStyles.loader, border: "3px solid #33415a", borderTop: "3px solid #6e9cff" },
+      }
+    : responsiveStyles;
+
   if (loading) {
     return (
-      <div style={responsiveStyles.loadingPage}>
-        <div style={responsiveStyles.loadingCard}>
-          <div style={responsiveStyles.loadingIcon}>📄</div>
-          <h2 style={responsiveStyles.loadingTitle}>Loading Mini Statement</h2>
-          <p style={responsiveStyles.loadingText}>
+      <div style={themedStyles.loadingPage}>
+        <div style={themedStyles.loadingCard}>
+          <div style={themedStyles.loadingIcon}>📄</div>
+          <h2 style={themedStyles.loadingTitle}>Loading Mini Statement</h2>
+          <p style={themedStyles.loadingText}>
             Please wait while we fetch your recent transactions...
           </p>
-          <div style={responsiveStyles.loader}></div>
+          <div style={themedStyles.loader}></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={responsiveStyles.page}>
-      <header style={responsiveStyles.header}>
-        <div style={responsiveStyles.brandArea}>
-          <div style={responsiveStyles.brandIcon}>🏦</div>
+    <div style={themedStyles.page}>
+      <header style={themedStyles.header}>
+        <div style={themedStyles.brandArea}>
+          <div style={themedStyles.brandIcon}>🏦</div>
           <div>
-            <div style={responsiveStyles.brandName}>AVANI BANK</div>
-            <div style={responsiveStyles.brandSubtitle}>Mini Statement</div>
+            <div style={themedStyles.brandName}>AVANI BANK</div>
+            <div style={themedStyles.brandSubtitle}>Mini Statement</div>
           </div>
         </div>
 
         <button
-          style={responsiveStyles.headerButton}
+          style={themedStyles.headerButton}
           onClick={() => navigate(-1)}
         >
           ← Account Management
         </button>
       </header>
 
-      <main style={responsiveStyles.container}>
-        <section style={responsiveStyles.pageHeading}>
-          <p style={responsiveStyles.eyebrow}>ACCOUNT SERVICES</p>
-          <h1 style={responsiveStyles.title}>Mini Statement</h1>
-          <p style={responsiveStyles.subtitle}>
+      <main style={themedStyles.container}>
+        <section style={themedStyles.pageHeading}>
+          <p style={themedStyles.eyebrow}>ACCOUNT SERVICES</p>
+          <h1 style={themedStyles.title}>Mini Statement</h1>
+          <p style={themedStyles.subtitle}>
             View your recent account transactions.
           </p>
         </section>
 
         {error ? (
-          <div style={responsiveStyles.errorBox}>⚠️ {error}</div>
+          <div style={themedStyles.errorBox}>⚠️ {error}</div>
         ) : (
           <>
-            <section style={responsiveStyles.summaryCard}>
-              <div style={responsiveStyles.summaryLeft}>
-                <div style={responsiveStyles.summaryIcon}>📄</div>
+            <section style={themedStyles.summaryCard}>
+              <div style={themedStyles.summaryLeft}>
+                <div style={themedStyles.summaryIcon}>📄</div>
                 <div>
-                  <p style={responsiveStyles.summaryLabel}>RECENT TRANSACTIONS</p>
-                  <p style={responsiveStyles.transactionCount}>
+                  <p style={themedStyles.summaryLabel}>RECENT TRANSACTIONS</p>
+                  <p style={themedStyles.transactionCount}>
                     {transactions.length} Transaction
                     {transactions.length !== 1 ? "s" : ""}
                   </p>
                 </div>
               </div>
-              <div style={responsiveStyles.secureBadge}>🛡️ Secure</div>
+              <div style={themedStyles.secureBadge}>🛡️ Secure</div>
             </section>
 
-            <section style={responsiveStyles.statementCard}>
-              <div style={responsiveStyles.cardHeader}>
-                <h2 style={responsiveStyles.cardTitle}>Recent Transactions</h2>
-                <p style={responsiveStyles.cardSubtitle}>
+            <section style={themedStyles.statementCard}>
+              <div style={themedStyles.cardHeader}>
+                <h2 style={themedStyles.cardTitle}>Recent Transactions</h2>
+                <p style={themedStyles.cardSubtitle}>
                   Your latest account activity
                 </p>
               </div>
 
               {transactions.length === 0 ? (
-                <div style={responsiveStyles.emptyState}>
-                  <div style={responsiveStyles.emptyIcon}>📄</div>
-                  <h3 style={responsiveStyles.emptyTitle}>No Transactions Found</h3>
-                  <p style={responsiveStyles.emptyText}>
+                <div style={themedStyles.emptyState}>
+                  <div style={themedStyles.emptyIcon}>📄</div>
+                  <h3 style={themedStyles.emptyTitle}>No Transactions Found</h3>
+                  <p style={themedStyles.emptyText}>
                     There are no recent transactions available.
                   </p>
                 </div>
               ) : (
-                <div style={responsiveStyles.transactionList}>
+                <div style={themedStyles.transactionList}>
                   {transactions.map((transaction, index) => {
                     const amount = getAmount(transaction);
                     const transactionDate = getTransactionDate(transaction);
@@ -385,27 +433,27 @@ function MiniStatement() {
                     return (
                       <div
                         key={transaction.id || transaction.transactionId || index}
-                        style={responsiveStyles.transactionRow}
+                        style={themedStyles.transactionRow}
                       >
                         <div
                           style={{
-                            ...responsiveStyles.transactionIcon,
+                            ...themedStyles.transactionIcon,
                             ...(isCredit
-                              ? responsiveStyles.creditIcon
-                              : responsiveStyles.debitIcon),
+                              ? themedStyles.creditIcon
+                              : themedStyles.debitIcon),
                           }}
                         >
                           {isCredit ? "↓" : "↑"}
                         </div>
 
-                        <div style={responsiveStyles.transactionDetails}>
-                          <div style={responsiveStyles.transactionTop}>
-                            <span style={responsiveStyles.transactionTitle}>
+                        <div style={themedStyles.transactionDetails}>
+                          <div style={themedStyles.transactionTop}>
+                            <span style={themedStyles.transactionTitle}>
                               {getDescription(transaction)}
                             </span>
                             <span
                               style={{
-                                ...responsiveStyles.amount,
+                                ...themedStyles.amount,
                                 color: isCredit ? "#159663" : "#dc3d3d",
                               }}
                             >
@@ -413,7 +461,7 @@ function MiniStatement() {
                             </span>
                           </div>
 
-                          <div style={responsiveStyles.transactionBottom}>
+                          <div style={themedStyles.transactionBottom}>
                             <span>
                               {formatDate(transactionDate)}
                               {" • "}
@@ -421,10 +469,10 @@ function MiniStatement() {
                             </span>
                             <span
                               style={{
-                                ...responsiveStyles.statusBadge,
+                                ...themedStyles.statusBadge,
                                 ...(transaction.status === "SUCCESS"
-                                  ? responsiveStyles.successBadge
-                                  : responsiveStyles.failedBadge),
+                                  ? themedStyles.successBadge
+                                  : themedStyles.failedBadge),
                               }}
                             >
                               {transaction.status || "UNKNOWN"}
@@ -439,11 +487,11 @@ function MiniStatement() {
             </section>
 
             {transactions.length > 0 && (
-              <section style={responsiveStyles.infoCard}>
-                <div style={responsiveStyles.infoIcon}>ℹ️</div>
+              <section style={themedStyles.infoCard}>
+                <div style={themedStyles.infoIcon}>ℹ️</div>
                 <div>
-                  <h3 style={responsiveStyles.infoTitle}>Mini Statement</h3>
-                  <p style={responsiveStyles.infoText}>
+                  <h3 style={themedStyles.infoTitle}>Mini Statement</h3>
+                  <p style={themedStyles.infoText}>
                     This page shows your most recent account transactions. For
                     complete transaction history, use Account Statement.
                   </p>
@@ -452,7 +500,7 @@ function MiniStatement() {
             )}
 
             <button
-              style={responsiveStyles.statementButton}
+              style={themedStyles.statementButton}
               onClick={() => navigate("/account/statement")}
             >
               View Full Account Statement →

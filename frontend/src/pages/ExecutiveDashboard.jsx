@@ -5,6 +5,17 @@ const API_BASE = "http://localhost:8080/api";
 
 function ExecutiveDashboard() {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("adminTheme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () =>
+      setDarkMode(localStorage.getItem("adminTheme") === "dark");
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
 
   const [dashboard, setDashboard] = useState(null);
   const [charts, setCharts] = useState(null);
@@ -1164,7 +1175,7 @@ function ExecutiveDashboard() {
 
   if (loading) {
     return (
-      <div style={styles.page}>
+      <div data-theme={darkMode ? "dark" : "light"} className="executive-theme-root" style={styles.page}>
         <div style={styles.loadingPage}>
           <div style={styles.loadingCard}>
             <div style={styles.loadingIcon}>
@@ -1191,10 +1202,105 @@ function ExecutiveDashboard() {
   // =========================================================
 
   return (
-    <div className="executive-responsive" style={styles.page}>
+    <div data-theme={darkMode ? "dark" : "light"} className="executive-responsive" style={styles.page}>
       <style>{`
         .executive-responsive {
           overflow-x: hidden;
+        }
+
+        .executive-responsive[data-theme="dark"],
+        .executive-theme-root[data-theme="dark"] {
+          background: #0b1220 !important;
+          color: #e5eaf3 !important;
+        }
+        [data-theme="dark"] .executive-container,
+        [data-theme="dark"] .executive-navigation,
+        [data-theme="dark"] .executive-navigation-scroll {
+          color: #e5eaf3 !important;
+        }
+        [data-theme="dark"] .executive-navigation,
+        [data-theme="dark"] .executive-navigation[style],
+        [data-theme="dark"] .executive-container .executive-navigation {
+          background: #151f32 !important;
+          border-color: #2a3850 !important;
+        }
+        .executive-responsive[data-theme="dark"] .kpiValue,
+        .executive-responsive[data-theme="dark"] .sectionTitle,
+        .executive-responsive[data-theme="dark"] h2,
+        .executive-responsive[data-theme="dark"] h3,
+        .executive-responsive[data-theme="dark"] strong,
+        .executive-responsive[data-theme="dark"] td {
+          color: #e8eef8 !important;
+        }
+        .executive-responsive[data-theme="dark"] p,
+        .executive-responsive[data-theme="dark"] span,
+        .executive-responsive[data-theme="dark"] .barLabel,
+        .executive-responsive[data-theme="dark"] .kpiLabel,
+        .executive-responsive[data-theme="dark"] .kpiDescription,
+        .executive-responsive[data-theme="dark"] .chartSubtitle,
+        .executive-responsive[data-theme="dark"] .reportCardSubtitle {
+          color: #aab8cc !important;
+        }
+        [data-theme="dark"] .executive-responsive .executive-container > div:not(.executive-header),
+        [data-theme="dark"] .executive-responsive .executive-kpi-grid > div,
+        [data-theme="dark"] .executive-responsive .executive-chart-grid > div,
+        [data-theme="dark"] .executive-responsive .reportCard,
+        [data-theme="dark"] .executive-responsive .executive-table-wrapper,
+        [data-theme="dark"] .executive-responsive .executive-summary-grid > div {
+          background: #151f32 !important;
+          border-color: #2a3850 !important;
+          color: #e5eaf3 !important;
+        }
+        /* The theme attribute lives on .executive-responsive itself, so
+           these root-scoped selectors are required for its direct card children. */
+        .executive-responsive[data-theme="dark"] .executive-kpi-grid > div,
+        .executive-responsive[data-theme="dark"] .executive-chart-grid > div,
+        .executive-responsive[data-theme="dark"] .executive-summary-grid > div,
+        .executive-responsive[data-theme="dark"] .reportCard,
+        .executive-responsive[data-theme="dark"] .executive-table-wrapper,
+        .executive-responsive[data-theme="dark"] .emptyTable {
+          background: #151f32 !important;
+          border-color: #2a3850 !important;
+          color: #e5eaf3 !important;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18) !important;
+        }
+        .executive-responsive[data-theme="dark"] .kpiIcon {
+          background: #22375a !important;
+          color: #a9caff !important;
+        }
+        .executive-responsive[data-theme="dark"] .barTrack {
+          background: #26344a !important;
+        }
+        [data-theme="dark"] .executive-responsive .executive-navigation-scroll button {
+          color: #c2cde0 !important;
+        }
+        [data-theme="dark"] .executive-responsive .executive-navigation-scroll button[style*="edf4ff"],
+        [data-theme="dark"] .executive-responsive .executive-navigation-scroll button[style*="237"],
+        [data-theme="dark"] .executive-responsive .executive-navigation-scroll button[style*="2457c6"] {
+          background: #22375a !important;
+          color: #a9caff !important;
+        }
+        [data-theme="dark"] .executive-responsive th {
+          background: #1d2a40 !important;
+          color: #d7e2f2 !important;
+          border-color: #2a3850 !important;
+        }
+        [data-theme="dark"] .executive-responsive td {
+          border-color: #2a3850 !important;
+        }
+        [data-theme="dark"] .executive-responsive .executive-table-wrapper,
+        [data-theme="dark"] .executive-responsive .emptyTable,
+        [data-theme="dark"] .executive-responsive .barTrack {
+          border-color: #2a3850 !important;
+          background: #101a2b !important;
+        }
+        [data-theme="dark"] .executive-theme-root .loadingCard,
+        [data-theme="dark"] .executive-theme-root .loadingPage {
+          background: #101a2b !important;
+          color: #e5eaf3 !important;
+        }
+        [data-theme="dark"] .executive-responsive button:not(.executive-header button) {
+          transition: background-color .15s ease, color .15s ease;
         }
 
         .executive-responsive .executive-container {

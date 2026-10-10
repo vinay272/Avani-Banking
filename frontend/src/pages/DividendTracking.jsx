@@ -4,6 +4,18 @@ import { useNavigate } from "react-router-dom";
 const DividendTracking = () => {
   const navigate = useNavigate();
 
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () =>
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
   const [dividends, setDividends] = useState([]);
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -143,13 +155,47 @@ const DividendTracking = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const darkOverrides = {
+    page: { background: "#0b1220", color: "#e5e7eb" },
+    content: {},
+    errorBox: { background: "#3b1722", color: "#fecdd3", border: "1px solid #7f1d1d" },
+    summaryCard: { background: "#151f30", border: "1px solid #293548", boxShadow: "0 4px 16px rgba(0,0,0,0.18)" },
+    cardIcon: { background: "#1e3a5f", color: "#93c5fd" },
+    cardLabel: { color: "#a7b3c5" },
+    cardValue: { color: "#f3f4f6" },
+    cardValueSmall: { color: "#f3f4f6" },
+    smallDate: { color: "#9ca3af" },
+    analyticsCard: { background: "#151f30", border: "1px solid #293548", boxShadow: "0 4px 16px rgba(0,0,0,0.18)" },
+    analyticsItem: { background: "#101827", border: "1px solid #293548" },
+    analyticsItemTop: { color: "#dbe4f0" },
+    analyticsTrack: { background: "#334155" },
+    historyCard: { background: "#151f30", border: "1px solid #293548", boxShadow: "0 4px 16px rgba(0,0,0,0.18)" },
+    historyHeader: { borderBottom: "1px solid #293548" },
+    sectionTitle: { color: "#f3f4f6" },
+    sectionSubtitle: { color: "#a7b3c5" },
+    select: { background: "#101827", color: "#e5e7eb", border: "1px solid #475569", colorScheme: "dark" },
+    table: { background: "#151f30" },
+    th: { background: "#1e293b", color: "#cbd5e1", borderBottom: "1px solid #334155" },
+    td: { color: "#dbe4f0", borderBottom: "1px solid #293548" },
+    investmentName: { color: "#f3f4f6" },
+    idText: { color: "#9ca3af" },
+    typeBadge: { background: "#1e3a5f", color: "#bfdbfe" },
+    emptyState: { color: "#a7b3c5" },
+    infoCard: { background: "#132744", border: "1px solid #254873" },
+    infoTitle: { color: "#bfdbfe" },
+    infoText: { color: "#cbd5e1" },
+  };
+
   const getResponsiveStyle = (name) => ({
     ...(styles[name] || {}),
     ...(isMobile ? responsiveStyles[name] || {} : {}),
+    ...(darkMode && name !== "header" && name !== "backButton"
+      ? darkOverrides[name] || {}
+      : {}),
   });
 
   return (
-    <div style={getResponsiveStyle("page")}>
+    <div data-theme={darkMode ? "dark" : "light"} style={getResponsiveStyle("page")}>
       {/* Header */}
       <div style={getResponsiveStyle("header")}>
         <div style={getResponsiveStyle("headerLeft")}>
@@ -271,7 +317,7 @@ const DividendTracking = () => {
             <div style={getResponsiveStyle("analyticsTrack")}>
                 <div
                     style={{
-                        ...styles.analyticsFill,
+                        ...getResponsiveStyle("analyticsFill"),
                         width: `${
                             summary?.totalDividend > 0
                                 ? (
@@ -304,7 +350,7 @@ const DividendTracking = () => {
             <div style={getResponsiveStyle("analyticsTrack")}>
                 <div
                     style={{
-                        ...styles.analyticsFill,
+                        ...getResponsiveStyle("analyticsFill"),
                         width: `${
                             summary?.totalDividend > 0
                                 ? (
@@ -337,7 +383,7 @@ const DividendTracking = () => {
             <div style={getResponsiveStyle("analyticsTrack")}>
                 <div
                     style={{
-                        ...styles.analyticsFill,
+                        ...getResponsiveStyle("analyticsFill"),
                         width: `${
                             summary?.totalDividend > 0
                                 ? (
@@ -370,7 +416,7 @@ const DividendTracking = () => {
             <div style={getResponsiveStyle("analyticsTrack")}>
                 <div
                     style={{
-                        ...styles.analyticsFill,
+                        ...getResponsiveStyle("analyticsFill"),
                         width: `${
                             summary?.totalDividend > 0
                                 ? (
@@ -403,7 +449,7 @@ const DividendTracking = () => {
             <div style={getResponsiveStyle("analyticsTrack")}>
                 <div
                     style={{
-                        ...styles.analyticsFill,
+                        ...getResponsiveStyle("analyticsFill"),
                         width: `${
                             summary?.totalDividend > 0
                                 ? (
@@ -530,8 +576,8 @@ const DividendTracking = () => {
 
                       <td
                         style={{
-                          ...styles.td,
-                          ...styles.amount,
+                          ...getResponsiveStyle("td"),
+                          ...getResponsiveStyle("amount"),
                         }}
                       >
                         +{formatCurrency(dividend.dividendAmount)}

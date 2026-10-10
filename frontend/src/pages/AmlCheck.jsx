@@ -4,6 +4,21 @@ import { useNavigate } from "react-router-dom";
 function AmlCheck() {
   const navigate = useNavigate();
 
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
   const [customer, setCustomer] = useState(null);
   const [status, setStatus] = useState("CLEAR");
   const [riskLevel, setRiskLevel] = useState("LOW");
@@ -264,7 +279,7 @@ function AmlCheck() {
       <>
         <style>{globalStyles}</style>
 
-        <div className="aml-loading-page">
+        <div className={`aml-loading-page ${darkMode ? "aml-dark" : ""}`}>
           <div className="aml-loading-card">
             <div className="aml-spinner"></div>
 
@@ -291,7 +306,7 @@ function AmlCheck() {
       <>
         <style>{globalStyles}</style>
 
-        <div className="aml-loading-page">
+        <div className={`aml-loading-page ${darkMode ? "aml-dark" : ""}`}>
           <div className="aml-loading-card">
 
             <div className="error-circle">
@@ -329,7 +344,7 @@ function AmlCheck() {
     <>
       <style>{globalStyles}</style>
 
-      <div className="aml-page">
+      <div className={`aml-page ${darkMode ? "aml-dark" : ""}`}>
 
         {/* =================================================
             HEADER
@@ -2077,6 +2092,136 @@ tbody tr:last-child td {
   .empty-state {
     padding: 35px 10px;
   }
+}
+
+
+/* =====================================================
+   AVANI GLOBAL DARK MODE
+   Dashboard button and blue customer/header cards stay unchanged.
+===================================================== */
+
+.aml-page.aml-dark {
+  background: #0b1220;
+  color: #e8eef7;
+}
+
+.aml-page.aml-dark .intro-card,
+.aml-page.aml-dark .form-card,
+.aml-page.aml-dark .history-card {
+  background: #111a2b;
+  border-color: #26344b;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.aml-page.aml-dark .intro-card h2,
+.aml-page.aml-dark .history-header h2,
+.aml-page.aml-dark .card-top h3 {
+  color: #edf3ff;
+}
+
+.aml-page.aml-dark .intro-card p,
+.aml-page.aml-dark .history-header p,
+.aml-page.aml-dark .card-top p {
+  color: #9aa9bd;
+}
+
+.aml-page.aml-dark .form-group label {
+  color: #b8c4d6;
+}
+
+.aml-page.aml-dark .form-group select,
+.aml-page.aml-dark .form-group textarea {
+  background: #172235;
+  border-color: #34445e;
+  color: #e8eef7;
+  color-scheme: dark;
+}
+
+.aml-page.aml-dark .form-group textarea::placeholder {
+  color: #71809a;
+}
+
+.aml-page.aml-dark .record-count {
+  background: #172f63;
+  color: #9ebeff;
+}
+
+.aml-page.aml-dark .table-wrapper {
+  border-color: #26344b;
+}
+
+.aml-page.aml-dark thead th {
+  background: #172235;
+  border-bottom-color: #34445e;
+  color: #a8b7cc;
+}
+
+.aml-page.aml-dark tbody td {
+  border-bottom-color: #26344b;
+  color: #c0ccdc;
+}
+
+.aml-page.aml-dark tbody tr:hover {
+  background: #172235;
+}
+
+.aml-page.aml-dark .id-cell {
+  color: #9ebeff !important;
+}
+
+.aml-page.aml-dark .empty-state {
+  background: #172235;
+  border: 1px dashed #34445e;
+  border-radius: 12px;
+}
+
+.aml-page.aml-dark .empty-state h3 {
+  color: #dce5f1;
+}
+
+.aml-page.aml-dark .empty-state p {
+  color: #8795aa;
+}
+
+.aml-page.aml-dark .aml-footer {
+  background: #111a2b;
+  border-top-color: #26344b;
+  color: #8795aa;
+}
+
+/* Keep the Dashboard button white in both themes. */
+.aml-page.aml-dark .dashboard-button {
+  background: #ffffff;
+  color: #173b8c;
+  border-color: #dce3ee;
+}
+
+.aml-loading-page.aml-dark {
+  background: linear-gradient(135deg, #0b1220, #0e1728);
+}
+
+.aml-loading-page.aml-dark .aml-loading-card {
+  background: #111a2b;
+  color: #edf3ff;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.aml-loading-page.aml-dark .aml-loading-card h2 {
+  color: #edf3ff;
+}
+
+.aml-loading-page.aml-dark .aml-loading-card p {
+  color: #8795aa;
+}
+
+.aml-loading-page.aml-dark .aml-spinner {
+  border-color: #29384e;
+  border-top-color: #5b91ff;
+}
+
+.aml-loading-page.aml-dark .error-circle {
+  background: #351b22;
+  color: #ff9da9;
 }
 
 `;

@@ -3,6 +3,18 @@ import { useNavigate } from "react-router-dom";
 
 function BalanceInquiry() {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 700);
   const [isTablet, setIsTablet] = useState(window.innerWidth <= 1000);
@@ -22,6 +34,73 @@ function BalanceInquiry() {
   const [error, setError] = useState("");
 
   const responsiveStyles = getResponsiveStyles(isTablet, isMobile);
+  const themedStyles = darkMode
+    ? {
+        ...responsiveStyles,
+        page: {
+          ...responsiveStyles.page,
+          background: "#0b1220",
+          color: "#e5eaf5",
+        },
+        brandSubtitle: {
+          ...responsiveStyles.brandSubtitle,
+          color: "rgba(255,255,255,0.78)",
+        },
+        pageHeader: { ...responsiveStyles.pageHeader },
+        title: { ...responsiveStyles.title, color: "#f1f5ff" },
+        subtitle: { ...responsiveStyles.subtitle, color: "#a5b4cc" },
+        errorBox: {
+          ...responsiveStyles.errorBox,
+          background: "#3a2020",
+          border: "1px solid #704040",
+          color: "#fecaca",
+        },
+        balanceCard: {
+          ...responsiveStyles.balanceCard,
+          background: "#151f32",
+          border: "1px solid #29364d",
+          boxShadow: "0 12px 35px rgba(0,0,0,0.22)",
+        },
+        label: { ...responsiveStyles.label, color: "#a5b4cc" },
+        balance: { ...responsiveStyles.balance, color: "#f1f5ff" },
+        divider: { ...responsiveStyles.divider, background: "#2b3850" },
+        infoLabel: { ...responsiveStyles.infoLabel, color: "#9aa9c2" },
+        infoValue: { ...responsiveStyles.infoValue, color: "#e5eaf5" },
+        emptyCard: {
+          ...responsiveStyles.emptyCard,
+          background: "#151f32",
+          border: "1px solid #29364d",
+        },
+        emptyIcon: {
+          ...responsiveStyles.emptyIcon,
+          background: "#24324a",
+        },
+        emptyTitle: { ...responsiveStyles.emptyTitle, color: "#f1f5ff" },
+        emptyText: { ...responsiveStyles.emptyText, color: "#a5b4cc" },
+        footer: {
+          ...responsiveStyles.footer,
+          background: "#101a2b",
+          borderTop: "1px solid #29364d",
+          color: "#9aa9c2",
+        },
+        loadingPage: {
+          ...responsiveStyles.loadingPage,
+          background: "linear-gradient(135deg, #0b1220, #111d32)",
+        },
+        loadingCard: {
+          ...responsiveStyles.loadingCard,
+          background: "#151f32",
+          boxShadow: "0 15px 40px rgba(0,0,0,0.28)",
+        },
+        loadingTitle: { ...responsiveStyles.loadingTitle, color: "#f1f5ff" },
+        loadingText: { ...responsiveStyles.loadingText, color: "#a5b4cc" },
+        loader: {
+          ...responsiveStyles.loader,
+          border: "3px solid #33415a",
+          borderTop: "3px solid #5b8cff",
+        },
+      }
+    : responsiveStyles;
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -91,43 +170,43 @@ function BalanceInquiry() {
 
   if (loading) {
     return (
-      <div style={responsiveStyles.loadingPage}>
-        <div style={responsiveStyles.loadingCard}>
-          <div style={responsiveStyles.loadingIcon}>₹</div>
+      <div style={themedStyles.loadingPage}>
+        <div style={themedStyles.loadingCard}>
+          <div style={themedStyles.loadingIcon}>₹</div>
 
-          <h2 style={responsiveStyles.loadingTitle}>
+          <h2 style={themedStyles.loadingTitle}>
             Checking Balance
           </h2>
 
-          <p style={responsiveStyles.loadingText}>
+          <p style={themedStyles.loadingText}>
             Please wait while we fetch your account balance...
           </p>
 
-          <div style={responsiveStyles.loader}></div>
+          <div style={themedStyles.loader}></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={responsiveStyles.page}>
+    <div style={themedStyles.page}>
 
       {/* ================= NAVBAR ================= */}
 
-      <header style={responsiveStyles.navbar}>
+      <header style={themedStyles.navbar}>
 
-        <div style={responsiveStyles.brandArea}>
+        <div style={themedStyles.brandArea}>
 
-          <div style={responsiveStyles.brandIcon}>
+          <div style={themedStyles.brandIcon}>
             🏦
           </div>
 
           <div>
-            <div style={responsiveStyles.brandName}>
+            <div style={themedStyles.brandName}>
               AVANI BANK
             </div>
 
-            <div style={responsiveStyles.brandSubtitle}>
+            <div style={themedStyles.brandSubtitle}>
               Balance Inquiry
             </div>
           </div>
@@ -135,7 +214,7 @@ function BalanceInquiry() {
         </div>
 
         <button
-          style={responsiveStyles.backButton}
+          style={themedStyles.backButton}
           onClick={() => navigate("/accounts")}
         >
           ← Account Management
@@ -145,19 +224,19 @@ function BalanceInquiry() {
 
       {/* ================= MAIN ================= */}
 
-      <main style={responsiveStyles.container}>
+      <main style={themedStyles.container}>
 
-        <section style={responsiveStyles.pageHeader}>
+        <section style={themedStyles.pageHeader}>
 
-          <p style={responsiveStyles.eyebrow}>
+          <p style={themedStyles.eyebrow}>
             ACCOUNT SERVICES
           </p>
 
-          <h1 style={responsiveStyles.title}>
+          <h1 style={themedStyles.title}>
             Balance Inquiry
           </h1>
 
-          <p style={responsiveStyles.subtitle}>
+          <p style={themedStyles.subtitle}>
             Check your current account balance and account status.
           </p>
 
@@ -166,7 +245,7 @@ function BalanceInquiry() {
         {/* ================= ERROR ================= */}
 
         {error && (
-          <div style={responsiveStyles.errorBox}>
+          <div style={themedStyles.errorBox}>
             ⚠️ {error}
           </div>
         )}
@@ -175,50 +254,50 @@ function BalanceInquiry() {
 
         {account ? (
 
-          <section style={responsiveStyles.balanceCard}>
+          <section style={themedStyles.balanceCard}>
 
-            <div style={responsiveStyles.balanceIcon}>
+            <div style={themedStyles.balanceIcon}>
               ₹
             </div>
 
-            <p style={responsiveStyles.label}>
+            <p style={themedStyles.label}>
               AVAILABLE BALANCE
             </p>
 
-            <h2 style={responsiveStyles.balance}>
+            <h2 style={themedStyles.balance}>
               ₹{formatCurrency(account.balance)}
             </h2>
 
-            <div style={responsiveStyles.divider}></div>
+            <div style={themedStyles.divider}></div>
 
-            <div style={responsiveStyles.accountInfo}>
+            <div style={themedStyles.accountInfo}>
 
               <div>
-                <p style={responsiveStyles.infoLabel}>
+                <p style={themedStyles.infoLabel}>
                   ACCOUNT NUMBER
                 </p>
 
-                <p style={responsiveStyles.infoValue}>
+                <p style={themedStyles.infoValue}>
                   {account.accountNumber || "N/A"}
                 </p>
               </div>
 
               <div>
-                <p style={responsiveStyles.infoLabel}>
+                <p style={themedStyles.infoLabel}>
                   ACCOUNT TYPE
                 </p>
 
-                <p style={responsiveStyles.infoValue}>
+                <p style={themedStyles.infoValue}>
                   {account.accountType || "N/A"}
                 </p>
               </div>
 
               <div>
-                <p style={responsiveStyles.infoLabel}>
+                <p style={themedStyles.infoLabel}>
                   STATUS
                 </p>
 
-                <p style={responsiveStyles.status}>
+                <p style={themedStyles.status}>
                   ● {account.status || "ACTIVE"}
                 </p>
               </div>
@@ -229,17 +308,17 @@ function BalanceInquiry() {
 
         ) : (
 
-          <div style={responsiveStyles.emptyCard}>
+          <div style={themedStyles.emptyCard}>
 
-            <div style={responsiveStyles.emptyIcon}>
+            <div style={themedStyles.emptyIcon}>
               🏦
             </div>
 
-            <h3 style={responsiveStyles.emptyTitle}>
+            <h3 style={themedStyles.emptyTitle}>
               No Account Found
             </h3>
 
-            <p style={responsiveStyles.emptyText}>
+            <p style={themedStyles.emptyText}>
               We could not find an account associated with your profile.
             </p>
 
@@ -249,10 +328,10 @@ function BalanceInquiry() {
 
         {/* ================= BACK BUTTON ================= */}
 
-        <div style={responsiveStyles.bottomActions}>
+        <div style={themedStyles.bottomActions}>
 
           <button
-            style={responsiveStyles.primaryButton}
+            style={themedStyles.primaryButton}
             onClick={() => navigate("/accounts")}
           >
             ← Back to Account Management
@@ -264,7 +343,7 @@ function BalanceInquiry() {
 
       {/* ================= FOOTER ================= */}
 
-      <footer style={responsiveStyles.footer}>
+      <footer style={themedStyles.footer}>
 
         <div>
           © {new Date().getFullYear()} Avani Bank

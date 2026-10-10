@@ -31,6 +31,17 @@ const getPercentage = (value, total) => {
 
 function PortfolioDashboard() {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () =>
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
 
   // Responsive layout state
   const [isMobile, setIsMobile] = useState(
@@ -219,6 +230,58 @@ function PortfolioDashboard() {
     },
   }), [isMobile, isTablet]);
 
+  // Theme overrides are layered over responsive styles; the blue header stays unchanged.
+  const themedStyles = useMemo(() => {
+    const darkOverrides = {
+      page: { background: "#0b1220", color: "#e5e7eb" },
+      container: { color: "#e5e7eb" },
+      heroCard: {
+        background: "linear-gradient(120deg, #172b49 0%, #111c30 58%, #172b49 100%)",
+        borderColor: "#2b4264",
+      },
+      heroTitle: { color: "#f3f6fc" },
+      heroText: { color: "#b5c2d6" },
+      heroCircleInner: { background: "#111c30", color: "#c4cee0" },
+      summaryCard: { background: "#131e30", borderColor: "#28374d", boxShadow: "0 5px 18px rgba(0,0,0,0.18)" },
+      cardLabel: { color: "#aab8cc" },
+      summaryValue: { color: "#f3f6fc" },
+      summaryBottom: { color: "#9aa9bf" },
+      panel: { background: "#131e30", borderColor: "#28374d", boxShadow: "0 6px 22px rgba(0,0,0,0.18)" },
+      panelTitle: { color: "#f3f6fc" },
+      panelSubtitle: { color: "#aab8cc" },
+      donutCenter: { background: "#131e30", boxShadow: "inset 0 0 0 1px #34445b" },
+      donutLabel: { color: "#aab8cc" },
+      donutValue: { color: "#f3f6fc" },
+      donutCaption: { color: "#9aa9bf" },
+      legendRow: { background: "transparent" },
+      legendLeft: { color: "#d8e1ef" },
+      legendRight: { color: "#b5c2d6" },
+      returnCircleInner: { background: "#131e30", boxShadow: "inset 0 0 0 1px #34445b", color: "#e5e7eb" },
+      performanceStat: { borderBottomColor: "#2b394e", color: "#d8e1ef" },
+      performanceMessage: { background: "#1a2940", color: "#c4cee0" },
+      refreshButton: { background: "#1a2940", borderColor: "#344a68", color: "#93baff" },
+      breakdownCard: { borderColor: "#2b394e", background: "#111c2e" },
+      breakdownName: { color: "#e2e8f0" },
+      progressTrack: { background: "#2b394e" },
+      breakdownValue: { color: "#e2e8f0" },
+      arrow: { color: "#aab8cc" },
+      quickSection: { background: "linear-gradient(135deg, #172b49, #111c30)", borderColor: "#2b4264" },
+      quickTitle: { color: "#f3f6fc" },
+      quickSubtitle: { color: "#aab8cc" },
+      quickButton: { background: "#17263d", borderColor: "#344a68", color: "#a8c8ff" },
+      loaderContainer: { color: "#e5e7eb" },
+      spinner: { borderColor: "#293b55", borderTopColor: "#60a5fa" },
+      loadingText: { color: "#b5c2d6" },
+      errorCard: { background: "#131e30", borderColor: "#34445b", color: "#e5e7eb", boxShadow: "0 8px 25px rgba(0,0,0,0.2)" },
+    };
+    return Object.fromEntries(
+      Object.entries(responsiveStyles).map(([key, value]) => [
+        key,
+        { ...value, ...(darkMode ? (darkOverrides[key] || {}) : {}) },
+      ])
+    );
+  }, [responsiveStyles, darkMode]);
+
 
   const [portfolio, setPortfolio] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -376,28 +439,28 @@ function PortfolioDashboard() {
 
   if (loading) {
     return (
-      <div style={{ ...styles.page, ...responsiveStyles.page }}>
-        <div style={{ ...styles.header, ...responsiveStyles.header }}>
+      <div style={{ ...styles.page, ...themedStyles.page }}>
+        <div style={{ ...styles.header, ...themedStyles.header }}>
           <div>
-            <div style={{ ...styles.headerTitle, ...responsiveStyles.headerTitle }}>
+            <div style={{ ...styles.headerTitle, ...themedStyles.headerTitle }}>
               Portfolio Dashboard
             </div>
-            <div style={{ ...styles.headerSubtitle, ...responsiveStyles.headerSubtitle }}>
+            <div style={{ ...styles.headerSubtitle, ...themedStyles.headerSubtitle }}>
               Track, analyze and grow your investments
             </div>
           </div>
 
           <button
-            style={{ ...styles.backButton, ...responsiveStyles.backButton }}
+            style={{ ...styles.backButton, ...themedStyles.backButton }}
             onClick={() => navigate("/investments")}
           >
             ← Investments
           </button>
         </div>
 
-        <div style={{ ...styles.loaderContainer, ...responsiveStyles.loaderContainer }}>
-          <div style={{ ...styles.spinner, ...responsiveStyles.spinner }}></div>
-          <p style={{ ...styles.loadingText, ...responsiveStyles.loadingText }}>
+        <div style={{ ...styles.loaderContainer, ...themedStyles.loaderContainer }}>
+          <div style={{ ...styles.spinner, ...themedStyles.spinner }}></div>
+          <p style={{ ...styles.loadingText, ...themedStyles.loadingText }}>
             Loading your portfolio...
           </p>
         </div>
@@ -407,34 +470,34 @@ function PortfolioDashboard() {
 
   if (error) {
     return (
-      <div style={{ ...styles.page, ...responsiveStyles.page }}>
-        <div style={{ ...styles.header, ...responsiveStyles.header }}>
+      <div style={{ ...styles.page, ...themedStyles.page }}>
+        <div style={{ ...styles.header, ...themedStyles.header }}>
           <div>
-            <div style={{ ...styles.headerTitle, ...responsiveStyles.headerTitle }}>
+            <div style={{ ...styles.headerTitle, ...themedStyles.headerTitle }}>
               Portfolio Dashboard
             </div>
-            <div style={{ ...styles.headerSubtitle, ...responsiveStyles.headerSubtitle }}>
+            <div style={{ ...styles.headerSubtitle, ...themedStyles.headerSubtitle }}>
               Track, analyze and grow your investments
             </div>
           </div>
 
           <button
-            style={{ ...styles.backButton, ...responsiveStyles.backButton }}
+            style={{ ...styles.backButton, ...themedStyles.backButton }}
             onClick={() => navigate("/investments")}
           >
             ← Back to Investments
           </button>
         </div>
 
-        <div style={{ ...styles.errorCard, ...responsiveStyles.errorCard }}>
-          <div style={{ ...styles.errorIcon, ...responsiveStyles.errorIcon }}>⚠️</div>
+        <div style={{ ...styles.errorCard, ...themedStyles.errorCard }}>
+          <div style={{ ...styles.errorIcon, ...themedStyles.errorIcon }}>⚠️</div>
 
           <h2>Unable to load portfolio</h2>
 
           <p>{error}</p>
 
           <button
-            style={{ ...styles.retryButton, ...responsiveStyles.retryButton }}
+            style={{ ...styles.retryButton, ...themedStyles.retryButton }}
             onClick={fetchPortfolio}
           >
             Try Again
@@ -445,59 +508,59 @@ function PortfolioDashboard() {
   }
 
   return (
-    <div style={{ ...styles.page, ...responsiveStyles.page }}>
+    <div style={{ ...styles.page, ...themedStyles.page }}>
       {/* =====================================================
           HEADER
       ====================================================== */}
 
-      <header style={{ ...styles.header, ...responsiveStyles.header }}>
-        <div style={{ ...styles.headerLeft, ...responsiveStyles.headerLeft }}>
-          <div style={{ ...styles.headerIcon, ...responsiveStyles.headerIcon }}>📊</div>
+      <header style={{ ...styles.header, ...themedStyles.header }}>
+        <div style={{ ...styles.headerLeft, ...themedStyles.headerLeft }}>
+          <div style={{ ...styles.headerIcon, ...themedStyles.headerIcon }}>📊</div>
 
           <div>
-            <div style={{ ...styles.headerTitle, ...responsiveStyles.headerTitle }}>
+            <div style={{ ...styles.headerTitle, ...themedStyles.headerTitle }}>
               Portfolio Dashboard
             </div>
 
-            <div style={{ ...styles.headerSubtitle, ...responsiveStyles.headerSubtitle }}>
+            <div style={{ ...styles.headerSubtitle, ...themedStyles.headerSubtitle }}>
               Your complete investment portfolio in one place
             </div>
           </div>
         </div>
 
         <button
-          style={{ ...styles.backButton, ...responsiveStyles.backButton }}
+          style={{ ...styles.backButton, ...themedStyles.backButton }}
           onClick={() => navigate("/investments")}
         >
           ← Back to Investments
         </button>
       </header>
 
-      <main style={{ ...styles.container, ...responsiveStyles.container }}>
+      <main style={{ ...styles.container, ...themedStyles.container }}>
         {/* =====================================================
             HERO
         ====================================================== */}
 
-        <section style={{ ...styles.heroCard, ...responsiveStyles.heroCard }}>
+        <section style={{ ...styles.heroCard, ...themedStyles.heroCard }}>
           <div>
-            <div style={{ ...styles.heroSmall, ...responsiveStyles.heroSmall }}>
+            <div style={{ ...styles.heroSmall, ...themedStyles.heroSmall }}>
               YOUR WEALTH JOURNEY
             </div>
 
-            <h1 style={{ ...styles.heroTitle, ...responsiveStyles.heroTitle }}>
+            <h1 style={{ ...styles.heroTitle, ...themedStyles.heroTitle }}>
               Invest today,
               <br />
               grow for tomorrow.
             </h1>
 
-            <p style={{ ...styles.heroText, ...responsiveStyles.heroText }}>
+            <p style={{ ...styles.heroText, ...themedStyles.heroText }}>
               Keep track of your investments, returns and
               portfolio allocation from one dashboard.
             </p>
           </div>
 
-          <div style={{ ...styles.heroCircle, ...responsiveStyles.heroCircle }}>
-            <div style={{ ...styles.heroCircleInner, ...responsiveStyles.heroCircleInner }}>
+          <div style={{ ...styles.heroCircle, ...themedStyles.heroCircle }}>
+            <div style={{ ...styles.heroCircleInner, ...themedStyles.heroCircleInner }}>
               <span>PORTFOLIO</span>
               <strong>LIVE</strong>
             </div>
@@ -508,9 +571,9 @@ function PortfolioDashboard() {
             SUMMARY CARDS
         ====================================================== */}
 
-        <section style={{ ...styles.summaryGrid, ...responsiveStyles.summaryGrid }}>
-          <div style={{ ...styles.summaryCard, ...responsiveStyles.summaryCard }}>
-            <div style={{ ...styles.summaryTop, ...responsiveStyles.summaryTop }}>
+        <section style={{ ...styles.summaryGrid, ...themedStyles.summaryGrid }}>
+          <div style={{ ...styles.summaryCard, ...themedStyles.summaryCard }}>
+            <div style={{ ...styles.summaryTop, ...themedStyles.summaryTop }}>
               <div
                 style={{
                   ...styles.summaryIcon,
@@ -521,22 +584,22 @@ function PortfolioDashboard() {
                 💰
               </div>
 
-              <span style={{ ...styles.cardLabel, ...responsiveStyles.cardLabel }}>
+              <span style={{ ...styles.cardLabel, ...themedStyles.cardLabel }}>
                 Total Invested
               </span>
             </div>
 
-            <div style={{ ...styles.summaryValue, ...responsiveStyles.summaryValue }}>
+            <div style={{ ...styles.summaryValue, ...themedStyles.summaryValue }}>
               {formatCurrency(portfolio?.totalInvested)}
             </div>
 
-            <div style={{ ...styles.summaryBottom, ...responsiveStyles.summaryBottom }}>
+            <div style={{ ...styles.summaryBottom, ...themedStyles.summaryBottom }}>
               Capital deployed
             </div>
           </div>
 
-          <div style={{ ...styles.summaryCard, ...responsiveStyles.summaryCard }}>
-            <div style={{ ...styles.summaryTop, ...responsiveStyles.summaryTop }}>
+          <div style={{ ...styles.summaryCard, ...themedStyles.summaryCard }}>
+            <div style={{ ...styles.summaryTop, ...themedStyles.summaryTop }}>
               <div
                 style={{
                   ...styles.summaryIcon,
@@ -547,22 +610,22 @@ function PortfolioDashboard() {
                 📈
               </div>
 
-              <span style={{ ...styles.cardLabel, ...responsiveStyles.cardLabel }}>
+              <span style={{ ...styles.cardLabel, ...themedStyles.cardLabel }}>
                 Current Value
               </span>
             </div>
 
-            <div style={{ ...styles.summaryValue, ...responsiveStyles.summaryValue }}>
+            <div style={{ ...styles.summaryValue, ...themedStyles.summaryValue }}>
               {formatCurrency(portfolio?.currentValue)}
             </div>
 
-            <div style={{ ...styles.positiveText, ...responsiveStyles.positiveText }}>
+            <div style={{ ...styles.positiveText, ...themedStyles.positiveText }}>
               ● Live portfolio value
             </div>
           </div>
 
-          <div style={{ ...styles.summaryCard, ...responsiveStyles.summaryCard }}>
-            <div style={{ ...styles.summaryTop, ...responsiveStyles.summaryTop }}>
+          <div style={{ ...styles.summaryCard, ...themedStyles.summaryCard }}>
+            <div style={{ ...styles.summaryTop, ...themedStyles.summaryTop }}>
               <div
                 style={{
                   ...styles.summaryIcon,
@@ -577,7 +640,7 @@ function PortfolioDashboard() {
                 {isProfit ? "↗" : "↘"}
               </div>
 
-              <span style={{ ...styles.cardLabel, ...responsiveStyles.cardLabel }}>
+              <span style={{ ...styles.cardLabel, ...themedStyles.cardLabel }}>
                 Profit / Loss
               </span>
             </div>
@@ -608,8 +671,8 @@ function PortfolioDashboard() {
             </div>
           </div>
 
-          <div style={{ ...styles.summaryCard, ...responsiveStyles.summaryCard }}>
-            <div style={{ ...styles.summaryTop, ...responsiveStyles.summaryTop }}>
+          <div style={{ ...styles.summaryCard, ...themedStyles.summaryCard }}>
+            <div style={{ ...styles.summaryTop, ...themedStyles.summaryTop }}>
               <div
                 style={{
                   ...styles.summaryIcon,
@@ -620,7 +683,7 @@ function PortfolioDashboard() {
                 %
               </div>
 
-              <span style={{ ...styles.cardLabel, ...responsiveStyles.cardLabel }}>
+              <span style={{ ...styles.cardLabel, ...themedStyles.cardLabel }}>
                 Overall Return
               </span>
             </div>
@@ -647,13 +710,13 @@ function PortfolioDashboard() {
               %
             </div>
 
-            <div style={{ ...styles.summaryBottom, ...responsiveStyles.summaryBottom }}>
+            <div style={{ ...styles.summaryBottom, ...themedStyles.summaryBottom }}>
               Portfolio performance
             </div>
           </div>
 
-          <div style={{ ...styles.summaryCard, ...responsiveStyles.summaryCard }}>
-            <div style={{ ...styles.summaryTop, ...responsiveStyles.summaryTop }}>
+          <div style={{ ...styles.summaryCard, ...themedStyles.summaryCard }}>
+            <div style={{ ...styles.summaryTop, ...themedStyles.summaryTop }}>
               <div
                 style={{
                   ...styles.summaryIcon,
@@ -664,16 +727,16 @@ function PortfolioDashboard() {
                 ◉
               </div>
 
-              <span style={{ ...styles.cardLabel, ...responsiveStyles.cardLabel }}>
+              <span style={{ ...styles.cardLabel, ...themedStyles.cardLabel }}>
                 Active Investments
               </span>
             </div>
 
-            <div style={{ ...styles.summaryValue, ...responsiveStyles.summaryValue }}>
+            <div style={{ ...styles.summaryValue, ...themedStyles.summaryValue }}>
               {portfolio?.activeInvestments || 0}
             </div>
 
-            <div style={{ ...styles.summaryBottom, ...responsiveStyles.summaryBottom }}>
+            <div style={{ ...styles.summaryBottom, ...themedStyles.summaryBottom }}>
               Across investment products
             </div>
           </div>
@@ -683,43 +746,43 @@ function PortfolioDashboard() {
             MAIN ANALYTICS
         ====================================================== */}
 
-        <section style={{ ...styles.mainGrid, ...responsiveStyles.mainGrid }}>
+        <section style={{ ...styles.mainGrid, ...themedStyles.mainGrid }}>
           {/* =================================================
               LIVE DONUT
           ================================================== */}
 
-          <div style={{ ...styles.panel, ...responsiveStyles.panel }}>
-            <div style={{ ...styles.panelHeader, ...responsiveStyles.panelHeader }}>
+          <div style={{ ...styles.panel, ...themedStyles.panel }}>
+            <div style={{ ...styles.panelHeader, ...themedStyles.panelHeader }}>
               <div>
-                <h2 style={{ ...styles.panelTitle, ...responsiveStyles.panelTitle }}>
+                <h2 style={{ ...styles.panelTitle, ...themedStyles.panelTitle }}>
                   Portfolio Allocation
                 </h2>
 
-                <p style={{ ...styles.panelSubtitle, ...responsiveStyles.panelSubtitle }}>
+                <p style={{ ...styles.panelSubtitle, ...themedStyles.panelSubtitle }}>
                   Live distribution of your current portfolio
                 </p>
               </div>
 
-              <div style={{ ...styles.liveBadge, ...responsiveStyles.liveBadge }}>
-                <span style={{ ...styles.liveDot, ...responsiveStyles.liveDot }}></span>
+              <div style={{ ...styles.liveBadge, ...themedStyles.liveBadge }}>
+                <span style={{ ...styles.liveDot, ...themedStyles.liveDot }}></span>
                 LIVE
               </div>
             </div>
 
-            <div style={{ ...styles.allocationContent, ...responsiveStyles.allocationContent }}>
-              <div style={{ ...styles.donutWrapper, ...responsiveStyles.donutWrapper }}>
+            <div style={{ ...styles.allocationContent, ...themedStyles.allocationContent }}>
+              <div style={{ ...styles.donutWrapper, ...themedStyles.donutWrapper }}>
                 <div
                   style={{
                     ...styles.donut,
                     background: donutGradient,
                   }}
                 >
-                  <div style={{ ...styles.donutCenter, ...responsiveStyles.donutCenter }}>
-                    <span style={{ ...styles.donutLabel, ...responsiveStyles.donutLabel }}>
+                  <div style={{ ...styles.donutCenter, ...themedStyles.donutCenter }}>
+                    <span style={{ ...styles.donutLabel, ...themedStyles.donutLabel }}>
                       Current Value
                     </span>
 
-                    <strong style={{ ...styles.donutValue, ...responsiveStyles.donutValue }}>
+                    <strong style={{ ...styles.donutValue, ...themedStyles.donutValue }}>
                       {formatCurrency(
                         portfolio?.currentValue
                       )}
@@ -727,12 +790,12 @@ function PortfolioDashboard() {
                   </div>
                 </div>
 
-                <div style={{ ...styles.donutCaption, ...responsiveStyles.donutCaption }}>
+                <div style={{ ...styles.donutCaption, ...themedStyles.donutCaption }}>
                   Updated from your live investment data
                 </div>
               </div>
 
-              <div style={{ ...styles.legend, ...responsiveStyles.legend }}>
+              <div style={{ ...styles.legend, ...themedStyles.legend }}>
                 {allocation.map((item, index) => {
                   const percentage =
                     getPercentage(
@@ -751,14 +814,14 @@ function PortfolioDashboard() {
                   return (
                     <div
                       key={item.name}
-                      style={{ ...styles.legendRow, ...responsiveStyles.legendRow }}
+                      style={{ ...styles.legendRow, ...themedStyles.legendRow }}
                       onClick={() => {
                         if (item.value > 0) {
                           navigate(item.route);
                         }
                       }}
                     >
-                      <div style={{ ...styles.legendLeft, ...responsiveStyles.legendLeft }}>
+                      <div style={{ ...styles.legendLeft, ...themedStyles.legendLeft }}>
                         <span
                           style={{
                             ...styles.legendDot,
@@ -767,7 +830,7 @@ function PortfolioDashboard() {
                           }}
                         />
 
-                        <span style={{ ...styles.legendIcon, ...responsiveStyles.legendIcon }}>
+                        <span style={{ ...styles.legendIcon, ...themedStyles.legendIcon }}>
                           {item.icon}
                         </span>
 
@@ -776,7 +839,7 @@ function PortfolioDashboard() {
                         </span>
                       </div>
 
-                      <div style={{ ...styles.legendRight, ...responsiveStyles.legendRight }}>
+                      <div style={{ ...styles.legendRight, ...themedStyles.legendRight }}>
                         <strong>
                           {percentage.toFixed(1)}%
                         </strong>
@@ -796,24 +859,24 @@ function PortfolioDashboard() {
               CIRCULAR RETURN
           ================================================== */}
 
-          <div style={{ ...styles.panel, ...responsiveStyles.panel }}>
-            <div style={{ ...styles.panelHeader, ...responsiveStyles.panelHeader }}>
+          <div style={{ ...styles.panel, ...themedStyles.panel }}>
+            <div style={{ ...styles.panelHeader, ...themedStyles.panelHeader }}>
               <div>
-                <h2 style={{ ...styles.panelTitle, ...responsiveStyles.panelTitle }}>
+                <h2 style={{ ...styles.panelTitle, ...themedStyles.panelTitle }}>
                   Portfolio Performance
                 </h2>
 
-                <p style={{ ...styles.panelSubtitle, ...responsiveStyles.panelSubtitle }}>
+                <p style={{ ...styles.panelSubtitle, ...themedStyles.panelSubtitle }}>
                   Your overall investment return
                 </p>
               </div>
 
-              <div style={{ ...styles.performanceIcon, ...responsiveStyles.performanceIcon }}>
+              <div style={{ ...styles.performanceIcon, ...themedStyles.performanceIcon }}>
                 ↗
               </div>
             </div>
 
-            <div style={{ ...styles.performanceContent, ...responsiveStyles.performanceContent }}>
+            <div style={{ ...styles.performanceContent, ...themedStyles.performanceContent }}>
               <div
                 style={{
                   ...styles.returnCircle,
@@ -825,7 +888,7 @@ function PortfolioDashboard() {
                       : "conic-gradient(#ef4444 0deg, #ef4444 90deg, #fee2e2 90deg, #fee2e2 360deg)",
                 }}
               >
-                <div style={{ ...styles.returnCircleInner, ...responsiveStyles.returnCircleInner }}>
+                <div style={{ ...styles.returnCircleInner, ...themedStyles.returnCircleInner }}>
                   <span>RETURN</span>
 
                   <strong>
@@ -837,8 +900,8 @@ function PortfolioDashboard() {
                 </div>
               </div>
 
-              <div style={{ ...styles.performanceStats, ...responsiveStyles.performanceStats }}>
-                <div style={{ ...styles.performanceStat, ...responsiveStyles.performanceStat }}>
+              <div style={{ ...styles.performanceStats, ...themedStyles.performanceStats }}>
+                <div style={{ ...styles.performanceStat, ...themedStyles.performanceStat }}>
                   <span>Invested</span>
                   <strong>
                     {formatCurrency(
@@ -847,7 +910,7 @@ function PortfolioDashboard() {
                   </strong>
                 </div>
 
-                <div style={{ ...styles.performanceStat, ...responsiveStyles.performanceStat }}>
+                <div style={{ ...styles.performanceStat, ...themedStyles.performanceStat }}>
                   <span>Current Value</span>
                   <strong>
                     {formatCurrency(
@@ -856,7 +919,7 @@ function PortfolioDashboard() {
                   </strong>
                 </div>
 
-                <div style={{ ...styles.performanceStat, ...responsiveStyles.performanceStat }}>
+                <div style={{ ...styles.performanceStat, ...themedStyles.performanceStat }}>
                   <span>Net Gain</span>
                   <strong
                     style={{
@@ -872,7 +935,7 @@ function PortfolioDashboard() {
               </div>
             </div>
 
-            <div style={{ ...styles.performanceMessage, ...responsiveStyles.performanceMessage }}>
+            <div style={{ ...styles.performanceMessage, ...themedStyles.performanceMessage }}>
               {isProfit
                 ? "Your portfolio is currently growing. Keep investing consistently for long-term wealth creation."
                 : "Review your portfolio allocation and investment strategy."}
@@ -884,27 +947,27 @@ function PortfolioDashboard() {
             INVESTMENT BREAKDOWN
         ====================================================== */}
 
-        <section style={{ ...styles.panel, ...responsiveStyles.panel }}>
-          <div style={{ ...styles.panelHeader, ...responsiveStyles.panelHeader }}>
+        <section style={{ ...styles.panel, ...themedStyles.panel }}>
+          <div style={{ ...styles.panelHeader, ...themedStyles.panelHeader }}>
             <div>
-              <h2 style={{ ...styles.panelTitle, ...responsiveStyles.panelTitle }}>
+              <h2 style={{ ...styles.panelTitle, ...themedStyles.panelTitle }}>
                 Investment Breakdown
               </h2>
 
-              <p style={{ ...styles.panelSubtitle, ...responsiveStyles.panelSubtitle }}>
+              <p style={{ ...styles.panelSubtitle, ...themedStyles.panelSubtitle }}>
                 Explore each investment category
               </p>
             </div>
 
             <button
-              style={{ ...styles.refreshButton, ...responsiveStyles.refreshButton }}
+              style={{ ...styles.refreshButton, ...themedStyles.refreshButton }}
               onClick={fetchPortfolio}
             >
               ↻ Refresh
             </button>
           </div>
 
-          <div style={{ ...styles.breakdownGrid, ...responsiveStyles.breakdownGrid }}>
+          <div style={{ ...styles.breakdownGrid, ...themedStyles.breakdownGrid }}>
             {allocation.map((item) => {
               const percentage =
                 getPercentage(
@@ -915,7 +978,7 @@ function PortfolioDashboard() {
               return (
                 <div
                   key={item.name}
-                  style={{ ...styles.breakdownCard, ...responsiveStyles.breakdownCard }}
+                  style={{ ...styles.breakdownCard, ...themedStyles.breakdownCard }}
                   onClick={() => {
                     navigate(item.route);
                   }}
@@ -938,12 +1001,12 @@ function PortfolioDashboard() {
                     {item.icon}
                   </div>
 
-                  <div style={{ ...styles.breakdownInfo, ...responsiveStyles.breakdownInfo }}>
-                    <div style={{ ...styles.breakdownName, ...responsiveStyles.breakdownName }}>
+                  <div style={{ ...styles.breakdownInfo, ...themedStyles.breakdownInfo }}>
+                    <div style={{ ...styles.breakdownName, ...themedStyles.breakdownName }}>
                       {item.name}
                     </div>
 
-                    <div style={{ ...styles.progressTrack, ...responsiveStyles.progressTrack }}>
+                    <div style={{ ...styles.progressTrack, ...themedStyles.progressTrack }}>
                       <div
                         style={{
                           ...styles.progressFill,
@@ -966,7 +1029,7 @@ function PortfolioDashboard() {
                     </div>
                   </div>
 
-                  <div style={{ ...styles.breakdownValue, ...responsiveStyles.breakdownValue }}>
+                  <div style={{ ...styles.breakdownValue, ...themedStyles.breakdownValue }}>
                     <strong>
                       {formatCurrency(item.value)}
                     </strong>
@@ -976,7 +1039,7 @@ function PortfolioDashboard() {
                     </span>
                   </div>
 
-                  <span style={{ ...styles.arrow, ...responsiveStyles.arrow }}>
+                  <span style={{ ...styles.arrow, ...themedStyles.arrow }}>
                     →
                   </span>
                 </div>
@@ -989,21 +1052,21 @@ function PortfolioDashboard() {
             QUICK ACTIONS
         ====================================================== */}
 
-        <section style={{ ...styles.quickSection, ...responsiveStyles.quickSection }}>
+        <section style={{ ...styles.quickSection, ...themedStyles.quickSection }}>
           <div>
-            <h2 style={{ ...styles.quickTitle, ...responsiveStyles.quickTitle }}>
+            <h2 style={{ ...styles.quickTitle, ...themedStyles.quickTitle }}>
               Grow Your Portfolio
             </h2>
 
-            <p style={{ ...styles.quickSubtitle, ...responsiveStyles.quickSubtitle }}>
+            <p style={{ ...styles.quickSubtitle, ...themedStyles.quickSubtitle }}>
               Explore more investment opportunities with
               Avani Bank.
             </p>
           </div>
 
-          <div style={{ ...styles.quickActions, ...responsiveStyles.quickActions }}>
+          <div style={{ ...styles.quickActions, ...themedStyles.quickActions }}>
             <button
-              style={{ ...styles.quickButton, ...responsiveStyles.quickButton }}
+              style={{ ...styles.quickButton, ...themedStyles.quickButton }}
               onClick={() =>
                 navigate("/investments/mutual-funds")
               }
@@ -1016,7 +1079,7 @@ function PortfolioDashboard() {
             </button>
 
             <button
-              style={{ ...styles.quickButton, ...responsiveStyles.quickButton }}
+              style={{ ...styles.quickButton, ...themedStyles.quickButton }}
               onClick={() =>
                 navigate("/investments/sip")
               }
@@ -1029,7 +1092,7 @@ function PortfolioDashboard() {
             </button>
 
             <button
-              style={{ ...styles.quickButton, ...responsiveStyles.quickButton }}
+              style={{ ...styles.quickButton, ...themedStyles.quickButton }}
               onClick={() =>
                 navigate("/investments/bonds")
               }
@@ -1042,7 +1105,7 @@ function PortfolioDashboard() {
             </button>
 
             <button
-              style={{ ...styles.quickButton, ...responsiveStyles.quickButton }}
+              style={{ ...styles.quickButton, ...themedStyles.quickButton }}
               onClick={() =>
                 navigate("/investments/gold")
               }

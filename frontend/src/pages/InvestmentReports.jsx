@@ -32,6 +32,17 @@ const getChartColor = (type) => {
 
 function InvestmentReports() {
   const navigate = useNavigate();
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () =>
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
 
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" ? window.innerWidth <= 640 : false
@@ -55,6 +66,51 @@ function InvestmentReports() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const darkOverrides = {
+    page: { background: "#0b1220", color: "#e5edf8" },
+    loadingPage: { background: "#0b1220", color: "#e5edf8" },
+    loadingText: { color: "#a8b6ca" },
+    intro: { color: "#e5edf8" },
+    pageTitle: { color: "#f1f5f9" },
+    pageDescription: { color: "#a8b6ca" },
+    reportDateBox: { background: "#151f30", borderColor: "#2a3a50" },
+    reportDateLabel: { color: "#a8b6ca" },
+    reportDate: { color: "#dbeafe" },
+    summaryCard: { background: "#151f30", borderColor: "#2a3a50", boxShadow: "0 6px 22px rgba(0,0,0,0.18)" },
+    summaryTitle: { color: "#a8b6ca" },
+    summaryValue: { color: "#f1f5f9" },
+    summarySubtitle: { color: "#9aa9bd" },
+    countSection: { background: "#111b2b", borderColor: "#29384d", boxShadow: "0 6px 24px rgba(0,0,0,0.16)" },
+    sectionTitle: { color: "#f1f5f9" },
+    sectionSubtitle: { color: "#a8b6ca" },
+    totalCount: { background: "#1b2a3e", color: "#c1cee0" },
+    countCard: { background: "#162235", borderColor: "#2a3a50", color: "#e5edf8" },
+    countName: { color: "#d1dced" },
+    countNumber: { color: "#f1f5f9" },
+    countLabel: { color: "#a8b6ca" },
+    card: { background: "#111b2b", borderColor: "#29384d", boxShadow: "0 6px 24px rgba(0,0,0,0.16)" },
+    performanceNameStrong: { color: "#e5edf8" },
+    performanceRow: { borderBottomColor: "#2a3a50" },
+    barLabels: { color: "#a8b6ca" },
+    barTrack: { background: "#263449" },
+    refreshButton: { background: "#192a40", borderColor: "#315078", color: "#8dbbff" },
+    tableHeader: { background: "#1b2a3e", color: "#c1cee0" },
+    tableRow: { borderBottomColor: "#2a3a50" },
+    tableProduct: { color: "#d1dced" },
+    tableText: { color: "#c1cee0" },
+    totalRow: { background: "#1b2a3e", color: "#e5edf8" },
+    noteCard: { background: "#142238", borderColor: "#2b4566" },
+    noteTitle: { color: "#dbeafe" },
+    noteText: { color: "#b3c2d6" },
+    footerQuote: { background: "linear-gradient(135deg, #142238 0%, #111b2b 100%)", borderColor: "#2b4566" },
+    quoteText: { color: "#c1cee0" },
+    quoteAuthor: { color: "#8dbbff" },
+    errorCard: { background: "#151f30", borderColor: "#2a3a50", boxShadow: "0 10px 35px rgba(0,0,0,0.25)" },
+    errorTitle: { color: "#f1f5f9" },
+    errorText: { color: "#b3c2d6" },
+    secondaryButton: { background: "#192a40", borderColor: "#38506d", color: "#dbeafe" },
+  };
+
   const getResponsiveStyle = (key) => ({
     ...styles[key],
     ...(isMobile
@@ -62,6 +118,7 @@ function InvestmentReports() {
       : isTablet
       ? responsiveStyles.tablet[key]
       : {}),
+    ...(darkMode ? (darkOverrides[key] || {}) : {}),
   });
 
   const [report, setReport] = useState(null);
@@ -235,7 +292,7 @@ function InvestmentReports() {
 
   if (error) {
     return (
-      <div style={getResponsiveStyle("page")}>
+      <div data-theme={darkMode ? "dark" : "light"} style={getResponsiveStyle("page")}>
         <div style={getResponsiveStyle("errorCard")}>
           <div style={getResponsiveStyle("errorIcon")}>⚠️</div>
 
@@ -270,7 +327,7 @@ function InvestmentReports() {
   // =========================================================
 
   return (
-    <div style={getResponsiveStyle("page")}>
+    <div data-theme={darkMode ? "dark" : "light"} style={getResponsiveStyle("page")}>
 
       {/* =====================================================
           HEADER
@@ -363,6 +420,7 @@ function InvestmentReports() {
             )}
             subtitle="Across all active investments"
             type="blue"
+            darkMode={darkMode}
           />
 
           <ReportCard
@@ -373,6 +431,7 @@ function InvestmentReports() {
             )}
             subtitle="Current portfolio valuation"
             type="green"
+            darkMode={darkMode}
           />
 
           <ReportCard
@@ -386,6 +445,7 @@ function InvestmentReports() {
             positive={
               Number(report?.totalProfitLoss || 0) >= 0
             }
+            darkMode={darkMode}
           />
 
           <ReportCard
@@ -399,6 +459,7 @@ function InvestmentReports() {
             positive={
               Number(report?.returnPercentage || 0) >= 0
             }
+            darkMode={darkMode}
           />
 
         </section>
@@ -923,6 +984,7 @@ function ReportCard({
   subtitle,
   type,
   positive,
+  darkMode = false,
 }) {
   const iconStyles = {
     blue: {
@@ -947,7 +1009,10 @@ function ReportCard({
   };
 
   return (
-    <div style={styles.summaryCard}>
+    <div style={{
+      ...styles.summaryCard,
+      ...(darkMode ? { background: "#151f30", borderColor: "#2a3a50", boxShadow: "0 6px 22px rgba(0,0,0,0.18)" } : {}),
+    }}>
 
       <div
         style={{
@@ -960,7 +1025,10 @@ function ReportCard({
 
       <div>
 
-        <span style={styles.summaryTitle}>
+        <span style={{
+          ...styles.summaryTitle,
+          ...(darkMode ? { color: "#a8b6ca" } : {}),
+        }}>
           {title}
         </span>
 
@@ -972,12 +1040,18 @@ function ReportCard({
               ? "negative"
               : ""
           }
-          style={styles.summaryValue}
+          style={{
+            ...styles.summaryValue,
+            ...(darkMode && positive == null ? { color: "#f1f5f9" } : {}),
+          }}
         >
           {value}
         </strong>
 
-        <span style={styles.summarySubtitle}>
+        <span style={{
+          ...styles.summarySubtitle,
+          ...(darkMode ? { color: "#9aa9bd" } : {}),
+        }}>
           {subtitle}
         </span>
 

@@ -5,6 +5,19 @@ function AccountDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
   const [account, setAccount] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -222,7 +235,7 @@ function AccountDetails() {
     },
 
     detailRow: {
-      ...responsiveStyles.detailRow,
+      ...styles.detailRow,
       ...(isMobile && {
         minHeight: "68px",
         gap: "10px",
@@ -230,7 +243,7 @@ function AccountDetails() {
     },
 
     detailIcon: {
-      ...responsiveStyles.detailIcon,
+      ...styles.detailIcon,
       ...(isMobile && {
         width: "38px",
         height: "38px",
@@ -288,7 +301,7 @@ function AccountDetails() {
     },
 
     statusBadge: {
-      ...responsiveStyles.statusBadge,
+      ...styles.statusBadge,
       ...(isMobile && {
         fontSize: "8px",
         padding: "4px 8px",
@@ -370,21 +383,75 @@ function AccountDetails() {
     },
   };
 
+  const themedStyles = {
+    ...responsiveStyles,
+    page: {
+      ...responsiveStyles.page,
+      ...(darkMode ? { background: "#0b1220", color: "#e8eef7" } : {}),
+    },
+    container: {
+      ...responsiveStyles.container,
+      ...(darkMode ? { color: "#e8eef7" } : {}),
+    },
+    eyebrow: { ...responsiveStyles.eyebrow, ...(darkMode ? { color: "#83aaff" } : {}) },
+    title: { ...responsiveStyles.title, ...(darkMode ? { color: "#f1f5fb" } : {}) },
+    subtitle: { ...responsiveStyles.subtitle, ...(darkMode ? { color: "#a7b4c8" } : {}) },
+    detailsCard: {
+      ...responsiveStyles.detailsCard,
+      ...(darkMode ? { background: "#111a2b", border: "1px solid #26344b", boxShadow: "0 10px 30px rgba(0,0,0,0.18)" } : {}),
+    },
+    detailRow: {
+      ...responsiveStyles.detailRow,
+      ...(darkMode ? { borderBottom: "1px solid #29364b" } : {}),
+    },
+    label: { ...responsiveStyles.label, ...(darkMode ? { color: "#9aaac0" } : {}) },
+    value: { ...responsiveStyles.value, ...(darkMode ? { color: "#e8eef7" } : {}) },
+    balance: { ...responsiveStyles.balance, ...(darkMode ? { color: "#f1f5fb" } : {}) },
+    copyButton: {
+      ...responsiveStyles.copyButton,
+      ...(darkMode ? { background: "#172235", color: "#e8eef7", border: "1px solid #34445e" } : {}),
+    },
+    securityCard: {
+      ...responsiveStyles.securityCard,
+      ...(darkMode ? { background: "#111a2b", border: "1px solid #26344b", boxShadow: "0 6px 20px rgba(0,0,0,0.16)" } : {}),
+    },
+    securityTitle: { ...responsiveStyles.securityTitle, ...(darkMode ? { color: "#e8eef7" } : {}) },
+    securityText: { ...responsiveStyles.securityText, ...(darkMode ? { color: "#a7b4c8" } : {}) },
+    errorBox: {
+      ...responsiveStyles.errorBox,
+      ...(darkMode ? { background: "#351c25", border: "1px solid #743344", color: "#ffb8c4" } : {}),
+    },
+    loadingPage: {
+      ...responsiveStyles.loadingPage,
+      ...(darkMode ? { background: "#0b1220" } : {}),
+    },
+    loadingCard: {
+      ...responsiveStyles.loadingCard,
+      ...(darkMode ? { background: "#111a2b", color: "#e8eef7", boxShadow: "0 15px 40px rgba(0,0,0,0.25)" } : {}),
+    },
+    loadingTitle: { ...responsiveStyles.loadingTitle, ...(darkMode ? { color: "#f1f5fb" } : {}) },
+    loadingText: { ...responsiveStyles.loadingText, ...(darkMode ? { color: "#a7b4c8" } : {}) },
+    loader: {
+      ...responsiveStyles.loader,
+      ...(darkMode ? { border: "3px solid #29364b", borderTop: "3px solid #5790ff" } : {}),
+    },
+  };
+
   if (loading) {
     return (
-      <div style={responsiveStyles.loadingPage}>
-        <div style={responsiveStyles.loadingCard}>
-          <div style={responsiveStyles.loadingIcon}>🏦</div>
+      <div style={themedStyles.loadingPage}>
+        <div style={themedStyles.loadingCard}>
+          <div style={themedStyles.loadingIcon}>🏦</div>
 
-          <h2 style={responsiveStyles.loadingTitle}>
+          <h2 style={themedStyles.loadingTitle}>
             Loading account
           </h2>
 
-          <p style={responsiveStyles.loadingText}>
+          <p style={themedStyles.loadingText}>
             Please wait while we fetch your account details...
           </p>
 
-          <div style={responsiveStyles.loader}></div>
+          <div style={themedStyles.loader}></div>
         </div>
       </div>
     );
@@ -392,32 +459,32 @@ function AccountDetails() {
 
   if (error) {
     return (
-      <div style={responsiveStyles.page}>
-        <header style={responsiveStyles.header}>
-          <div style={responsiveStyles.brandArea}>
-            <div style={responsiveStyles.brandIcon}>🏦</div>
+      <div style={themedStyles.page}>
+        <header style={themedStyles.header}>
+          <div style={themedStyles.brandArea}>
+            <div style={themedStyles.brandIcon}>🏦</div>
 
             <div>
-              <div style={responsiveStyles.brandName}>
+              <div style={themedStyles.brandName}>
                 AVANI BANK
               </div>
 
-              <div style={responsiveStyles.brandSubtitle}>
+              <div style={themedStyles.brandSubtitle}>
                 Account Details
               </div>
             </div>
           </div>
 
           <button
-            style={responsiveStyles.headerButton}
+            style={themedStyles.headerButton}
             onClick={() => navigate("/accounts")}
           >
             ← Back to Accounts
           </button>
         </header>
 
-        <main style={responsiveStyles.container}>
-          <div style={responsiveStyles.errorBox}>
+        <main style={themedStyles.container}>
+          <div style={themedStyles.errorBox}>
             {error}
           </div>
         </main>
@@ -427,25 +494,25 @@ function AccountDetails() {
 
   if (!account) {
     return (
-      <div style={responsiveStyles.page}>
-        <header style={responsiveStyles.header}>
-          <div style={responsiveStyles.brandArea}>
-            <div style={responsiveStyles.brandIcon}>🏦</div>
+      <div style={themedStyles.page}>
+        <header style={themedStyles.header}>
+          <div style={themedStyles.brandArea}>
+            <div style={themedStyles.brandIcon}>🏦</div>
 
             <div>
-              <div style={responsiveStyles.brandName}>
+              <div style={themedStyles.brandName}>
                 AVANI BANK
               </div>
 
-              <div style={responsiveStyles.brandSubtitle}>
+              <div style={themedStyles.brandSubtitle}>
                 Account Details
               </div>
             </div>
           </div>
         </header>
 
-        <main style={responsiveStyles.container}>
-          <div style={responsiveStyles.errorBox}>
+        <main style={themedStyles.container}>
+          <div style={themedStyles.errorBox}>
             Account not found.
           </div>
         </main>
@@ -456,24 +523,24 @@ function AccountDetails() {
   const statusStyle = getStatusStyle(account.status);
 
   return (
-    <div style={responsiveStyles.page}>
+    <div style={themedStyles.page}>
 
       {/* ================= HEADER ================= */}
 
-      <header style={responsiveStyles.header}>
+      <header style={themedStyles.header}>
 
-        <div style={responsiveStyles.brandArea}>
+        <div style={themedStyles.brandArea}>
 
-          <div style={responsiveStyles.brandIcon}>
+          <div style={themedStyles.brandIcon}>
             🏦
           </div>
 
           <div>
-            <div style={responsiveStyles.brandName}>
+            <div style={themedStyles.brandName}>
               AVANI BANK
             </div>
 
-            <div style={responsiveStyles.brandSubtitle}>
+            <div style={themedStyles.brandSubtitle}>
               Account Details
             </div>
           </div>
@@ -481,7 +548,7 @@ function AccountDetails() {
         </div>
 
         <button
-          style={responsiveStyles.headerButton}
+          style={themedStyles.headerButton}
           onClick={() => navigate("/accounts")}
         >
           ← Back to Accounts
@@ -491,19 +558,19 @@ function AccountDetails() {
 
       {/* ================= MAIN ================= */}
 
-      <main style={responsiveStyles.container}>
+      <main style={themedStyles.container}>
 
-        <section style={responsiveStyles.pageHeading}>
+        <section style={themedStyles.pageHeading}>
 
-          <p style={responsiveStyles.eyebrow}>
+          <p style={themedStyles.eyebrow}>
             ACCOUNT INFORMATION
           </p>
 
-          <h1 style={responsiveStyles.title}>
+          <h1 style={themedStyles.title}>
             Account Details
           </h1>
 
-          <p style={responsiveStyles.subtitle}>
+          <p style={themedStyles.subtitle}>
             View your account information and details.
           </p>
 
@@ -511,30 +578,30 @@ function AccountDetails() {
 
         {/* ================= DETAILS CARD ================= */}
 
-        <section style={responsiveStyles.detailsCard}>
+        <section style={themedStyles.detailsCard}>
 
           {/* ACCOUNT NUMBER */}
 
-          <div style={responsiveStyles.detailRow}>
+          <div style={themedStyles.detailRow}>
 
-            <div style={responsiveStyles.detailIcon}>
+            <div style={themedStyles.detailIcon}>
               💳
             </div>
 
-            <div style={responsiveStyles.detailContent}>
+            <div style={themedStyles.detailContent}>
 
-              <p style={responsiveStyles.label}>
+              <p style={themedStyles.label}>
                 ACCOUNT NUMBER
               </p>
 
-              <p style={responsiveStyles.value}>
+              <p style={themedStyles.value}>
                 {account.accountNumber || "N/A"}
               </p>
 
             </div>
 
             <button
-              style={responsiveStyles.copyButton}
+              style={themedStyles.copyButton}
               onClick={() =>
                 navigator.clipboard?.writeText(
                   account.accountNumber || ""
@@ -548,19 +615,19 @@ function AccountDetails() {
 
           {/* ACCOUNT TYPE */}
 
-          <div style={responsiveStyles.detailRow}>
+          <div style={themedStyles.detailRow}>
 
-            <div style={responsiveStyles.detailIcon}>
+            <div style={themedStyles.detailIcon}>
               👛
             </div>
 
-            <div style={responsiveStyles.detailContent}>
+            <div style={themedStyles.detailContent}>
 
-              <p style={responsiveStyles.label}>
+              <p style={themedStyles.label}>
                 ACCOUNT TYPE
               </p>
 
-              <p style={responsiveStyles.value}>
+              <p style={themedStyles.value}>
                 {account.accountType || "N/A"}
               </p>
 
@@ -570,26 +637,26 @@ function AccountDetails() {
 
           {/* STATUS */}
 
-          <div style={responsiveStyles.detailRow}>
+          <div style={themedStyles.detailRow}>
 
             <div
               style={{
-                ...responsiveStyles.detailIcon,
+                ...themedStyles.detailIcon,
                 background: "#eaf9f2",
               }}
             >
               ●
             </div>
 
-            <div style={responsiveStyles.detailContent}>
+            <div style={themedStyles.detailContent}>
 
-              <p style={responsiveStyles.label}>
+              <p style={themedStyles.label}>
                 ACCOUNT STATUS
               </p>
 
               <span
                 style={{
-                  ...responsiveStyles.statusBadge,
+                  ...themedStyles.statusBadge,
                   ...statusStyle,
                 }}
               >
@@ -602,11 +669,11 @@ function AccountDetails() {
 
           {/* BALANCE */}
 
-          <div style={responsiveStyles.detailRow}>
+          <div style={themedStyles.detailRow}>
 
             <div
               style={{
-                ...responsiveStyles.detailIcon,
+                ...themedStyles.detailIcon,
                 background: "#eaf9f2",
                 color: "#11915e",
               }}
@@ -614,13 +681,13 @@ function AccountDetails() {
               ₹
             </div>
 
-            <div style={responsiveStyles.detailContent}>
+            <div style={themedStyles.detailContent}>
 
-              <p style={responsiveStyles.label}>
+              <p style={themedStyles.label}>
                 AVAILABLE BALANCE
               </p>
 
-              <p style={responsiveStyles.balance}>
+              <p style={themedStyles.balance}>
                 ₹{formatCurrency(account.balance)}
               </p>
 
@@ -632,22 +699,22 @@ function AccountDetails() {
 
           <div
             style={{
-              ...responsiveStyles.detailRow,
+              ...themedStyles.detailRow,
               borderBottom: "none",
             }}
           >
 
-            <div style={responsiveStyles.detailIcon}>
+            <div style={themedStyles.detailIcon}>
               %
             </div>
 
-            <div style={responsiveStyles.detailContent}>
+            <div style={themedStyles.detailContent}>
 
-              <p style={responsiveStyles.label}>
+              <p style={themedStyles.label}>
                 INTEREST RATE
               </p>
 
-              <p style={responsiveStyles.interest}>
+              <p style={themedStyles.interest}>
                 {account.interestRate || 0}%
               </p>
 
@@ -659,19 +726,19 @@ function AccountDetails() {
 
         {/* ================= SECURITY CARD ================= */}
 
-        <section style={responsiveStyles.securityCard}>
+        <section style={themedStyles.securityCard}>
 
-          <div style={responsiveStyles.securityIcon}>
+          <div style={themedStyles.securityIcon}>
             🛡️
           </div>
 
           <div>
 
-            <h3 style={responsiveStyles.securityTitle}>
+            <h3 style={themedStyles.securityTitle}>
               Your account is secure
             </h3>
 
-            <p style={responsiveStyles.securityText}>
+            <p style={themedStyles.securityText}>
               Your account information is protected
               with bank-level security.
             </p>

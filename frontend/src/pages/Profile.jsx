@@ -4,6 +4,21 @@ import { useNavigate } from "react-router-dom";
 function Profile() {
   const navigate = useNavigate();
 
+  // Sync with the theme selected on the Dashboard.
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("avani-theme") === "dark"
+  );
+
+  useEffect(() => {
+    const syncTheme = () => {
+      setDarkMode(localStorage.getItem("avani-theme") === "dark");
+    };
+
+    window.addEventListener("storage", syncTheme);
+    syncTheme();
+    return () => window.removeEventListener("storage", syncTheme);
+  }, []);
+
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" && window.innerWidth <= 700
   );
@@ -273,23 +288,57 @@ function Profile() {
     });
   };
 
+  const themedStyles = darkMode
+    ? {
+        ...styles,
+        page: { ...styles.page, background: "#0b1220", color: "#e5eaf3" },
+        container: { ...styles.container },
+        profileHero: { ...styles.profileHero, background: "#151f30", borderColor: "#29364a", boxShadow: "0 8px 30px rgba(0,0,0,0.22)" },
+        profileName: { ...styles.profileName, color: "#f1f5f9" },
+        profileEmail: { ...styles.profileEmail, color: "#a4b1c5" },
+        balanceBox: { ...styles.balanceBox, borderLeftColor: "#29364a", borderTopColor: "#29364a" },
+        balanceLabel: { ...styles.balanceLabel, color: "#a4b1c5" },
+        balance: { ...styles.balance, color: "#8db5ff" },
+        card: { ...styles.card, background: "#151f30", borderColor: "#29364a", boxShadow: "0 8px 30px rgba(0,0,0,0.18)" },
+        cardTitle: { ...styles.cardTitle, color: "#f1f5f9" },
+        cardSubtitle: { ...styles.cardSubtitle, color: "#a4b1c5" },
+        cardIcon: { ...styles.cardIcon, background: "#223454", color: "#c6d8ff" },
+        securityIcon: { ...styles.securityIcon, background: "#183b32", color: "#9de3c5" },
+        infoItem: { ...styles.infoItem, background: "#101a2a", borderColor: "#29364a" },
+        infoLabel: { ...styles.infoLabel, color: "#a4b1c5" },
+        infoValue: { ...styles.infoValue, color: "#e5eaf3" },
+        accountNumberBox: { ...styles.accountNumberBox, background: "linear-gradient(135deg, #172641, #1b2b46)", borderColor: "#31496d" },
+        accountNumber: { ...styles.accountNumber, color: "#9bbcff" },
+        accountHint: { ...styles.accountHint, color: "#a4b1c5" },
+        detailBox: { ...styles.detailBox, background: "#101a2a", borderColor: "#29364a" },
+        detailLabel: { ...styles.detailLabel, color: "#a4b1c5" },
+        detailValue: { ...styles.detailValue, color: "#e5eaf3" },
+        label: { ...styles.label, color: "#c4cede" },
+        input: { ...styles.input, background: "#0d1726", color: "#f1f5f9", borderColor: "#394960", colorScheme: "dark" },
+        securityNote: { ...styles.securityNote, color: "#a4b1c5" },
+        loadingTitle: { ...styles.loadingTitle, color: "#f1f5f9" },
+        loadingText: { ...styles.loadingText, color: "#a4b1c5" },
+        errorContainer: { ...styles.errorContainer, background: "#151f30", color: "#e5eaf3", borderColor: "#29364a" },
+      }
+    : styles;
+
   // =========================
   // LOADING
   // =========================
 
   if (loading) {
     return (
-      <div style={{ ...styles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
-        <div style={styles.loadingContainer}>
-          <div style={styles.loadingIcon}>
+      <div style={{ ...themedStyles.page, ...(isMobile ? responsiveStyles.page : {}) }}>
+        <div style={themedStyles.loadingContainer}>
+          <div style={themedStyles.loadingIcon}>
             ⟳
           </div>
 
-          <h2 style={styles.loadingTitle}>
+          <h2 style={themedStyles.loadingTitle}>
             Loading Profile
           </h2>
 
-          <p style={styles.loadingText}>
+          <p style={themedStyles.loadingText}>
             Fetching your account information...
           </p>
         </div>
@@ -303,9 +352,9 @@ function Profile() {
 
   if (error) {
     return (
-      <div style={styles.page}>
-        <div style={styles.errorContainer}>
-          <div style={styles.errorIcon}>
+      <div style={themedStyles.page}>
+        <div style={themedStyles.errorContainer}>
+          <div style={themedStyles.errorIcon}>
             ⚠
           </div>
 
@@ -317,7 +366,7 @@ function Profile() {
 
           <button
             onClick={() => navigate("/dashboard")}
-            style={{ ...styles.primaryButton, ...(isMobile ? responsiveStyles.primaryButton : {}) }}
+            style={{ ...themedStyles.primaryButton, ...(isMobile ? responsiveStyles.primaryButton : {}) }}
           >
             ← Back to Dashboard
           </button>
@@ -327,46 +376,46 @@ function Profile() {
   }
 
   return (
-    <div style={styles.page}>
-      <div style={{ ...styles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
+    <div style={themedStyles.page}>
+      <div style={{ ...themedStyles.container, ...(isMobile ? responsiveStyles.container : {}) }}>
 
         {/* =========================
             HEADER
         ========================= */}
 
-        <div style={{ ...styles.header, ...(isMobile ? responsiveStyles.header : {}) }}>
+        <div style={{ ...themedStyles.header, ...(isMobile ? responsiveStyles.header : {}) }}>
 
-          <div style={{ ...styles.headerContent, ...(isMobile ? responsiveStyles.headerContent : {}) }}>
+          <div style={{ ...themedStyles.headerContent, ...(isMobile ? responsiveStyles.headerContent : {}) }}>
 
-            <p style={styles.smallTitle}>
+            <p style={themedStyles.smallTitle}>
               AVANI BANK
             </p>
 
-            <h1 style={{ ...styles.title, ...(isMobile ? responsiveStyles.title : {}) }}>
+            <h1 style={{ ...themedStyles.title, ...(isMobile ? responsiveStyles.title : {}) }}>
               My Profile
             </h1>
 
-            <p style={{ ...styles.subtitle, ...(isMobile ? responsiveStyles.subtitle : {}) }}>
+            <p style={{ ...themedStyles.subtitle, ...(isMobile ? responsiveStyles.subtitle : {}) }}>
               Manage your personal and account
               information securely.
             </p>
 
           </div>
 
-          <div style={{ ...styles.headerActions, ...(isMobile ? responsiveStyles.headerActions : {}) }}>
+          <div style={{ ...themedStyles.headerActions, ...(isMobile ? responsiveStyles.headerActions : {}) }}>
 
             <button
               onClick={() =>
                 navigate("/dashboard")
               }
-              style={{ ...styles.headerButton, ...(isMobile ? responsiveStyles.headerButton : {}) }}
+              style={{ ...themedStyles.headerButton, ...(isMobile ? responsiveStyles.headerButton : {}) }}
             >
               ← Dashboard
             </button>
 
             <button
               onClick={handleLogout}
-              style={{ ...styles.logoutButton, ...(isMobile ? responsiveStyles.logoutButton : {}) }}
+              style={{ ...themedStyles.logoutButton, ...(isMobile ? responsiveStyles.logoutButton : {}) }}
             >
               Logout
             </button>
@@ -379,36 +428,36 @@ function Profile() {
             PROFILE HERO
         ========================= */}
 
-        <div style={{ ...styles.profileHero, ...(isMobile ? responsiveStyles.profileHero : {}) }}>
+        <div style={{ ...themedStyles.profileHero, ...(isMobile ? responsiveStyles.profileHero : {}) }}>
 
-          <div style={{ ...styles.avatar, ...(isMobile ? responsiveStyles.avatar : {}) }}>
+          <div style={{ ...themedStyles.avatar, ...(isMobile ? responsiveStyles.avatar : {}) }}>
             {customer?.fullName
               ?.charAt(0)
               ?.toUpperCase() || "U"}
           </div>
 
-          <div style={{ ...styles.profileIdentity, ...(isMobile ? responsiveStyles.profileIdentity : {}) }}>
+          <div style={{ ...themedStyles.profileIdentity, ...(isMobile ? responsiveStyles.profileIdentity : {}) }}>
 
-            <h2 style={{ ...styles.profileName, ...(isMobile ? responsiveStyles.profileName : {}) }}>
+            <h2 style={{ ...themedStyles.profileName, ...(isMobile ? responsiveStyles.profileName : {}) }}>
               {customer?.fullName ||
                 "Customer"}
             </h2>
 
-            <p style={{ ...styles.profileEmail, ...(isMobile ? responsiveStyles.profileEmail : {}) }}>
+            <p style={{ ...themedStyles.profileEmail, ...(isMobile ? responsiveStyles.profileEmail : {}) }}>
               {customer?.email ||
                 "Email unavailable"}
             </p>
 
-            <div style={{ ...styles.profileMeta, ...(isMobile ? responsiveStyles.profileMeta : {}) }}>
+            <div style={{ ...themedStyles.profileMeta, ...(isMobile ? responsiveStyles.profileMeta : {}) }}>
 
-              <span style={styles.accountBadge}>
+              <span style={themedStyles.accountBadge}>
                 {customer?.accountType ||
                   "Account"}
               </span>
 
               <span
                 style={{
-                  ...styles.statusBadge,
+                  ...themedStyles.statusBadge,
                   ...(isMobile ? responsiveStyles.statusBadge : {}),
                   background:
                     customer?.status === "ACTIVE"
@@ -427,13 +476,13 @@ function Profile() {
 
           </div>
 
-          <div style={{ ...styles.balanceBox, ...(isMobile ? responsiveStyles.balanceBox : {}) }}>
+          <div style={{ ...themedStyles.balanceBox, ...(isMobile ? responsiveStyles.balanceBox : {}) }}>
 
-            <p style={styles.balanceLabel}>
+            <p style={themedStyles.balanceLabel}>
               Available Balance
             </p>
 
-            <h2 style={{ ...styles.balance, ...(isMobile ? responsiveStyles.balance : {}) }}>
+            <h2 style={{ ...themedStyles.balance, ...(isMobile ? responsiveStyles.balance : {}) }}>
               ₹{formatBalance(
                 customer?.balance
               )}
@@ -447,50 +496,54 @@ function Profile() {
             PERSONAL INFORMATION
         ========================= */}
 
-        <div style={{ ...styles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
+        <div style={{ ...themedStyles.card, ...(isMobile ? responsiveStyles.card : {}) }}>
 
-          <div style={{ ...styles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
+          <div style={{ ...themedStyles.cardHeader, ...(isMobile ? responsiveStyles.cardHeader : {}) }}>
 
             <div>
-              <h2 style={{ ...styles.cardTitle, ...(isMobile ? responsiveStyles.cardTitle : {}) }}>
+              <h2 style={{ ...themedStyles.cardTitle, ...(isMobile ? responsiveStyles.cardTitle : {}) }}>
                 Personal Information
               </h2>
 
-              <p style={{ ...styles.cardSubtitle, ...(isMobile ? responsiveStyles.cardSubtitle : {}) }}>
+              <p style={{ ...themedStyles.cardSubtitle, ...(isMobile ? responsiveStyles.cardSubtitle : {}) }}>
                 Your registered personal details
               </p>
             </div>
 
-            <div style={styles.cardIcon}>
+            <div style={themedStyles.cardIcon}>
               👤
             </div>
 
           </div>
 
-          <div style={{ ...styles.infoGrid, ...(isMobile ? responsiveStyles.infoGrid : {}) }}>
+          <div style={{ ...themedStyles.infoGrid, ...(isMobile ? responsiveStyles.infoGrid : {}) }}>
 
             <InfoItem
               label="Full Name"
               value={customer?.fullName}
               isMobile={isMobile}
+              darkMode={darkMode}
             />
 
             <InfoItem
               label="Email Address"
               value={customer?.email}
               isMobile={isMobile}
+              darkMode={darkMode}
             />
 
             <InfoItem
               label="Phone Number"
               value={customer?.phone}
               isMobile={isMobile}
+              darkMode={darkMode}
             />
 
             <InfoItem
               label="Account Type"
               value={customer?.accountType}
               isMobile={isMobile}
+              darkMode={darkMode}
             />
 
           </div>
@@ -501,52 +554,52 @@ function Profile() {
             ACCOUNT INFORMATION
         ========================= */}
 
-        <div style={styles.card}>
+        <div style={themedStyles.card}>
 
-          <div style={styles.cardHeader}>
+          <div style={themedStyles.cardHeader}>
 
             <div>
-              <h2 style={styles.cardTitle}>
+              <h2 style={themedStyles.cardTitle}>
                 Account Information
               </h2>
 
-              <p style={styles.cardSubtitle}>
+              <p style={themedStyles.cardSubtitle}>
                 Your Avani Bank account details
               </p>
             </div>
 
-            <div style={styles.cardIcon}>
+            <div style={themedStyles.cardIcon}>
               🏦
             </div>
 
           </div>
 
-          <div style={{ ...styles.accountGrid, ...(isMobile ? responsiveStyles.accountGrid : {}) }}>
+          <div style={{ ...themedStyles.accountGrid, ...(isMobile ? responsiveStyles.accountGrid : {}) }}>
 
-            <div style={{ ...styles.accountNumberBox, ...(isMobile ? responsiveStyles.accountNumberBox : {}) }}>
+            <div style={{ ...themedStyles.accountNumberBox, ...(isMobile ? responsiveStyles.accountNumberBox : {}) }}>
 
-              <p style={styles.detailLabel}>
+              <p style={themedStyles.detailLabel}>
                 Account Number
               </p>
 
-              <h3 style={{ ...styles.accountNumber, ...(isMobile ? responsiveStyles.accountNumber : {}) }}>
+              <h3 style={{ ...themedStyles.accountNumber, ...(isMobile ? responsiveStyles.accountNumber : {}) }}>
                 {customer?.accountNumber ||
                   "Not available"}
               </h3>
 
-              <p style={styles.accountHint}>
+              <p style={themedStyles.accountHint}>
                 Use this number to receive money
               </p>
 
             </div>
 
-            <div style={{ ...styles.detailBox, ...(isMobile ? responsiveStyles.detailBox : {}) }}>
+            <div style={{ ...themedStyles.detailBox, ...(isMobile ? responsiveStyles.detailBox : {}) }}>
 
-              <p style={styles.detailLabel}>
+              <p style={themedStyles.detailLabel}>
                 Current Balance
               </p>
 
-              <h3 style={{ ...styles.detailValue, ...(isMobile ? responsiveStyles.detailValue : {}) }}>
+              <h3 style={{ ...themedStyles.detailValue, ...(isMobile ? responsiveStyles.detailValue : {}) }}>
                 ₹{formatBalance(
                   customer?.balance
                 )}
@@ -554,15 +607,15 @@ function Profile() {
 
             </div>
 
-            <div style={styles.detailBox}>
+            <div style={themedStyles.detailBox}>
 
-              <p style={styles.detailLabel}>
+              <p style={themedStyles.detailLabel}>
                 Account Status
               </p>
 
               <h3
                 style={{
-                  ...styles.detailValue,
+                  ...themedStyles.detailValue,
                   ...(isMobile ? responsiveStyles.detailValue : {}),
                   color:
                     customer?.status === "ACTIVE"
@@ -576,13 +629,13 @@ function Profile() {
 
             </div>
 
-            <div style={styles.detailBox}>
+            <div style={themedStyles.detailBox}>
 
-              <p style={styles.detailLabel}>
+              <p style={themedStyles.detailLabel}>
                 Account Created
               </p>
 
-              <h3 style={styles.detailValue}>
+              <h3 style={themedStyles.detailValue}>
                 {formatDate(
                   customer?.createdAt
                 )}
@@ -598,24 +651,24 @@ function Profile() {
             CHANGE PASSWORD
         ========================= */}
 
-        <div style={styles.card}>
+        <div style={themedStyles.card}>
 
-          <div style={styles.cardHeader}>
+          <div style={themedStyles.cardHeader}>
 
             <div>
 
-              <h2 style={styles.cardTitle}>
+              <h2 style={themedStyles.cardTitle}>
                 Security
               </h2>
 
-              <p style={styles.cardSubtitle}>
+              <p style={themedStyles.cardSubtitle}>
                 Change your account password
                 securely.
               </p>
 
             </div>
 
-            <div style={styles.securityIcon}>
+            <div style={themedStyles.securityIcon}>
               🔐
             </div>
 
@@ -625,11 +678,11 @@ function Profile() {
             onSubmit={handleChangePassword}
           >
 
-            <div style={{ ...styles.passwordGrid, ...(isMobile ? responsiveStyles.passwordGrid : {}) }}>
+            <div style={{ ...themedStyles.passwordGrid, ...(isMobile ? responsiveStyles.passwordGrid : {}) }}>
 
-              <div style={styles.field}>
+              <div style={themedStyles.field}>
 
-                <label style={styles.label}>
+                <label style={themedStyles.label}>
                   Current Password
                 </label>
 
@@ -643,14 +696,14 @@ function Profile() {
                     handlePasswordChange
                   }
                   placeholder="Enter current password"
-                  style={styles.input}
+                  style={themedStyles.input}
                 />
 
               </div>
 
-              <div style={styles.field}>
+              <div style={themedStyles.field}>
 
-                <label style={styles.label}>
+                <label style={themedStyles.label}>
                   New Password
                 </label>
 
@@ -664,14 +717,14 @@ function Profile() {
                     handlePasswordChange
                   }
                   placeholder="Minimum 6 characters"
-                  style={styles.input}
+                  style={themedStyles.input}
                 />
 
               </div>
 
-              <div style={styles.field}>
+              <div style={themedStyles.field}>
 
-                <label style={styles.label}>
+                <label style={themedStyles.label}>
                   Confirm New Password
                 </label>
 
@@ -685,7 +738,7 @@ function Profile() {
                     handlePasswordChange
                   }
                   placeholder="Confirm new password"
-                  style={styles.input}
+                  style={themedStyles.input}
                 />
 
               </div>
@@ -693,20 +746,20 @@ function Profile() {
             </div>
 
             {passwordMessage && (
-              <div style={styles.success}>
+              <div style={themedStyles.success}>
                 ✓ {passwordMessage}
               </div>
             )}
 
             {passwordError && (
-              <div style={styles.error}>
+              <div style={themedStyles.error}>
                 ⚠ {passwordError}
               </div>
             )}
 
-            <div style={{ ...styles.passwordFooter, ...(isMobile ? responsiveStyles.passwordFooter : {}) }}>
+            <div style={{ ...themedStyles.passwordFooter, ...(isMobile ? responsiveStyles.passwordFooter : {}) }}>
 
-              <p style={{ ...styles.securityNote, ...(isMobile ? responsiveStyles.securityNote : {}) }}>
+              <p style={{ ...themedStyles.securityNote, ...(isMobile ? responsiveStyles.securityNote : {}) }}>
                 🔒 Your password is securely
                 encrypted.
               </p>
@@ -715,7 +768,7 @@ function Profile() {
                 type="submit"
                 disabled={passwordLoading}
                 style={{
-                  ...styles.primaryButton,
+                  ...themedStyles.primaryButton,
                   ...(isMobile ? responsiveStyles.primaryButton : {}),
                   opacity: passwordLoading
                     ? 0.7
@@ -745,15 +798,23 @@ function Profile() {
 // REUSABLE INFO COMPONENT
 // =========================
 
-function InfoItem({ label, value, isMobile }) {
+function InfoItem({ label, value, isMobile, darkMode }) {
   return (
-    <div style={{ ...styles.infoItem, ...(isMobile ? responsiveStyles.infoItem : {}) }}>
+    <div style={{
+      ...styles.infoItem,
+      ...(darkMode ? { background: "#101a2a", borderColor: "#29364a" } : {}),
+      ...(isMobile ? responsiveStyles.infoItem : {}),
+    }}>
 
-      <p style={styles.infoLabel}>
+      <p style={{ ...styles.infoLabel, ...(darkMode ? { color: "#a4b1c5" } : {}) }}>
         {label}
       </p>
 
-      <p style={{ ...styles.infoValue, ...(isMobile ? responsiveStyles.infoValue : {}) }}>
+      <p style={{
+        ...styles.infoValue,
+        ...(darkMode ? { color: "#e5eaf3" } : {}),
+        ...(isMobile ? responsiveStyles.infoValue : {}),
+      }}>
         {value || "Not available"}
       </p>
 
