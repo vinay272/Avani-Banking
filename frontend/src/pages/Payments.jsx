@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 // =====================================================
 // PAYMENT OPTIONS
@@ -20,6 +21,7 @@ const paymentOptions = [
 
 function Payments() {
   const navigate = useNavigate();
+  const { language, t } = useLanguage();
 
   // =====================================================
   // DARK MODE
@@ -4115,13 +4117,12 @@ function Payments() {
           <div className="payments-header">
             <div className="payments-header-content">
               <div>
-                <p className="payments-eyebrow">AVANI BANK • DIGITAL BANKING</p>
+                <p className="payments-eyebrow">{t("Secure • Reliable • Digital Banking")}</p>
 
-                <h1 className="payments-title">Payments</h1>
+                <h1 className="payments-title">{t("Payments")}</h1>
 
                 <p className="payments-subtitle">
-                  Transfer money, pay bills and manage all your payments
-                  securely.
+                  {t("Transfer money, pay bills and manage all your payments securely.")}
                 </p>
               </div>
 
@@ -4130,7 +4131,7 @@ function Payments() {
                 className="dashboard-button"
                 onClick={() => navigate("/dashboard")}
               >
-                ← Dashboard
+                ← {t("Dashboard")}
               </button>
             </div>
           </div>
@@ -4157,7 +4158,7 @@ function Payments() {
                     }
                     onClick={() => handlePaymentChange(option)}
                   >
-                    {option}
+                    {t(option)}
                   </button>
                 ))}
               </div>
@@ -4170,14 +4171,14 @@ function Payments() {
             <div className="payment-content">
               <div className="payment-content-header">
                 <div>
-                  <h2 className="payment-content-title">{selectedPayment}</h2>
+                  <h2 className="payment-content-title">{t(selectedPayment)}</h2>
 
                   <p className="payment-content-description">
-                    {getDescription()}
+                    {t(getDescription())}
                   </p>
                 </div>
 
-                <div className="secure-badge">🔒 Secure</div>
+                <div className="secure-badge">🔒 {t("Secure")}</div>
               </div>
 
               {/* =================================================
@@ -4223,9 +4224,9 @@ function Payments() {
                           <div className="form-icon">UPI</div>
 
                           <div>
-                            <h4>UPI Transfer</h4>
+                            <h4>{t("UPI Transfer")}</h4>
 
-                            <p>Transfer money using receiver UPI ID</p>
+                            <p>{t("Transfer money using receiver UPI ID")}</p>
                           </div>
                         </div>
 
@@ -4234,11 +4235,11 @@ function Payments() {
                           onSubmit={handleUpiTransfer}
                         >
                           <div className="form-group">
-                            <label>Receiver UPI ID</label>
+                            <label>{t("Receiver UPI ID")}</label>
 
                             <input
                               type="text"
-                              placeholder="example@avani"
+                              placeholder={t("example@avani")}
                               value={receiverUpiId}
                               onChange={(e) => setReceiverUpiId(e.target.value)}
                               autoComplete="off"
@@ -4247,7 +4248,7 @@ function Payments() {
                           </div>
 
                           <div className="form-group">
-                            <label>Transfer Amount</label>
+                            <label>{t("Transfer Amount")}</label>
 
                             <div className="input-wrapper">
                               <span className="input-prefix">₹</span>
@@ -4255,7 +4256,7 @@ function Payments() {
                               <input
                                 className="with-prefix"
                                 type="number"
-                                placeholder="Enter amount"
+                                placeholder={t("Enter amount")}
                                 min="1"
                                 step="0.01"
                                 value={amount}
@@ -4271,8 +4272,8 @@ function Payments() {
                             disabled={loading}
                           >
                             {loading
-                              ? "Processing UPI..."
-                              : "Transfer via UPI →"}
+                              ? t("Processing UPI...")
+                              : t("Transfer via UPI →")}
                           </button>
                         </form>
                       </>
@@ -4286,7 +4287,7 @@ function Payments() {
                           <div className="form-icon bank">🏦</div>
 
                           <div>
-                            <h4>Account Transfer</h4>
+                            <h4>{t("Account Transfer")}</h4>
 
                             <p>
                               Transfer directly using account number and IFSC
@@ -4299,12 +4300,12 @@ function Payments() {
                           onSubmit={(e) => handleBankTransfer(e, "TRANSFER")}
                         >
                           <div className="form-group">
-                            <label>Receiver Account Number</label>
+                            <label>{t("Receiver Account Number")}</label>
 
                             <input
                               type="text"
                               inputMode="numeric"
-                              placeholder="Enter account number"
+                              placeholder={t("Enter account number")}
                               value={receiverAccountNumber}
                               onChange={(e) =>
                                 setReceiverAccountNumber(e.target.value)
@@ -4315,11 +4316,11 @@ function Payments() {
                           </div>
 
                           <div className="form-group">
-                            <label>Receiver IFSC Code</label>
+                            <label>{t("Receiver IFSC Code")}</label>
 
                             <input
                               type="text"
-                              placeholder="Example: AVNB0000001"
+                              placeholder={t("Example: AVNB0000001")}
                               value={receiverIfscCode}
                               onChange={(e) =>
                                 setReceiverIfscCode(
@@ -4337,7 +4338,7 @@ function Payments() {
                           </div>
 
                           <div className="form-group">
-                            <label>Transfer Amount</label>
+                            <label>{t("Transfer Amount")}</label>
 
                             <div className="input-wrapper">
                               <span className="input-prefix">₹</span>
@@ -4345,7 +4346,7 @@ function Payments() {
                               <input
                                 className="with-prefix"
                                 type="number"
-                                placeholder="Enter amount"
+                                placeholder={t("Enter amount")}
                                 min="1"
                                 step="0.01"
                                 value={amount}
@@ -4361,8 +4362,8 @@ function Payments() {
                             disabled={loading}
                           >
                             {loading
-                              ? "Processing Transfer..."
-                              : "Transfer to Account →"}
+                              ? t("Processing Transfer...")
+                              : t("Transfer to Account →")}
                           </button>
                         </form>
                       </>
@@ -4384,7 +4385,7 @@ function Payments() {
                   <div className="info-card">
                     <div className="info-icon">🔐</div>
 
-                    <h4>Secure Account Payments</h4>
+                    <h4>{t("Secure Account Payments")}</h4>
 
                     <p>
                       Your bank transfer is authenticated and verified securely
@@ -4395,25 +4396,25 @@ function Payments() {
                       <li>
                         <span className="check">✓</span>
 
-                        <span>Account number verification</span>
+                        <span>{t("Account number verification")}</span>
                       </li>
 
                       <li>
                         <span className="check">✓</span>
 
-                        <span>IFSC code verification</span>
+                        <span>{t("IFSC code verification")}</span>
                       </li>
 
                       <li>
                         <span className="check">✓</span>
 
-                        <span>JWT authenticated transfer</span>
+                        <span>{t("JWT authenticated transfer")}</span>
                       </li>
 
                       <li>
                         <span className="check">✓</span>
 
-                        <span>Transaction recorded in history</span>
+                        <span>{t("Transaction recorded in history")}</span>
                       </li>
                     </ul>
                   </div>
@@ -4450,12 +4451,12 @@ function Payments() {
                       onSubmit={(e) => handleBankTransfer(e, selectedPayment)}
                     >
                       <div className="form-group">
-                        <label>Receiver Account Number</label>
+                        <label>{t("Receiver Account Number")}</label>
 
                         <input
                           type="text"
                           inputMode="numeric"
-                          placeholder="Enter account number"
+                          placeholder={t("Enter account number")}
                           value={receiverAccountNumber}
                           onChange={(e) =>
                             setReceiverAccountNumber(e.target.value)
@@ -4466,11 +4467,11 @@ function Payments() {
                       </div>
 
                       <div className="form-group">
-                        <label>Receiver IFSC Code</label>
+                        <label>{t("Receiver IFSC Code")}</label>
 
                         <input
                           type="text"
-                          placeholder="Example: AVNB0000001"
+                          placeholder={t("Example: AVNB0000001")}
                           value={receiverIfscCode}
                           onChange={(e) =>
                             setReceiverIfscCode(e.target.value.toUpperCase())
@@ -4486,7 +4487,7 @@ function Payments() {
                       </div>
 
                       <div className="form-group">
-                        <label>Transfer Amount</label>
+                        <label>{t("Transfer Amount")}</label>
 
                         <div className="input-wrapper">
                           <span className="input-prefix">₹</span>
@@ -4494,7 +4495,7 @@ function Payments() {
                           <input
                             className="with-prefix"
                             type="number"
-                            placeholder="Enter amount"
+                            placeholder={t("Enter amount")}
                             min="1"
                             step="0.01"
                             value={amount}
@@ -4543,25 +4544,25 @@ function Payments() {
                       <li>
                         <span className="check">✓</span>
 
-                        <span>Receiver account verified</span>
+                        <span>{t("Receiver account verified")}</span>
                       </li>
 
                       <li>
                         <span className="check">✓</span>
 
-                        <span>IFSC code verified</span>
+                        <span>{t("IFSC code verified")}</span>
                       </li>
 
                       <li>
                         <span className="check">✓</span>
 
-                        <span>JWT authenticated transaction</span>
+                        <span>{t("JWT authenticated transaction")}</span>
                       </li>
 
                       <li>
                         <span className="check">✓</span>
 
-                        <span>Transaction recorded in banking history</span>
+                        <span>{t("Transaction recorded in banking history")}</span>
                       </li>
                     </ul>
                   </div>
@@ -4579,19 +4580,19 @@ function Payments() {
                       <div className="form-icon bank">QR</div>
 
                       <div>
-                        <h4>Generate UPI QR Code</h4>
+                        <h4>{t("Generate UPI QR Code")}</h4>
 
-                        <p>Create a payment QR using UPI details.</p>
+                        <p>{t("Create a payment QR using UPI details.")}</p>
                       </div>
                     </div>
 
                     <form className="transfer-form" onSubmit={handleGenerateQr}>
                       <div className="form-group">
-                        <label>UPI ID</label>
+                        <label>{t("UPI ID")}</label>
 
                         <input
                           type="text"
-                          placeholder="example@upi"
+                          placeholder={t("example@upi")}
                           value={qrUpiId}
                           onChange={(e) => setQrUpiId(e.target.value)}
                           autoComplete="off"
@@ -4600,11 +4601,11 @@ function Payments() {
                       </div>
 
                       <div className="form-group">
-                        <label>Receiver Name</label>
+                        <label>{t("Receiver Name")}</label>
 
                         <input
                           type="text"
-                          placeholder="Enter receiver name"
+                          placeholder={t("Enter receiver name")}
                           value={qrReceiverName}
                           onChange={(e) => setQrReceiverName(e.target.value)}
                           autoComplete="off"
@@ -4613,7 +4614,7 @@ function Payments() {
                       </div>
 
                       <div className="form-group">
-                        <label>Payment Amount</label>
+                        <label>{t("Payment Amount")}</label>
 
                         <div className="input-wrapper">
                           <span className="input-prefix">₹</span>
@@ -4621,7 +4622,7 @@ function Payments() {
                           <input
                             className="with-prefix"
                             type="number"
-                            placeholder="Enter amount"
+                            placeholder={t("Enter amount")}
                             min="1"
                             step="0.01"
                             value={qrAmount}
@@ -4670,13 +4671,13 @@ function Payments() {
 
                     <div className="qr-details">
                       <div className="qr-detail-row">
-                        <span>UPI ID</span>
+                        <span>{t("UPI ID")}</span>
 
                         <strong>{qrUpiId || "—"}</strong>
                       </div>
 
                       <div className="qr-detail-row">
-                        <span>Amount</span>
+                        <span>{t("Amount")}</span>
 
                         <strong>
                           {qrAmount
@@ -4689,14 +4690,14 @@ function Payments() {
                       </div>
 
                       <div className="qr-detail-row">
-                        <span>Name</span>
+                        <span>{t("Name")}</span>
 
                         <strong>{qrReceiverName || "—"}</strong>
                       </div>
 
                       {qrTransactionReference && (
                         <div className="qr-detail-row">
-                          <span>Reference</span>
+                          <span>{t("Reference")}</span>
 
                           <strong>{qrTransactionReference}</strong>
                         </div>
@@ -4745,9 +4746,9 @@ function Payments() {
                       <div className="form-icon bank">📱</div>
 
                       <div>
-                        <h4>Mobile Recharge</h4>
+                        <h4>{t("Mobile Recharge")}</h4>
 
-                        <p>Recharge your mobile number securely.</p>
+                        <p>{t("Recharge your mobile number securely.")}</p>
                       </div>
                     </div>
 
@@ -4755,7 +4756,7 @@ function Payments() {
                       {/* MOBILE NUMBER */}
 
                       <div className="form-group">
-                        <label>Mobile Number</label>
+                        <label>{t("Mobile Number")}</label>
 
                         <input
                           type="tel"
@@ -4765,7 +4766,7 @@ function Payments() {
                               e.target.value.replace(/\D/g, "").slice(0, 10),
                             )
                           }
-                          placeholder="Enter 10-digit mobile number"
+                          placeholder={t("Enter 10-digit mobile number")}
                           maxLength={10}
                           disabled={loading}
                         />
@@ -4774,7 +4775,7 @@ function Payments() {
                       {/* OPERATOR */}
 
                       <div className="form-group">
-                        <label>Operator</label>
+                        <label>{t("Operator")}</label>
 
                         <select
                           className="recharge-operator"
@@ -4792,13 +4793,13 @@ function Payments() {
                       {/* AMOUNT */}
 
                       <div className="form-group">
-                        <label>Recharge Amount</label>
+                        <label>{t("Recharge Amount")}</label>
 
                         <input
                           type="number"
                           value={rechargeAmount}
                           onChange={(e) => setRechargeAmount(e.target.value)}
-                          placeholder="Enter recharge amount"
+                          placeholder={t("Enter recharge amount")}
                           min="1"
                           step="0.01"
                           disabled={loading}
@@ -4825,7 +4826,7 @@ function Payments() {
                         <div className="form-icon bank">✅</div>
 
                         <div>
-                          <h4>Recharge Successful</h4>
+                          <h4>{t("Recharge Successful")}</h4>
 
                           <p>
                             Your mobile recharge has been completed
@@ -4836,24 +4837,24 @@ function Payments() {
 
                       <div className="recharge-success-details">
                         <p>
-                          <strong>Amount:</strong> ₹{rechargeSuccess.amount}
+                          <strong>{t("Amount:")}</strong> ₹{rechargeSuccess.amount}
                         </p>
 
                         <p>
-                          <strong>Mobile Number:</strong>{" "}
+                          <strong>{t("Mobile Number:")}</strong>{" "}
                           {rechargeSuccess.receiverAccountNumber}
                         </p>
 
                         <p>
-                          <strong>Operator:</strong> {rechargeOperator}
+                          <strong>{t("Operator:")}</strong> {rechargeOperator}
                         </p>
 
                         <p>
-                          <strong>Transaction ID:</strong> {rechargeSuccess.id}
+                          <strong>{t("Transaction ID:")}</strong> {rechargeSuccess.id}
                         </p>
 
                         <p>
-                          <strong>Status:</strong> {rechargeSuccess.status}
+                          <strong>{t("Status:")}</strong> {rechargeSuccess.status}
                         </p>
                       </div>
                     </div>
@@ -4868,8 +4869,8 @@ function Payments() {
               {selectedPayment === "Auto-Pay" && (
                 <div className="payment-form">
                   <div className="form-header">
-                    <h2>Auto-Pay</h2>
-                    <p>Schedule automatic payments for your bills</p>
+                    <h2>{t("Auto-Pay")}</h2>
+                    <p>{t("Schedule automatic payments for your bills")}</p>
                   </div>
 
                   {/* Create Auto-Pay Form */}
@@ -4877,7 +4878,7 @@ function Payments() {
                     <div className="form-row">
                       {/* Account */}
                       <div className="form-group">
-                        <label>Payment Account</label>
+                        <label>{t("Payment Account")}</label>
 
                         <select
                           className="bill-select"
@@ -4912,12 +4913,12 @@ function Payments() {
 
                       {/* Biller Name */}
                       <div className="form-group">
-                        <label>Biller Name</label>
+                        <label>{t("Biller Name")}</label>
                         <input
                           type="text"
                           value={autoPayBillerName}
                           onChange={(e) => setAutoPayBillerName(e.target.value)}
-                          placeholder="e.g. Jio, Airtel, Electricity"
+                          placeholder={t("e.g. Jio, Airtel, Electricity")}
                           required
                         />
                       </div>
@@ -4926,26 +4927,26 @@ function Payments() {
                     <div className="form-row">
                       {/* Biller Reference */}
                       <div className="form-group">
-                        <label>Biller Reference</label>
+                        <label>{t("Biller Reference")}</label>
                         <input
                           type="text"
                           value={autoPayBillerReference}
                           onChange={(e) =>
                             setAutoPayBillerReference(e.target.value)
                           }
-                          placeholder="Mobile / Consumer Number"
+                          placeholder={t("Mobile / Consumer Number")}
                           required
                         />
                       </div>
 
                       {/* Amount */}
                       <div className="form-group">
-                        <label>Amount (₹)</label>
+                        <label>{t("Amount (₹)")}</label>
                         <input
                           type="number"
                           value={autoPayAmount}
                           onChange={(e) => setAutoPayAmount(e.target.value)}
-                          placeholder="Enter amount"
+                          placeholder={t("Enter amount")}
                           min="1"
                           step="0.01"
                           required
@@ -4956,7 +4957,7 @@ function Payments() {
                     <div className="form-row">
                       {/* Frequency */}
                       <div className="form-group">
-                        <label>Frequency</label>
+                        <label>{t("Frequency")}</label>
 
                         <select
                           className="autopay-frequency"
@@ -4964,16 +4965,16 @@ function Payments() {
                           onChange={(e) => setAutoPayFrequency(e.target.value)}
                           required
                         >
-                          <option value="DAILY">Daily</option>
-                          <option value="WEEKLY">Weekly</option>
-                          <option value="MONTHLY">Monthly</option>
-                          <option value="YEARLY">Yearly</option>
+                          <option value="DAILY">{t("Daily")}</option>
+                          <option value="WEEKLY">{t("Weekly")}</option>
+                          <option value="MONTHLY">{t("Monthly")}</option>
+                          <option value="YEARLY">{t("Yearly")}</option>
                         </select>
                       </div>
 
                       {/* Start Date */}
                       <div className="form-group">
-                        <label>Start Date</label>
+                        <label>{t("Start Date")}</label>
 
                         <input
                           type="date"
@@ -4997,14 +4998,14 @@ function Payments() {
                   {/* Existing Auto-Pay Records */}
                   <div className="autopay-list-section">
                     <div className="form-header">
-                      <h2>My Auto-Pay</h2>
-                      <p>Manage your scheduled automatic payments</p>
+                      <h2>{t("My Auto-Pay")}</h2>
+                      <p>{t("Manage your scheduled automatic payments")}</p>
                     </div>
 
                     {autoPayLoading && autoPays.length === 0 ? (
-                      <p className="no-data">Loading Auto-Pay records...</p>
+                      <p className="no-data">{t("Loading Auto-Pay records...")}</p>
                     ) : autoPays.length === 0 ? (
-                      <p className="no-data">No Auto-Pay scheduled yet.</p>
+                      <p className="no-data">{t("No Auto-Pay scheduled yet.")}</p>
                     ) : (
                       <div className="autopay-list">
                         {autoPays.map((autoPay) => (
@@ -5026,22 +5027,22 @@ function Payments() {
 
                             <div className="autopay-details">
                               <div>
-                                <strong>Amount</strong>
+                                <strong>{t("Amount")}</strong>
                                 <span>₹{autoPay.amount}</span>
                               </div>
 
                               <div>
-                                <strong>Frequency</strong>
+                                <strong>{t("Frequency")}</strong>
                                 <span>{autoPay.frequency}</span>
                               </div>
 
                               <div>
-                                <strong>Next Due</strong>
+                                <strong>{t("Next Due")}</strong>
                                 <span>{autoPay.nextDueDate}</span>
                               </div>
 
                               <div>
-                                <strong>Account ID</strong>
+                                <strong>{t("Account ID")}</strong>
                                 <span>{autoPay.account?.id}</span>
                               </div>
                             </div>
@@ -5110,9 +5111,9 @@ function Payments() {
 
                   <div className="payment-form">
                     <div className="form-header">
-                      <h2>Schedule a Payment</h2>
+                      <h2>{t("Schedule a Payment")}</h2>
 
-                      <p>Schedule a one-time payment for a future date.</p>
+                      <p>{t("Schedule a one-time payment for a future date.")}</p>
                     </div>
 
                     <form onSubmit={handleCreateScheduledPayment}>
@@ -5120,7 +5121,7 @@ function Payments() {
                         {/* Account */}
 
                         <div className="form-group">
-                          <label>Debit Account</label>
+                          <label>{t("Debit Account")}</label>
 
                           <select
                             value={scheduledPaymentAccountId}
@@ -5159,7 +5160,7 @@ function Payments() {
                         {/* Payment Type */}
 
                         <div className="form-group">
-                          <label>Payment Type</label>
+                          <label>{t("Payment Type")}</label>
 
                           <select
                             value={scheduledPaymentType}
@@ -5186,12 +5187,12 @@ function Payments() {
                         {/* Receiver Account */}
 
                         <div className="form-group">
-                          <label>Receiver Account Number</label>
+                          <label>{t("Receiver Account Number")}</label>
 
                           <input
                             type="text"
                             inputMode="numeric"
-                            placeholder="Enter receiver account number"
+                            placeholder={t("Enter receiver account number")}
                             value={scheduledPaymentReceiverAccountNumber}
                             onChange={(e) =>
                               setScheduledPaymentReceiverAccountNumber(
@@ -5208,11 +5209,11 @@ function Payments() {
                         {/* IFSC */}
 
                         <div className="form-group">
-                          <label>Receiver IFSC Code</label>
+                          <label>{t("Receiver IFSC Code")}</label>
 
                           <input
                             type="text"
-                            placeholder="Enter IFSC code"
+                            placeholder={t("Enter IFSC code")}
                             value={scheduledPaymentReceiverIfscCode}
                             onChange={(e) =>
                               setScheduledPaymentReceiverIfscCode(
@@ -5235,7 +5236,7 @@ function Payments() {
                         {/* Amount */}
 
                         <div className="form-group">
-                          <label>Payment Amount</label>
+                          <label>{t("Payment Amount")}</label>
 
                           <div className="input-wrapper">
                             <span className="input-prefix">₹</span>
@@ -5243,7 +5244,7 @@ function Payments() {
                             <input
                               className="with-prefix"
                               type="number"
-                              placeholder="Enter amount"
+                              placeholder={t("Enter amount")}
                               min="1"
                               step="0.01"
                               value={scheduledPaymentAmount}
@@ -5259,7 +5260,7 @@ function Payments() {
                         {/* Scheduled Date */}
 
                         <div className="form-group">
-                          <label>Scheduled Date</label>
+                          <label>{t("Scheduled Date")}</label>
 
                           <input
                             type="date"
@@ -5292,7 +5293,7 @@ function Payments() {
 
                   <div className="autopay-list-section">
                     <div className="form-header">
-                      <h2>Your Scheduled Payments</h2>
+                      <h2>{t("Your Scheduled Payments")}</h2>
 
                       <p>
                         View and manage your upcoming and completed scheduled
@@ -5302,9 +5303,9 @@ function Payments() {
 
                     {scheduledPaymentLoading &&
                     scheduledPayments.length === 0 ? (
-                      <p className="no-data">Loading Scheduled Payments...</p>
+                      <p className="no-data">{t("Loading Scheduled Payments...")}</p>
                     ) : scheduledPayments.length === 0 ? (
-                      <p className="no-data">No Scheduled Payments found.</p>
+                      <p className="no-data">{t("No Scheduled Payments found.")}</p>
                     ) : (
                       <div className="autopay-list">
                         {scheduledPayments.map((scheduledPayment) => (
@@ -5340,7 +5341,7 @@ function Payments() {
 
                             <div className="autopay-details">
                               <div>
-                                <strong>Amount</strong>
+                                <strong>{t("Amount")}</strong>
 
                                 <span>
                                   ₹
@@ -5354,19 +5355,19 @@ function Payments() {
                               </div>
 
                               <div>
-                                <strong>IFSC</strong>
+                                <strong>{t("IFSC")}</strong>
 
                                 <span>{scheduledPayment.receiverIfscCode}</span>
                               </div>
 
                               <div>
-                                <strong>Scheduled Date</strong>
+                                <strong>{t("Scheduled Date")}</strong>
 
                                 <span>{scheduledPayment.scheduledDate}</span>
                               </div>
 
                               <div>
-                                <strong>Payment Type</strong>
+                                <strong>{t("Payment Type")}</strong>
 
                                 <span>{scheduledPayment.paymentType}</span>
                               </div>
@@ -5477,9 +5478,9 @@ function Payments() {
                       <div className="form-icon bank">🧾</div>
 
                       <div>
-                        <h4>Transaction Receipts</h4>
+                        <h4>{t("Transaction Receipts")}</h4>
 
-                        <p>View your completed transaction receipts</p>
+                        <p>{t("View your completed transaction receipts")}</p>
                       </div>
                     </div>
 
@@ -5487,7 +5488,7 @@ function Payments() {
                       <div className="coming-soon">
                         <div className="coming-soon-icon">⏳</div>
 
-                        <h4>Loading Transactions...</h4>
+                        <h4>{t("Loading Transactions...")}</h4>
 
                         <p>
                           Please wait while we load your transaction history.
@@ -5497,7 +5498,7 @@ function Payments() {
                       <div className="coming-soon">
                         <div className="coming-soon-icon">🧾</div>
 
-                        <h4>No Transactions Found</h4>
+                        <h4>{t("No Transactions Found")}</h4>
 
                         <p>
                           Your transaction receipts will appear here after a
@@ -5614,7 +5615,7 @@ function Payments() {
                       <>
                         <div className="info-icon">🧾</div>
 
-                        <h4>Transaction Receipt</h4>
+                        <h4>{t("Transaction Receipt")}</h4>
 
                         <p>
                           Select any transaction from the list to view its
@@ -5625,25 +5626,25 @@ function Payments() {
                           <li>
                             <span className="check">✓</span>
 
-                            <span>Transaction ID</span>
+                            <span>{t("Transaction ID")}</span>
                           </li>
 
                           <li>
                             <span className="check">✓</span>
 
-                            <span>Amount and status</span>
+                            <span>{t("Amount and status")}</span>
                           </li>
 
                           <li>
                             <span className="check">✓</span>
 
-                            <span>Sender and receiver details</span>
+                            <span>{t("Sender and receiver details")}</span>
                           </li>
 
                           <li>
                             <span className="check">✓</span>
 
-                            <span>Transaction date and type</span>
+                            <span>{t("Transaction date and type")}</span>
                           </li>
                         </ul>
                       </>
@@ -5655,7 +5656,7 @@ function Payments() {
                           <div>
                             <h3>AVANI BANK</h3>
 
-                            <p>Digital Banking Transaction Receipt</p>
+                            <p>{t("Digital Banking Transaction Receipt")}</p>
                           </div>
 
                           <div className="receipt-success-badge">✓ SUCCESS</div>
@@ -5677,17 +5678,17 @@ function Payments() {
 
                         <div className="receipt-details">
                           <div className="receipt-detail-row">
-                            <span>Transaction ID</span>
+                            <span>{t("Transaction ID")}</span>
                             <strong>#{selectedReceipt.id}</strong>
                           </div>
 
                           <div className="receipt-detail-row">
-                            <span>Transaction Type</span>
+                            <span>{t("Transaction Type")}</span>
                             <strong>{selectedReceipt.transactionType}</strong>
                           </div>
 
                           <div className="receipt-detail-row amount-row">
-                            <span>Amount</span>
+                            <span>{t("Amount")}</span>
 
                             <strong>
                               ₹
@@ -5704,7 +5705,7 @@ function Payments() {
                           <div className="receipt-divider"></div>
 
                           <div className="receipt-detail-row">
-                            <span>From Account</span>
+                            <span>{t("From Account")}</span>
 
                             <strong>
                               {selectedReceipt.senderAccountNumber}
@@ -5712,7 +5713,7 @@ function Payments() {
                           </div>
 
                           <div className="receipt-detail-row">
-                            <span>To Account / Reference</span>
+                            <span>{t("To Account / Reference")}</span>
 
                             <strong>
                               {selectedReceipt.receiverAccountNumber}
@@ -5720,7 +5721,7 @@ function Payments() {
                           </div>
 
                           <div className="receipt-detail-row">
-                            <span>Status</span>
+                            <span>{t("Status")}</span>
 
                             <strong className="receipt-status">
                               ✓ {selectedReceipt.status}
@@ -5728,7 +5729,7 @@ function Payments() {
                           </div>
 
                           <div className="receipt-detail-row">
-                            <span>Transaction Date</span>
+                            <span>{t("Transaction Date")}</span>
 
                             <strong>
                               {selectedReceipt.transactionDate
@@ -5745,22 +5746,22 @@ function Payments() {
                             This is a digitally generated transaction receipt.
                           </p>
 
-                          <span>AVANI BANK • Secure Digital Banking</span>
+                          <span>{t("AVANI BANK • Secure Digital Banking")}</span>
                         </div>
                         <div>
-                          <strong>Transaction ID</strong>
+                          <strong>{t("Transaction ID")}</strong>
 
                           <div>#{selectedReceipt.id}</div>
                         </div>
 
                         <div>
-                          <strong>Transaction Type</strong>
+                          <strong>{t("Transaction Type")}</strong>
 
                           <div>{selectedReceipt.transactionType}</div>
                         </div>
 
                         <div>
-                          <strong>Amount</strong>
+                          <strong>{t("Amount")}</strong>
 
                           <div
                             style={{
@@ -5781,19 +5782,19 @@ function Payments() {
                         </div>
 
                         <div>
-                          <strong>From Account</strong>
+                          <strong>{t("From Account")}</strong>
 
                           <div>{selectedReceipt.senderAccountNumber}</div>
                         </div>
 
                         <div>
-                          <strong>To Account / Reference</strong>
+                          <strong>{t("To Account / Reference")}</strong>
 
                           <div>{selectedReceipt.receiverAccountNumber}</div>
                         </div>
 
                         <div>
-                          <strong>Status</strong>
+                          <strong>{t("Status")}</strong>
 
                           <div
                             style={{
@@ -5806,7 +5807,7 @@ function Payments() {
                         </div>
 
                         <div>
-                          <strong>Transaction Date</strong>
+                          <strong>{t("Transaction Date")}</strong>
 
                           <div>
                             {selectedReceipt.transactionDate
@@ -5848,7 +5849,7 @@ function Payments() {
                       <div className="form-icon bank">🧾</div>
 
                       <div>
-                        <h4>Pay Your Bill</h4>
+                        <h4>{t("Pay Your Bill")}</h4>
 
                         <p>
                           Enter biller and consumer details to make a secure
@@ -5864,7 +5865,7 @@ function Payments() {
                       {/* BILL CATEGORY */}
 
                       <div className="form-group">
-                        <label>Bill Category</label>
+                        <label>{t("Bill Category")}</label>
 
                         <div className="bill-category-grid">
                           {[
@@ -5901,11 +5902,11 @@ function Payments() {
                       {/* BILLER NAME */}
 
                       <div className="form-group">
-                        <label>Biller Name</label>
+                        <label>{t("Biller Name")}</label>
 
                         <input
                           type="text"
-                          placeholder="Example: Avani Electricity"
+                          placeholder={t("Example: Avani Electricity")}
                           value={billBillerName}
                           onChange={(e) => setBillBillerName(e.target.value)}
                           autoComplete="off"
@@ -5916,11 +5917,11 @@ function Payments() {
                       {/* CONSUMER NUMBER */}
 
                       <div className="form-group">
-                        <label>Consumer Number</label>
+                        <label>{t("Consumer Number")}</label>
 
                         <input
                           type="text"
-                          placeholder="Enter consumer / account number"
+                          placeholder={t("Enter consumer / account number")}
                           value={billConsumerNumber}
                           onChange={(e) =>
                             setBillConsumerNumber(e.target.value)
@@ -5938,7 +5939,7 @@ function Payments() {
                       {/* AMOUNT */}
 
                       <div className="form-group">
-                        <label>Bill Amount</label>
+                        <label>{t("Bill Amount")}</label>
 
                         <div className="input-wrapper">
                           <span className="input-prefix">₹</span>
@@ -5946,7 +5947,7 @@ function Payments() {
                           <input
                             className="with-prefix"
                             type="number"
-                            placeholder="Enter bill amount"
+                            placeholder={t("Enter bill amount")}
                             min="1"
                             step="0.01"
                             value={billAmount}
@@ -5985,7 +5986,7 @@ function Payments() {
                   <div className="bill-info-card">
                     <div className="info-icon">🧾</div>
 
-                    <h4>Secure Bill Payment</h4>
+                    <h4>{t("Secure Bill Payment")}</h4>
 
                     <p>
                       Pay your electricity, water, gas, broadband and other
@@ -5995,28 +5996,28 @@ function Payments() {
                     {/* BILL SUMMARY */}
 
                     <div className="bill-summary">
-                      <p className="bill-summary-title">Payment Summary</p>
+                      <p className="bill-summary-title">{t("Payment Summary")}</p>
 
                       <div className="bill-summary-row">
-                        <span>Category</span>
+                        <span>{t("Category")}</span>
 
                         <strong>{billCategory || "—"}</strong>
                       </div>
 
                       <div className="bill-summary-row">
-                        <span>Biller</span>
+                        <span>{t("Biller")}</span>
 
                         <strong>{billBillerName || "—"}</strong>
                       </div>
 
                       <div className="bill-summary-row">
-                        <span>Consumer No.</span>
+                        <span>{t("Consumer No.")}</span>
 
                         <strong>{billConsumerNumber || "—"}</strong>
                       </div>
 
                       <div className="bill-summary-row">
-                        <span>Amount</span>
+                        <span>{t("Amount")}</span>
 
                         <strong>
                           {billAmount
@@ -6038,19 +6039,19 @@ function Payments() {
                         </p>
 
                         <div className="bill-summary-row">
-                          <span>Status</span>
+                          <span>{t("Status")}</span>
 
                           <strong>{billTransaction.status || "SUCCESS"}</strong>
                         </div>
 
                         <div className="bill-summary-row">
-                          <span>Transaction ID</span>
+                          <span>{t("Transaction ID")}</span>
 
                           <strong>{billTransaction.id || "—"}</strong>
                         </div>
 
                         <div className="bill-summary-row">
-                          <span>Paid Amount</span>
+                          <span>{t("Paid Amount")}</span>
 
                           <strong>
                             ₹
@@ -6065,7 +6066,7 @@ function Payments() {
                         </div>
 
                         <div className="bill-summary-row">
-                          <span>Type</span>
+                          <span>{t("Type")}</span>
 
                           <strong>
                             {billTransaction.transactionType || "BILL_PAYMENT"}
@@ -6078,25 +6079,25 @@ function Payments() {
                       <li>
                         <span className="check">✓</span>
 
-                        <span>JWT authenticated payment</span>
+                        <span>{t("JWT authenticated payment")}</span>
                       </li>
 
                       <li>
                         <span className="check">✓</span>
 
-                        <span>Sender account and balance verified</span>
+                        <span>{t("Sender account and balance verified")}</span>
                       </li>
 
                       <li>
                         <span className="check">✓</span>
 
-                        <span>Bill transaction recorded</span>
+                        <span>{t("Bill transaction recorded")}</span>
                       </li>
 
                       <li>
                         <span className="check">✓</span>
 
-                        <span>Secure Avani Bank payment processing</span>
+                        <span>{t("Secure Avani Bank payment processing")}</span>
                       </li>
                     </ul>
                   </div>
@@ -6130,7 +6131,7 @@ function Payments() {
           <div className="payments-footer">
             <span>© 2026 Avani Bank</span>
 
-            <span>Secure Banking • Privacy • Terms</span>
+            <span>{t("Secure Banking • Privacy • Terms")}</span>
           </div>
         </div>
       </div>

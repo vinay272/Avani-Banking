@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
 function Dashboard() {
   const navigate = useNavigate();
-
+  const { language, setLanguage, supportedLanguages, t } = useLanguage();
   const [customer, setCustomer] = useState(null);
   const [sentTransactions, setSentTransactions] = useState([]);
   const [receivedTransactions, setReceivedTransactions] = useState([]);
@@ -34,11 +35,11 @@ function Dashboard() {
   const getGreeting = () => {
     const hour = new Date().getHours();
 
-    if (hour >= 5 && hour < 12) return "Good Morning";
-    if (hour >= 12 && hour < 17) return "Good Afternoon";
-    if (hour >= 17 && hour < 21) return "Good Evening";
+    if (hour >= 5 && hour < 12) return t("Good Morning");
+    if (hour >= 12 && hour < 17) return t("Good Afternoon");
+    if (hour >= 17 && hour < 21) return t("Good Evening");
 
-    return "Good Night";
+    return t("Good Night");
   };
 
   // =====================================================
@@ -296,10 +297,10 @@ function Dashboard() {
         <div style={themeStyles.loadingCard}>
           <div style={themeStyles.loadingIcon}>🏦</div>
 
-          <h2 style={themeStyles.loadingTitle}>Loading your dashboard</h2>
+          <h2 style={themeStyles.loadingTitle}>{t("Loading your dashboard")}</h2>
 
           <p style={themeStyles.loadingText}>
-            Please wait while we fetch your account information...
+            {t("Please wait while we fetch your account information...")}
           </p>
 
           <div style={themeStyles.loader}></div>
@@ -318,7 +319,7 @@ function Dashboard() {
         <div style={themeStyles.errorCard}>
           <div style={themeStyles.errorIcon}>⚠️</div>
 
-          <h2 style={themeStyles.errorTitle}>Unable to load dashboard</h2>
+          <h2 style={themeStyles.errorTitle}>{t("Unable to load dashboard")}</h2>
 
           <p style={themeStyles.errorText}>{error}</p>
 
@@ -326,7 +327,7 @@ function Dashboard() {
             style={themeStyles.primaryButton}
             onClick={() => window.location.reload()}
           >
-            Try Again
+            {t("Try Again")}
           </button>
         </div>
       </div>
@@ -351,14 +352,27 @@ function Dashboard() {
           <div>
             <div style={themeStyles.brandName}>AVANI BANK</div>
 
-            <div style={themeStyles.brandSubtitle}>Digital Banking</div>
+            <div style={themeStyles.brandSubtitle}>{t("Digital Banking")}</div>
           </div>
         </div>
 
         <div className="dashboard-nav-right" style={themeStyles.navRight}>
+          <select
+  value={language}
+  onChange={(event) => setLanguage(event.target.value)}
+  style={themeStyles.themeToggle}
+  aria-label="Select language"
+  title="Select language"
+>
+  {supportedLanguages.map((item) => (
+    <option key={item.code} value={item.code}>
+      {item.flag} {item.nativeName}
+    </option>
+  ))}
+</select>
           <div style={themeStyles.accountBadge}>
             <span style={themeStyles.onlineDot}></span>
-            Account Active
+            {t("Account Active")}
           </div>
 
           <button
@@ -373,11 +387,11 @@ function Dashboard() {
             <span style={themeStyles.themeToggleIcon}>
               {darkMode ? "☀️" : "🌙"}
             </span>
-            {darkMode ? "Light" : "Dark"}
+            {darkMode ? t("Light") : t("Dark")}
           </button>
 
           <button style={themeStyles.logoutButton} onClick={handleLogout}>
-            Logout
+            {t("Logout")}
           </button>
         </div>
       </header>
@@ -393,11 +407,11 @@ function Dashboard() {
             <p style={themeStyles.greetingSmall}>{getGreeting()}</p>
 
             <h1 style={themeStyles.greetingTitle}>
-              {customer?.fullName || "Customer"} 👋
+              {customer?.fullName || t("Customer")} 👋
             </h1>
 
             <p style={themeStyles.greetingSubtitle}>
-              Here's your account overview and recent banking activity.
+              {t("Here's your account overview and recent banking activity.")}
             </p>
           </div>
 
@@ -405,7 +419,7 @@ function Dashboard() {
             <div style={themeStyles.accountMiniIcon}>💳</div>
 
             <div>
-              <p style={themeStyles.miniLabel}>ACCOUNT NUMBER</p>
+              <p style={themeStyles.miniLabel}>{t("ACCOUNT NUMBER")}</p>
 
               <p style={themeStyles.miniValue}>
                 {customer?.accountNumber || "N/A"}
@@ -425,13 +439,13 @@ function Dashboard() {
             <div style={themeStyles.balanceIcon}>₹</div>
 
             <div>
-              <p style={themeStyles.balanceLabel}>AVAILABLE BALANCE</p>
+              <p style={themeStyles.balanceLabel}>{t("AVAILABLE BALANCE")}</p>
 
               <h2 style={themeStyles.balanceAmount}>
                 ₹{formatCurrency(customer?.balance)}
               </h2>
 
-              <p style={themeStyles.balanceStatus}>Available in your account</p>
+              <p style={themeStyles.balanceStatus}>{t("Available in your account")}</p>
             </div>
           </div>
 
@@ -439,7 +453,7 @@ function Dashboard() {
             className="dashboard-balance-right"
             style={themeStyles.balanceRight}
           >
-            <p style={themeStyles.accountTypeLabel}>ACCOUNT TYPE</p>
+            <p style={themeStyles.accountTypeLabel}>{t("ACCOUNT TYPE")}</p>
 
             <p style={themeStyles.accountTypeValue}>
               {customer?.accountType || "N/A"}
@@ -464,7 +478,7 @@ function Dashboard() {
             </div>
 
             <div style={themeStyles.statContent}>
-              <p style={themeStyles.statLabel}>MONEY SENT</p>
+              <p style={themeStyles.statLabel}>{t("MONEY SENT")}</p>
 
               <h3 style={themeStyles.statValue}>
                 ₹{formatCurrency(moneySent)}
@@ -489,7 +503,7 @@ function Dashboard() {
             </div>
 
             <div style={themeStyles.statContent}>
-              <p style={themeStyles.statLabel}>MONEY RECEIVED</p>
+              <p style={themeStyles.statLabel}>{t("MONEY RECEIVED")}</p>
 
               <h3 style={themeStyles.statValue}>
                 ₹{formatCurrency(moneyReceived)}
@@ -514,11 +528,11 @@ function Dashboard() {
             </div>
 
             <div style={themeStyles.statContent}>
-              <p style={themeStyles.statLabel}>TOTAL TRANSACTIONS</p>
+              <p style={themeStyles.statLabel}>{t("TOTAL TRANSACTIONS")}</p>
 
               <h3 style={themeStyles.statValue}>{totalTransactions}</h3>
 
-              <p style={themeStyles.statSubtext}>All account activity</p>
+              <p style={themeStyles.statSubtext}>{t("All account activity")}</p>
             </div>
           </div>
         </section>
@@ -528,9 +542,9 @@ function Dashboard() {
         <section style={themeStyles.section}>
           <div style={themeStyles.sectionHeader}>
             <div>
-              <p style={themeStyles.sectionEyebrow}>BANKING</p>
+              <p style={themeStyles.sectionEyebrow}>{t("BANKING")}</p>
 
-              <h2 style={themeStyles.sectionTitle}>Quick Actions</h2>
+              <h2 style={themeStyles.sectionTitle}>{t("Quick Actions")}</h2>
             </div>
           </div>
 
@@ -551,7 +565,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Payments</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Payments")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   UPI, NEFT, RTGS, IMPS, bills and other payments.
@@ -578,10 +592,10 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Transaction History</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Transaction History")}</h3>
 
                 <p style={themeStyles.actionDescription}>
-                  View all your transactions.
+                  {t("View all your transactions.")}
                 </p>
               </div>
 
@@ -606,7 +620,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>My Cards</h3>
+                <h3 style={themeStyles.actionTitle}>{t("My Cards")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Manage your debit and credit cards.
@@ -634,7 +648,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>KYC Verification</h3>
+                <h3 style={themeStyles.actionTitle}>{t("KYC Verification")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Verify and manage your KYC documents.
@@ -662,7 +676,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Risk Profile</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Risk Profile")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   View your customer risk assessment.
@@ -690,7 +704,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Address Verification</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Address Verification")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Verify and manage your registered address.
@@ -717,7 +731,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Duplicate KYC</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Duplicate KYC")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Check KYC document duplication.
@@ -744,7 +758,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Joint Account</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Joint Account")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Manage your joint bank accounts.
@@ -769,7 +783,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Relationship History</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Relationship History")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   View your customer relationship history.
@@ -794,7 +808,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Biometric Verification</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Biometric Verification")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Manage your biometric verification.
@@ -821,7 +835,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>AML Check</h3>
+                <h3 style={themeStyles.actionTitle}>{t("AML Check")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Anti-Money Laundering screening & compliance
@@ -848,7 +862,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Nominee Management</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Nominee Management")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Add and manage your nominees.
@@ -876,7 +890,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Beneficiaries</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Beneficiaries")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Add and manage your beneficiaries.
@@ -904,7 +918,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Account Management</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Account Management")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Manage accounts, balance, statements and account services.
@@ -932,7 +946,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Profile & Account</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Profile & Account")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   View and manage your account details.
@@ -960,7 +974,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Settings</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Settings")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Manage security and preferences.
@@ -988,7 +1002,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Loan Management</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Loan Management")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Apply for loans and manage your repayments.
@@ -1017,7 +1031,7 @@ function Dashboard() {
 
               <div style={themeStyles.actionText}>
                 <h3 style={themeStyles.actionTitle}>
-                  Investment & Wealth Management
+                  {t("Investment & Wealth Management")}
                 </h3>
 
                 <p style={themeStyles.actionDescription}>
@@ -1046,7 +1060,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Security Center</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Security Center")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Monitor fraud alerts, risk score and account security.
@@ -1074,7 +1088,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Customer Service</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Customer Service")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Raise complaints, service requests, appointments and get
@@ -1103,7 +1117,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>Notifications</h3>
+                <h3 style={themeStyles.actionTitle}>{t("Notifications")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   View alerts, banking updates and important notifications.
@@ -1144,7 +1158,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.actionText}>
-                <h3 style={themeStyles.actionTitle}>View Activity</h3>
+                <h3 style={themeStyles.actionTitle}>{t("View Activity")}</h3>
 
                 <p style={themeStyles.actionDescription}>
                   Check your recent transactions.
@@ -1163,7 +1177,7 @@ function Dashboard() {
             <div>
               <p style={themeStyles.sectionEyebrow}>TRANSACTIONS</p>
 
-              <h2 style={themeStyles.sectionTitle}>Recent Activity</h2>
+              <h2 style={themeStyles.sectionTitle}>{t("Recent Activity")}</h2>
             </div>
 
             <div style={themeStyles.transactionCount}>
@@ -1181,10 +1195,10 @@ function Dashboard() {
               <div style={themeStyles.emptyState}>
                 <div style={themeStyles.emptyIcon}>📭</div>
 
-                <h3 style={themeStyles.emptyTitle}>No transactions yet</h3>
+                <h3 style={themeStyles.emptyTitle}>{t("No transactions yet")}</h3>
 
                 <p style={themeStyles.emptyText}>
-                  Your recent transactions will appear here.
+                  {t("Your recent transactions will appear here.")}
                 </p>
 
                 <button
@@ -1229,11 +1243,11 @@ function Dashboard() {
 
                       <div style={themeStyles.transactionInfo}>
                         <h3 style={themeStyles.transactionTitle}>
-                          {isSent ? "Money Sent" : "Money Received"}
+                          {isSent ? t("Money Sent") : t("Money Received")}
                         </h3>
 
                         <p style={themeStyles.transactionAccount}>
-                          {isSent ? "To" : "From"} Account{" "}
+                          {isSent ? t("To") : t("From")} Account{" "}
                           {otherAccount || "N/A"}
                         </p>
 
@@ -1275,7 +1289,7 @@ function Dashboard() {
             <div>
               <p style={themeStyles.sectionEyebrow}>PROFILE</p>
 
-              <h2 style={themeStyles.sectionTitle}>Account Information</h2>
+              <h2 style={themeStyles.sectionTitle}>{t("Account Information")}</h2>
             </div>
           </div>
 
@@ -1287,7 +1301,7 @@ function Dashboard() {
 
               <div>
                 <h3 style={themeStyles.profileName}>
-                  {customer?.fullName || "Customer"}
+                  {customer?.fullName || t("Customer")}
                 </h3>
 
                 <p style={themeStyles.profileEmail}>
@@ -1302,7 +1316,7 @@ function Dashboard() {
 
             <div className="dashboard-profile-grid" style={themeStyles.profileGrid}>
               <div style={themeStyles.profileItem}>
-                <p style={themeStyles.profileLabel}>FULL NAME</p>
+                <p style={themeStyles.profileLabel}>{t("FULL NAME")}</p>
 
                 <p style={themeStyles.profileValue}>
                   {customer?.fullName || "N/A"}
@@ -1310,7 +1324,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.profileItem}>
-                <p style={themeStyles.profileLabel}>EMAIL</p>
+                <p style={themeStyles.profileLabel}>{t("EMAIL")}</p>
 
                 <p style={themeStyles.profileValue}>
                   {customer?.email || "N/A"}
@@ -1318,7 +1332,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.profileItem}>
-                <p style={themeStyles.profileLabel}>PHONE</p>
+                <p style={themeStyles.profileLabel}>{t("PHONE")}</p>
 
                 <p style={themeStyles.profileValue}>
                   {customer?.phone || "N/A"}
@@ -1326,7 +1340,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.profileItem}>
-                <p style={themeStyles.profileLabel}>ACCOUNT NUMBER</p>
+                <p style={themeStyles.profileLabel}>{t("ACCOUNT NUMBER")}</p>
 
                 <p style={themeStyles.profileValue}>
                   {customer?.accountNumber || "N/A"}
@@ -1334,7 +1348,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.profileItem}>
-                <p style={themeStyles.profileLabel}>ACCOUNT TYPE</p>
+                <p style={themeStyles.profileLabel}>{t("ACCOUNT TYPE")}</p>
 
                 <p style={themeStyles.profileValue}>
                   {customer?.accountType || "N/A"}
@@ -1342,7 +1356,7 @@ function Dashboard() {
               </div>
 
               <div style={themeStyles.profileItem}>
-                <p style={themeStyles.profileLabel}>CUSTOMER SINCE</p>
+                <p style={themeStyles.profileLabel}>{t("CUSTOMER SINCE")}</p>
 
                 <p style={themeStyles.profileValue}>
                   {formatDate(customer?.createdAt)}
@@ -1356,7 +1370,7 @@ function Dashboard() {
       <footer className="dashboard-footer" style={themeStyles.footer}>
         <div>© {new Date().getFullYear()} Avani Bank</div>
 
-        <div>Secure • Reliable • Digital Banking</div>
+        <div>{t("Secure • Reliable • Digital Banking")}</div>
       </footer>
     </div>
   );
