@@ -219,7 +219,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -261,16 +261,14 @@ function Payments() {
       if (!sentResponse.ok) {
         throw new Error(
           sentData.message ||
-            sentData.error ||
-            "Failed to load sent transactions",
+            sentData.error || t("Failed to load sent transactions"),
         );
       }
 
       if (!receivedResponse.ok) {
         throw new Error(
           receivedData.message ||
-            receivedData.error ||
-            "Failed to load received transactions",
+            receivedData.error || t("Failed to load received transactions"),
         );
       }
 
@@ -305,7 +303,7 @@ function Payments() {
     } catch (error) {
       console.error("Load Transaction Receipts Error:", error);
 
-      setMessage(error.message || "Unable to load transaction receipts");
+      setMessage(error.message || t("Unable to load transaction receipts"));
 
       setMessageType("error");
     } finally {
@@ -321,7 +319,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -349,7 +347,7 @@ function Payments() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "Failed to load transaction receipt",
+          data.message || data.error || t("Failed to load transaction receipt"),
         );
       }
 
@@ -357,7 +355,7 @@ function Payments() {
     } catch (error) {
       console.error("View Receipt Error:", error);
 
-      setMessage(error.message || "Unable to load transaction receipt");
+      setMessage(error.message || t("Unable to load transaction receipt"));
 
       setMessageType("error");
     } finally {
@@ -377,27 +375,27 @@ function Payments() {
     const transferAmount = Number(amount);
 
     if (!account) {
-      return "Receiver account number is required";
+      return t("Receiver account number is required");
     }
 
     if (!/^\d+$/.test(account)) {
-      return "Please enter a valid account number";
+      return t("Please enter a valid account number");
     }
 
     if (!ifsc) {
-      return "Receiver IFSC code is required";
+      return t("Receiver IFSC code is required");
     }
 
     if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc)) {
-      return "Invalid IFSC code format";
+      return t("Invalid IFSC code format");
     }
 
     if (!amount || !Number.isFinite(transferAmount)) {
-      return "Please enter a valid transfer amount";
+      return t("Please enter a valid transfer amount");
     }
 
     if (transferAmount <= 0) {
-      return "Transfer amount must be greater than 0";
+      return t("Transfer amount must be greater than 0");
     }
 
     return null;
@@ -413,13 +411,13 @@ function Payments() {
     clearMessage();
 
     if (!receiverUpiId.trim()) {
-      setMessage("Receiver UPI ID is required");
+      setMessage(t("Receiver UPI ID is required"));
       setMessageType("error");
       return;
     }
 
     if (!receiverUpiId.includes("@")) {
-      setMessage("Please enter a valid UPI ID");
+      setMessage(t("Please enter a valid UPI ID"));
       setMessageType("error");
       return;
     }
@@ -427,7 +425,7 @@ function Payments() {
     const transferAmount = Number(amount);
 
     if (!amount || !Number.isFinite(transferAmount) || transferAmount <= 0) {
-      setMessage("Transfer amount must be greater than 0");
+      setMessage(t("Transfer amount must be greater than 0"));
       setMessageType("error");
       return;
     }
@@ -435,7 +433,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -463,13 +461,13 @@ function Payments() {
       }
 
       if (!response.ok) {
-        throw new Error(data.message || data.error || "UPI transfer failed");
+        throw new Error(data.message || data.error || t("UPI transfer failed"));
       }
 
       setMessage(
         `₹${transferAmount.toLocaleString(
           "en-IN",
-        )} transferred successfully via UPI`,
+        )} ${t("transferred successfully via UPI")}`,
       );
 
       setMessageType("success");
@@ -479,7 +477,7 @@ function Payments() {
     } catch (error) {
       console.error("UPI Transfer Error:", error);
 
-      setMessage(error.message || "Something went wrong during UPI transfer");
+      setMessage(error.message || t("Something went wrong during UPI transfer"));
 
       setMessageType("error");
     } finally {
@@ -523,7 +521,7 @@ function Payments() {
     }
 
     if (customer?.accountNumber && customer.accountNumber === account) {
-      setMessage("You cannot transfer money to your own account");
+      setMessage(t("You cannot transfer money to your own account"));
 
       setMessageType("error");
       return;
@@ -536,7 +534,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
 
       setMessageType("error");
       return;
@@ -592,7 +590,7 @@ function Payments() {
       setMessage(
         `₹${transferAmount.toLocaleString(
           "en-IN",
-        )} transferred successfully via ${transferType}`,
+        )} ${t("transferred successfully via")} ${transferType}`,
       );
 
       setMessageType("success");
@@ -631,19 +629,19 @@ function Payments() {
     const value = Number(qrAmount);
 
     if (!upiId || !upiId.includes("@")) {
-      setMessage("Please enter a valid UPI ID");
+      setMessage(t("Please enter a valid UPI ID"));
       setMessageType("error");
       return;
     }
 
     if (!name) {
-      setMessage("Receiver name is required");
+      setMessage(t("Receiver name is required"));
       setMessageType("error");
       return;
     }
 
     if (!qrAmount || !Number.isFinite(value) || value <= 0) {
-      setMessage("Payment amount must be greater than 0");
+      setMessage(t("Payment amount must be greater than 0"));
       setMessageType("error");
       return;
     }
@@ -651,7 +649,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -681,7 +679,7 @@ function Payments() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "QR payment generation failed",
+          data.message || data.error || t("QR payment generation failed"),
         );
       }
 
@@ -690,8 +688,8 @@ function Payments() {
       setQrTransactionReference(data.transactionReference || "");
 
       setMessage(
-        `QR code generated successfully. Reference: ${
-          data.transactionReference || "N/A"
+        `${t("QR code generated successfully. Reference:")} ${
+          data.transactionReference || t("N/A")
         }`,
       );
 
@@ -703,7 +701,7 @@ function Payments() {
       setQrTransactionReference("");
 
       setMessage(
-        error.message || "Something went wrong while generating the QR code.",
+        error.message || t("Something went wrong while generating the QR code."),
       );
 
       setMessageType("error");
@@ -761,31 +759,31 @@ function Payments() {
     // -------------------------------------------------
 
     if (!category) {
-      setMessage("Please select a bill category");
+      setMessage(t("Please select a bill category"));
       setMessageType("error");
       return;
     }
 
     if (!billerName) {
-      setMessage("Biller name is required");
+      setMessage(t("Biller name is required"));
       setMessageType("error");
       return;
     }
 
     if (!consumerNumber) {
-      setMessage("Consumer number is required");
+      setMessage(t("Consumer number is required"));
       setMessageType("error");
       return;
     }
 
     if (!/^[A-Za-z0-9\-\/]+$/.test(consumerNumber)) {
-      setMessage("Please enter a valid consumer number");
+      setMessage(t("Please enter a valid consumer number"));
       setMessageType("error");
       return;
     }
 
     if (!billAmount || !Number.isFinite(value) || value <= 0) {
-      setMessage("Bill payment amount must be greater than 0");
+      setMessage(t("Bill payment amount must be greater than 0"));
       setMessageType("error");
       return;
     }
@@ -797,7 +795,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -845,7 +843,7 @@ function Payments() {
       // -------------------------------------------------
 
       if (!response.ok) {
-        throw new Error(data.message || data.error || "Bill payment failed");
+        throw new Error(data.message || data.error || t("Bill payment failed"));
       }
 
       // -------------------------------------------------
@@ -857,14 +855,14 @@ function Payments() {
       const paidAmount = Number(data.amount ?? value);
 
       const transactionId = data.id
-        ? `Transaction ID: ${data.id}`
-        : "Payment successful";
+        ? `${t("Transaction ID:")} ${data.id}`
+        : t("Payment successful");
 
       setMessage(
         `₹${paidAmount.toLocaleString("en-IN", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
-        })} bill paid successfully. ${transactionId}`,
+        })} ${t("bill paid successfully.")} ${transactionId}`,
       );
 
       setMessageType("success");
@@ -877,8 +875,7 @@ function Payments() {
       console.error("Bill Payment Error:", error);
 
       setMessage(
-        error.message ||
-          "Something went wrong while processing the bill payment.",
+        error.message || t("Something went wrong while processing the bill payment."),
       );
 
       setMessageType("error");
@@ -898,7 +895,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -922,7 +919,7 @@ function Payments() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "Failed to load accounts",
+          data.message || data.error || t("Failed to load accounts"),
         );
       }
 
@@ -936,7 +933,7 @@ function Payments() {
     } catch (error) {
       console.error("Load Accounts Error:", error);
 
-      setMessage(error.message || "Unable to load your accounts");
+      setMessage(error.message || t("Unable to load your accounts"));
 
       setMessageType("error");
     } finally {
@@ -951,7 +948,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -975,7 +972,7 @@ function Payments() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "Failed to load Auto-Pay records",
+          data.message || data.error || t("Failed to load Auto-Pay records"),
         );
       }
 
@@ -983,7 +980,7 @@ function Payments() {
     } catch (error) {
       console.error("Load Auto-Pay Error:", error);
 
-      setMessage(error.message || "Unable to load Auto-Pay records");
+      setMessage(error.message || t("Unable to load Auto-Pay records"));
 
       setMessageType("error");
     } finally {
@@ -1003,31 +1000,31 @@ function Payments() {
     const amountValue = Number(autoPayAmount);
 
     if (!autoPayAccountId || !Number.isInteger(accountId) || accountId <= 0) {
-      setMessage("Please enter a valid Account ID");
+      setMessage(t("Please enter a valid Account ID"));
       setMessageType("error");
       return;
     }
 
     if (!autoPayBillerName.trim()) {
-      setMessage("Biller name is required");
+      setMessage(t("Biller name is required"));
       setMessageType("error");
       return;
     }
 
     if (!autoPayBillerReference.trim()) {
-      setMessage("Biller reference is required");
+      setMessage(t("Biller reference is required"));
       setMessageType("error");
       return;
     }
 
     if (!autoPayAmount || !Number.isFinite(amountValue) || amountValue <= 0) {
-      setMessage("Auto-Pay amount must be greater than 0");
+      setMessage(t("Auto-Pay amount must be greater than 0"));
       setMessageType("error");
       return;
     }
 
     if (!autoPayStartDate) {
-      setMessage("Please select a start date");
+      setMessage(t("Please select a start date"));
       setMessageType("error");
       return;
     }
@@ -1035,7 +1032,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -1068,11 +1065,11 @@ function Payments() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "Failed to create Auto-Pay",
+          data.message || data.error || t("Failed to create Auto-Pay"),
         );
       }
 
-      setMessage(`Auto-Pay created successfully. Auto-Pay ID: ${data.id}`);
+      setMessage(`${t("Auto-Pay created successfully. Auto-Pay ID:")} ${data.id}`);
 
       setMessageType("success");
 
@@ -1089,7 +1086,7 @@ function Payments() {
       console.error("Create Auto-Pay Error:", error);
 
       setMessage(
-        error.message || "Something went wrong while creating Auto-Pay",
+        error.message || t("Something went wrong while creating Auto-Pay"),
       );
 
       setMessageType("error");
@@ -1106,7 +1103,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -1134,18 +1131,18 @@ function Payments() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "Failed to pause Auto-Pay",
+          data.message || data.error || t("Failed to pause Auto-Pay"),
         );
       }
 
-      setMessage("Auto-Pay paused successfully");
+      setMessage(t("Auto-Pay paused successfully"));
       setMessageType("success");
 
       await loadAutoPays();
     } catch (error) {
       console.error("Pause Auto-Pay Error:", error);
 
-      setMessage(error.message || "Unable to pause Auto-Pay");
+      setMessage(error.message || t("Unable to pause Auto-Pay"));
 
       setMessageType("error");
     } finally {
@@ -1161,7 +1158,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -1189,18 +1186,18 @@ function Payments() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "Failed to resume Auto-Pay",
+          data.message || data.error || t("Failed to resume Auto-Pay"),
         );
       }
 
-      setMessage("Auto-Pay resumed successfully");
+      setMessage(t("Auto-Pay resumed successfully"));
       setMessageType("success");
 
       await loadAutoPays();
     } catch (error) {
       console.error("Resume Auto-Pay Error:", error);
 
-      setMessage(error.message || "Unable to resume Auto-Pay");
+      setMessage(error.message || t("Unable to resume Auto-Pay"));
 
       setMessageType("error");
     } finally {
@@ -1216,7 +1213,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -1244,18 +1241,18 @@ function Payments() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "Failed to cancel Auto-Pay",
+          data.message || data.error || t("Failed to cancel Auto-Pay"),
         );
       }
 
-      setMessage("Auto-Pay cancelled successfully");
+      setMessage(t("Auto-Pay cancelled successfully"));
       setMessageType("success");
 
       await loadAutoPays();
     } catch (error) {
       console.error("Cancel Auto-Pay Error:", error);
 
-      setMessage(error.message || "Unable to cancel Auto-Pay");
+      setMessage(error.message || t("Unable to cancel Auto-Pay"));
 
       setMessageType("error");
     } finally {
@@ -1271,7 +1268,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -1310,18 +1307,18 @@ function Payments() {
         }
 
         throw new Error(
-          data.message || data.error || "Failed to delete Auto-Pay",
+          data.message || data.error || t("Failed to delete Auto-Pay"),
         );
       }
 
-      setMessage("Auto-Pay deleted successfully");
+      setMessage(t("Auto-Pay deleted successfully"));
       setMessageType("success");
 
       await loadAutoPays();
     } catch (error) {
       console.error("Delete Auto-Pay Error:", error);
 
-      setMessage(error.message || "Unable to delete Auto-Pay");
+      setMessage(error.message || t("Unable to delete Auto-Pay"));
 
       setMessageType("error");
     } finally {
@@ -1341,7 +1338,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -1368,7 +1365,7 @@ function Payments() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "Failed to load Scheduled Payments",
+          data.message || data.error || t("Failed to load Scheduled Payments"),
         );
       }
 
@@ -1376,7 +1373,7 @@ function Payments() {
     } catch (error) {
       console.error("Load Scheduled Payments Error:", error);
 
-      setMessage(error.message || "Unable to load Scheduled Payments");
+      setMessage(error.message || t("Unable to load Scheduled Payments"));
 
       setMessageType("error");
     } finally {
@@ -1397,37 +1394,37 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
 
     if (!scheduledPaymentAccountId) {
-      setMessage("Please select an account.");
+      setMessage(t("Please select an account."));
       setMessageType("error");
       return;
     }
 
     if (!scheduledPaymentReceiverAccountNumber.trim()) {
-      setMessage("Receiver account number is required.");
+      setMessage(t("Receiver account number is required."));
       setMessageType("error");
       return;
     }
 
     if (!scheduledPaymentReceiverIfscCode.trim()) {
-      setMessage("Receiver IFSC code is required.");
+      setMessage(t("Receiver IFSC code is required."));
       setMessageType("error");
       return;
     }
 
     if (!scheduledPaymentAmount || Number(scheduledPaymentAmount) <= 0) {
-      setMessage("Amount must be greater than zero.");
+      setMessage(t("Amount must be greater than zero."));
       setMessageType("error");
       return;
     }
 
     if (!scheduledPaymentDate) {
-      setMessage("Please select a scheduled date.");
+      setMessage(t("Please select a scheduled date."));
       setMessageType("error");
       return;
     }
@@ -1467,11 +1464,11 @@ function Payments() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "Failed to create Scheduled Payment",
+          data.message || data.error || t("Failed to create Scheduled Payment"),
         );
       }
 
-      setMessage("Scheduled Payment created successfully.");
+      setMessage(t("Scheduled Payment created successfully."));
       setMessageType("success");
 
       setScheduledPaymentReceiverAccountNumber("");
@@ -1483,7 +1480,7 @@ function Payments() {
     } catch (error) {
       console.error("Create Scheduled Payment Error:", error);
 
-      setMessage(error.message || "Unable to create Scheduled Payment");
+      setMessage(error.message || t("Unable to create Scheduled Payment"));
       setMessageType("error");
     } finally {
       setScheduledPaymentLoading(false);
@@ -1498,7 +1495,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -1526,18 +1523,18 @@ function Payments() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "Failed to pause Scheduled Payment",
+          data.message || data.error || t("Failed to pause Scheduled Payment"),
         );
       }
 
-      setMessage("Scheduled Payment paused successfully.");
+      setMessage(t("Scheduled Payment paused successfully."));
       setMessageType("success");
 
       await loadScheduledPayments();
     } catch (error) {
       console.error("Pause Scheduled Payment Error:", error);
 
-      setMessage(error.message || "Unable to pause Scheduled Payment");
+      setMessage(error.message || t("Unable to pause Scheduled Payment"));
       setMessageType("error");
     } finally {
       setScheduledPaymentLoading(false);
@@ -1552,7 +1549,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -1580,18 +1577,18 @@ function Payments() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "Failed to resume Scheduled Payment",
+          data.message || data.error || t("Failed to resume Scheduled Payment"),
         );
       }
 
-      setMessage("Scheduled Payment resumed successfully.");
+      setMessage(t("Scheduled Payment resumed successfully."));
       setMessageType("success");
 
       await loadScheduledPayments();
     } catch (error) {
       console.error("Resume Scheduled Payment Error:", error);
 
-      setMessage(error.message || "Unable to resume Scheduled Payment");
+      setMessage(error.message || t("Unable to resume Scheduled Payment"));
       setMessageType("error");
     } finally {
       setScheduledPaymentLoading(false);
@@ -1606,7 +1603,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -1642,18 +1639,18 @@ function Payments() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "Failed to cancel Scheduled Payment",
+          data.message || data.error || t("Failed to cancel Scheduled Payment"),
         );
       }
 
-      setMessage("Scheduled Payment cancelled successfully.");
+      setMessage(t("Scheduled Payment cancelled successfully."));
       setMessageType("success");
 
       await loadScheduledPayments();
     } catch (error) {
       console.error("Cancel Scheduled Payment Error:", error);
 
-      setMessage(error.message || "Unable to cancel Scheduled Payment");
+      setMessage(error.message || t("Unable to cancel Scheduled Payment"));
       setMessageType("error");
     } finally {
       setScheduledPaymentLoading(false);
@@ -1668,7 +1665,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -1704,18 +1701,18 @@ function Payments() {
 
       if (!response.ok) {
         throw new Error(
-          data.message || data.error || "Failed to delete Scheduled Payment",
+          data.message || data.error || t("Failed to delete Scheduled Payment"),
         );
       }
 
-      setMessage("Scheduled Payment deleted successfully.");
+      setMessage(t("Scheduled Payment deleted successfully."));
       setMessageType("success");
 
       await loadScheduledPayments();
     } catch (error) {
       console.error("Delete Scheduled Payment Error:", error);
 
-      setMessage(error.message || "Unable to delete Scheduled Payment");
+      setMessage(error.message || t("Unable to delete Scheduled Payment"));
       setMessageType("error");
     } finally {
       setScheduledPaymentLoading(false);
@@ -1796,31 +1793,31 @@ function Payments() {
   const getDescription = () => {
     switch (selectedPayment) {
       case "UPI Transfer":
-        return "Send money instantly using UPI or bank account details.";
+        return t("Send money instantly using UPI or bank account details.");
 
       case "NEFT":
-        return "Transfer money securely using NEFT.";
+        return t("Transfer money securely using NEFT.");
 
       case "RTGS":
-        return "Transfer high-value payments securely using RTGS.";
+        return t("Transfer high-value payments securely using RTGS.");
 
       case "IMPS":
-        return "Transfer money instantly using IMPS.";
+        return t("Transfer money instantly using IMPS.");
 
       case "QR Payment":
-        return "Generate a UPI QR code and open it directly in a UPI app.";
+        return t("Generate a UPI QR code and open it directly in a UPI app.");
 
       case "Bill Payment":
-        return "Pay electricity, water, gas, broadband and other bills securely.";
+        return t("Pay electricity, water, gas, broadband and other bills securely.");
 
       case "Recharge":
-        return "Recharge your mobile and other services securely.";
+        return t("Recharge your mobile and other services securely.");
 
       case "Auto-Pay":
-        return "Manage recurring payments securely.";
+        return t("Manage recurring payments securely.");
 
       case "Scheduled Payment":
-        return "Schedule your payments for a future date.";
+        return t("Schedule your payments for a future date.");
 
       default:
         return `Manage your ${selectedPayment.toLowerCase()} payments securely.`;
@@ -1845,21 +1842,21 @@ function Payments() {
 
     // Mobile validation
     if (!/^[0-9]{10}$/.test(mobile)) {
-      setMessage("Please enter a valid 10-digit mobile number.");
+      setMessage(t("Please enter a valid 10-digit mobile number."));
       setMessageType("error");
       return;
     }
 
     // Operator validation
     if (!operator) {
-      setMessage("Please select a mobile operator.");
+      setMessage(t("Please select a mobile operator."));
       setMessageType("error");
       return;
     }
 
     // Amount validation
     if (!Number.isFinite(value) || value <= 0) {
-      setMessage("Recharge amount must be greater than 0.");
+      setMessage(t("Recharge amount must be greater than 0."));
       setMessageType("error");
       return;
     }
@@ -1868,7 +1865,7 @@ function Payments() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setMessage("Login session expired. Please login again.");
+      setMessage(t("Login session expired. Please login again."));
       setMessageType("error");
       return;
     }
@@ -1918,7 +1915,7 @@ function Payments() {
       // =========================
 
       if (!response.ok) {
-        throw new Error(data.message || data.error || "Recharge failed");
+        throw new Error(data.message || data.error || t("Recharge failed"));
       }
 
       // =========================
@@ -1945,7 +1942,7 @@ function Payments() {
       console.error("Recharge Error:", error);
 
       setMessage(
-        error.message || "Something went wrong while processing recharge.",
+        error.message || t("Something went wrong while processing recharge."),
       );
 
       setMessageType("error");
@@ -2139,6 +2136,7 @@ function Payments() {
                     margin: 0;
                     font-size: 25px;
                     font-weight: 800;
+                    color: #000000;
                 }
 
                 .payment-content-description {
@@ -4333,7 +4331,7 @@ function Payments() {
                             />
 
                             <span className="ifsc-helper">
-                              11-character bank branch IFSC code
+                              {t("11-character bank branch IFSC code")}
                             </span>
                           </div>
 
@@ -4440,9 +4438,9 @@ function Payments() {
                       </div>
 
                       <div>
-                        <h4>{selectedPayment} Transfer</h4>
+                        <h4>{t(selectedPayment)} {t("Transfer")}</h4>
 
-                        <p>Transfer money securely using {selectedPayment}</p>
+                        <p>{t("Transfer money securely using")} {t(selectedPayment)}</p>
                       </div>
                     </div>
 
@@ -4482,7 +4480,7 @@ function Payments() {
                         />
 
                         <span className="ifsc-helper">
-                          11-character bank branch IFSC code
+                          {t("11-character bank branch IFSC code")}
                         </span>
                       </div>
 
@@ -4511,8 +4509,8 @@ function Payments() {
                         disabled={loading}
                       >
                         {loading
-                          ? `Processing ${selectedPayment}...`
-                          : `Transfer via ${selectedPayment} →`}
+                          ? `${t("Processing")} ${t(selectedPayment)}...`
+                          : `${t("Transfer via")} ${t(selectedPayment)} →`}
                       </button>
                     </form>
 
@@ -4532,12 +4530,12 @@ function Payments() {
                   <div className="info-card">
                     <div className="info-icon">🔐</div>
 
-                    <h4>Secure {selectedPayment} Payments</h4>
+                    <h4>{t("Secure")} {t(selectedPayment)} {t("Payments")}</h4>
 
                     <p>
                       Transfer money securely to an active Avani Bank account
                       using
-                      {` ${selectedPayment}`}.
+                      {` ${t(selectedPayment)}`}.
                     </p>
 
                     <ul className="info-list">
@@ -4673,7 +4671,7 @@ function Payments() {
                       <div className="qr-detail-row">
                         <span>{t("UPI ID")}</span>
 
-                        <strong>{qrUpiId || "—"}</strong>
+                        <strong>{qrUpiId || t("—")}</strong>
                       </div>
 
                       <div className="qr-detail-row">
@@ -4692,7 +4690,7 @@ function Payments() {
                       <div className="qr-detail-row">
                         <span>{t("Name")}</span>
 
-                        <strong>{qrReceiverName || "—"}</strong>
+                        <strong>{qrReceiverName || t("—")}</strong>
                       </div>
 
                       {qrTransactionReference && (
@@ -4829,8 +4827,7 @@ function Payments() {
                           <h4>{t("Recharge Successful")}</h4>
 
                           <p>
-                            Your mobile recharge has been completed
-                            successfully.
+                            {t("Your mobile recharge has been completed successfully.")}
                           </p>
                         </div>
                       </div>
@@ -5054,7 +5051,7 @@ function Payments() {
                                   className="transfer-button"
                                   onClick={() => handlePauseAutoPay(autoPay.id)}
                                 >
-                                  Pause
+                                  {t("Pause")}
                                 </button>
                               )}
 
@@ -5066,7 +5063,7 @@ function Payments() {
                                     handleResumeAutoPay(autoPay.id)
                                   }
                                 >
-                                  Resume
+                                  {t("Resume")}
                                 </button>
                               )}
 
@@ -5079,7 +5076,7 @@ function Payments() {
                                     handleCancelAutoPay(autoPay.id)
                                   }
                                 >
-                                  Cancel
+                                  {t("Cancel")}
                                 </button>
                               )}
 
@@ -5088,7 +5085,7 @@ function Payments() {
                                 className="transfer-button"
                                 onClick={() => handleDeleteAutoPay(autoPay.id)}
                               >
-                                Delete
+                                {t("Delete")}
                               </button>
                             </div>
                           </div>
@@ -5178,7 +5175,7 @@ function Payments() {
                           </select>
 
                           <span className="ifsc-helper">
-                            One-time bank transfer
+                            {t("One-time bank transfer")}
                           </span>
                         </div>
                       </div>
@@ -5227,7 +5224,7 @@ function Payments() {
                           />
 
                           <span className="ifsc-helper">
-                            11-character bank branch IFSC code
+                            {t("11-character bank branch IFSC code")}
                           </span>
                         </div>
                       </div>
@@ -5392,7 +5389,7 @@ function Payments() {
                                       )
                                     }
                                   >
-                                    Pause
+                                    {t("Pause")}
                                   </button>
 
                                   <button
@@ -5405,7 +5402,7 @@ function Payments() {
                                       )
                                     }
                                   >
-                                    Cancel
+                                    {t("Cancel")}
                                   </button>
                                 </>
                               )}
@@ -5424,7 +5421,7 @@ function Payments() {
                                       )
                                     }
                                   >
-                                    Resume
+                                    {t("Resume")}
                                   </button>
 
                                   <button
@@ -5437,7 +5434,7 @@ function Payments() {
                                       )
                                     }
                                   >
-                                    Cancel
+                                    {t("Cancel")}
                                   </button>
                                 </>
                               )}
@@ -5455,7 +5452,7 @@ function Payments() {
                                     )
                                   }
                                 >
-                                  Delete
+                                  {t("Delete")}
                                 </button>
                               )}
                             </div>
@@ -5491,7 +5488,7 @@ function Payments() {
                         <h4>{t("Loading Transactions...")}</h4>
 
                         <p>
-                          Please wait while we load your transaction history.
+                          {t("Please wait while we load your transaction history.")}
                         </p>
                       </div>
                     ) : transactionReceipts.length === 0 ? (
@@ -5501,8 +5498,7 @@ function Payments() {
                         <h4>{t("No Transactions Found")}</h4>
 
                         <p>
-                          Your transaction receipts will appear here after a
-                          successful payment.
+                          {t("Your transaction receipts will appear here after a successful payment.")}
                         </p>
                       </div>
                     ) : (
@@ -5618,8 +5614,7 @@ function Payments() {
                         <h4>{t("Transaction Receipt")}</h4>
 
                         <p>
-                          Select any transaction from the list to view its
-                          complete receipt.
+                          {t("Select any transaction from the list to view its complete receipt.")}
                         </p>
 
                         <ul className="info-list">
@@ -5654,12 +5649,12 @@ function Payments() {
                           <div className="receipt-bank-logo">🏦</div>
 
                           <div>
-                            <h3>AVANI BANK</h3>
+                            <h3>{t("AVANI BANK")}</h3>
 
                             <p>{t("Digital Banking Transaction Receipt")}</p>
                           </div>
 
-                          <div className="receipt-success-badge">✓ SUCCESS</div>
+                          <div className="receipt-success-badge">✓ {t("SUCCESS")}</div>
 
                           <div className="info-icon">🧾</div>
 
@@ -5672,7 +5667,7 @@ function Payments() {
                               Payment Receipt
                             </h4>
 
-                            <p>Avani Bank</p>
+                            <p>{t("Avani Bank")}</p>
                           </div>
                         </div>
 
@@ -5743,7 +5738,7 @@ function Payments() {
 
                         <div className="receipt-footer">
                           <p>
-                            This is a digitally generated transaction receipt.
+                            {t("This is a digitally generated transaction receipt.")}
                           </p>
 
                           <span>{t("AVANI BANK • Secure Digital Banking")}</span>
@@ -5852,8 +5847,7 @@ function Payments() {
                         <h4>{t("Pay Your Bill")}</h4>
 
                         <p>
-                          Enter biller and consumer details to make a secure
-                          payment.
+                          {t("Enter biller and consumer details to make a secure payment.")}
                         </p>
                       </div>
                     </div>
@@ -5931,8 +5925,7 @@ function Payments() {
                         />
 
                         <span className="ifsc-helper">
-                          Enter the consumer or service account number provided
-                          by the biller.
+                          {t("Enter the consumer or service account number provided by the biller.")}
                         </span>
                       </div>
 
@@ -5989,8 +5982,7 @@ function Payments() {
                     <h4>{t("Secure Bill Payment")}</h4>
 
                     <p>
-                      Pay your electricity, water, gas, broadband and other
-                      service bills securely from your Avani Bank account.
+                      {t("Pay your electricity, water, gas, broadband and other service bills securely from your Avani Bank account.")}
                     </p>
 
                     {/* BILL SUMMARY */}
@@ -6001,19 +5993,19 @@ function Payments() {
                       <div className="bill-summary-row">
                         <span>{t("Category")}</span>
 
-                        <strong>{billCategory || "—"}</strong>
+                        <strong>{billCategory || t("—")}</strong>
                       </div>
 
                       <div className="bill-summary-row">
                         <span>{t("Biller")}</span>
 
-                        <strong>{billBillerName || "—"}</strong>
+                        <strong>{billBillerName || t("—")}</strong>
                       </div>
 
                       <div className="bill-summary-row">
                         <span>{t("Consumer No.")}</span>
 
-                        <strong>{billConsumerNumber || "—"}</strong>
+                        <strong>{billConsumerNumber || t("—")}</strong>
                       </div>
 
                       <div className="bill-summary-row">
@@ -6035,19 +6027,19 @@ function Payments() {
                     {billTransaction && (
                       <div className="bill-summary">
                         <p className="bill-summary-title">
-                          Transaction Details
+                          {t("Transaction Details")}
                         </p>
 
                         <div className="bill-summary-row">
                           <span>{t("Status")}</span>
 
-                          <strong>{billTransaction.status || "SUCCESS"}</strong>
+                          <strong>{billTransaction.status || t("SUCCESS")}</strong>
                         </div>
 
                         <div className="bill-summary-row">
                           <span>{t("Transaction ID")}</span>
 
-                          <strong>{billTransaction.id || "—"}</strong>
+                          <strong>{billTransaction.id || t("—")}</strong>
                         </div>
 
                         <div className="bill-summary-row">
@@ -6129,7 +6121,7 @@ function Payments() {
                     ================================================= */}
 
           <div className="payments-footer">
-            <span>© 2026 Avani Bank</span>
+            <span>© 2026 {t("Avani Bank")}</span>
 
             <span>{t("Secure Banking • Privacy • Terms")}</span>
           </div>
